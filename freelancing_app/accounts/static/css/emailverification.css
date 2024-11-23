@@ -1,0 +1,83 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.otp-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.otp-inputs input {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    text-align: center;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.otp-inputs input:focus {
+    border-color: #6c5ce7;
+}
+
+.otp-inputs input:disabled {
+    background-color: #f1f1f1;
+}
+
+.btn-submit {
+    background-color: #6c5ce7;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+    background-color: #5a4bc1;
+}
+
+.resend-container {
+    margin-top: 20px;
+}
+
+.resend-container p {
+    font-size: 14px;
+    color: #777;
+}
+
+.resend-link {
+    color: #6c5ce7;
+    text-decoration: none;
+}
+
+.resend-link:hover {
+    text-decoration: underline;
+}

@@ -39,7 +39,7 @@
         <button type="submit" class="btn-login">Login</button>
 
         <div class="signup-link">
-            <p>Don't have an account? <a href=" {% url 'signup' %}">Sign up</a></p>
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
         </div>
 
         <div class="social-login">
@@ -55,5 +55,5 @@
 {% endblock %}
 
 {% block js %}
-<script src="{% static 'js/login.js' %}"></script>
+<script src="{% static 'js/validation.js' %}"></script>
 {% endblock  %}
