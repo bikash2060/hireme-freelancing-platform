@@ -12,54 +12,62 @@
 {% block content%}
 
 <div class="container">
-    <h1>Verification Completed! Choose Your Role</h1>
+    <h1>OTP Verified! Choose Your Role</h1>
     <p>Welcome! Please choose your role to get started:</p>
-    
-    <!-- Buttons to open the modals -->
-    <button class="role-btn" onclick="openModal('clientModal')">Want to be a Client</button>
-    <button class="role-btn" onclick="openModal('freelancerModal')">Want to be a Freelancer</button>
 
-    <!-- Modal for Client -->
-    <div id="clientModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('clientModal')">&times;</span>
-            <h2>Become a Client</h2>
-            <p>As a client, you can post job listings and hire talented freelancers.</p>
-            <button class="modal-btn">Apply to be a Client</button>
+    <div class="popup-container">
+        <button class="popup-btn" onclick="openPopup('freelancerPopup')">Want to start as Freelancer</button>
+        <button class="popup-btn" onclick="openPopup('clientPopup')">Want to start as Client</button>
+    </div>
+
+    <div id="freelancerPopup" class="popup-box">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('freelancerPopup')">&times;</span>
+            <h3>Want to start as Freelancer?</h3>
+            <form method="POST" action="{% url 'user-redirect' %}">
+                {% csrf_token %}
+                <input type="hidden" name="role" value="freelancer">
+                <button type="submit" class="next-btn">Next</button>
+            </form>
         </div>
     </div>
 
-    <!-- Modal for Freelancer -->
-    <div id="freelancerModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('freelancerModal')">&times;</span>
-            <h2>Become a Freelancer</h2>
-            <p>As a freelancer, you can create profiles and apply for jobs posted by clients.</p>
-            <button class="modal-btn">Apply to be a Freelancer</button>
+    <div id="clientPopup" class="popup-box">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup('clientPopup')">&times;</span>
+            <h3>Want to start as Client?</h3>
+            <form method="POST" action="{% url 'user-redirect' %}">
+                {% csrf_token %}
+                <input type="hidden" name="role" value="client">
+                <button type="submit" class="next-btn">Next</button>
+            </form>
         </div>
     </div>
 </div>
-
 <script>
-    // script.js
 
-// Function to open the modal
-function openModal(modalId) {
-    document.getElementById(modalId).style.display = "block";
+function openPopup(popupId) {
+    const allPopups = document.querySelectorAll('.popup-box');
+    allPopups.forEach(popup => {
+        popup.style.display = "none";
+    });
+
+    document.getElementById(popupId).style.display = "block";
 }
 
-// Function to close the modal
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
+function closePopup(popupId) {
+    document.getElementById(popupId).style.display = "none";
 }
 
-// Close modal when clicking outside the modal content
 window.onclick = function(event) {
-    if (event.target.className === 'modal') {
-        event.target.style.display = "none";
+    var freelancerPopup = document.getElementById('freelancerPopup');
+    var clientPopup = document.getElementById('clientPopup');
+    if (event.target === freelancerPopup) {
+        freelancerPopup.style.display = "none";
+    } else if (event.target === clientPopup) {
+        clientPopup.style.display = "none";
     }
 }
-
 
 </script>
 {% endblock %}
