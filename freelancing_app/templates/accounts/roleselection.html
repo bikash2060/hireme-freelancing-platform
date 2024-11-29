@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}Role Selection{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/roleselection.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="role-selection">
+    <div class="container">
+        <h2>Select Your <span>Role</span></h2>
+        <p>Choose how you'd like to get started:</p>
+        <div class="role-boxes">
+            <div class="role-box" id="client-role">
+                <i class="fa fa-user-tie"></i>
+                <h3>Get Started as a <br>Client</h3>
+                <p>Post projects and hire talented freelancers to get your work done.</p>
+                <button class="role-btn">Get Started</button>
+            </div>
+            <div class="role-box" id="freelancer-role">
+                <i class="fa fa-briefcase"></i>
+                <h3>Get Started as a <br>Freelancer</h3>
+                <p>Find projects and earn by offering your skills and expertise.</p>
+                <button class="role-btn">Get Started</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/otp.js'%}"></script>
+{% endblock %}

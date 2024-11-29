@@ -153,7 +153,7 @@ def verify_otp(request):
         messages.error(request, "Invalid OTP. Please try again.")
         return render(request, 'accounts/email_verification.html')
 
-    return render(request, 'accounts/email_verification.html')
+    return render(request, 'accounts/otpverification.html')
 
 def user_redirect(request):
     if request.method == "POST":

@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}Home{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="text-context">
+                <h3>Are you looking for <span>Freelancing?</span></h3>   
+                <p>Find top-tier talent and get your projects completed on time. Hire skilled freelancers with just a click, and bring your ideas to life.</p>
+                <div class="buttons">
+                    <a href="./pages/login.html"><span>Get Started</span></a>
+                </div>
+            </div>
+            <div class="banner-img">
+                <img src="./assests/images/Banner.png" alt="banner">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Guidance Section -->
+<div class="guidance">
+    <div class="container">
+        <div class="main-box">
+            <div class="card">
+                <i class="fas fa-id-card"></i>
+                <h3>Create Account</h3>
+                <span>First you have to create an<br> account here</span>
+            </div>
+            <div class="card">
+                <i class="fas fa-search-minus"></i>
+                <h3>Search Work</h3>
+                <span>Search the best<br> freelance work here</span>
+            </div>
+            <div class="card">
+                <i class="fas fa-check-circle"></i>
+                <h3>Save and Apply</h3>
+                <span>Apply or save and<br> start your work</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feature Section -->
+<div class="feature">
+    <div class="container">
+        <div class="content">
+            <div class="stats">
+                <div class="stat-box">
+                    <h2>500+</h2>
+                    <p>Freelancers</p>
+                </div>
+                <div class="stat-box">
+                    <h2>300+</h2>
+                    <p>Freelance Work Posted</p>
+                </div>
+                <div class="stat-box">
+                    <h2>500+</h2>
+                    <p>Projects Completed</p>
+                </div>
+                <div class="stat-box">
+                    <h2>500+</h2>
+                    <p>Positive Reviews</p>
+                </div>
+            </div>
+            <div class="text-content">
+                <h1>Find The Best <span>Freelancers</span> Here</h1>
+                <p>
+                    Empowering Nepali talents to connect with businesses and individuals nationwide. Whether you need a designer from Kathmandu, a developer from Pokhara, or a writer from Biratnagar, our platform brings the best local freelancers to help you achieve your goals. With a focus on quality, reliability, and affordability, we aim to bridge the gap between talent and opportunity. From small startups to established companies, we provide a space where ideas come to life through collaboration. Join us in creating a thriving ecosystem that supports local skills, fosters innovation, and drives Nepal’s digital economy forward!
+                </p>
+            </div>
+        </div>
+        <div class="image-container">
+            <img src="./assests/images/Girl Image.png" alt="Smiling Woman">
+        </div>
+    </div>
+</div>
+    
+<!-- Job Posts Section -->
+<div class="job-post">
+    <div class="container">
+        <p>The latest freelance work!</p>
+        <div class="text">
+            <h3>Recently Posted <span>Works</span></h3>
+            <div class="buttons">
+                <button class="slider-btn prev-btn" disabled>
+                    <i class="fa-solid fa-arrow-right fa-rotate-180"></i>
+                </button>
+                <button class="slider-btn next-btn">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        <div class="job-slider">
+
+            <div class="job-box">
+                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <h4 class="job-title">Web Development</h4>
+                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
+                <p class="project-budget">Budget: <span>$200</span></p>
+                <p class="project-status completed"><span>Completed</span></p>
+            
+                <div class="job-actions">
+                    <a href="#" class="see-details">See Details</a>
+                    <a href="#" class="apply-proposal">Apply Proposal</a>
+                </div>
+            </div>
+            
+            <div class="job-box">
+                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <h4 class="job-title">Web Development</h4>
+                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
+                <p class="project-budget">Budget: <span>$200</span></p>
+                <p class="project-status processing"><span>Processing</span></p>
+                
+                <div class="job-actions">
+                    <a href="#" class="see-details">See Details</a>
+                    <a href="#" class="apply-proposal">Apply Proposal</a>
+                </div>
+            </div>
+
+            <div class="job-box">
+                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <h4 class="job-title">Web Development</h4>
+                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
+                <p class="project-budget">Budget: <span>$200</span></p>
+                <p class="project-status cancelled"><span>Cancelled</span></p>
+                
+                <div class="job-actions">
+                    <a href="#" class="see-details">See Details</a>
+                    <a href="#" class="apply-proposal">Apply Proposal</a>
+                </div>
+            </div>
+
+            <div class="job-box">
+                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <h4 class="job-title">Web Development</h4>
+                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
+                <p class="project-budget">Budget: <span>$200</span></p>
+                <p class="project-status completed"><span>Completed</span></p>
+                
+                <div class="job-actions">
+                    <a href="#" class="see-details">See Details</a>
+                    <a href="#" class="apply-proposal">Apply Proposal</a>
+                </div>
+            </div>
+
+            <div class="job-box">
+                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <h4 class="job-title">Web Development</h4>
+                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
+                <p class="project-budget">Budget: <span>$200</span></p>
+                <p class="project-status completed"><span>Completed</span></p>
+                
+                <div class="job-actions">
+                    <a href="#" class="see-details">See Details</a>
+                    <a href="#" class="apply-proposal">Apply Proposal</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Skills Category Section -->
+<div class="skills-category">
+    <div class="container">
+        <h3>Choose Different <strong>Category</strong></h3>
+        <div class="category-box">
+
+            <a href="/freelancers?category=programming" class="category-item">
+                <img src="./assests/images/programming.png" alt="Programming">
+                <span class="category-text">Programming</span>
+            </a>
+
+            <a href="/freelancers?category=writing" class="category-item">
+                <img src="./assests/images/writing.jpg" alt="Writing">
+                <span class="category-text">Writing</span>
+            </a>
+
+            <a href="/freelancers?category=graphic-designing" class="category-item">
+                <img src="./assests/images/graphic desigining.jpg" alt="Graphic Designing">
+                <span class="category-text">Graphic Designing</span>
+            </a>
+
+            <a href="/freelancers?category=digital-marketing" class="category-item">
+                <img src="./assests/images/Digital Marketing.jpg" alt="Digital Marketing">
+                <span class="category-text">Digital Marketing</span>
+            </a>
+
+            <a href="/freelancers?category=programming" class="category-item">
+                <img src="./assests/images/programming.png" alt="Programming">
+                <span class="category-text">Programming</span>
+            </a>
+
+            <a href="/freelancers?category=writing" class="category-item">
+                <img src="./assests/images/writing.jpg" alt="Writing">
+                <span class="category-text">Writing</span>
+            </a>
+
+            <a href="/freelancers?category=graphic-designing" class="category-item">
+                <img src="./assests/images/graphic desigining.jpg" alt="Graphic Designing">
+                <span class="category-text">Graphic Designing</span>
+            </a>
+
+            <a href="/freelancers?category=digital-marketing" class="category-item">
+                <img src="./assests/images/Digital Marketing.jpg" alt="Digital Marketing">
+                <span class="category-text">Digital Marketing</span>
+            </a>
+
+        </div>
+
+        <div class="more-categories">
+            <a href="/categories" class="btn">More Categories</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="faq">
+    <div class="container">
+        <h3>Frequently Asked Questions</h3>
+        <div id="faq-list">
+            <div class="faq-item">
+                <h4>How do I get started as a freelancer?</h4>
+                <p>Sign up, create a profile, and start bidding on projects that match your skills.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How can I find freelance work?</h4>
+                <p>Browse available projects and submit proposals to clients.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do I get paid for my freelance work?</h4>
+                <p>Payments are processed securely through the platform once the work is completed and approved by the client.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I work with clients from other countries?</h4>
+                <p>Yes, you can work with clients from anywhere in the world. The platform connects freelancers with clients globally.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is there any fee for using the platform?</h4>
+                <p>Our platform charges a small service fee when a job is completed and paid. Please refer to our pricing page for detailed information.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do I update my profile?</h4>
+                <p>You can update your profile details anytime through the profile settings page.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Can I work part-time on the platform?</h4>
+                <p>Yes, you can choose part-time or full-time opportunities based on your preference.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What happens if I can't complete a project on time?</h4>
+                <p>Communicate with your client as soon as possible. You may request an extension if needed.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How can I rate a freelancer's work?</h4>
+                <p>You can rate the freelancer once the project is completed and approved by both parties.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How do I contact customer support?</h4>
+                <p>You can reach our support team through the "Help" section on the website.</p>
+            </div>
+        </div>
+        
+        <div class="faq-buttons">
+            <button id="show-more" onclick="showMoreFAQ()">Show More</button>
+            <button id="show-less" onclick="showLessFAQ()">Show Less</button>
+        </div>
+    </div>
+</div>
+
+<!-- Freelancer Profiles Section -->
+<div class="freelancer-portfolio">
+    <div class="container">
+        <span>Web Development, UI/UX Designing, SEO &amp; more !</span>
+        <h3>Checkout The Best <strong>Portfolios</strong> Here</h3>
+
+        <!-- Slider -->
+        <div class="portfolio-slider">
+            <div class="portfolio-boxes">
+
+                <div class="portfolio-box">
+                    <div class="profile-img">
+                        <img src="./assests/images/ronaldo.jpg" alt="Ronaldo" />
+                    </div>
+                    <div class="profile-info">
+                        <h4>Cristiano Ronaldo</h4>
+                        <div class="role-and-arrow">
+                            <p>Web Developer</p>
+                            <a href="#" class="view-profile">
+                                <span>→</span> 
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-box">
+                    <div class="profile-img">
+                        <img src="./assests/images/ramos.jpg" alt="Ramos" />
+                    </div>
+                    <div class="profile-info">
+                        <h4>Ramos</h4>
+                        <div class="role-and-arrow">
+                            <p>Full Stack Developer</p>
+                            <a href="#" class="view-profile">
+                                <span>→</span> 
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-box">
+                    <div class="profile-img">
+                        <img src="./assests/images/neymar.jpeg" alt="Neymar" />
+                    </div>
+                    <div class="profile-info">
+                        <h4>Neymar</h4>
+                        <div class="role-and-arrow">
+                            <p>SEO Expert</p>
+                            <a href="#" class="view-profile">
+                                <span>→</span> 
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-box">
+                    <div class="profile-img">
+                        <img src="./assests/images/messi.jpg" alt="Messi" />
+                    </div>
+                    <div class="profile-info">
+                        <h4>Lionel Messi</h4>
+                        <div class="role-and-arrow">
+                            <p>UI/UX Designer</p>
+                            <a href="#" class="view-profile">
+                                <span>→</span> 
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Subscription Section -->
+<div class="newsletter">
+    <div class="container">
+        <h2>Join Our Newsletter</h2>
+        <p>Get the latest updates and exclusive offers directly in your inbox.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email" class="email-input" required />
+            <button type="submit" class="subscribe-btn">Subscribe</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/jobslider.js'%}"></script>
+<script src="{% static 'js/faqloader.js'%}"></script>
+{% endblock %}

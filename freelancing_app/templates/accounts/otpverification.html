@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}Sign Up | OTP Verification{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/otpverification.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- OTP Verification Section -->
+<div class="otp-verification">
+    <div class="container">
+      <div class="email-icon">
+        <img src="../assests/images/email-logo.png" alt="Email Icon" />
+      </div>
+      <h3>Please check your email</h3>
+      <p>We've sent a 6-digit code to demo@gmail.com</p>
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+      </div>
+      <p class="resend-text">Didn’t get the code? <a href="#">Click to resend</a></p>
+      <div class="button-group">
+        <button class="cancel-btn">Cancel</button>
+        <button class="verify-btn">Verify</button>
+      </div>
+    </div>
+</div> 
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/otp.js'%}"></script>
+{% endblock %}
