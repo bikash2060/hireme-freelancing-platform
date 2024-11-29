@@ -292,9 +292,12 @@
     display: -webkit-box; 
     -webkit-box-orient: vertical; 
     -webkit-line-clamp: 4; 
-    overflow: hidden; 
+    display: block; 
+    line-clamp: 4;   
+    overflow: hidden;
     text-overflow: ellipsis; 
 }
+
 
 .job-box .project-budget{
     font-size: 20px;
