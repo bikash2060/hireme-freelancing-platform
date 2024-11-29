@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+
 <!-- Hero Section -->
 <div class="hero">
     <div class="container">
@@ -20,7 +21,7 @@
                 </div>
             </div>
             <div class="banner-img">
-                <img src="./assests/images/Banner.png" alt="banner">
+                <img src="{% static 'images/banner.png' %}" alt="banner">
             </div>
         </div>
     </div>
@@ -79,7 +80,7 @@
             </div>
         </div>
         <div class="image-container">
-            <img src="./assests/images/Girl Image.png" alt="Smiling Woman">
+            <img src="{% static 'images/girl image.png'%}" alt="Smiling Woman">
         </div>
     </div>
 </div>
@@ -102,7 +103,7 @@
         <div class="job-slider">
 
             <div class="job-box">
-                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
                 <h4 class="job-title">Web Development</h4>
                 <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
                 <p class="project-budget">Budget: <span>$200</span></p>
@@ -115,7 +116,7 @@
             </div>
             
             <div class="job-box">
-                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
                 <h4 class="job-title">Web Development</h4>
                 <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
                 <p class="project-budget">Budget: <span>$200</span></p>
@@ -128,7 +129,7 @@
             </div>
 
             <div class="job-box">
-                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
                 <h4 class="job-title">Web Development</h4>
                 <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
                 <p class="project-budget">Budget: <span>$200</span></p>
@@ -141,7 +142,7 @@
             </div>
 
             <div class="job-box">
-                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
                 <h4 class="job-title">Web Development</h4>
                 <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
                 <p class="project-budget">Budget: <span>$200</span></p>
@@ -154,7 +155,7 @@
             </div>
 
             <div class="job-box">
-                <img src="./assests/images/programming.png" alt="Programming" class="job-image">
+                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
                 <h4 class="job-title">Web Development</h4>
                 <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
                 <p class="project-budget">Budget: <span>$200</span></p>
@@ -176,50 +177,50 @@
         <h3>Choose Different <strong>Category</strong></h3>
         <div class="category-box">
 
-            <a href="/freelancers?category=programming" class="category-item">
-                <img src="./assests/images/programming.png" alt="Programming">
+            <a href="#" class="category-item">
+                <img src="{% static 'images/programming.png' %}" alt="Programming">
                 <span class="category-text">Programming</span>
             </a>
 
-            <a href="/freelancers?category=writing" class="category-item">
-                <img src="./assests/images/writing.jpg" alt="Writing">
+            <a href="#" class="category-item">
+                <img src="{% static 'images/writing.jpg' %}" alt="Writing">
                 <span class="category-text">Writing</span>
             </a>
 
-            <a href="/freelancers?category=graphic-designing" class="category-item">
-                <img src="./assests/images/graphic desigining.jpg" alt="Graphic Designing">
+            <a href="#" class="category-item">
+                <img src="{% static 'images/graphic designing.jpg' %}" alt="Graphic Designing">
                 <span class="category-text">Graphic Designing</span>
             </a>
 
-            <a href="/freelancers?category=digital-marketing" class="category-item">
-                <img src="./assests/images/Digital Marketing.jpg" alt="Digital Marketing">
+            <a href="#" class="category-item">
+                <img src="{% static 'images/digital marketing.jpg' %}" alt="Digital Marketing">
                 <span class="category-text">Digital Marketing</span>
             </a>
 
-            <a href="/freelancers?category=programming" class="category-item">
-                <img src="./assests/images/programming.png" alt="Programming">
+            <a href="#" class="category-item">
+                <img src="{% static 'images/writing.jpg' %}" alt="Writing">
+                <span class="category-text">Writing</span>
+            </a>
+
+            <a href="#" class="category-item">
+                <img src="{% static 'images/programming.png' %}" alt="Programming">
                 <span class="category-text">Programming</span>
             </a>
 
-            <a href="/freelancers?category=writing" class="category-item">
-                <img src="./assests/images/writing.jpg" alt="Writing">
-                <span class="category-text">Writing</span>
-            </a>
-
-            <a href="/freelancers?category=graphic-designing" class="category-item">
-                <img src="./assests/images/graphic desigining.jpg" alt="Graphic Designing">
-                <span class="category-text">Graphic Designing</span>
-            </a>
-
-            <a href="/freelancers?category=digital-marketing" class="category-item">
-                <img src="./assests/images/Digital Marketing.jpg" alt="Digital Marketing">
+            <a href="#" class="category-item">
+                <img src="{% static 'images/digital marketing.jpg' %}" alt="Digital Marketing">
                 <span class="category-text">Digital Marketing</span>
+            </a>
+
+            <a href="#" class="category-item">
+                <img src="{% static 'images/graphic designing.jpg' %}" alt="Graphic Designing">
+                <span class="category-text">Graphic Designing</span>
             </a>
 
         </div>
 
         <div class="more-categories">
-            <a href="/categories" class="btn">More Categories</a>
+            <a href="#" class="btn">More Categories</a>
         </div>
 
     </div>
@@ -291,7 +292,7 @@
 
                 <div class="portfolio-box">
                     <div class="profile-img">
-                        <img src="./assests/images/ronaldo.jpg" alt="Ronaldo" />
+                        <img src="{% static 'images/ronaldo.jpg' %}" alt="Ronaldo" />
                     </div>
                     <div class="profile-info">
                         <h4>Cristiano Ronaldo</h4>
@@ -306,7 +307,7 @@
 
                 <div class="portfolio-box">
                     <div class="profile-img">
-                        <img src="./assests/images/ramos.jpg" alt="Ramos" />
+                        <img src="{% static 'images/ramos.jpg' %}" alt="Ramos" />
                     </div>
                     <div class="profile-info">
                         <h4>Ramos</h4>
@@ -321,7 +322,7 @@
 
                 <div class="portfolio-box">
                     <div class="profile-img">
-                        <img src="./assests/images/neymar.jpeg" alt="Neymar" />
+                        <img src="{% static 'images/neymar.jpeg' %}" alt="Neymar" />
                     </div>
                     <div class="profile-info">
                         <h4>Neymar</h4>
@@ -336,7 +337,7 @@
 
                 <div class="portfolio-box">
                     <div class="profile-img">
-                        <img src="./assests/images/messi.jpg" alt="Messi" />
+                        <img src="{% static 'images/messi.jpg' %}" alt="Messi" />
                     </div>
                     <div class="profile-info">
                         <h4>Lionel Messi</h4>
