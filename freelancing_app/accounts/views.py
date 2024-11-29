@@ -7,6 +7,9 @@ from django.core.mail import send_mail
 from freelancing_app.settings import EMAIL_HOST_USER
 import random, re
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from . import formvalidation
 
 def user_login(request):
     if request.method == "POST":
@@ -49,109 +52,52 @@ def user_signup(request):
         password = request.POST.get(utils.PASSWORD)
         confirm_password = request.POST.get(utils.CONFIRM_PASSWORD)
         
-        # Check for empty fields
-        if not email_address or not username or not password or not confirm_password:
-            messages.error(request, "All fields are required.")
-            return redirect('signup')
+        user_input = {
+            'email': email_address, 
+            'username': username
+        }
         
-        # Email validation
-        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-        if not re.match(email_regex, email_address):
-            messages.error(request, "Enter a valid email address.")
-            return redirect('signup')
-        
-        # Password and confirm password match validation
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match.")
-            return redirect('signup')
-        
-        # Password complexity validation
-        if len(password) < 8:
-            messages.error(request, "Password must be at least 8 characters long.")
-            return redirect('signup')
-        
-        if not re.search(r'[A-Z]', password):
-            messages.error(request, "Password must contain at least one uppercase letter.")
-            return redirect('signup')
-        
-        if not re.search(r'[0-9]', password):
-            messages.error(request, "Password must contain at least one number.")
-            return redirect('signup')
-        
-        if not re.search(r'[@$!%*?&]', password):
-            messages.error(request, "Password must contain at least one special character.")
-            return redirect('signup')
+        # Validate form using the validate_signup_form function
+        valid, error_message = formvalidation.validate_signup_form(email_address, username, password, confirm_password)
 
-        # Username cannot be only numbers
-        if username.isdigit():
-            messages.error(request, "Username cannot be only numbers.")
-            return redirect('signup')
-
-        # Check if username or email already exists
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username is already taken.")
-            return redirect('signup')
+        if not valid:
+            # If validation fails, show the error and return the form with user input
+            messages.error(request, error_message)
+            user_input = {
+                'email': email_address, 
+                'username': username
+            }
+            return render(request, 'accounts/signup.html', {'form_data': user_input})
         
-        if User.objects.filter(email=email_address).exists():
-            messages.error(request, "An account with this email already exists.")
-            return redirect('signup')
-
         # Generate OTP and save in session
-        otp = random.randint(100000, 999999)
+        otp_code = random.randint(100000, 999999)
         request.session['signup_data'] = {'email': email_address, 'username': username, 'password': password}
-        request.session['otp'] = otp
+        request.session['otp'] = otp_code
 
-        # Send verification email
-        send_mail(
-            "Verify Your Email",
-            f"Your OTP code is {otp}",
-            EMAIL_HOST_USER,
-            [email_address],
-            fail_silently=False,
-        )
+        utils.send_verification_email(username, email_address, otp_code)
 
-        return redirect('verifyotp')
+        return redirect('accounts:otp_verification')
 
     return render(request, 'accounts/signup.html')
 
 def verify_otp(request):
     if request.method == 'POST':
         # Retrieve the entered OTP from the form
-        entered_otp = ''.join([request.POST.get(f'otp{i}', '') for i in range(1, 7)])
+        otp_entered = ''.join([request.POST.get(f'otp_{i}', '') for i in range(1, 7)])
         
         # Retrieve stored OTP and signup data from session
-        stored_otp = request.session.get('otp')
+        otp_code = request.session.get('otp')
         signup_data = request.session.get('signup_data')  # Contains email, username, and password
 
-        # Validate session data
-        if not stored_otp or not signup_data:
-            messages.error(request, "Session expired or invalid. Please try again.")
-            return redirect('signup')
-
-        # Check if the entered OTP matches the stored OTP
-        if entered_otp == str(stored_otp):
-            try:
-                # Create the user and set as active
-                user = User.objects.create_user(
-                    username=signup_data['username'],
-                    email=signup_data['email'],
-                    password=signup_data['password']
-                )
-                user.is_active = True
-                user.save()
-
-                # Clear session data
-                request.session.pop('otp', None)
-
-                return redirect('user-redirect')  
-
-            except Exception as e:
-                messages.error(request, f"Error creating user: {str(e)}")
-                return redirect('signup')
-        
-        # If OTP does not match
-        messages.error(request, "Invalid OTP. Please try again.")
-        return render(request, 'accounts/email_verification.html')
+        # Verify the OTP
+        if otp_entered == str(otp_code):
+            # OTP is correct, proceed with the next step (e.g., activate the account)
+            messages.success(request, "OTP verified successfully.")
+            return redirect('accounts:signup_success')  # Redirect to success page
+        else:
+            # OTP is incorrect, show an error message
+            messages.error(request, "Invalid OTP. Please try again.")
+            return render(request, 'accounts/otpverification.html')
 
     return render(request, 'accounts/otpverification.html')
 

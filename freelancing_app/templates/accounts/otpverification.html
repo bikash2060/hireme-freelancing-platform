@@ -8,30 +8,48 @@
 {% endblock %}
 
 {% block content %}
-<!-- OTP Verification Section -->
 <div class="otp-verification">
     <div class="container">
+
+      <div class="messages">
+          {% for message in messages %}
+              <div class="alert alert-danger">
+                  <span>{{ message }}</span>
+                  <i class="fa fa-times close-message" onclick="this.parentElement.style.display='none';"></i>
+              </div>
+          {% endfor %}
+      </div>
+
       <div class="email-icon">
-        <img src="../assests/images/email-logo.png" alt="Email Icon" />
+        <img src="{% static 'images/email-logo.png' %}" alt="Email Icon" />
       </div>
       <h3>Please check your email</h3>
-      <p>We've sent a 6-digit code to demo@gmail.com</p>
-      <div class="otp-inputs">
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-      </div>
-      <p class="resend-text">Didn’t get the code? <a href="#">Click to resend</a></p>
-      <div class="button-group">
-        <button class="cancel-btn">Cancel</button>
-        <button class="verify-btn">Verify</button>
-      </div>
+      <p>We've sent a 6-digit code to your email address.</p>
+      
+      <!-- Form to submit OTP -->
+      <form action="{% url 'accounts:otp_verification' %}" method="POST">
+        {% csrf_token %}
+        
+        <div class="otp-inputs">
+          <input type="text" name="otp_1" maxlength="1" class="otp-box" />
+          <input type="text" name="otp_2" maxlength="1" class="otp-box" />
+          <input type="text" name="otp_3" maxlength="1" class="otp-box" />
+          <input type="text" name="otp_4" maxlength="1" class="otp-box" />
+          <input type="text" name="otp_5" maxlength="1" class="otp-box" />
+          <input type="text" name="otp_6" maxlength="1" class="otp-box" />
+        </div>
+        
+        <p class="resend-text">Didn’t get the code? <a href="{% url 'accounts:otp_verification' %}">Click to resend</a></p>
+        
+        <div class="button-group">
+          <button type="button" class="cancel-btn">Cancel</button>
+          <button type="submit" class="verify-btn">Verify</button>
+        </div>
+      </form>
     </div>
 </div> 
 {% endblock %}
+
 
 {% block js_files %}
 <script src="{% static 'js/otp.js'%}"></script>

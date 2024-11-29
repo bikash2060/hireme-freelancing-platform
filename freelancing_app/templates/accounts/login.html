@@ -16,13 +16,13 @@
           <div class="login_option">
             <div class="option">
               <a href="#">
-                <img src="../assests/images/google.png" alt="Google" />
+                <img src="{% static 'images/google.png' %}" alt="Google" />
                 <span>Google</span>
               </a>
             </div>
             <div class="option">
               <a href="#">
-                <img src="../assests/images/github.png" alt="Github" />
+                <img src="{% static 'images/github.png' %}" alt="Github" />
                 <span>Github</span>
               </a>
             </div>
@@ -45,7 +45,7 @@
             </div>
           </div>
           <button type="submit">Log In</button>
-          <p class="sign_up">Don't have an account? <a href="signup.html">Sign up</a></p>
+          <p class="sign_up">Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a></p>
         </form>
       </div>
     </div>
