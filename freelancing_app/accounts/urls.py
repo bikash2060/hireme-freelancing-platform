@@ -7,5 +7,5 @@ urlpatterns = [
     path("login/", views.user_login, name="login"),
     path("signup/", views.user_signup, name="signup"),
     path("otp/verification/", views.verify_otp, name="otp_verification"),
-    path("career/", views.user_redirect, name="user-redirect"),
+    path("role/", views.user_redirect, name="roles"),
 ]

@@ -169,3 +169,32 @@ form button:hover {
 .password_container i:hover {
     color: #626cd6; 
 }
+
+.login_form .login-messages {
+    margin-bottom: 20px;
+}
+
+.login_form .alert {
+    position: relative;
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 5px;
+}
+
+.login_form .alert span {
+    font-size: 16px;
+}
+
+.login_form .close-message {
+    position: absolute;
+    padding: 4px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #721c24;
+}
+
+.login_form .close-message:hover {
+    color: #5a1a1a;
+}

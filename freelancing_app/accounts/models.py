@@ -1,5 +1,26 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.timezone import now, timedelta
+
+def default_expired_time():
+    return now() + timedelta(minutes=1)
+
+class OTPCode(models.Model):
+    otp_id = models.AutoField(primary_key=True)
+    otp_code = models.CharField(max_length=6)
+    email = models.EmailField()
+    otp_generated_time = models.DateTimeField(default=now)
+    otp_expired_time = models.DateTimeField(default=default_expired_time)
+    
+    class Meta:
+        db_table = "otp_code"
+
+    def is_valid(self):
+        """Check if the OTP is still valid."""
+        return now() <= self.otp_expired_time
+
+    def __str__(self):
+        return f"OTP for {self.email}"
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -54,3 +75,5 @@ class Freelancer(models.Model):
 
     def __str__(self):
         return self.user.username  
+    
+    

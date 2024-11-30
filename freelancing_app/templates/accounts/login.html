@@ -12,6 +12,16 @@
     <div class="container">
       <div class="login_form">
         <form action="#">
+
+          <div class="login-messages">
+            {% for message in messages %}
+              <div class="alert alert-danger">
+                <span>{{ message }}</span>
+                <i class="fa fa-times close-message"></i>
+              </div>
+            {% endfor %}
+          </div>
+
           <h3>Log in with</h3>
           <div class="login_option">
             <div class="option">

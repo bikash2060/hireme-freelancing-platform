@@ -1,6 +1,10 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
+from .models import OTPCode
+import random
+from datetime import timedelta
+from django.utils.timezone import now
 
 # Login/Signup Form Parameters
 EMAIL_ADDRESS = "emailaddress"
@@ -28,3 +32,13 @@ def send_verification_email(username, email_address, otp_code):
     
     # Send the email
     email.send(fail_silently=False)
+    
+def generate_and_save_otp(email):
+    otp = f"{random.randint(100000, 999999)}"
+    OTPCode.objects.create(
+        otp_code=otp,
+        email=email,
+        otp_generated_time=now(),
+        otp_expired_time=now() + timedelta(minutes=5)
+    )
+    return otp

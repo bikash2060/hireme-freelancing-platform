@@ -10,22 +10,33 @@
 {% block content %}
 <div class="role-selection">
     <div class="container">
+        {% for message in messages %}
+            <div class="alert alert-danger">
+                <span>{{ message }}</span>
+                <i class="fa fa-times close-message"></i>
+            </div>
+        {% endfor %}
         <h2>Select Your <span>Role</span></h2>
         <p>Choose how you'd like to get started:</p>
-        <div class="role-boxes">
-            <div class="role-box" id="client-role">
-                <i class="fa fa-user-tie"></i>
-                <h3>Get Started as a <br>Client</h3>
-                <p>Post projects and hire talented freelancers to get your work done.</p>
-                <button class="role-btn">Get Started</button>
+        <form method="POST" action="{% url 'accounts:roles' %}">
+            {% csrf_token %}
+            <div class="role-boxes">
+                <div class="role-box" id="client-role">
+                    <i class="fa fa-user-tie"></i>
+                    <h3>Get Started as a <br>Client</h3>
+                    <p>Post projects and hire talented freelancers to get your work done.</p>
+                    <input type="hidden" name="role" value="client">
+                    <button type="submit" class="role-btn">Get Started</button>
+                </div>
+                <div class="role-box" id="freelancer-role">
+                    <i class="fa fa-briefcase"></i>
+                    <h3>Get Started as a <br>Freelancer</h3>
+                    <p>Find projects and earn by offering your skills and expertise.</p>
+                    <input type="hidden" name="role" value="freelancer">
+                    <button type="submit" class="role-btn">Get Started</button>
+                </div>
             </div>
-            <div class="role-box" id="freelancer-role">
-                <i class="fa fa-briefcase"></i>
-                <h3>Get Started as a <br>Freelancer</h3>
-                <p>Find projects and earn by offering your skills and expertise.</p>
-                <button class="role-btn">Get Started</button>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 {% endblock %}
