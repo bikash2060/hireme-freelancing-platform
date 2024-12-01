@@ -10,12 +10,14 @@
 {% block content %}
 <div class="role-selection">
     <div class="container">
-        {% for message in messages %}
-            <div class="alert alert-danger">
-                <span>{{ message }}</span>
-                <i class="fa fa-times close-message"></i>
-            </div>
-        {% endfor %}
+        {% comment %} {% for message in messages %}
+            {% if message.tags == "success" %} {% endcomment %}
+                <div class="alert alert-success">
+                    {% comment %} <span>{{ message }}</span> {% endcomment %}
+                    <span>OTP verified successfully.</span>
+                    <i class="fa-solid fa-check"></i>
+                </div>
+        {% comment %} {% endfor %} {% endcomment %}
         <h2>Select Your <span>Role</span></h2>
         <p>Choose how you'd like to get started:</p>
         <form method="POST" action="{% url 'accounts:roles' %}">
@@ -25,7 +27,6 @@
                     <i class="fa fa-user-tie"></i>
                     <h3>Get Started as a <br>Client</h3>
                     <p>Post projects and hire talented freelancers to get your work done.</p>
-                    <!-- Use radio buttons or buttons to select role -->
                     <input type="radio" id="client" name="role" value="client" required>
                     <label for="client">Client</label>
                 </div>
@@ -33,18 +34,35 @@
                     <i class="fa fa-briefcase"></i>
                     <h3>Get Started as a <br>Freelancer</h3>
                     <p>Find projects and earn by offering your skills and expertise.</p>
-                    <!-- Use radio buttons or buttons to select role -->
                     <input type="radio" id="freelancer" name="role" value="freelancer">
                     <label for="freelancer">Freelancer</label>
                 </div>
             </div>
             <button type="submit" class="role-btn">Get Started</button>
         </form>
-        
     </div>
 </div>
 {% endblock %}
 
+
 {% block js_files %}
-<script src="{% static 'js/otp.js'%}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get all close buttons (those with class 'close-message')
+        const closeButtons = document.querySelectorAll('.fa-check');
+    
+        // Loop through each close button and add a click event listener
+        closeButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                // Find the closest parent alert message (this could be success or error message)
+                const alertMessage = event.target.closest('.alert');
+                if (alertMessage) {
+                    // Remove the alert message from the DOM
+                    alertMessage.remove();
+                }
+            });
+        });
+    });
+    
+</script>
 {% endblock %}

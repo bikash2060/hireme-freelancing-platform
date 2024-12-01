@@ -109,6 +109,7 @@
 }
   
 .cancel-btn {
+    text-decoration: none;
     background: #e0e0e0;
     color: #757575;
 }

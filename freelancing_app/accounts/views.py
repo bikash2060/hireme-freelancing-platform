@@ -1,163 +1,192 @@
+from django.views import View
+from django.db import DatabaseError
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from . import utils
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from .models import *
-from django.core.exceptions import ObjectDoesNotExist
-from . import formvalidation
+from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
+from .models import User, OTPCode, Client, Freelancer
+from . import formvalidation
 
-def user_login(request):
-    if request.method == "POST":
-        
+class UserLoginView(View):
+    """Class-based view for user login."""
+    
+    def get(self, request):
+        # Render the login page
+        return render(request, 'accounts/login.html')
+
+    def post(self, request):
         # Retrieve email and password from the form
         email = request.POST.get(utils.EMAIL_ADDRESS)
         password = request.POST.get(utils.PASSWORD)
 
         # Check if email exists in the database
         try:
-            user = User.objects.get(email=email)  # Look up user by email
+            user = User.objects.get(email=email)
         except User.DoesNotExist:
-            # If email is not found, display an error message
+            # Email not found
             messages.error(request, "Invalid email address.")
             return render(request, 'accounts/login.html')
 
         # Check if the entered password matches the stored hashed password
-        if user.check_password(password):  # Compare raw password with the hashed password
-            # Authenticate the user using the email and password
-            login(request, user)
-            
-            print(f"Logged in user: {request.user.username}")
-            # Redirect the user to the appropriate dashboard based on their role
+        if user.check_password(password):
+            login(request, user)  # Authenticate the user
+            # Redirect to the appropriate dashboard
             if user.role == 'client':
-                return redirect('clientdashboard:dashboard')  # Replace with actual URL for client dashboard
+                return redirect('clientdashboard:dashboard')
             elif user.role == 'freelancer':
-                return redirect('freelancerdashboard:dashboard')  # Replace with actual URL for freelancer dashboard
+                return redirect('freelancerdashboard:dashboard')
         else:
-            # If password does not match, display an error message
             messages.error(request, "Incorrect password.")
             return render(request, 'accounts/login.html')
 
-    # Render the login page if the request method is not POST
-    return render(request, 'accounts/login.html')
+class UserSignupView(View):
+    
+    """Class-based view for user signup."""
+    template_name = 'accounts/signup.html'
 
-def user_signup(request):
-    if request.method == "POST":
-        
-        # Retrieving inputs from signup form
-        email_address = request.POST.get(utils.EMAIL_ADDRESS)  
+    def get(self, request):
+        # Render the signup page
+        return render(request, self.template_name)
+
+    def post(self, request):
+        # Retrieving inputs from the signup form
+        email_address = request.POST.get(utils.EMAIL_ADDRESS)
         username = request.POST.get(utils.USERNAME)
         password = request.POST.get(utils.PASSWORD)
         confirm_password = request.POST.get(utils.CONFIRM_PASSWORD)
-        
+
         # Hash the password before storing in the session
         hashed_password = make_password(password)
-        
-        # Store the form data entered by the user temporarily in the session
+
+        # Store the form data temporarily in the session
         signup_data = {
             'email': email_address,
             'username': username,
-            'password': hashed_password
+            'password': hashed_password,
         }
         request.session['signup_data'] = signup_data
-        
-        # Validate form using the validate_signup_form function
-        valid, error_message = formvalidation.validate_signup_form(email_address, username, password, confirm_password)
+
+        # Validate the form
+        valid, error_message = formvalidation.validate_signup_form(
+            email_address, username, password, confirm_password
+        )
 
         if not valid:
-            # If validation fails, show the error and return the form with user input
             messages.error(request, error_message)
-            return render(request, 'accounts/signup.html', {'form_data': signup_data})
-        
+            return render(request, self.template_name, {'form_data': signup_data})
+
         # Store the email in the session
         request.session['email_address'] = email_address
-        
-        # Generate OTP and save in database
+
+        # Generate OTP and send verification email
         otp_code = utils.generate_and_save_otp(email_address)
         utils.send_verification_email(username, email_address, otp_code)
 
         return redirect('accounts:otp_verification')
 
-    return render(request, 'accounts/signup.html')
+class VerifyOTPView(View):
+    """Class-based view for OTP verification."""
+    
+    def get(self, request):
+        # Render the OTP verification page
+        return render(request, 'accounts/otpverification.html')
 
-def verify_otp(request):
-    if request.method == 'POST':
-        # Retrieve the entered OTP from the form (assuming it's entered in 6 fields)
+    def post(self, request):
+        # Retrieve the entered OTP
         otp_entered = ''.join([request.POST.get(f'otp_{i}', '') for i in range(1, 7)])
-
-        # Retrieve the email from the session
         email_address = request.session.get('email_address')
 
         if not email_address:
-            messages.error(request, "Session timed out")
-            return redirect('accounts:signup')  # Redirect to the signup page if no email in session
+            messages.error(request, "Session timed out.")
+            return redirect('accounts:signup')
 
         try:
             # Fetch the latest OTP record for the email (order by generated time)
             otp_record = OTPCode.objects.filter(email=email_address).order_by('-otp_generated_time').first()
 
-            if not otp_record:
-                # No OTP found for this email
-                messages.error(request, "No OTP found. Please request a new OTP.")
-                return redirect('accounts:signup')
-
-            # Check if the OTP has expired
             if otp_record.otp_expired_time < timezone.now():
-                # OTP has expired
                 messages.error(request, "OTP has expired. Please regenerate your OTP.")
-                return redirect('accounts:otp_verification')  
-
-            # If OTP is not expired, check if the entered OTP matches
-            if otp_entered == str(otp_record.otp_code):
-                # OTP is correct and still valid, proceed with the verification
-                messages.success(request, "OTP verified successfully.")
-                return redirect('accounts:roles')  
+                return redirect('accounts:otp_verification')
             else:
-                # OTP is incorrect
-                messages.error(request, "Invalid OTP. Please try again.")
-                return render(request, 'accounts/otpverification.html')
+                if otp_entered == str(otp_record.otp_code):
+                    messages.success(request, "OTP verified successfully.")
+                    return redirect('accounts:roles')
+                else:
+                    messages.error(request, "Invalid OTP. Please try again.")
+                    return render(request, 'accounts/otpverification.html')
 
-        except OTPCode.DoesNotExist:
-            # OTP does not match or is not found
-            messages.error(request, "Invalid OTP. Please try again.")
-            return render(request, 'accounts/otpverification.html')
+        except DatabaseError as e:
+            # Handle any database-related exceptions (like a crash or query failure)
+            messages.error(request, "An error occurred while fetching OTP.")
+            return redirect('accounts:signup')
 
-    return render(request, 'accounts/otpverification.html')
+        except Exception as e:
+            # Catch any other exceptions that might occur
+            messages.error(request, "An unexpected error occurred.")
+            return redirect('accounts:signup')
+        
+    def resend_otp(self, request):
+        """Method to resend OTP when the user clicks 'Click to resend'."""
+        email_address = request.session.get('email_address')
 
-def user_redirect(request):
-    if request.method == "POST":
+        signup_data = request.session.get('signup_data')
+        username = signup_data['username']
+
+        if not email_address:
+            messages.error(request, "Session timed out.")
+            return redirect('accounts:signup')
+
+        try:
+            # Generate a new OTP
+            otp_code = utils.generate_and_save_otp(email_address)  
+            print("Regenerated OTP:", otp_code)
+            utils.send_verification_email(username, email_address, otp_code)
+
+            messages.success(request, "A new OTP has been sent to your email.")
+            return redirect('accounts:otp_verification')
+
+        except Exception as e:
+            messages.error(request, "An error occurred while resending the OTP.")
+            return redirect('accounts:otp_verification')
+
+class UserRoleRedirectView(View):
+    
+    """Class-based view for role selection and user creation."""
+    def get(self, request):
+        # Render the role selection page
+        return render(request, 'accounts/roleselection.html')
+
+    def post(self, request):
+        # Retrieve signup data from the session
         signup_data = request.session.get('signup_data')
         if not signup_data:
             messages.error(request, "Session expired. Please sign up again.")
-            return redirect('accounts:signup')  
+            return redirect('accounts:signup')
 
-        # Retrieve the data from session
         email_address = signup_data['email']
         username = signup_data['username']
-        hashed_password = signup_data['password']  
-        
+        hashed_password = signup_data['password']
         role = request.POST.get("role", "").strip()
-        
-        # Create a new User object and save it to the database with the hashed password
+
+        # Create a new User object
         user = User.objects.create(
             email=email_address,
             username=username,
-            password=hashed_password,  
+            password=hashed_password,
             role=role,
             is_verified=True
         )
-        
-        # Optionally, you can add more fields or actions depending on the role
-        if role == 'client':
-            Client.objects.create(user=user)  # Assuming you have a Client model
-        elif role == 'freelancer':
-            Freelancer.objects.create(user=user)  # Assuming you have a Freelancer model
 
-        # Clear session data after account creation
+        # Create a related Client or Freelancer object
+        if role == 'client':
+            Client.objects.create(user=user)
+        elif role == 'freelancer':
+            Freelancer.objects.create(user=user)
+
+        # Clear session data
         del request.session['signup_data']
 
         messages.success(request, "Account created successfully.")
-        return redirect('accounts:login')  # Redirect to login page
-
-    return render(request, 'accounts/roleselection.html')
+        return redirect('accounts:login')

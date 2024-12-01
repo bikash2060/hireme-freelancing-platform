@@ -39,6 +39,6 @@ def generate_and_save_otp(email):
         otp_code=otp,
         email=email,
         otp_generated_time=now(),
-        otp_expired_time=now() + timedelta(minutes=5)
+        otp_expired_time=now() + timedelta(minutes=1)
     )
     return otp

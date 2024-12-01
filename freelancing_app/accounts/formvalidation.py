@@ -12,6 +12,14 @@ def validate_signup_form(email, username, password, confirm_password):
     if not re.match(email_regex, email):
         return False, "Enter a valid email address."
     
+    # Username cannot be only numbers
+    if username.isdigit():
+        return False, "Username cannot be only numbers."
+    
+    # Username cannot be started with numbers
+    if username[0].isdigit():
+        return False, "Username cannot be started with number."
+    
     # Username cannot be less than 5 characters long
     if len(username) < 5:
         return False, "Username must be at least 5 characters long."
@@ -19,10 +27,6 @@ def validate_signup_form(email, username, password, confirm_password):
     # Username cannot be more than 15 characters long
     if len(username) > 15:
         return False, "Username must not exceed 15 characters"
-    
-    # Username cannot be only numbers
-    if username.isdigit():
-        return False, "Username cannot be only numbers."
     
     # Password and confirm password match validation
     if password != confirm_password:

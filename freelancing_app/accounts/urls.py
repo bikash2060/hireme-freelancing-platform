@@ -1,11 +1,12 @@
 from django.urls import path
-from . import views
+from .views import *
 
-app_name = 'accounts'  
+app_name = 'accounts'
 
 urlpatterns = [
-    path("login/", views.user_login, name="login"),
-    path("signup/", views.user_signup, name="signup"),
-    path("otp/verification/", views.verify_otp, name="otp_verification"),
-    path("role/", views.user_redirect, name="roles"),
+    path("login/", UserLoginView.as_view(), name="login"),
+    path("signup/", UserSignupView.as_view(), name="signup"),
+    path("otp/verification/", VerifyOTPView.as_view(), name="otp_verification"),
+    path('otp_resend/', VerifyOTPView.as_view(), name='otp_resend'),  
+    path("role/", UserRoleRedirectView.as_view(), name="roles"),
 ]

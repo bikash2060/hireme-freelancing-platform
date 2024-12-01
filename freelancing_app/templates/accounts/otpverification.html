@@ -39,12 +39,15 @@
           <input type="text" name="otp_6" maxlength="1" class="otp-box" />
         </div>
         
-        <p class="resend-text">Didn’t get the code? <a href="{% url 'accounts:otp_verification' %}">Click to resend</a></p>
-        
+        <p class="resend-text">Didn’t get the code? 
+          <a href="{% url 'accounts:otp_resend' %}">Click to resend</a>
+        </p>
+      
         <div class="button-group">
-          <button type="button" class="cancel-btn">Cancel</button>
-          <button type="submit" class="verify-btn">Verify</button>
+            <a href = "{% url 'homes:home' %}" class="cancel-btn">Cancel</a>
+            <button type="submit" class="verify-btn">Verify</button> 
         </div>
+      
       </form>
     </div>
 </div> 
