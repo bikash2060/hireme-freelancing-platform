@@ -25,18 +25,22 @@
                     <i class="fa fa-user-tie"></i>
                     <h3>Get Started as a <br>Client</h3>
                     <p>Post projects and hire talented freelancers to get your work done.</p>
-                    <input type="hidden" name="role" value="client">
-                    <button type="submit" class="role-btn">Get Started</button>
+                    <!-- Use radio buttons or buttons to select role -->
+                    <input type="radio" id="client" name="role" value="client" required>
+                    <label for="client">Client</label>
                 </div>
                 <div class="role-box" id="freelancer-role">
                     <i class="fa fa-briefcase"></i>
                     <h3>Get Started as a <br>Freelancer</h3>
                     <p>Find projects and earn by offering your skills and expertise.</p>
-                    <input type="hidden" name="role" value="freelancer">
-                    <button type="submit" class="role-btn">Get Started</button>
+                    <!-- Use radio buttons or buttons to select role -->
+                    <input type="radio" id="freelancer" name="role" value="freelancer">
+                    <label for="freelancer">Freelancer</label>
                 </div>
             </div>
+            <button type="submit" class="role-btn">Get Started</button>
         </form>
+        
     </div>
 </div>
 {% endblock %}

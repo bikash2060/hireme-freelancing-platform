@@ -28,6 +28,13 @@ class User(AbstractUser):
         ('freelancer', 'Freelancer'),
     ]
     role = models.CharField(max_length=50, choices=ROLE_CHOICES)
+    is_verified = models.BooleanField(default=False)
+    
+    # Remove the unnecessary fields
+    is_staff = None
+    is_active = None
+    is_superuser = None
+    last_login = None
 
     groups = models.ManyToManyField(
         'auth.Group',

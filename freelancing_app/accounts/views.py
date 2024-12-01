@@ -6,12 +6,14 @@ from django.contrib.auth import authenticate, login
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from . import formvalidation
+from django.contrib.auth.hashers import make_password
 
 def user_login(request):
     if request.method == "POST":
         
         # Retrieve email and password from the form
         email = request.POST.get(utils.EMAIL_ADDRESS)
+        print(email)
         password = request.POST.get(utils.PASSWORD)
 
         # Check if email exists in the database
@@ -29,11 +31,14 @@ def user_login(request):
         if user is not None:
             # If authentication is successful, log the user in
             login(request, user)
-            messages.success(request, "Login successful!")
-            return redirect('dashboard')  # Redirect to the dashboard or any desired page
+            
+            if user.role == 'client':
+                return redirect('clientdashboard.html')
+            else:
+                return redirect('freelancerdashboard.html')
         else:
             # If authentication fails, show an error message
-            messages.error(request, "Incorrect password. Please try again.")
+            messages.error(request, "Incorrect password.")
             return render(request, 'accounts/login.html')
 
     # Render the login page if the request method is not POST
@@ -48,11 +53,16 @@ def user_signup(request):
         password = request.POST.get(utils.PASSWORD)
         confirm_password = request.POST.get(utils.CONFIRM_PASSWORD)
         
-        # Store the form data entered by the user
-        user_input = {
-            'email': email_address, 
-            'username': username
+        # Hash the password before storing in the session
+        hashed_password = make_password(password)
+        
+        # Store the form data entered by the user temporarily in the session
+        signup_data = {
+            'email': email_address,
+            'username': username,
+            'password': hashed_password
         }
+        request.session['signup_data'] = signup_data
         
         # Validate form using the validate_signup_form function
         valid, error_message = formvalidation.validate_signup_form(email_address, username, password, confirm_password)
@@ -60,18 +70,13 @@ def user_signup(request):
         if not valid:
             # If validation fails, show the error and return the form with user input
             messages.error(request, error_message)
-            user_input = {
-                'email': email_address, 
-                'username': username
-            }
-            return render(request, 'accounts/signup.html', {'form_data': user_input})
+            return render(request, 'accounts/signup.html', {'form_data': signup_data})
         
         # Store the email in the session
         request.session['email_address'] = email_address
         
         # Generate OTP and save in database
         otp_code = utils.generate_and_save_otp(email_address)
-
         utils.send_verification_email(username, email_address, otp_code)
 
         return redirect('accounts:otp_verification')
@@ -125,27 +130,36 @@ def verify_otp(request):
 def user_redirect(request):
     if request.method == "POST":
         signup_data = request.session.get('signup_data')
+        if not signup_data:
+            messages.error(request, "Session expired. Please sign up again.")
+            return redirect('accounts:signup')  
+
+        # Retrieve the data from session
         email_address = signup_data['email']
-        
-        if not email_address:
-            messages.error(request, "Session expired. Please log in again.")
-            return redirect('accounts:login')  
-        
-        try:
-            user = User.objects.get(email=email_address)
-        except ObjectDoesNotExist:
-            messages.error(request, "User not found.")
-            return redirect('signup')  
+        username = signup_data['username']
+        hashed_password = signup_data['password']  
         
         role = request.POST.get("role", "").strip()
         
-        if role not in ["client", "freelancer"]:
-            messages.error(request, "Invalid role selected.")
-            return redirect('some_page')  
+        # Create a new User object and save it to the database with the hashed password
+        user = User.objects.create(
+            email=email_address,
+            username=username,
+            password=hashed_password,  
+            role=role,
+            is_verified=True
+        )
         
-        # user.role = role
-        # user.save()
+        # Optionally, you can add more fields or actions depending on the role
+        if role == 'client':
+            Client.objects.create(user=user)  # Assuming you have a Client model
+        elif role == 'freelancer':
+            Freelancer.objects.create(user=user)  # Assuming you have a Freelancer model
+
+        # Clear session data after account creation
+        del request.session['signup_data']
+
         messages.success(request, "Account created successfully.")
-        return redirect('accounts:login')  
-    
+        return redirect('accounts:login')  # Redirect to login page
+
     return render(request, 'accounts/roleselection.html')
