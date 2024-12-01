@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}Log In{% endblock %}
+{% block title %}My Dashboard{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/clientdashboard.css' %}">
@@ -75,7 +75,7 @@
 <div class="greeting-section">
     <div class="container">
         <div class="greeting-content">
-            <h4>Good morning, Bikash</h4>
+            <h4>Good morning, {{ user.username }}</h4>
             <button class="post-job-btn">
                 <i class="fas fa-plus"></i> Post a job
             </button>

@@ -27,11 +27,13 @@ def user_login(request):
         if user.check_password(password):  # Compare raw password with the hashed password
             # Authenticate the user using the email and password
             login(request, user)
+            
+            print(f"Logged in user: {request.user.username}")
             # Redirect the user to the appropriate dashboard based on their role
             if user.role == 'client':
-                return redirect('client_dashboard')  # Replace with actual URL for client dashboard
+                return redirect('clientdashboard:dashboard')  # Replace with actual URL for client dashboard
             elif user.role == 'freelancer':
-                return redirect('freelancer_dashboard')  # Replace with actual URL for freelancer dashboard
+                return redirect('freelancerdashboard:dashboard')  # Replace with actual URL for freelancer dashboard
         else:
             # If password does not match, display an error message
             messages.error(request, "Incorrect password.")
