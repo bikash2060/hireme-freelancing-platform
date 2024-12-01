@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}Log In{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/clientdashboard.css' %}">
+{% endblock %}
+
+{% block navbar  %}
+<!-- Header -->
+<div class="body">
+    <div class="container">
+
+        <!-- Navigation Bar Section -->
+        <div class="navbar">
+            <nav>
+                <!-- Logo Section -->
+                <div class="logo">
+                    <i class="fab fa-slack"></i>
+                    <span class="logo_name">HireMe</span>
+                </div>
+
+                <!-- Search Bar Section -->
+                <div class="search-bar">
+                    <input type="text" placeholder="Search freelancers, projects..." />
+                    <button type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Links Section -->
+                <div class="links">
+                    <ul>
+                        <li>
+                            <a href="#" class="current">Home</a>
+                        </li>
+                        <li>
+                            <a href="#">My Projects</a>
+                        </li>
+                        <li>
+                            <a href="#">Hire Freelancers</a>
+                        </li>
+                        <li>
+                            <a href="#">About Us</a>
+                        </li>
+                        <!-- Dropdown Toggle for Logged-In User -->
+                        <li class="dropdown">
+                            <a href="javascript:void(0)" class="dropbtn">
+                                <div class="profile-circle">
+                                    <i class="fas fa-user-alt default-icon"></i>
+                                </div>
+                            </a>
+                            <div class="dropdown-content">
+                                <a href="#">My Profile</a>
+                                <a href="#">Settings</a>
+                                <a href="#">Log Out</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="language-switch" onclick="toggleLanguage(this)">
+                    <p class="language-text">Nepali</p>
+                    <i class="fa-solid fa-toggle-off"></i>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+
+{% block content %}
+<!-- Greeting Section -->
+<div class="greeting-section">
+    <div class="container">
+        <div class="greeting-content">
+            <h4>Good morning, Bikash</h4>
+            <button class="post-job-btn">
+                <i class="fas fa-plus"></i> Post a job
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Overview Section -->
+<div class="overview-section">
+    <div class="container">
+        <div class="overview-header">
+            <h3>Overview</h3>
+        </div>
+        <div class="overview-content">
+            <!-- Draft Job Card -->
+            <div class="draft-job-card">
+                <div class="job-info">
+                    <div class="job-header">
+                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
+                    </div>
+                    <span class="job-status">Draft job post</span>
+                    <p class="add-skills-text">Add the skills you need to continue</p>
+                </div>
+                <button class="add-skills-btn">View Details</button>
+            </div>
+            <div class="draft-job-card">
+                <div class="job-info">
+                    <div class="job-header">
+                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
+                    </div>
+                    <span class="job-status">Draft job post</span>
+                    <p class="add-skills-text">Add the skills you need to continue</p>
+                </div>
+                <button class="add-skills-btn">View Details</button>
+            </div>
+            <div class="draft-job-card">
+                <div class="job-info">
+                    <div class="job-header">
+                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
+                    </div>
+                    <span class="job-status">Draft job post</span>
+                    <p class="add-skills-text">Add the skills you need to continue</p>
+                </div>
+                <button class="add-skills-btn">View Details</button>
+            </div>
+            <div class="draft-job-card">
+                <div class="job-info">
+                    <div class="job-header">
+                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
+                    </div>
+                    <span class="job-status">Draft job post</span>
+                    <p class="add-skills-text">Add the skills you need to continue</p>
+                </div>
+                <button class="add-skills-btn">View Details</button>
+            </div>           
+            
+            
+            <!-- Post a Job Card (Four Cards in a Row) -->
+            <div class="post-job-section">
+                <div class="post-job-card">
+                    <button class="post-job-btn">
+                        <i class="fas fa-plus"></i> Post a job
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

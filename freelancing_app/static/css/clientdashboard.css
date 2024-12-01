@@ -1,0 +1,417 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.body{
+    background: #F2FAFA;
+}
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    align-items: center; /* Ensures vertical alignment of all items */
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 50px;
+    padding: 10px 20px; 
+    margin: 20px;
+    width: 100%; 
+    max-width: 1300px; 
+}
+
+nav .logo {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1E88E5; 
+    gap: 8px;
+}
+
+nav .logo i {
+    font-size: 28px;
+}
+
+nav .logo_name {
+    font-size: 22px; 
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px;
+    background: #f9f9f9;
+    border: 2px solid #1E88E5;
+    border-radius: 25px;
+    padding: 5px 15px;
+    width: 25%;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+    width: 100%;
+    color: #212121;
+}
+
+.search-bar input::placeholder {
+    color: #757575;
+}
+
+.search-bar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1E88E5;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.search-bar button:hover {
+    color: #0056b3;
+}
+
+.links ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 30px;
+}
+
+
+nav .links ul {
+    display: flex; 
+    list-style: none;
+    gap: 30px; 
+    align-items: center; 
+}
+
+nav .links ul li a {
+    text-decoration: none;
+    color: rgb(83, 82, 82);
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+nav .links ul li a:hover,
+nav .links ul li .current {
+    color: #1E88E5; 
+}
+
+.language-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 2px solid #1E88E5;
+    border-radius: 20px;
+    padding: 5px 15px;
+    color: #1E88E5;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.language-switch.on {
+    background: #1E88E5;
+    color: #fcf7f7;
+}
+
+.language-switch i {
+    font-size: 18px;
+    transition: color 0.3s ease; 
+}
+
+.language-switch.on i {
+    color: #fff;
+}
+
+.language-text {
+    margin: 0;
+}
+
+nav .links ul li.dropdown {
+    position: relative;
+}
+
+nav .links ul li .dropbtn {
+    font-size: 18px;
+    text-decoration: none;
+    color: rgb(83, 82, 82);
+    padding: 10px;
+    transition: color 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+nav .links ul li .dropbtn:hover {
+    color: #1E88E5; 
+}
+
+.profile-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ddd; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.profile-circle img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-circle .default-icon {
+    font-size: 18px;
+    color: #fff;
+}
+
+nav .links ul li .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+nav .links ul li .dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: rgb(83, 82, 82);
+    transition: background-color 0.3s ease;
+}
+
+nav .links ul li .dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #1E88E5;
+}
+
+nav .links ul li:hover .dropdown-content {
+    display: block;
+}
+
+/* Greeting Section */
+.greeting-section {
+    background: #fff; 
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.greeting-content {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.greeting-content h4 {
+    font-size: 24px;
+    font-weight: 500;
+    color: #212121;
+    margin: 0;
+}
+
+.post-job-btn {
+    background-color: #008000; 
+    color: #fff; 
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.post-job-btn i {
+    font-size: 14px;
+}
+
+.post-job-btn:hover {
+    background-color: #006400; 
+    transform: scale(1.05); 
+}
+
+/* Overview Section */
+.overview-section {
+    padding: 20px 0;
+}
+
+.overview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.overview-header h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #212121;
+}
+
+.view-toggle button {
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.view-toggle button.active {
+    background-color: #1E88E5;
+    border-color: #1E88E5;
+    color: #fff;
+}
+
+.view-toggle button i {
+    font-size: 16px;
+}
+
+.overview-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Draft Job Card */
+.draft-job-card {
+    width: 350px; /* Fixed width for draft post */
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+.job-info .job-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.job-info .job-header p {
+    font-size: 16px;
+    color: #212121;
+    margin: 0;
+    flex: 1;
+}
+
+.job-info .job-header .job-icon {
+    font-size: 20px;
+    color: #1E88E5;
+}
+
+.job-info .job-header .options-icon {
+    font-size: 16px;
+    color: #757575;
+    cursor: pointer;
+}
+
+.job-status {
+    display: inline-block;
+    background-color: #E0F2F1;
+    color: #388E3C;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.add-skills-text {
+    font-size: 14px;
+    color: #757575;
+    margin-bottom: 20px;
+}
+
+.add-skills-btn {
+    background: none;
+    border: 1px solid #1E88E5;
+    color: #1E88E5;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.add-skills-btn:hover {
+    background-color: #1E88E5;
+    color: #fff;
+}
+
+/* Post a Job Section */
+.post-job-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  /* 4 cards per row */
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+/* Post a Job Card */
+.post-job-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px; /* Fixed height */
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-job-btn {
+    background: #4CAF50;
+    color: #fff;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.post-job-btn i {
+    margin-right: 5px;
+}
+
+.post-job-btn:hover {
+    background: #45A049;
+}
+

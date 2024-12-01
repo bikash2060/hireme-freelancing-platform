@@ -13,31 +13,27 @@ def user_login(request):
         
         # Retrieve email and password from the form
         email = request.POST.get(utils.EMAIL_ADDRESS)
-        print(email)
         password = request.POST.get(utils.PASSWORD)
 
         # Check if email exists in the database
         try:
             user = User.objects.get(email=email)  # Look up user by email
         except User.DoesNotExist:
-            
             # If email is not found, display an error message
             messages.error(request, "Invalid email address.")
             return render(request, 'accounts/login.html')
 
-        # Authenticate the user using username (since Django authentication requires it)
-        user = authenticate(request, username=user.username, password=password)
-
-        if user is not None:
-            # If authentication is successful, log the user in
+        # Check if the entered password matches the stored hashed password
+        if user.check_password(password):  # Compare raw password with the hashed password
+            # Authenticate the user using the email and password
             login(request, user)
-            
+            # Redirect the user to the appropriate dashboard based on their role
             if user.role == 'client':
-                return redirect('clientdashboard.html')
-            else:
-                return redirect('freelancerdashboard.html')
+                return redirect('client_dashboard')  # Replace with actual URL for client dashboard
+            elif user.role == 'freelancer':
+                return redirect('freelancer_dashboard')  # Replace with actual URL for freelancer dashboard
         else:
-            # If authentication fails, show an error message
+            # If password does not match, display an error message
             messages.error(request, "Incorrect password.")
             return render(request, 'accounts/login.html')
 
