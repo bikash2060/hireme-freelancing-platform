@@ -4,6 +4,6 @@ urlpatterns = [
     path("", include("home.urls")),
     path("home/", include("home.urls")),
     path("account/", include("accounts.urls", namespace="accounts")),  
-    path("dashboard/", include("dashboard.urls", namespace="dashboard")),
+    path("dashboard/", include("clientdashboard.urls", namespace="clientdashboard")),
     path("profiles/", include("profiles.urls")),
 ]
