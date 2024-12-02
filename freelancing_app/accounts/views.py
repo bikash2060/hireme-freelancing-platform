@@ -127,7 +127,8 @@ class VerifyOTPView(View):
             messages.error(request, "An unexpected error occurred.")
             return redirect('accounts:signup')
         
-    def resend_otp(self, request):
+class ResendOTPView(View):
+    def get(self, request):
         """Method to resend OTP when the user clicks 'Click to resend'."""
         email_address = request.session.get('email_address')
 
@@ -150,6 +151,7 @@ class VerifyOTPView(View):
         except Exception as e:
             messages.error(request, "An error occurred while resending the OTP.")
             return redirect('accounts:otp_verification')
+    
 
 class UserRoleRedirectView(View):
     
