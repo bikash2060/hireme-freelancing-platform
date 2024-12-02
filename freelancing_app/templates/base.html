@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}My Freelancing Platform{% endblock %}</title>
 
-    {% load static %}
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -83,7 +83,7 @@
     {% endblock %}
 
     {% block content %}
-    
+
     {% endblock %}
 
     <!-- Footer Section -->
@@ -161,6 +161,6 @@
     {% block js_files %}
     {% endblock %}
 
-    {% comment %} <scrip src="{% url 'js/togglelanguage.js' %}"></script> {% endcomment %}
+    <script src="{% static 'js/togglelanguage.js' %}"></script>
 </body>
 </html>
