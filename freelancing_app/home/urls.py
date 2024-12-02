@@ -7,4 +7,3 @@ urlpatterns = [
     path('index/',HomeView.as_view()),
     path('', HomeView.as_view(), name='home'),
 ]
-
