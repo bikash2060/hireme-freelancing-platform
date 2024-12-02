@@ -1,6 +1,6 @@
 from django.views import View
 from django.db import DatabaseError
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
@@ -8,50 +8,70 @@ from . import utils, formvalidation
 from .models import User, OTPCode, Client, Freelancer
 from django.utils import timezone
 
-
+#Testing in progress
 class UserLoginView(View):
+    
+    # Template used for rendering the login page
+    rendered_template = 'accounts/login.html'
+    
     def get(self, request):
-        return render(request, 'accounts/login.html')
+        # Renders the login page when the user visits the login URL
+        return render(request, self.rendered_template)
 
     def post(self, request):
-        email = request.POST.get(utils.EMAIL_ADDRESS).strip()
-        password = request.POST.get(utils.PASSWORD).strip()
-
-        if not email or not password:
-            messages.error(request, "All fields are required.")
-            return render(request, 'accounts/login.html')
-
-        if " " in password:
-            messages.error(request, "Password should not contain spaces.")
-            return render(request, 'accounts/login.html')
+        # Retrieves email and password from the POST request
+        email = request.POST.get('emailaddress').strip()
+        password = request.POST.get('password').strip()
+        
+        # Validate the login form (check if email and password are valid)
+        valid, error_message = formvalidation.validate_login_form(email, password)
+        
+        if not valid:
+            # If validation fails, display an error message and re-render the login page
+            messages.error(request, error_message)
+            return render(request, self.rendered_template)
 
         try:
+            # Retrieve the user by email address
             user = User.objects.get(email=email)
         except User.DoesNotExist:
+            # If the user doesn't exist, display an error message and re-render the login page
             messages.error(request, "Invalid email address.")
-            return render(request, 'accounts/login.html')
-
+            return render(request, self.rendered_template)
+        
+        # Check if the entered password matches the user's stored password
         if user.check_password(password):
+            # If the password is correct, log the user in and proceed to role-based dashboard
             login(request, user)
+            # if user.role == 'client':
+            #     return redirect('clientdashboard:dashboard')
+            # elif user.role == 'freelancer':
+            #     return redirect('freelancerdashboard:dashboard')
             if user.role == 'client':
-                return redirect('clientdashboard:dashboard')
-            elif user.role == 'freelancer':
-                return redirect('freelancerdashboard:dashboard')
+                return HttpResponse('Client Dashboard')
+            else:
+                return HttpResponse('Freelancer Dashboard')
         else:
-            messages.error(request, "Incorrect password.")
+             # If password is incorrect, display an error message and re-render the login page
+            messages.error(request, 'Incorrect password.')
             return render(request, 'accounts/login.html')
 
 
 class ForgotPasswordView(View):
+    
+    rendered_template = 'accounts/reset_password_request.html'
+    
+    success_redirect_URL = 'accounts:verify-otp'
+    
     def get(self, request):
-        return render(request, 'accounts/requestotp.html')
+        return render(request, self.rendered_template)
 
     def post(self, request):
         email_address = request.POST.get('email')
         
         if not email_address:
             messages.error(request, "Please enter email address.")
-            return render(request, 'accounts/requestotp.html')
+            return render(request, self.rendered_template)
 
         user = User.objects.filter(email=email_address)
 
@@ -59,42 +79,49 @@ class ForgotPasswordView(View):
             request.session['email_address'] = email_address
             otp_code = utils.generate_and_save_otp(email_address)
             utils.send_reset_password_email(email_address, otp_code)
-            return redirect('accounts:resetpassword')
+            return redirect(self.success_redirect_URL)
 
         messages.error(request, "Email not found")
-        return render(request, 'accounts/requestotp.html')
+        return render(request, self.rendered_template)
 
 
 class PasswordResetView(View):
+    
+    renderd_template = 'accounts/reset_password_otp_verification.html'
+    
+    success_redirect_URL = 'accounts:change-password'
+    
+    error_redirect_URL = 'accounts:login'
+    
     def get(self, request):
-        return render(request, 'accounts/passwordresetotp.html')
+        return render(request, self.renderd_template)
 
     def post(self, request):
         otp_entered = ''.join([request.POST.get(f'otp_{i}', '') for i in range(1, 7)])
 
         if not otp_entered:
             messages.error(request, "Please enter OTP code.")
-            return render(request, 'accounts/otpverification.html')
+            return render(request, self.renderd_template)
 
         email_address = request.session.get('email_address')
 
         if not email_address:
             messages.error(request, "Session timed out. Please request OTP again.")
-            return redirect('accounts:forgotpassword')
+            return redirect(self.error_redirect_URL)
 
         try:
             otp_record = OTPCode.objects.filter(email=email_address).order_by('-otp_generated_time').first()
 
             if otp_record.otp_expired_time < timezone.now():
                 messages.error(request, "OTP has expired. Please regenerate your OTP.")
-                return render(request, 'accounts/passwordresetotp.html')
+                return render(request, self.renderd_template)
 
             if otp_entered == str(otp_record.otp_code):
                 messages.success(request, "OTP verified successfully.")
-                return redirect('accounts:changepassword')
+                return redirect(self.success_redirect_URL)
 
             messages.error(request, "Invalid OTP. Please try again.")
-            return render(request, 'accounts/passwordresetotp.html')
+            return render(request, self.renderd_template)
 
         except OTPCode.DoesNotExist:
             messages.error(request, "No OTP record found for this email.")
@@ -102,11 +129,11 @@ class PasswordResetView(View):
 
         except DatabaseError:
             messages.error(request, "An error occurred while fetching OTP.")
-            return redirect('accounts:forgot_password')
+            return redirect(self.error_redirect_URL)
 
         except Exception:
             messages.error(request, "An unexpected error occurred.")
-            return redirect('accounts:forgot_password')
+            return redirect(self.error_redirect_URL)
 
 
 class ForgotPasswordResendOTPView(View):
@@ -407,4 +434,3 @@ class UserRoleRedirectView(View):
         # If an invalid role is selected, display an error and redirect to role selection page
         messages.error(request, "Invalid role selection.")
         return redirect('accounts:roles')  # Redirect to role selection page if role is invalid
-
