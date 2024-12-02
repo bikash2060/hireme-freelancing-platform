@@ -35,7 +35,6 @@
       <h3>Please check your email</h3>
       <p>We've sent a 6-digit code to your email address.</p>
       
-      <!-- Form to submit OTP -->
       <form action="{% url 'accounts:otp_verification' %}" method="POST">
         {% csrf_token %}
         

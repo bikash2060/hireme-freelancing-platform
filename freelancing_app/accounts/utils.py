@@ -6,15 +6,12 @@ import random
 from datetime import timedelta
 from django.utils.timezone import now
 
-# Login/Signup Form Parameters
-EMAIL_ADDRESS = "emailaddress"
-USERNAME = "username"
-PASSWORD = "password"
-CONFIRM_PASSWORD = "confirmpassword"
-
 def send_verification_email(username, email_address, otp_code):
+    # Sends an email with an OTP code to the specified user email for verification.
+    # Includes both plain text and HTML content to ensure proper display in various email clients.
+
     # Prepare HTML email content
-    email_html_content = render_to_string('emailtemplate/emailtemplate.html', {
+    email_html_content = render_to_string('emailtemplate/signup_verification_email.html', {
         'username': username,
         'otp': otp_code,
     })
@@ -55,6 +52,10 @@ def send_reset_password_email(email_address, otp_code):
     email.send(fail_silently=False)
     
 def generate_and_save_otp(email):
+    """
+    Generates a 6-digit OTP, saves it to the database with an expiration time, and returns the OTP.
+    Associates the OTP with the provided email address and ensures it expires in 1 minute.
+    """
     otp = f"{random.randint(100000, 999999)}"
     OTPCode.objects.create(
         otp_code=otp,
