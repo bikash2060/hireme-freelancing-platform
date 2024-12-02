@@ -11,6 +11,7 @@ def validate_signup_form(email, username, password, confirm_password):
     # Check for spaces within the email, password, and confirm_password
     if " " in email:
         return False, "Email should not contain spaces."
+    
     if " " in password or " " in confirm_password:
         return False, "Password should not contain spaces."
 

@@ -11,6 +11,6 @@ urlpatterns = [
     path("choose-role/", UserRoleRedirectView.as_view(), name="roles"),
     path("forgot-password/", ForgotPasswordView.as_view(), name="forgotpassword"),
     path("password-reset/", PasswordResetView.as_view(), name="resetpassword"),
-    path("resendotp/", ForgotPasswordResendOTPView.as_view(), name="resendotp"),
+    path("resend-otp/", ForgotPasswordResendOTPView.as_view(), name="resendotp"),
     path("change-password/", ChangePasswordView.as_view(), name="changepassword"),
 ]
