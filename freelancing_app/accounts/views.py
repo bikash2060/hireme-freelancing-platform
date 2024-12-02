@@ -52,10 +52,10 @@ class UserSignupView(View):
 
     def post(self, request):
         # Retrieving inputs from the signup form
-        email_address = request.POST.get(utils.EMAIL_ADDRESS)
-        username = request.POST.get(utils.USERNAME)
-        password = request.POST.get(utils.PASSWORD)
-        confirm_password = request.POST.get(utils.CONFIRM_PASSWORD)
+        email_address = request.POST.get(utils.EMAIL_ADDRESS).strip()
+        username = request.POST.get(utils.USERNAME).strip()
+        password = request.POST.get(utils.PASSWORD).strip()
+        confirm_password = request.POST.get(utils.CONFIRM_PASSWORD).strip()
 
         # Hash the password before storing in the session
         hashed_password = make_password(password)
@@ -96,6 +96,11 @@ class VerifyOTPView(View):
     def post(self, request):
         # Retrieve the entered OTP
         otp_entered = ''.join([request.POST.get(f'otp_{i}', '') for i in range(1, 7)])
+        
+        if not otp_entered:
+            messages.error(request, "Please enter OTP code.")
+            return render(request, 'accounts/otpverification.html')
+        
         email_address = request.session.get('email_address')
 
         if not email_address:
@@ -108,7 +113,7 @@ class VerifyOTPView(View):
 
             if otp_record.otp_expired_time < timezone.now():
                 messages.error(request, "OTP has expired. Please regenerate your OTP.")
-                return redirect('accounts:otp_verification')
+                return render(request, 'accounts/otpverification.html')
             else:
                 if otp_entered == str(otp_record.otp_code):
                     messages.success(request, "OTP verified successfully.")
@@ -142,17 +147,15 @@ class ResendOTPView(View):
         try:
             # Generate a new OTP
             otp_code = utils.generate_and_save_otp(email_address)  
-            print("Regenerated OTP:", otp_code)
             utils.send_verification_email(username, email_address, otp_code)
 
             messages.success(request, "A new OTP has been sent to your email.")
-            return redirect('accounts:otp_verification')
+            return render(request, 'accounts/otpverification.html')
 
         except Exception as e:
             messages.error(request, "An error occurred while resending the OTP.")
             return redirect('accounts:otp_verification')
     
-
 class UserRoleRedirectView(View):
     
     """Class-based view for role selection and user creation."""

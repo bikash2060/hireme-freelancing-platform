@@ -170,31 +170,45 @@ form button:hover {
     color: #626cd6; 
 }
 
-.login_form .login-messages {
-    margin-bottom: 20px;
-}
-
-.login_form .alert {
+.alert {
     position: relative;
     padding: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+}
+
+.alert-danger {
     background-color: #f8d7da;
     color: #721c24;
-    border-radius: 5px;
 }
 
-.login_form .alert span {
-    font-size: 16px;
+.alert-success {
+    background-color: #d4edda; 
+    color: #155724;
 }
 
-.login_form .close-message {
-    position: absolute;
-    padding: 4px;
-    right: 10px;
+.close-message {
     cursor: pointer;
     font-size: 18px;
+}
+
+.alert-danger .close-message {
     color: #721c24;
 }
 
-.login_form .close-message:hover {
+.alert-danger .close-message:hover {
     color: #5a1a1a;
+}
+
+.alert-success .close-message {
+    color: #155724;
+}
+
+.alert-success .close-message:hover {
+    color: #0b3e1e;
 }

@@ -19,11 +19,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-// JavaScript to close the message
-document.querySelectorAll('.close-message').forEach(function(icon) {
-  icon.addEventListener('click', function() {
-    var message = icon.closest('.alert');
-    message.style.display = 'none';
-  });
-});
-  

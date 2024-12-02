@@ -28,9 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .map((input) => input.value)
         .join("");
   
-      if (otpCode.length !== 6) {
-        alert("Please enter a valid 6-digit OTP.");
-      } 
     });
   });
-  
+
+

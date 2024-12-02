@@ -10,14 +10,16 @@
 {% block content %}
 <div class="role-selection">
     <div class="container">
-        {% comment %} {% for message in messages %}
-            {% if message.tags == "success" %} {% endcomment %}
-                <div class="alert alert-success">
-                    {% comment %} <span>{{ message }}</span> {% endcomment %}
-                    <span>OTP verified successfully.</span>
-                    <i class="fa-solid fa-check"></i>
-                </div>
-        {% comment %} {% endfor %} {% endcomment %}
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "success" %} 
+                    <div class="alert alert-success">
+                        <span>{{ message }}</span>
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                {% endif %}
+            {% endfor %} 
+        {% endif %}
         <h2>Select Your <span>Role</span></h2>
         <p>Choose how you'd like to get started:</p>
         <form method="POST" action="{% url 'accounts:roles' %}">
@@ -46,23 +48,5 @@
 
 
 {% block js_files %}
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get all close buttons (those with class 'close-message')
-        const closeButtons = document.querySelectorAll('.fa-check');
-    
-        // Loop through each close button and add a click event listener
-        closeButtons.forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                // Find the closest parent alert message (this could be success or error message)
-                const alertMessage = event.target.closest('.alert');
-                if (alertMessage) {
-                    // Remove the alert message from the DOM
-                    alertMessage.remove();
-                }
-            });
-        });
-    });
-    
-</script>
+<script src="{% static 'js/message.js'%}"></script>
 {% endblock %}

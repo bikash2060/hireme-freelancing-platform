@@ -7,6 +7,6 @@ urlpatterns = [
     path("login/", UserLoginView.as_view(), name="login"),
     path("signup/", UserSignupView.as_view(), name="signup"),
     path("otp/verification/", VerifyOTPView.as_view(), name="otp_verification"),
-    path('otp_resend/', ResendOTPView.as_view(), name='otp_resend'),  
+    path('otp/verification/resend/', ResendOTPView.as_view(), name='otp_resend'),  
     path("role/", UserRoleRedirectView.as_view(), name="roles"),
 ]

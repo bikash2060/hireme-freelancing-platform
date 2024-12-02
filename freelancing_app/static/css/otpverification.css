@@ -12,55 +12,70 @@
 .alert {
     position: relative;
     padding: 15px;
-    background-color: #f8d7da;
-    color: #721c24;
     border-radius: 5px;
     font-size: 16px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #fff;
 }
 
-.alert span {
-    font-size: 16px;
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda; 
+    color: #155724;
 }
 
 .close-message {
     cursor: pointer;
     font-size: 18px;
+}
+
+.alert-danger .close-message {
     color: #721c24;
 }
 
-.close-message:hover {
+.alert-danger .close-message:hover {
     color: #5a1a1a;
 }
 
+.alert-success .close-message {
+    color: #155724;
+}
+
+.alert-success .close-message:hover {
+    color: #0b3e1e;
+}
 
 .email-icon img {
     width: 50px;
 }
-  
+
 .otp-verification h3 {
     font-size: 22px;
     font-weight: 600;
     color: #212121;
     margin-bottom: 10px;
 }
-  
+
 .otp-verification p {
     font-size: 14px;
     color: #757575;
     margin-bottom: 20px;
 }
-  
+
 .otp-inputs {
     display: flex;
     justify-content: center;
     gap: 10px;
     margin-bottom: 20px;
 }
-  
+
 .otp-box {
     width: 50px;
     height: 50px;
@@ -72,33 +87,33 @@
     background: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-  
+
 .otp-box:focus {
     border-color: #1e88e5;
     box-shadow: 0 0 5px rgba(30, 136, 229, 0.5);
 }
-  
+
 .resend-text {
     font-size: 14px;
     color: #757575;
     margin-bottom: 20px;
 }
-  
+
 .resend-text a {
     color: #1e88e5;
     text-decoration: none;
 }
-  
+
 .resend-text a:hover {
     text-decoration: underline;
 }
-  
+
 .button-group {
     display: flex;
     justify-content: center;
     gap: 20px;
 }
-  
+
 .cancel-btn,
 .verify-btn {
     padding: 10px 20px;
@@ -107,22 +122,22 @@
     border-radius: 5px;
     cursor: pointer;
 }
-  
+
 .cancel-btn {
     text-decoration: none;
     background: #e0e0e0;
     color: #757575;
 }
-  
+
 .cancel-btn:hover {
     background: #c7c7c7;
 }
-  
+
 .verify-btn {
     background: #4caf50;
     color: #fff;
 }
-  
+
 .verify-btn:hover {
     background: #43a047;
 }
