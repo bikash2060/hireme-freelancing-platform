@@ -1,18 +1,42 @@
-function toggleLanguage(button) {
-    // Toggle the "on" class
-    button.classList.toggle("on");
+document.addEventListener('DOMContentLoaded', () => {
+    const notificationIcon = document.querySelector('.notification-icon');
+    const notificationBox = document.querySelector('.notification-box');
+    const languageIcon = document.querySelector('.fa-globe');
+    const languageBox = document.querySelector('.language-box');
+    const markReadButton = document.querySelector('.mark-read');
 
-    // Change the icon and text
-    const icon = button.querySelector("i");
-    const text = button.querySelector(".language-text");
+    // Toggle notification box visibility
+    notificationIcon.addEventListener('click', (e) => {
+        e.preventDefault();
+        notificationBox.style.display =
+            notificationBox.style.display === 'block' ? 'none' : 'block';
+    });
 
-    if (button.classList.contains("on")) {
-        // When "on", show "Nepali" with "fa-toggle-on"
-        icon.classList.replace("fa-toggle-off", "fa-toggle-on");
-        text.textContent = "Nepali";
-    } else {
-        // When "off", show "English" with "fa-toggle-off"
-        icon.classList.replace("fa-toggle-on", "fa-toggle-off");
-        text.textContent = "English";
-    }
-}
+    // Close notification box if clicked outside
+    document.addEventListener('click', (e) => {
+        if (!notificationIcon.contains(e.target) && !notificationBox.contains(e.target)) {
+            notificationBox.style.display = 'none';
+        }
+    });
+
+    // Toggle language box visibility
+    languageIcon.addEventListener('click', (e) => {
+        e.preventDefault();
+        languageBox.style.display =
+            languageBox.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Mark all as read functionality
+    markReadButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const notificationItems = document.querySelectorAll('.notification-item');
+        notificationItems.forEach(item => {
+            item.style.opacity = '0.5'; // Indicate read state visually
+        });
+        markReadButton.textContent = 'All notifications are read';
+        markReadButton.style.pointerEvents = 'none'; // Disable button
+    });
+
+    // Initially hide notification box on page load
+    notificationBox.style.display = 'none';
+});

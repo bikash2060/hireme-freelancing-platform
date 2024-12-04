@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 100px 0;
+    margin: 160px 0 80px 0;
 }
 .email-container {
     background-color: white;
@@ -38,7 +38,7 @@ input[type="email"]:focus {
     border-color: #1E88E5;
 }
 
-button {
+.email-container button {
     padding: 12px;
     background-color: #1E88E5;
     color: white;

@@ -1,6 +1,8 @@
 /* Signup Form */
 .signup {
-    margin: 40px auto;
+    position: relative;
+    margin-top: 140px;
+    margin-bottom: 60px;
 }
 
 .signup-container {

@@ -18,66 +18,80 @@
 </head>
 <body>
     {% block navbar%}
-    <!-- Navigation Bar Section -->
-    <div class="body">
-        <div class="container">
-    
-            <div class="navbar">
-                <nav>
-                    <div class="logo">
-                        <i class="fab fa-slack"></i>
-                        <span class="logo_name">HireMe</span>
-                    </div>
-                    <div class="links">
-                        <ul>
-                            <li>
-                                <a href=" {% url 'homes:home' %}" >Home</a>
-                            </li>
-                            <li>
-                                <a href="#">Find Work</a>
-                            </li>
-                            <li>
-                                <a href="#">Find Freelancers</a>
-                            </li>
-                            <li>
-                                <a href="#">About Us</a>
-                            </li>
-                            <li>
-                                <a href="#">Help</a>
-                            </li>
-
-                            {% if user.is_authenticated %}
-                                <li>
-                                    <a href="{% url 'logout' %}">Log Out</a>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="javascript:void(0)" class="dropbtn">
-                                        <div class="profile-circle">
-                                            <i class="fas fa-user-alt default-icon"></i>
-                                        </div>
-                                    </a>
-                                    <div class="dropdown-content">
-                                        <a href="#">My Profile</a>
-                                        <a href="#">My Projects</a>
-                                        <a href="#">Settings</a>
-                                        <a href="#">Log Out</a>
-                                    </div>
-                                </li>
-                            {% else %}
-                                <li>
-                                    <a href="{% url 'accounts:login' %}">Log In</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                    <div class="language-switch" onclick="toggleLanguage(this)">
-                        <p class="language-text">Nepali</p>
-                        <i class="fa-solid fa-toggle-off"></i>
-                    </div>
-                </nav>
+    <div class="nav-container">
+        <nav class="navbar">
+            <div class="logo">
+                <a href="{% url 'homes:home' %}">
+                    <i class="fab fa-slack"></i>
+                    <span class="logo_name">HireMe</span>
+                </a>
             </div>
-            
-        </div>
+            <div class="links">
+                <a href="{% url 'homes:home' %}">Home</a>
+                <a href="#">Find Freelancers</a>
+                <a href="#">Find Projects</a>
+                <a href="#">About Us</a>
+                <a href="#">Help</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for Freelancers, Projects..." />
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="side-icons">
+                <div class="icon-container">
+                    <!-- Notification Bell Icon -->
+                    <div class="icon notification-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <!-- Notification Box -->
+                    <div class="notification-box">
+                        <div class="notification-header">
+                            <span>Notifications</span>
+                            <a href="#" class="mark-read">Mark all as read</a>
+                        </div>
+                        <hr>
+                        <div class="notification-content">
+                            <div class="notification-item">
+                                <p><strong>Your deadline for the assignment Project Proposal for CS6P05NI</strong></p>
+                                <p>Project_Assessment_AU_24 is due within 24 hours. Please make sure to submit it before the deadline.</p>
+                                <span>December 3, 2024 at 01:07 PM</span>
+                            </div>
+                            <hr />
+                            <div class="notification-item">
+                                <p><strong>Your deadline for the assignment Project Proposal for CS6P05NI</strong></p>
+                                <p>Project_Assessment_AU_24 is due within 24 hours. Please make sure to submit it before the deadline.</p>
+                                <span>December 3, 2024 at 01:02 PM</span>
+                            </div>
+                            <hr />
+                            <div class="notification-item">
+                                <p><strong>A new teaching resource has been shared with you.</strong></p>
+                                <p>December 2, 2024 at 07:08 AM</p>
+                            </div>
+                            <hr />
+                            <div class="notification-item">
+                                <p><strong>Your deadline for the assignment Introduction Section - Interim Report</strong></p>
+                                <span>December 2, 2024 at 02:15 PM</span>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Language Selection -->
+                    <div class="language-box">
+                        <select>
+                            <option value="en" selected>English</option>
+                            <option value="ne">Nepali</option>
+                        </select>
+                    </div>
+    
+                    <!-- Language Icon -->
+                    <a href="#" class="icon"><i class="fas fa-globe"></i></a>
+    
+                    <!-- Login and Signup Links -->
+                    <a href="{% url 'accounts:login' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{% url 'accounts:signup' %}" class="signup-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
+                </div>
+            </div>
+        </nav>
     </div>
     {% endblock %}
 

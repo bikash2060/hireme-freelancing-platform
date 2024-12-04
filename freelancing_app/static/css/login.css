@@ -1,6 +1,7 @@
 /* Login Form */
 .login {
-    margin: 40px auto;
+    margin-top: 140px;
+    margin-bottom: 60px;
 }
 
 .login .container{

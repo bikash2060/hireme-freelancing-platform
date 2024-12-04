@@ -1,6 +1,7 @@
 /* Hero Section */
 .hero {
     position: relative;
+    top: 80px;
     background: #F2FAFA; 
     padding-bottom: 50px;
 }
@@ -84,7 +85,6 @@
 .guidance .main-box {
     position: relative;
     z-index: 10;
-    margin-top: -5%;
     margin-bottom: 30px;
     background-color: #fff;
     width: 100%;
