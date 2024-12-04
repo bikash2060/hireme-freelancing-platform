@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}Home{% endblock %}
+{% block title %}HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
@@ -17,7 +17,7 @@
                 <h3>Are you looking for <span>Freelancing?</span></h3>   
                 <p>Find top-tier talent and get your projects completed on time. Hire skilled freelancers with just a click, and bring your ideas to life.</p>
                 <div class="buttons">
-                    <a href="./pages/login.html"><span>Get Started</span></a>
+                    <a href="{% url 'accounts:login'%}"><span>Get Started</span></a>
                 </div>
             </div>
             <div class="banner-img">

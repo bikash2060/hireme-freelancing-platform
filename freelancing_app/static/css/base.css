@@ -6,6 +6,13 @@
     box-sizing: border-box;
 }
 
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+/* Navbar Styling */
 .navbar {
     position: fixed; 
     top: 0; 
