@@ -1,7 +1,7 @@
 /* Login Form */
 .login {
-    margin-top: 140px;
-    margin-bottom: 60px;
+    margin-top: 150px;
+    margin-bottom: 60px;    
 }
 
 .login .container{
@@ -61,6 +61,7 @@
 .login_form p {
     text-align: center;
     font-weight: 500;
+    font-size: 17px;
 }
 
 .login_form .separator {
@@ -86,7 +87,7 @@
     display: block;
 }
 
-form .input_box label {
+.login_form .input_box label {
     display: block;
     font-weight: 500;
     margin-bottom: 8px;
@@ -119,13 +120,13 @@ form .input_box {
     position: relative;
 }
 
-a {
+.login_form a {
     text-decoration: none;
     color: #626cd6;
     font-weight: 500;
 }
 
-a:hover {
+.login_form a:hover {
     text-decoration: underline;
 }
 
@@ -171,45 +172,3 @@ form button:hover {
     color: #626cd6; 
 }
 
-.alert {
-    position: relative;
-    padding: 15px;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-}
-
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.alert-success {
-    background-color: #d4edda; 
-    color: #155724;
-}
-
-.close-message {
-    cursor: pointer;
-    font-size: 18px;
-}
-
-.alert-danger .close-message {
-    color: #721c24;
-}
-
-.alert-danger .close-message:hover {
-    color: #5a1a1a;
-}
-
-.alert-success .close-message {
-    color: #155724;
-}
-
-.alert-success .close-message:hover {
-    color: #0b3e1e;
-}
