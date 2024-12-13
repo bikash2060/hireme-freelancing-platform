@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils.timezone import now, timedelta
 
@@ -22,59 +22,59 @@ class OTPCode(models.Model):
     def __str__(self):
         return f"OTP for {self.email}"
 
-class User(AbstractUser):
-    ROLE_CHOICES = [
-        ('client', 'Client'),
-        ('freelancer', 'Freelancer'),
-    ]
-    role = models.CharField(max_length=50, choices=ROLE_CHOICES)
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+class User(AbstractBaseUser):
+    
+    username = models.CharField(max_length=150, unique=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128)
+    role = models.CharField(max_length=50)
+    date_joined = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
 
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='custom_user_set', 
-        blank=True,
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='custom_user_permissions_set',  
-        blank=True,
-    )
+    objects = CustomUserManager()
 
-    class Meta:
-        db_table = "User"
-    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
     def __str__(self):
         return self.username
-
-
+    
+    class Meta:
+        db_table = "user"
 
 class Client(models.Model):
-    client_id = models.AutoField(primary_key=True)
+    client_ID = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
-    bio = models.TextField(blank=True, null=True)
-    location = models.CharField(max_length=255, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='clients/', blank=True, null=True)
-
-    class Meta:
-        db_table = "Client"
+    bio = models.CharField(max_length=255, blank=True, null=True)
+    location = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
-        return self.user.username  
-
+        return f"Client: {self.user.username}"
+    
+    class Meta:
+        db_table = "client"
 
 class Freelancer(models.Model):
-    freelancer_id = models.AutoField(primary_key=True)
+    freelancer_ID = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='freelancer_profile')
-    profile_picture = models.ImageField(upload_to='freelancers/', blank=True, null=True)
-    experience = models.IntegerField(help_text="Years of experience")
-    language = models.CharField(max_length=255, blank=True, null=True)
-    video_introduction = models.URLField(blank=True, null=True)
-
-    class Meta:
-        db_table = "Freelancer"
-
+    skills = models.TextField(blank=True, null=True)
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    portfolio_link = models.URLField(blank=True, null=True)
+    
     def __str__(self):
-        return self.user.username  
+        return f"Freelancer: {self.user.username}"
     
-    
+    class Meta:
+        db_table = "freelancer"

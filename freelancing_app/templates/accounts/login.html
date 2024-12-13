@@ -5,6 +5,7 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -15,22 +16,15 @@
         {% csrf_token %}
 
         {% if messages %}
-          <div class="messages">
-            {% for message in messages %}
-                {% if message.tags == "error"%}
-                  <div class="alert alert-danger">
-                      <span>{{ message }}</span>
-                      <i class="fa fa-times close-message"></i>
-                  </div>
-                {% else %}
-                  <div class="alert alert-success">
-                    <span>{{ message }}</span>
-                    <i class="fa fa-times close-message"></i>
-                  </div>
-                {% endif %}
-            {% endfor %}
-          </div>
-        {% endif%}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        <span>{{ message }}</span>
+                        <i class="fa fa-times close-message"></i>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
           
         <h3>Log in with</h3>
         <div class="login_option">

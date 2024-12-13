@@ -9,27 +9,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const userBox = document.querySelector('.profile-main .user-box');
 
     const hideAllBoxes = () => {
-        messageBox.style.display = 'none';
-        notificationBox.style.display = 'none';
-        languageBox.style.display = 'none';
-        userBox.style.display = 'none';
+        if (messageBox) messageBox.style.display = 'none';
+        if (notificationBox) notificationBox.style.display = 'none';
+        if (languageBox) languageBox.style.display = 'none';
+        if (userBox) userBox.style.display = 'none';
     };
 
-    messengerIcon.addEventListener("click", function (event) {
-        event.stopPropagation();
-        if (messageBox.style.display === "block") {
-            messageBox.style.display = "none";  
-        } else {
-            hideAllBoxes();
-            messageBox.style.display = "block";  
-        }
-    });
+    if (messengerIcon && messageBox) {
+        messengerIcon.addEventListener("click", function (event) {
+            event.stopPropagation();
+            if (messageBox.style.display === "block") {
+                messageBox.style.display = "none";  
+            } else {
+                hideAllBoxes();
+                messageBox.style.display = "block";  
+            }
+        });
 
-    document.addEventListener("click", function (event) {
-        if (!messageBox.contains(event.target) && !messengerIcon.contains(event.target)) {
-            messageBox.style.display = "none";
-        }
-    });
+        document.addEventListener("click", function (event) {
+            if (messageBox && !messageBox.contains(event.target) && !messengerIcon.contains(event.target)) {
+                messageBox.style.display = "none";
+            }
+        });
+    }
 
     if (notificationIcon && notificationBox) {
         notificationIcon.addEventListener('click', (e) => {
@@ -43,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         document.addEventListener('click', (e) => {
-            if (!notificationIcon.contains(e.target) && !notificationBox.contains(e.target)) {
+            if (notificationBox && !notificationIcon.contains(e.target) && !notificationBox.contains(e.target)) {
                 notificationBox.style.display = 'none';
             }
         });
@@ -61,24 +63,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         document.addEventListener('click', (e) => {
-            if (!languageIcon.contains(e.target) && !languageBox.contains(e.target)) {
+            if (languageBox && !languageIcon.contains(e.target) && !languageBox.contains(e.target)) {
                 languageBox.style.display = 'none';
             }
         });
     }
 
-    profileIcon.addEventListener('click', () => {
-        if (userBox.style.display === 'block') {
-            userBox.style.display = 'none';  
-        } else {
-            hideAllBoxes();
-            userBox.style.display = 'block';  
-        }
-    });
+    if (profileIcon && userBox) {
+        profileIcon.addEventListener('click', () => {
+            if (userBox.style.display === 'block') {
+                userBox.style.display = 'none';  
+            } else {
+                hideAllBoxes();
+                userBox.style.display = 'block';  
+            }
+        });
 
-    document.addEventListener('click', (event) => {
-        if (!event.target.closest('.profile-main')) {
-            userBox.style.display = 'none';
-        }
-    });
+        document.addEventListener('click', (event) => {
+            if (userBox && !event.target.closest('.profile-main')) {
+                userBox.style.display = 'none';
+            }
+        });
+    }
 });

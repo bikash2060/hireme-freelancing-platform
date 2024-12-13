@@ -2,7 +2,7 @@ from django.views import View
 from django.db import DatabaseError
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate, login
 from django.contrib.auth.hashers import make_password
 from . import utils, formvalidation
 from .models import User, OTPCode, Client, Freelancer
@@ -31,30 +31,24 @@ class UserLoginView(View):
             messages.error(request, error_message)
             return render(request, self.rendered_template)
 
-        try:
-            # Retrieve the user by email address
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            # If the user doesn't exist, display an error message and re-render the login page
-            messages.error(request, "Invalid email address.")
-            return render(request, self.rendered_template)
+        # Use the authenticate method to check user credentials
+        user = authenticate(request, email=email, password=password)
         
-        # Check if the entered password matches the user's stored password
-        if user.check_password(password):
-            # If the password is correct, log the user in and proceed to role-based dashboard
+        print(f"User: {user}")
+        
+        if user is not None:
+            # If authentication is successful, log the user in
             login(request, user)
-            # if user.role == 'client':
-            #     return redirect('clientdashboard:dashboard')
-            # elif user.role == 'freelancer':
-            #     return redirect('freelancerdashboard:dashboard')
+            
+            # Redirect based on user role
             if user.role == 'client':
                 return HttpResponse('Client Dashboard')
             else:
                 return HttpResponse('Freelancer Dashboard')
         else:
-             # If password is incorrect, display an error message and re-render the login page
-            messages.error(request, 'Incorrect password.')
-            return render(request, 'accounts/login.html')
+            # If authentication fails, display an error message and re-render the login page
+            messages.error(request, 'Invalid credentials. Please try again.')
+            return render(request, self.rendered_template)
 
 
 class ForgotPasswordView(View):
@@ -408,14 +402,17 @@ class UserRoleRedirectView(View):
         role = request.POST.get('role', '').strip()
 
         # Create a new User instance and save it to the database
-        user = User.objects.create(
+        user = User.objects.create_user(
             email=email_address,
             username=username,
             password=hashed_password,
             role=role,
-            is_verified=True  # Set the user as verified (from session)
+            is_verified=True  
         )
 
+        # Convert role to lowercase for comparison
+        role = role.lower() 
+                
         # Depending on the role selected, create a corresponding user profile (Client or Freelancer)
         if role == 'client':
             # Create and save the Client profile

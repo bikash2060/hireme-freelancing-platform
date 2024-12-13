@@ -1,4 +1,6 @@
 from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.backends import ModelBackend
+from .models import User
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import OTPCode
@@ -64,3 +66,18 @@ def generate_and_save_otp(email):
         otp_expired_time=now() + timedelta(minutes=1)
     )
     return otp
+
+class EmailBackend(ModelBackend):
+    def authenticate(self, request, email=None, password=None, **kwargs):
+        try:
+            user = User.objects.get(email=email)
+            print(f"User found: {user}")  # Debugging: Check if user is fetched correctly
+            if user.check_password(password):
+                print("Password correct!")  # Debugging: Password match
+                return user
+            else:
+                print("Password mismatch!")  # Debugging: Incorrect password
+        except User.DoesNotExist:
+            print("User does not exist")  # Debugging: User not found
+        return None
+

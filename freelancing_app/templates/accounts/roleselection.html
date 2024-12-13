@@ -5,20 +5,21 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/roleselection.css' %}">
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="role-selection">
     <div class="container">
         {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == "success" %} 
-                    <div class="alert alert-success">
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
                         <span>{{ message }}</span>
-                        <i class="fa-solid fa-check"></i>
+                        <i class="fa fa-times close-message"></i>
                     </div>
-                {% endif %}
-            {% endfor %} 
+                {% endfor %}
+            </div>
         {% endif %}
         <h2>Select Your <span>Role</span></h2>
         <p>Choose how you'd like to get started:</p>

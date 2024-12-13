@@ -5,6 +5,7 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -12,19 +13,20 @@
   <div class="signup-container">
     <div class="signup-form">
       <form action="{% url 'accounts:signup' %}" method="POST">
-        <h3>Sign Up with</h3>
+        {% csrf_token %}
 
         {% if messages %}
-          <div class="signup-messages">
-            {% for message in messages %}
-              <div class="alert alert-danger">
-                <span>{{ message }}</span>
-                <i class="fa fa-times close-message"></i>
-              </div>
-            {% endfor %}
+          <div class="alert-container">
+              {% for message in messages %}
+                  <div class="alert {{ message.tags }}">
+                      <span>{{ message }}</span>
+                      <i class="fa fa-times close-message"></i>
+                  </div>
+              {% endfor %}
           </div>
         {% endif %}
-
+        
+        <h3>Sign Up with</h3>
         <div class="signup-options">
           <div class="signup-option">
             <a href="#">

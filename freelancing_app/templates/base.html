@@ -18,7 +18,7 @@
 
 </head>
 <body>
-<!-- Navigation Bar Section -->
+<!-- Navigation Bar -->
 <div class="nav-container">
     <nav class="navbar">
         <div class="logo">
@@ -44,7 +44,8 @@
         
         <div class="side-icons">
             <div class="icon-container">
-
+                
+                {% if user.is_authenticated %}
                 <!-- Notification Box -->
                 <div class="notification-main">
                     <div class="icon notification-icon">
@@ -81,7 +82,8 @@
                         </div>
                     </div>
                 </div>
-            
+                {% endif %}
+                
                 <!-- Change Language Box -->
                 <div class="language-main">
                     <div class="language-selector">
@@ -100,7 +102,8 @@
                     </div>
                 </div>             
                 
-                <!-- Message Lanugage Box -->
+                {% if user.is_authenticated %}
+                <!-- Message Box -->
                 <div class="message-main">
                     <div class="language-selector">
                         <div class="icon" id="messenger-icon">
@@ -117,7 +120,6 @@
                             <hr>
                             <div class="chat-list">
                                 <div class="chat-row">
-                                    <!-- <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile"> -->
                                     <i class="fa-regular fa-user user-icon"></i>
                                     <div class="chat-details">
                                         <p class="chat-name">Bikash Bhattarai</p>
@@ -130,7 +132,6 @@
                                 
                                 <div class="chat-row">
                                     <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
-                                    <!-- <i class="fa-regular fa-user user-icon"></i> -->
                                     <div class="chat-details">
                                         <p class="chat-name">Bikash Bhattarai</p>
                                         <div class="chat-meta">
@@ -139,75 +140,25 @@
                                         </div>
                                     </div>
                                 </div>    
-                                
-                                <div class="chat-row">
-                                    <!-- <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile"> -->
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Hello</span>
-                                            <span class="time">1W</span>
-                                        </div>
-                                    </div>
-                                </div>             
-
-                                <div class="chat-row">
-                                    <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
-                                    <!-- <i class="fa-regular fa-user user-icon"></i> -->
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque velit consequatur vel quos maiores nihil, praesentium saepe numquam illum magnam? Repellendus eligendi qui at cumque odit excepturi sed iusto nam.</span>
-                                            <span class="time">10W</span>
-                                        </div>
-                                    </div>
-                                </div>             
-
-                                <div class="chat-row">
-                                    <!-- <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile"> -->
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Message</span>
-                                            <span class="time">1h</span>
-                                        </div>
-                                    </div>
-                                </div>             
-
-                                <div class="chat-row">
-                                    <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
-                                    <!-- <i class="fa-regular fa-user user-icon"></i> -->
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum cum deserunt consequatur aliquam distinctio ea quibusdam voluptatibus maiores, blanditiis libero repellendus, modi itaque, vel quaerat delectus. Fugiat aliquid nulla temporibus!</span>
-                                            <span class="time">1h</span>
-                                        </div>
-                                    </div>
-                                </div>             
                             </div>
                         </div>
                     </div>
                 </div>
             
-                <a href="{% url 'accounts:login' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
-                <a href="{% url 'accounts:signup' %}" class="signup-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
-            </div>    
+            </div>
+            {% endif %}
             
             <!-- User Profile Section -->
+            {% if user.is_authenticated %}
             <div class="profile-main">
                 <div class="icon">
                     <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
-                    <!-- <i class="fa-regular fa-user"></i> -->
                 </div>
                 <div class="user-box">
                     <div class="username">
                         <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
-                        <!-- <i class="fa-regular fa-user"></i> -->
                         <div class="user-info">
-                            <p>Bikash Bhattarai</p>
+                            <p>{{ user.username }}</p>
                             <span>Client</span>
                         </div>
                     </div>
@@ -224,10 +175,17 @@
                     </div>
                 </div>
             </div>
-
+            {% endif %}
+            
+            <!-- Login and Signup Links for Unauthenticated Users -->
+            {% if not user.is_authenticated %}
+            <a href="{% url 'accounts:login' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <a href="{% url 'accounts:signup' %}" class="signup-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
+            {% endif %}
         </div>
     </nav>
 </div>
+    
 
 <!-- Detailed Chat Box -->
 <div class="detailed-chat">

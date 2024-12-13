@@ -69,7 +69,7 @@ WSGI_APPLICATION = "freelancing_app.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fyp_database',
+        'NAME': 'hireme_db',
         'USER': 'root',
         'PASSWORD': 'Bishal@123',
         'HOST': 'localhost',
@@ -92,6 +92,15 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+# settings.py
+AUTH_USER_MODEL = 'accounts.User' 
+
+AUTHENTICATION_BACKENDS = [
+    'accounts.utils.EmailBackend',  
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Language and timezone settings for the application.
 LANGUAGE_CODE = "en-us"
