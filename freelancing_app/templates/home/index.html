@@ -14,12 +14,12 @@
     <div class="container">
         <div class="hero-content">
             <div class="text-context">
-                <h3>Are you looking for <span>Freelancing?</span></h3>   
-                <p>Find top-tier talent and get your projects completed on time. Hire skilled freelancers with just a click, and bring your ideas to life.</p>
+                <h3>Unlock a World of <span><br>Limitless Possibilities</span></h3>
+                <p>Discover expert freelancers ready to elevate your projects. Whether you're starting a new venture or scaling your business, connect with top talent to achieve your goals with confidence and ease.</p>                
                 <div class="buttons">
-                    <a href="{% url 'accounts:login'%}"><span>Get Started</span></a>
+                    <a href="{% url 'accounts:login' %}"><span>Get Started</span></a>
                 </div>
-            </div>
+            </div>         
             <div class="banner-img">
                 <img src="{% static 'images/banner.png' %}" alt="banner">
             </div>
@@ -80,7 +80,7 @@
             </div>
         </div>
         <div class="image-container">
-            <img src="{% static 'images/girl image.png'%}" alt="Smiling Woman">
+            <img src="{% static 'images/girl.png' %}" alt="Smiling Woman">
         </div>
     </div>
 </div>
@@ -285,71 +285,113 @@
     <div class="container">
         <span>Web Development, UI/UX Designing, SEO &amp; more !</span>
         <h3>Checkout The Best <strong>Portfolios</strong> Here</h3>
-
-        <!-- Slider -->
-        <div class="portfolio-slider">
-            <div class="portfolio-boxes">
-
-                <div class="portfolio-box">
-                    <div class="profile-img">
-                        <img src="{% static 'images/ronaldo.jpg' %}" alt="Ronaldo" />
-                    </div>
-                    <div class="profile-info">
-                        <h4>Cristiano Ronaldo</h4>
-                        <div class="role-and-arrow">
-                            <p>Web Developer</p>
-                            <a href="#" class="view-profile">
-                                <span>→</span> 
-                            </a>
-                        </div>
-                    </div>
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="image">
+                    <img src="{% static 'images/ronaldo.jpg'%}" alt="ronaldo" class="profile-img" />
                 </div>
-
-                <div class="portfolio-box">
-                    <div class="profile-img">
-                        <img src="{% static 'images/ramos.jpg' %}" alt="Ramos" />
-                    </div>
-                    <div class="profile-info">
-                        <h4>Ramos</h4>
-                        <div class="role-and-arrow">
-                            <p>Full Stack Developer</p>
-                            <a href="#" class="view-profile">
-                                <span>→</span> 
-                            </a>
-                        </div>
-                    </div>
+                <div class="text-data">
+                  <span class="name">Cristiano Ronaldo</span>
+                  <span class="job">Full Stack Developer</span>
                 </div>
-
-                <div class="portfolio-box">
-                    <div class="profile-img">
-                        <img src="{% static 'images/neymar.jpeg' %}" alt="Neymar" />
-                    </div>
-                    <div class="profile-info">
-                        <h4>Neymar</h4>
-                        <div class="role-and-arrow">
-                            <p>SEO Expert</p>
-                            <a href="#" class="view-profile">
-                                <span>→</span> 
-                            </a>
-                        </div>
-                    </div>
+                <div class="media-buttons">
+                    <a href="#" style="background: #4267b2" class="link">
+                        <i class="bx bxl-facebook"></i>
+                    </a>
+                    <a href="#" style="background: #1da1f2" class="link">
+                        <i class="bx bxl-twitter"></i>
+                    </a>
+                    <a href="#" style="background: #e1306c" class="link">
+                        <i class="bx bxl-instagram"></i>
+                    </a>
+                    <a href="#" style="background: #0077B5" class="link">
+                        <i class="bx bxl-linkedin"></i>
+                    </a>
                 </div>
-
-                <div class="portfolio-box">
-                    <div class="profile-img">
-                        <img src="{% static 'images/messi.jpg' %}" alt="Messi" />
-                    </div>
-                    <div class="profile-info">
-                        <h4>Lionel Messi</h4>
-                        <div class="role-and-arrow">
-                            <p>UI/UX Designer</p>
-                            <a href="#" class="view-profile">
-                                <span>→</span> 
-                            </a>
-                        </div>
-                    </div>
+                <div class="buttons">
+                    <a href="#" class="button">View Profile</a>
                 </div>
-                
+            </div>
+    
+            <div class="profile-card">
+                <div class="image">
+                    <img src="{% static 'images/ramos.jpg' %}" alt="ramos" class="profile-img" />
+                </div>
+                <div class="text-data">
+                  <span class="name">Sergio Ramoes</span>
+                  <span class="job">SEO Specialist</span>
+                </div>
+                <div class="media-buttons">
+                    <a href="#" style="background: #4267b2" class="link">
+                        <i class="bx bxl-facebook"></i>
+                    </a>
+                    <a href="#" style="background: #1da1f2" class="link">
+                        <i class="bx bxl-twitter"></i>
+                    </a>
+                    <a href="#" style="background: #e1306c" class="link">
+                        <i class="bx bxl-instagram"></i>
+                    </a>
+                    <a href="#" style="background: #0077B5" class="link">
+                        <i class="bx bxl-linkedin"></i>
+                    </a>
+                </div>
+                <div class="buttons">
+                    <a href="#" class="button">View Profile</a>
+                </div>
+            </div>
+    
+            <div class="profile-card">
+                <div class="image">
+                    <img src="{% static 'images/neymar.jpeg' %}" alt="neymar" class="profile-img" />
+                </div>
+                <div class="text-data">
+                  <span class="name">Neymar</span>
+                  <span class="job">Frontend Developer</span>
+                </div>
+                <div class="media-buttons">
+                    <a href="#" style="background: #4267b2" class="link">
+                        <i class="bx bxl-facebook"></i>
+                    </a>
+                    <a href="#" style="background: #1da1f2" class="link">
+                        <i class="bx bxl-twitter"></i>
+                    </a>
+                    <a href="#" style="background: #e1306c" class="link">
+                        <i class="bx bxl-instagram"></i>
+                    </a>
+                    <a href="#" style="background: #0077B5" class="link">
+                        <i class="bx bxl-linkedin"></i>
+                    </a>
+                </div>
+                <div class="buttons">
+                    <a href="#" class="button">View Profile</a>
+                </div>
+            </div>
+    
+            <div class="profile-card">
+                <div class="image">
+                    <img src="{% static 'images/messi.jpg'%}" alt="messi" class="profile-img" />
+                </div>
+                <div class="text-data">
+                  <span class="name">Lionel Messi</span>
+                  <span class="job">DevOps Engineer</span>
+                </div>
+                <div class="media-buttons">
+                    <a href="#" style="background: #4267b2" class="link">
+                        <i class="bx bxl-facebook"></i>
+                    </a>
+                    <a href="#" style="background: #1da1f2" class="link">
+                        <i class="bx bxl-twitter"></i>
+                    </a>
+                    <a href="#" style="background: #e1306c" class="link">
+                        <i class="bx bxl-instagram"></i>
+                    </a>
+                    <a href="#" style="background: #0077B5" class="link">
+                        <i class="bx bxl-linkedin"></i>
+                    </a>
+                </div>
+                <div class="buttons">
+                    <a href="#" class="button">View Profile</a>
+                </div>
             </div>
         </div>
     </div>
@@ -369,6 +411,6 @@
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/jobslider.js'%}"></script>
-<script src="{% static 'js/faqloader.js'%}"></script>
+<script src="{% static 'js/job-slider.js'%}"></script>
+<script src="{% static 'js/faq-loader.js'%}"></script>
 {% endblock %}
