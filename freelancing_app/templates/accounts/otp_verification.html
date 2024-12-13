@@ -30,10 +30,10 @@
       {% endif%}
 
       <div class="email-icon">
-        <img src="{% static 'images/email-logo.png' %}" alt="Email Icon" />
+        <i class="bx bxs-check-shield"></i>
       </div>
-      <h3>Please check your email</h3>
-      <p>We've sent a 6-digit code to your email address.</p>
+      <h3>Enter OTP Code</h3>
+      <p>We've sent a 6-digit code to registered email address.</p>
       
       <form action="{% url 'accounts:otp_verification' %}" method="POST">
         {% csrf_token %}
@@ -47,7 +47,7 @@
           <input type="text" name="otp_6" maxlength="1" class="otp-box" />
         </div>
         
-        <p class="resend-text">Didn’t get the code? 
+        <p class="resend-text">Is the code expired? 
           <a href="{% url 'accounts:otp_resend' %}">Click to resend</a>
         </p>
       
@@ -63,6 +63,6 @@
 
 
 {% block js_files %}
-<script src="{% static 'js/otp.js'%}"></script>
+<script src="{% static 'js/otp-verification.js'%}"></script>
 <script src="{% static 'js/message.js'%}"></script>
 {% endblock %}
