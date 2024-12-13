@@ -1,7 +1,6 @@
 /* Signup Form */
 .signup {
-    position: relative;
-    margin-top: 140px;
+    margin-top: 150px;
     margin-bottom: 60px;
 }
 
@@ -61,6 +60,7 @@
 }
 
 .signup-form p {
+    font-size: 17px;
     text-align: center;
     font-weight: 500;
 }
@@ -168,32 +168,4 @@
 .password-container i:hover {
     color: #626cd6; 
 }
-
-.signup-form .signup-messages {
-    margin-bottom: 20px;
-}
-
-.signup-form .alert {
-    position: relative;
-    padding: 15px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border-radius: 5px;
-}
-
-.signup-form .alert span {
-    font-size: 16px;
-}
-
-.signup-form .close-message {
-    position: absolute;
-    padding: 4px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 18px;
-    color: #721c24;
-}
-
-.signup-form .close-message:hover {
-    color: #5a1a1a;
-}
+  
