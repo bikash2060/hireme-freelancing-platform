@@ -1,4 +1,5 @@
 from django.views import View
+from smtplib import SMTPException
 from django.db import DatabaseError
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
@@ -8,7 +9,7 @@ from . import utils, formvalidation
 from .models import User, OTPCode, Client, Freelancer
 from django.utils import timezone
 
-#Testing in progress
+# Testing in-progress
 class UserLoginView(View):
     
     # Template used for rendering the login page
@@ -32,8 +33,13 @@ class UserLoginView(View):
             return render(request, self.rendered_template)
 
         # Use the authenticate method to check user credentials
-        user = authenticate(request, email=email, password=password)
-        
+        try:
+            user = authenticate(request, email=email, password=password)
+            print(f"User: {user}")
+        except Exception as e:
+            # Catch any unexpected errors during authentication
+            messages.error(request, "An error occurred while authenticating your credentials. Please try again.")
+            return render(request, self.rendered_template)
         print(f"User: {user}")
         
         if user is not None:
@@ -188,8 +194,9 @@ class ChangePasswordView(View):
             messages.error(request, "User not found.")
             return redirect('accounts:forgotpassword')
 
-#Testing Completed
+# Testing Completed:
 class UserSignupView(View):
+    
     # Define the template to be rendered for the signup page.
     rendered_template = 'accounts/signup.html'
     
@@ -213,21 +220,18 @@ class UserSignupView(View):
         7. Send the OTP to the user's email address for verification.
         8. Redirect the user to the OTP verification page for further steps.
         """
-        
-        email_address = request.POST.get('emailaddress').strip()
+
+        email_address = request.POST.get('emailaddress').strip().lower()
         username = request.POST.get('username').strip()
         password = request.POST.get('password').strip()
         confirm_password = request.POST.get('confirmpassword').strip()
-
-        # Hash the password before storing in the session or database later
-        hashed_password = make_password(password)
 
         # Store the form data temporarily in the session to preserve the user's input
         # And avoid re-entering the same values in the form if validation fails.
         signup_data = {
             'email': email_address,
             'username': username,
-            'password': hashed_password,
+            'password': password,
         }
 
         # Validate the form
@@ -242,15 +246,30 @@ class UserSignupView(View):
 
         # If validation passes, store the data in the session
         request.session['signup_data'] = signup_data
-
+        request.session.set_expiry(300)
+        
         # Generate OTP and send verification email
-        otp_code = utils.generate_and_save_otp(email_address)
-        utils.send_verification_email(username, email_address, otp_code)
+        try:
+            # Generate OTP
+            otp_code = utils.generate_and_save_otp(email_address)
+
+            # Send the OTP email
+            try:
+                utils.send_verification_email(username, email_address, otp_code)
+            except SMTPException as e:
+                # Handle email-related errors
+                messages.error(request, "Failed to send verification email due to a server issue.")
+                return render(request, self.rendered_template, {'form_data': signup_data})
+
+        except Exception as e:
+            # Handle any unexpected errors during OTP generation or other issues
+            messages.error(request, "An error occurred during the signup process.")
+            return render(request, self.rendered_template, {'form_data': signup_data})
 
         # Redirect the user to the OTP verification page
         return redirect(self.successful_redirect_URL)
 
-#Testing Completed
+# Testing Completed
 class VerifyOTPView(View):
     # Template for rendering the OTP verification form
     rendered_template = 'accounts/otp_verification.html'
@@ -327,7 +346,7 @@ class VerifyOTPView(View):
             messages.error(request, 'An unexpected error occurred.')
             return redirect(self.error_redirect_URL)
 
-#Testing Completed
+# Testing Completed
 class GenerateNewOTPView(View):
     
     # Template for OTP verification page
@@ -355,8 +374,12 @@ class GenerateNewOTPView(View):
             otp_code = utils.generate_and_save_otp(email_address)
             
             # Send the OTP to the user's email for verification
-            utils.send_verification_email(username, email_address, otp_code)
-            
+            try:
+                utils.send_verification_email(username, email_address, otp_code)
+            except Exception as e:
+                messages.error(request, "Failed to send verification email. Please try again.")
+                return render(request, self.rendered_template, {'form_data': signup_data})
+        
             # Inform the user that a new OTP has been sent successfully
             messages.success(request, 'A new OTP has been sent to your email.')
             return render(request, self.rendered_template)  # Render OTP verification page
@@ -366,7 +389,7 @@ class GenerateNewOTPView(View):
             messages.error(request, 'An error occurred while resending the OTP.')
             return render(request, self.rendered_template)  
 
-#Testing Completed
+# Testing Completed
 class UserRoleRedirectView(View):
     
     # Template for role selection view
@@ -396,38 +419,44 @@ class UserRoleRedirectView(View):
         # Extract user details (email, username, password) from the session
         email_address = signup_data.get('email')
         username = signup_data.get('username')
-        hashed_password = signup_data.get('password')
+        password = signup_data.get('password')
         
         # Get the selected role from the form (client or freelancer)
         role = request.POST.get('role', '').strip()
 
         # Create a new User instance and save it to the database
-        user = User.objects.create_user(
-            email=email_address,
-            username=username,
-            password=hashed_password,
-            role=role,
-            is_verified=True  
-        )
-
+        try:
+            user = User.objects.create_user(
+                email=email_address,
+                username=username,
+                password=password,
+                role=role,
+                is_verified=True  
+            )
+        except Exception as e:
+            messages.error(request, 'An error occurred while creating your account.')
+            return redirect(self.error_redirect_URL)
+        
         # Convert role to lowercase for comparison
         role = role.lower() 
                 
-        # Depending on the role selected, create a corresponding user profile (Client or Freelancer)
-        if role == 'client':
-            # Create and save the Client profile
-            Client.objects.create(user=user)  
-            messages.success(request, 'You have successfully signed up as a client.')
-            # Redirect to login page after successful signup
-            return redirect(self.successful_redirect_URL)  
+        try:
+            # Depending on the role selected, create a corresponding user profile (Client or Freelancer)
+            if role == 'client':
+                # Create and save the Client profile
+                Client.objects.create(user=user)
+                messages.success(request, 'You have successfully signed up as a client.')
+                return redirect(self.successful_redirect_URL)  # Redirect to login page after successful signup
 
-        elif role == 'freelancer':
-            # Create and save the Freelancer profile
-            Freelancer.objects.create(user=user)  
-            messages.success(request, 'You have successfully signed up as a freelancer.')
-            # Redirect to login page after successful signup
-            return redirect(self.successful_redirect_URL)  
+            else:
+                # Create and save the Freelancer profile
+                Freelancer.objects.create(user=user)
+                messages.success(request, 'You have successfully signed up as a freelancer.')
+                return redirect(self.successful_redirect_URL)  # Redirect to login page after successful signup
 
-        # If an invalid role is selected, display an error and redirect to role selection page
-        messages.error(request, "Invalid role selection.")
-        return redirect('accounts:roles')  # Redirect to role selection page if role is invalid
+        except Exception as e:
+            messages.error(request, 'An error occurred while creating your profile.')
+            return redirect(self.error_redirect_URL)
+
+
+

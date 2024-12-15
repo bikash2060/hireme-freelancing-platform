@@ -63,7 +63,7 @@ def generate_and_save_otp(email):
         otp_code=otp,
         email=email,
         otp_generated_time=now(),
-        otp_expired_time=now() + timedelta(minutes=1)
+        otp_expired_time=now() + timedelta(minutes=2)
     )
     return otp
 
@@ -71,13 +71,13 @@ class EmailBackend(ModelBackend):
     def authenticate(self, request, email=None, password=None, **kwargs):
         try:
             user = User.objects.get(email=email)
-            print(f"User found: {user}")  # Debugging: Check if user is fetched correctly
+            print(f"User found: {user}")  
             if user.check_password(password):
-                print("Password correct!")  # Debugging: Password match
+                print("Password correct!")  
                 return user
             else:
-                print("Password mismatch!")  # Debugging: Incorrect password
+                print("Password mismatch!")  
         except User.DoesNotExist:
-            print("User does not exist")  # Debugging: User not found
+            print("User does not exist")  
         return None
 
