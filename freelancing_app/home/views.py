@@ -6,3 +6,6 @@ class HomeView(View):
     # Handle GET requests to render the home page.
     def get(self, request):
         return render(request, 'home/index.html')
+
+def handling_404(request, exception):
+    return render(request, '404.html', {})
