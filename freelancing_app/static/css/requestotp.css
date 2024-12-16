@@ -10,7 +10,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px;
+    max-width: 550px;
 }
 
 h2 {
@@ -28,6 +28,7 @@ input[type="email"] {
     padding: 12px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
+    background: #F8F8FB;
     border-radius: 4px;
     font-size: 16px;
     outline: none;

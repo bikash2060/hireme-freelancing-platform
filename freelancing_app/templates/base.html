@@ -22,16 +22,16 @@
 <div class="nav-container">
     <nav class="navbar">
         <div class="logo">
-            <a href="#">
-                <img src="{% static 'images/Logo.svg' %}" alt="company-logo">
+            <a href="{% url 'homes:home' %}">
+                <img src="{% static 'images/Logo.png' %}" alt="company-logo">
             </a>
         </div>
         <div class="links">
             <a href="{% url 'homes:home' %}">Home</a>
             <a href="#">Find Freelancers</a>
             <a href="#">Find Projects</a>
-            <a href="#">About Us</a>
             <a href="#">Help</a>
+            <a href="#">About Us</a>
         </div>
         <div class="search-bar">
             <select class="search-type">
@@ -170,7 +170,7 @@
                         </div>
                         <div class="logout">
                             <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
-                            <a href="#">Logout</a>
+                            <a href="{% url 'accounts:logout' %}">Logout</a>
                         </div>
                     </div>
                 </div>
@@ -186,7 +186,7 @@
     </nav>
 </div>
     
-
+{% if user.is_authenticated %}
 <!-- Detailed Chat Box -->
 <div class="detailed-chat">
     <div class="main-box">
@@ -247,6 +247,7 @@
         
     </div>
 </div>
+{% endif %}
 
 {% block content %}
 
@@ -257,7 +258,7 @@
     <div class="content">
         <div class="top">
             <div class="logo-details">
-                <img src="{% static 'images/Logo.svg' %}" alt="company-logo">
+                <img src="{% static 'images/Logo.png' %}" alt="company-logo">
             </div>
             <div class="media-icons">
                 <a href="https://www.facebook.com/bishal.bhattarai.984786" target="_blank"><i class="fab fa-facebook-f"></i></a>
@@ -302,7 +303,7 @@
 
             <ul class="box">
                 <li class="link_name">Quick Links</li>
-                <li><a href="#">Login</a></li>
+                <li><a href="{% url 'accounts:login' %}">Login</a></li>
                 <li><a href="#">Terms &amp; Conditions</a></li>
                 <li><a href="#">Privacy Policy</a></li>
                 <li><a href="#">Categories</a></li>

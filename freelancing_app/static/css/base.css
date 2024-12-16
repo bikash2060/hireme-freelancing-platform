@@ -936,18 +936,18 @@ footer::before {
 footer .content {
     max-width: 1300px;
     margin: auto;
-    padding: 30px 40px 40px 40px;
+    padding: 0 40px 40px 40px;
 }
 
 footer .content .top {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 .content .top .logo-details img {
-    height: 50px; 
+    height: 100px; 
     max-width: 100%;
 }
 
