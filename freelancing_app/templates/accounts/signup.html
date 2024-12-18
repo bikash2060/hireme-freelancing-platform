@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static%}
+{% load socialaccount %}
 
 {% block title %}HireMe{% endblock %}
 
@@ -12,7 +13,7 @@
 <div class="signup">
   <div class="signup-container">
     <div class="signup-form">
-      <form action="{% url 'accounts:signup' %}" method="POST">
+      <form action="{% url 'account:signup' %}" method="POST">
         {% csrf_token %}
 
         {% if messages %}
@@ -29,7 +30,7 @@
         <h3>Sign Up with</h3>
         <div class="signup-options">
           <div class="signup-option">
-            <a href="#">
+            <a href="{% provider_login_url 'google' %}">
               <img src="{% static 'images/Google.png'%}" alt="Google" />
               <span>Google</span>
             </a>
@@ -68,7 +69,7 @@
         </div>
         <button type="submit" class="signup-button">Sign Up</button>
         <p class="signup-login-link">
-          Already have an account? <a href="{% url 'accounts:login' %}">Log in</a>
+          Already have an account? <a href="{% url 'account:login' %}">Log in</a>
         </p>
       </form>
     </div>

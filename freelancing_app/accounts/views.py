@@ -18,10 +18,15 @@ class UserLoginView(View):
     successful_redirect_URL = ''
     
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Renders the login page when the user visits the login URL
         return render(request, self.rendered_template)
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
         # Retrieves email and password from the POST request
         email = request.POST.get('emailaddress').strip().lower()
         password = request.POST.get('password').strip()
@@ -78,10 +83,10 @@ class ForgotPasswordView(View):
     rendered_template = 'accounts/reset_password_request.html'
     
     # URL to redirect to upon successful OTP request
-    success_redirect_URL = 'accounts:verify-otp'
+    success_redirect_URL = 'account:verify-otp'
     
     # URL to redirect to in case of an error (e.g., invalid email or unexpected error)
-    error_redirect_URL = 'accounts:login'
+    error_redirect_URL = 'account:login'
     
     def get(self, request):
         # Renders the password reset request page when the user visits the reset password URL
@@ -145,10 +150,10 @@ class PasswordResetOTPVerifyView(View):
     rendered_template = 'accounts/reset_password_otp_verification.html'
     
     # URL to redirect to upon successful OTP verification
-    success_redirect_URL = 'accounts:change-password'
+    success_redirect_URL = 'account:change-password'
     
     # URL to redirect to in case of an error (e.g., invalid OTP or session expiry)
-    error_redirect_URL = 'accounts:login'
+    error_redirect_URL = 'account:login'
     
     def get(self, request):
         # Renders the OTP verification page when the user visits the OTP verification URL
@@ -162,7 +167,7 @@ class PasswordResetOTPVerifyView(View):
         if not email_address:
             # If session expired, display an error message and redirect to the forgot password page
             messages.error(request, "Session expired. Please request the OTP again.")
-            return redirect('accounts:forgotpassword')
+            return redirect('account:forgotpassword')
         
         # Retrieve the OTP entered by the user, formed by concatenating each digit field
         otp_entered = ''.join([request.POST.get(f'otp_{i}', '') for i in range(1, 7)])
@@ -221,10 +226,10 @@ class ForgotPasswordResendOTPView(View):
     rendered_template = 'accounts/reset_password_otp_verification.html'
     
     # URL to redirect to upon successful OTP resend
-    success_redirect_URL = 'accounts:change-password'
+    success_redirect_URL = 'account:change-password'
     
     # URL to redirect to in case of an error (e.g., session expired or OTP issue)
-    error_redirect_URL = 'accounts:login'
+    error_redirect_URL = 'account:login'
     
     def get(self, request):
         # Retrieves the email address stored in the session
@@ -234,7 +239,7 @@ class ForgotPasswordResendOTPView(View):
         if not email_address:
             # If session expired, display an error message and redirect to the forgot password page
             messages.error(request, "Session expired. Please request the OTP again.")
-            return redirect('accounts:forgotpassword')
+            return redirect('account:forgotpassword')
 
         try:
             # Deletes any existing OTP record for the given email
@@ -271,10 +276,10 @@ class ChangePasswordView(View):
     rendered_template = 'accounts/resetpassword.html'
     
     # URL to redirect to upon successful password change
-    success_redirect_URL = 'accounts:login'
+    success_redirect_URL = 'account:login'
     
     # URL to redirect to in case of error (e.g., session expired or other issues)
-    error_redirect_URL = 'accounts:forgotpassword'
+    error_redirect_URL = 'account:forgotpassword'
     
     def get(self, request):
         # Renders the change password page when the user accesses the URL
@@ -333,14 +338,20 @@ class UserSignupView(View):
     rendered_template = 'accounts/signup.html'
     
     # URL to redirect upon successful registration
-    successful_redirect_URL = 'accounts:otp_verification'
+    successful_redirect_URL = 'account:otp_verification'
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Handle GET request to render the signup page.
         # This will display the form for the user to fill out for creating new account.
         return render(request, self.rendered_template)
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         """
         Handle POST request when the user submits the signup form.
         1. Retrieve and sanitize the user inputs (email, username, password, and confirm password).
@@ -410,10 +421,10 @@ class VerifyOTPView(View):
     rendered_template = 'accounts/otp_verification.html'
     
     # URL to redirect upon successful OTP verification
-    successful_redirect_URL = 'accounts:roles'
+    successful_redirect_URL = 'account:roles'
     
     # URL to redirect if an error occurs during verification
-    error_redirect_URL = 'accounts:signup'
+    error_redirect_URL = 'account:signup'
     
     def get(self, request):
         """
@@ -493,7 +504,7 @@ class GenerateNewOTPView(View):
     rendered_template = 'accounts/otp_verification.html'  
     
     # Set the URL to redirect in case of session expiration
-    error_redirect_URL = 'accounts:signup'  
+    error_redirect_URL = 'account:signup'  
     
     def get(self, request):
         
@@ -539,10 +550,10 @@ class UserRoleRedirectView(View):
     rendered_template = 'accounts/roleselection.html'  
     
     # URL to redirect upon successful signup
-    successful_redirect_URL = 'accounts:login'  
+    successful_redirect_URL = 'account:login'  
     
     # URL to redirect if session expired or other errors
-    error_redirect_URL = 'accounts:signup'  
+    error_redirect_URL = 'account:signup'  
 
     def get(self, request):
         # Renders the role selection page (GET request)

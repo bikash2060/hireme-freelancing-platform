@@ -29,7 +29,7 @@
       <h3>Enter OTP Code</h3>
       <p>We've sent a 6-digit code to registered email address.</p>
       
-      <form action="{% url 'accounts:otp_verification' %}" method="POST">
+      <form action="{% url 'account:otp_verification' %}" method="POST">
         {% csrf_token %}
         
         <div class="otp-inputs">
@@ -42,7 +42,7 @@
         </div>
         
         <p class="resend-text">Is the code expired? 
-          <a href="{% url 'accounts:otp_resend' %}">Click to resend</a>
+          <a href="{% url 'account:otp_resend' %}">Click to resend</a>
         </p>
       
         <div class="button-group">

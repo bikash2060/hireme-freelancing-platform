@@ -23,7 +23,7 @@
         {% endif %}
         <h2>Select Your <span>Role</span></h2>
         <p>Choose how you'd like to get started:</p>
-        <form method="POST" action="{% url 'accounts:roles' %}">
+        <form method="POST" action="{% url 'account:roles' %}">
             {% csrf_token %}
             <div class="role-boxes">
                 <div class="role-box" id="client-role">

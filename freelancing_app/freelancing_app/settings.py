@@ -7,27 +7,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-y9vjmoy_i9&x-5!dq7w-dq+fsts@dsmut9(yp)$)lyg%rd43_x"
 
 # Debug mode setting; should be False in production.
-DEBUG = False
+DEBUG = True
 
 # List of allowed hostnames for the application.
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
+SITE_ID = 1
+
 # Installed apps for the project, including Django and custom apps.
 INSTALLED_APPS = [
+    # Django built-in apps
     "django.contrib.admin",
-    "django.contrib.auth",
+    'django.contrib.sites',
+    'django.contrib.auth',
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # Third-party apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    
+    # Custom apps
     "home",
     "accounts",
-    "clientdashboard",
-    "profiles",
 ]
 
 # Middleware stack for request/response processing.
 MIDDLEWARE = [
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -42,7 +53,6 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Root URL configuration for the project.
 ROOT_URLCONF = "freelancing_app.urls"
-
 
 TEMPLATES = [
     {
@@ -99,8 +109,20 @@ AUTH_USER_MODEL = 'accounts.User'
 AUTHENTICATION_BACKENDS = [
     'accounts.utils.EmailBackend',  
     'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+LOGIN_REDIRECT_URL = '/account/choose-role/'
+LOGOUT_REDIRECT_URL = '/'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'OAUTH_PKCE_ENABLED': True,
+    },
+}
 
 # Language and timezone settings for the application.
 LANGUAGE_CODE = "en-us"
