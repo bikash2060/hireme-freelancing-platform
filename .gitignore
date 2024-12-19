@@ -1,0 +1,32 @@
+# Ignore virtual environment folders
+.venv/
+virtualenv/
+
+# Ignore IDE specific files
+.idea/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore environment configuration
+.env
+
+# Ignore Django-related files
+db.sqlite3
+*.log
+staticfiles/
+
+# Ignore compiled files
+*.pyc
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore any temporary or backup files
+*.swp
+*.bak
+*.tmp
+*~
+

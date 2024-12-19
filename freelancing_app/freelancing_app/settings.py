@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
     
     # Custom apps
     "home",
@@ -121,6 +122,10 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['email'],
         'AUTH_PARAMS': {'access_type': 'online'},
         'OAUTH_PKCE_ENABLED': True,
+    },
+    'github': {
+        'SCOPE': ['user', 'repo', 'read:org'],  
+        'AUTH_PARAMS': {'allow_signup': 'true'},  
     },
 }
 
