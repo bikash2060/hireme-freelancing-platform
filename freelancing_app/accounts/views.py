@@ -59,9 +59,9 @@ class UserLoginView(View):
                         
             # Redirect based on user role
             if user.role == 'client':
-                return redirect('client:dashboard')
+                return redirect('dashboard:client')
             else:
-                return HttpResponse('freelancer/dashboard')
+                return redirect('dashboard:freelancer')
         else:
             # If authentication fails, check if the email exists in the database
             try:

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ClientdashboardConfig(AppConfig):
+class UserprofilesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'clientdashboard'
+    name = 'userprofiles'

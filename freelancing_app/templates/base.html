@@ -27,7 +27,15 @@
             </a>
         </div>
         <div class="links">
-            <a href="{% url 'homes:home' %}">Home</a>
+            {% if user.is_authenticated %}
+                {% if user.role == "client" %}
+                    <a href="{% url 'dashboard:client' %}">Home</a>
+                {% else %}
+                    <a href="{% url 'dashboard:freelancer' %}">Home</a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'homes:home' %}">Home</a>
+            {% endif %}
             <a href="#">Find Freelancers</a>
             <a href="#">Find Projects</a>
             <a href="#">Help</a>

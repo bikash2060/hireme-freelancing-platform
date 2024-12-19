@@ -6,7 +6,7 @@ urlpatterns = [
     path("", include("home.urls", namespace="homes")),
     path('accounts/', include('allauth.urls')),
     path('account/', include('accounts.urls', namespace='account')),
-    path('client/', include('clientdashboard.urls', namespace='client')),
+    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
 ]
 
 handler404 = 'home.views.handling_404'
