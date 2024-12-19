@@ -5,142 +5,88 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/clientdashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
 {% endblock %}
 
-{% block navbar  %}
-<!-- Header -->
-<div class="body">
-    <div class="container">
-
-        <!-- Navigation Bar Section -->
-        <div class="navbar">
-            <nav>
-                <!-- Logo Section -->
-                <div class="logo">
-                    <i class="fab fa-slack"></i>
-                    <span class="logo_name">HireMe</span>
-                </div>
-
-                <!-- Search Bar Section -->
-                <div class="search-bar">
-                    <input type="text" placeholder="Search freelancers, projects..." />
-                    <button type="button">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-
-                <!-- Navigation Links Section -->
-                <div class="links">
-                    <ul>
-                        <li>
-                            <a href="#" class="current">Home</a>
-                        </li>
-                        <li>
-                            <a href="#">My Projects</a>
-                        </li>
-                        <li>
-                            <a href="#">Hire Freelancers</a>
-                        </li>
-                        <li>
-                            <a href="#">About Us</a>
-                        </li>
-                        <!-- Dropdown Toggle for Logged-In User -->
-                        <li class="dropdown">
-                            <a href="javascript:void(0)" class="dropbtn">
-                                <div class="profile-circle">
-                                    <i class="fas fa-user-alt default-icon"></i>
-                                </div>
-                            </a>
-                            <div class="dropdown-content">
-                                <a href="#">My Profile</a>
-                                <a href="#">Settings</a>
-                                <a href="#">Log Out</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="language-switch" onclick="toggleLanguage(this)">
-                    <p class="language-text">Nepali</p>
-                    <i class="fa-solid fa-toggle-off"></i>
-                </div>
-            </nav>
-        </div>
-    </div>
-</div>
-{% endblock  %}
 
 {% block content %}
-<!-- Greeting Section -->
-<div class="greeting-section">
+<div class="hero-section">
     <div class="container">
-        <div class="greeting-content">
-            <h4>Good morning, {{ user.username }}</h4>
-            <button class="post-job-btn">
-                <i class="fas fa-plus"></i> Post a job
-            </button>
+        <div class="hero-content">
+            <h3>Good evening, Bikash</h3>
+            <a href="#" class="post-project-btn">
+                <i class="fas fa-plus"></i> Post a Project
+            </a>
         </div>
     </div>
 </div>
 
-<!-- Overview Section -->
-<div class="overview-section">
+<div class="quick-actions">
     <div class="container">
-        <div class="overview-header">
-            <h3>Overview</h3>
+        <h2>What would you like to do?</h2>
+        <div class="action-grid">
+            <div class="action-card">
+                <i class="fas fa-search"></i>
+                <h3>Find Freelancers</h3>
+                <p>Browse top talents for your project</p>
+                <a href="#" class="btn">Explore Talents</a>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-briefcase"></i>
+                <h3>Post a Project</h3>
+                <p>Get proposals from skilled professionals</p>
+                <a href="#" class="btn">Create Project</a>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>My Projects</h3>
+                <p>Manage and track your ongoing projects</p>
+                <a href="#" class="btn">View Projects</a>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-clipboard-check"></i>
+                <h3>Proposals</h3>
+                <p>Review and manage project proposals</p>
+                <a href="#" class="btn">Check Proposals</a>
+            </div>
         </div>
-        <div class="overview-content">
-            <!-- Draft Job Card -->
-            <div class="draft-job-card">
-                <div class="job-info">
-                    <div class="job-header">
-                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
-                    </div>
-                    <span class="job-status">Draft job post</span>
-                    <p class="add-skills-text">Add the skills you need to continue</p>
+    </div>
+</div>
+    
+<!-- Recent Project Section -->
+<div class="project-filter">
+    <div class="container">
+        <div class="filter">
+            <div class="filter-box">
+                <div class="buttons">
+                    <button class="reset-btn">Reset</button>
+                    <button class="apply-btn">Apply</button>
                 </div>
-                <button class="add-skills-btn">View Details</button>
-            </div>
-            <div class="draft-job-card">
-                <div class="job-info">
-                    <div class="job-header">
-                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
-                    </div>
-                    <span class="job-status">Draft job post</span>
-                    <p class="add-skills-text">Add the skills you need to continue</p>
-                </div>
-                <button class="add-skills-btn">View Details</button>
-            </div>
-            <div class="draft-job-card">
-                <div class="job-info">
-                    <div class="job-header">
-                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
-                    </div>
-                    <span class="job-status">Draft job post</span>
-                    <p class="add-skills-text">Add the skills you need to continue</p>
-                </div>
-                <button class="add-skills-btn">View Details</button>
-            </div>
-            <div class="draft-job-card">
-                <div class="job-info">
-                    <div class="job-header">
-                        <p>Graphic designer needed to design ad creative for multiple campaigns</p>
-                    </div>
-                    <span class="job-status">Draft job post</span>
-                    <p class="add-skills-text">Add the skills you need to continue</p>
-                </div>
-                <button class="add-skills-btn">View Details</button>
-            </div>           
-            
-            
-            <!-- Post a Job Card (Four Cards in a Row) -->
-            <div class="post-job-section">
-                <div class="post-job-card">
-                    <button class="post-job-btn">
-                        <i class="fas fa-plus"></i> Post a job
-                    </button>
+                <hr>
+                <div class="category">
+                    <p>Choose category</p>
+                    <select id="category">
+                        <option value="design">Design</option>
+                        <option value="development">Development</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="design">Design</option>
+                        <option value="development">Development</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="design">Design</option>
+                        <option value="development">Development</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="design">Design</option>
+                        <option value="development">Development</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="design">Design</option>
+                        <option value="development">Development</option>
+                        <option value="marketing">Marketing</option>
+                    </select>
                 </div>
             </div>
+        </div>
+        <div class="project">
+
         </div>
     </div>
 </div>

@@ -14,9 +14,6 @@ class UserLoginView(View):
     # Template used for rendering the login page
     rendered_template = 'accounts/login.html'
     
-    # URL to redirect upon successful login
-    successful_redirect_URL = ''
-    
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('homes:home')
@@ -62,9 +59,9 @@ class UserLoginView(View):
                         
             # Redirect based on user role
             if user.role == 'client':
-                return HttpResponse('Client Dashboard')
+                return redirect('client:dashboard')
             else:
-                return HttpResponse('Freelancer Dashboard')
+                return HttpResponse('freelancer/dashboard')
         else:
             # If authentication fails, check if the email exists in the database
             try:

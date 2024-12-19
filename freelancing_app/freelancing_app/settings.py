@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     # Custom apps
     "home",
     "accounts",
+    "clientdashboard",
 ]
 
 # Middleware stack for request/response processing.
