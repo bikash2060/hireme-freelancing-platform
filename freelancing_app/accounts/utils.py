@@ -68,11 +68,16 @@ def generate_and_save_otp(email):
     return otp
 
 class EmailBackend(ModelBackend):
+    """
+    Custom backend for authenticating users using their email and password.
+    Inherits from Django's ModelBackend and overrides the authenticate method.
+    """
     def authenticate(self, request, email=None, password=None, **kwargs):
         try:
+            # Attempt to retrieve the user by email
             user = User.objects.get(email=email)
             if user.check_password(password):
-                return user
+                return user # Return the authenticated user
             else:
                 print("Password mismatch!")  
         except User.DoesNotExist:
