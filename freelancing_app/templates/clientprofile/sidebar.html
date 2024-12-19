@@ -1,0 +1,87 @@
+{% load static %}
+    <div class="sidebar">
+        <div class="menu_content">
+            <ul class="menu_items">
+                <!-- Profile -->
+                <li class="item">
+                    <a href="{% url 'client:profile' %}" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-user"></i>
+                        </span>
+                        <span class="navlink">My Info</span>
+                    </a>
+                </li>
+    
+                <!-- Change Password -->
+                <li class="item">
+                    <a href="" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-key"></i>
+                        </span>
+                        <span class="navlink">Change Password</span>
+                    </a>
+                </li>
+    
+                <!-- Payment History -->
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-wallet"></i>
+                        </span>
+                        <span class="navlink">Payment History</span>
+                    </a>
+                </li>
+    
+                <!-- My Projects -->
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-briefcase"></i>
+                        </span>
+                        <span class="navlink">Projects History</span>
+                    </a>
+                </li>
+    
+                <!-- Chats -->
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-chat"></i>
+                        </span>
+                        <span class="navlink">Chats</span>
+                    </a>
+                </li>
+    
+                <!-- Proposals -->
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-file"></i>
+                        </span>
+                        <span class="navlink">Proposals</span>
+                    </a>
+                </li>
+    
+                <!-- Notifications -->
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-bell"></i>
+                        </span>
+                        <span class="navlink">Notifications</span>
+                    </a>
+                </li>
+    
+                <!-- Favorites -->
+                <li class="item">
+                    <a href="#" class="nav_link">
+                        <span class="navlink_icon">
+                            <i class="bx bx-heart"></i>
+                        </span>
+                        <span class="navlink">Favorites</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+<script src="{% static 'js/sidebar.js'%}"></script>

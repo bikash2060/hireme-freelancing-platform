@@ -42,6 +42,7 @@ class User(AbstractBaseUser):
     role = models.CharField(max_length=50)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
+    profile_image = models.ImageField(upload_to='user_images/', null=True, blank=True)
 
     objects = CustomUserManager()
 
@@ -57,9 +58,13 @@ class User(AbstractBaseUser):
 class Client(models.Model):
     client_ID = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
-    bio = models.CharField(max_length=255, blank=True, null=True)
-    location = models.CharField(max_length=20, blank=True, null=True)
-
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    languages = models.CharField(max_length=255, blank=True, null=True)  # Store multiple languages as a comma-separated string
+    bio = models.TextField(blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    
     def __str__(self):
         return f"Client: {self.user.username}"
     

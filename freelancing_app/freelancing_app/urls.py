@@ -7,9 +7,11 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('account/', include('accounts.urls', namespace='account')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    path('client/', include('clientprofile.urls', namespace='client'))
 ]
 
 handler404 = 'home.views.handling_404'
 
 if settings.DEBUG:  
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

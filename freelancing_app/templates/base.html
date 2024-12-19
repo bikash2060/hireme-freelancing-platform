@@ -22,9 +22,21 @@
 <div class="nav-container">
     <nav class="navbar">
         <div class="logo">
-            <a href="{% url 'homes:home' %}">
-                <img src="{% static 'images/Logo.png' %}" alt="company-logo">
-            </a>
+            {% if user.is_authenticated %}
+                {% if user.role == "client" %}
+                <a href="{% url 'dashboard:client' %}">
+                    <img src="{% static 'images/Logo.png' %}" alt="company-logo">
+                </a>
+                {% else %}
+                    <a href="{% url 'dashboard:freelancer' %}">
+                        <img src="{% static 'images/Logo.png' %}" alt="company-logo">
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'homes:home' %}">
+                    <img src="{% static 'images/Logo.png' %}" alt="company-logo">
+                </a>
+            {% endif %}
         </div>
         <div class="links">
             {% if user.is_authenticated %}
@@ -182,11 +194,11 @@
             {% if user.is_authenticated %}
             <div class="profile-main">
                 <div class="icon">
-                    <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
+                    <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
                 </div>
                 <div class="user-box">
                     <div class="username">
-                        <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
+                        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
                         <div class="user-info">
                             <p>{{ user.username }}</p>
                             <span>{{ user.role.capitalize }}</span>
@@ -196,7 +208,11 @@
                     <div class="shortcut-settings">
                         <div class="my-profile">
                             <i class="fa-solid fa-gear"></i>
-                            <a href="#">Account Settings</a>
+                            {% if user.role == "client"%}
+                                <a href="{% url 'client:profile' %}">Account Settings</a>
+                            {% else %}
+                                <a href="#">Account Settings</a>
+                            {% endif %}
                         </div>
                         <div class="logout">
                             <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
@@ -276,7 +292,7 @@
         </div>       
         
     </div>
-</div>
+</div> 
 {% endif %}
 
 {% block content %}
@@ -284,6 +300,7 @@
 {% endblock %}
 
 <!-- Footer Section -->
+{% block footer %}
 <footer>
     <div class="content">
         <div class="top">
@@ -351,7 +368,8 @@
         </div>
     </div>
 </footer>  
-    
+{% endblock %}
+
 {% block js_files %}
 
 {% endblock %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/basicinfo.css' %}">
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="overlay" class="overlay"></div>
+{% include 'clientprofile/sidebar.html' %}
+<div class="user-basic-info">
+    <div class="settings-container">
+        <p class="title">My Profile</p>
+
+        <div class="profile-info">
+            <div class="box">
+                <div class="left-side">
+                    <img src="{% if user.profile_image %}{{ MEDIA_URL }}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
+
+                    <div class="details">
+                        <p class="name">{{user.first_name|add:" "}}{{user.last_name}}</p>
+                        <p class="position">{{user.username}}</p>
+                        {% if client.city and client.country %}
+                            <p class="address">{{client.city|add:","}}{{client.country}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="right-side">
+                    <a href="#" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
+                </div>                
+            </div>
+
+            <div class="edit-profile-form" id="edit-profile-form">
+                {% if messages %}
+                    <div class="alert-container">
+                        {% for message in messages %}
+                            <div class="alert {{ message.tags }}">
+                                <span>{{ message }}</span>
+                                <i class="fa fa-times close-message"></i>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form action="{% url 'client:edit' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="profile-image">Profile Image</label>
+                        <input type="file" id="profile-image" name="profile_image" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" value="{{ user.username }}">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="save-btn">Save Changes</button>
+                        <a href="{% url 'client:profile' %}" id="cancel-edit" class="cancel-btn">Cancel</a>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+        
+        <div class="personal-info">
+            <div class="box">
+                <div class="header">
+                    <p class="caption"><i class="fa-regular fa-id-card"></i>Personal Information</p>
+                    <a href="#" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
+                </div>
+                <div class="body-content">
+                    <div class="col-1">
+                        <p><strong>First Name</strong></p>
+                        <p>{{user.first_name|default:" " }}</p>
+                    </div>
+                    <div class="col-2">
+                        <p><strong>Last Name</strong></p>
+                        <p>{{user.last_name|default:" " }}</p>
+                    </div>
+                    <div class="col-3">
+                        <p><strong>Email Address</strong></p>
+                        <p id="email">{{user.email}}</p>
+                    </div>
+                    <div class="col-4">
+                        <p><strong>Phone</strong></p>
+                        <p>{{client.phone_number|default:" " }}</p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>Languages</strong></p>
+                        <p>{{client.languages|default:" " }}</p>
+                    </div>                    
+                    <div class="col-7">
+                        <p><strong>Bio</strong></p>
+                        <p id="bio" class="bio-text">
+                            {{client.bio|default:" " }}
+                        </p> 
+                        <a href="javascript:void(0);" id="read-more" class="read-more">Read More</a>
+                    </div>   
+                                     
+                </div>
+            </div>
+        </div>
+
+        <div class="addreess-info">
+            <div class="box">
+                <div class="header">
+                    <p class="caption"><i class="fa-solid fa-location-dot"></i>Address</p>
+                    <a href="#" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
+                </div>
+                <div class="body-content">
+                    <div class="col-1">
+                        <p><strong>Country</strong></p>
+                        <p>{{client.country|default:" " }}</p>
+                    </div>
+                    <div class="col-2">
+                        <p><strong>City/State</strong></p>
+                        <p>{{client.city|default:" " }}</p>
+                    </div>
+                    <div class="col-3">
+                        <p><strong>Postal Code</strong></p>
+                        <p>{{client.postal_code|default:" " }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="company-info">
+            <div class="box">
+                <div class="header">
+                    <p class="caption"><i class="fas fa-landmark"></i>Company</p>
+                    <a href="#" class="add-link">Add<i class="fas fa-plus"></i></a>
+                </div>
+                <div class="body-content">
+                    <div class="company-item">
+                        <div class="company-logo">
+                            <img src="{% static 'images/facebook.png' %}" alt="facebook Logo">
+                        </div>
+                        <div class="company-details">
+                            <p class="position">Software Engineer</p>
+                            <p class="company-name">Facebook · Full-time</p>
+                            <p class="duration">Jan 2024 - Present · 1 yrs</p>
+                            <p class="location">Oregon, United States</p>
+                        </div>
+                        <a href="#" class="edit-icon"><i class="bx bx-pencil"></i></a>
+                    </div>
+                    <div class="company-item">
+                        <div class="company-logo">
+                            <img src="{% static 'images/code himalaya.png' %}" alt="codehimalaya Logo">
+                        </div>
+                        <div class="company-details">
+                            <p class="position">Backend Developer</p>
+                            <p class="company-name">Code Himalaya · Self-employed</p>
+                            <p class="duration">Jan 2023 - Jan 2024 · 1 yr</p>
+                            <p class="location">Kathmandu, Nepal</p>
+                        </div>
+                        <a href="#" class="edit-icon"><i class="bx bx-pencil"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+<script src="{% static 'js/basic-info.js' %}"></script>
+{% endblock %}

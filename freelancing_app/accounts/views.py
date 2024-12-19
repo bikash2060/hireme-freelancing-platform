@@ -55,7 +55,7 @@ class UserLoginView(View):
             login(request, user)
             
             # Set session expiry to 30 minutes
-            request.session.set_expiry(30 * 60)
+            # request.session.set_expiry(30 * 60)
                         
             # Redirect based on user role
             if user.role == 'client':

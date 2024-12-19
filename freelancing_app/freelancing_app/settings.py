@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 # Define base directory path for the project.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,7 +37,7 @@ INSTALLED_APPS = [
     "home",
     "accounts",
     "dashboard",
-    "userprofiles",
+    "clientprofile",
 ]
 
 # Middleware stack for request/response processing.
@@ -151,6 +152,11 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# settings.py
+MEDIA_URL = '/media/'  # URL to access media files in the browser
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory where media files are stored
+
 
 # Default type for auto-incrementing primary key fields.
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
