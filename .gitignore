@@ -9,8 +9,8 @@ __pycache__/
 *.pyo
 
 # Ignore Django migration files
-**/migrations/
-*.pyc
+freelancing_app/accounts/__pycache__
+freelancing_app/accounts/migrations
 
 # Ignore environment configuration
 .env
