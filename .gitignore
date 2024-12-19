@@ -24,9 +24,8 @@ staticfiles/
 # Ignore macOS specific files
 .DS_Store
 
-# Ignore any temporary or backup files
+# Ignore temporary or backup files
 *.swp
 *.bak
 *.tmp
 *~
-
