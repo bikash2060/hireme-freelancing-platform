@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block content %}
-<div id="overlay" class="overlay"></div>
 {% include 'clientprofile/sidebar.html' %}
 <div class="user-basic-info">
     <div class="settings-container">
@@ -30,45 +29,16 @@
                     </div>
                 </div>
                 <div class="right-side">
-                    <a href="#" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
+                    <a href="{% url 'client:edit-profile-image' %}" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
                 </div>                
-            </div>
-
-            <div class="edit-profile-form" id="edit-profile-form">
-                {% if messages %}
-                    <div class="alert-container">
-                        {% for message in messages %}
-                            <div class="alert {{ message.tags }}">
-                                <span>{{ message }}</span>
-                                <i class="fa fa-times close-message"></i>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <form action="{% url 'client:edit' %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="profile-image">Profile Image</label>
-                        <input type="file" id="profile-image" name="profile_image" accept="image/*">
-                    </div>
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" value="{{ user.username }}">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="save-btn">Save Changes</button>
-                        <a href="{% url 'client:profile' %}" id="cancel-edit" class="cancel-btn">Cancel</a>
-                    </div>
-                </form>
-            </div>
-            
+            </div>            
         </div>
         
         <div class="personal-info">
             <div class="box">
                 <div class="header">
                     <p class="caption"><i class="fa-regular fa-id-card"></i>Personal Information</p>
-                    <a href="#" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
+                    <a href="{% url 'client:edit-personal-info' %}" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
                 </div>
                 <div class="body-content">
                     <div class="col-1">
@@ -98,7 +68,6 @@
                         </p> 
                         <a href="javascript:void(0);" id="read-more" class="read-more">Read More</a>
                     </div>   
-                                     
                 </div>
             </div>
         </div>
@@ -173,5 +142,5 @@
 
 {% block js_files %}
 <script src="{% static 'js/message.js' %}"></script>
-<script src="{% static 'js/basic-info.js' %}"></script>
+<script src="{% static 'js/client-profile.js' %}"></script>
 {% endblock %}

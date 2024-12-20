@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/editprofileimage.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'clientprofile/sidebar.html' %}
+<div class="edit-image-container">
+    <div class="back-button">
+        <a href="{% url 'client:profile' %}">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="edit-profile-form" id="edit-profile-form">
+        {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        <span>{{ message }}</span>
+                        <i class="fa fa-times close-message"></i>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form action="{% url 'client:edit-profile-image' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="profile-image">Profile Image</label>
+                <input type="file" id="profile-image" name="profile_image" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Save Changes</button>
+                <a href="{% url 'client:profile' %}" id="cancel-edit" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>    
+</div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/editpersonalinfo.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'clientprofile/sidebar.html' %}
+<div class="edit-personal-container">
+    <div class="back-button">
+        <a href="{% url 'client:profile' %}">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="personal-info-form">
+        {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        <span>{{ message }}</span>
+                        <i class="fa fa-times close-message"></i>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form action="{% url 'client:edit-personal-info' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="first-name">First Name</label>
+                <input type="text" id="first-name" name="first_name" value="{{ user.first_name }}">
+            </div>
+            <div class="form-group">
+                <label for="last-name">Last Name</label>
+                <input type="text" id="last-name" name="last_name" value="{{ user.last_name }}">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="phone-number">Phone Number</label>
+                <input type="text" id="phone-number" name="phone_number" value="{{ client.phone_number }}">
+            </div>
+            <div class="form-group">
+                <label for="languages">Languages</label>
+                <input type="text" id="languages" name="languages" value="{{ client.languages }}">
+            </div>
+            <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea id="bio" name="bio">{{ client.bio }}</textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="save-btn">Save Changes</button>
+                <a href="{% url 'client:profile' %}" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+{% endblock %}

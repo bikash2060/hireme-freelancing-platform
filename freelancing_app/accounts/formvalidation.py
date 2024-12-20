@@ -7,7 +7,8 @@ def validate_signup_form(email, username, password, confirm_password):
     Validates the user signup form by checking required fields, email, username, password, and their respective formats.
     Ensures password complexity, checks for existing email/username, and handles database errors.
     """
-    
+    reserved_words = {"admin", "root", "user", "support"}
+
     if not email or not username or not password or not confirm_password:
         return False, "All fields are required."
 
@@ -35,6 +36,9 @@ def validate_signup_form(email, username, password, confirm_password):
     
     if len(username) > 15:
         return False, "Username must not exceed 15 characters."
+    
+    if username.lower() in reserved_words:
+        return False, "This username is reserved. Please choose another."
 
     if password != confirm_password:
         return False, "Passwords do not match."

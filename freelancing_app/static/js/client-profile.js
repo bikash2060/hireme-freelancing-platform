@@ -32,28 +32,3 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    const editLink = document.querySelector('.edit-link');
-    const overlay = document.getElementById('overlay');
-    const editProfileForm = document.getElementById('edit-profile-form');
-    const cancelBtn = document.getElementById('cancel-edit');
-    
-    // Show overlay and form when edit button is clicked
-    editLink.addEventListener('click', function(event) {
-        event.preventDefault();
-        overlay.style.display = 'block'; // Show overlay
-        editProfileForm.style.display = 'block'; // Show form
-        document.body.classList.add('no-scroll'); // Disable scrolling
-    });
-
-
-    // If there are any messages, ensure the form remains visible
-    const messageContainer = document.querySelector('.alert-container');
-    if (messageContainer) {
-        overlay.style.display = 'block'; // Show overlay
-        editProfileForm.style.display = 'block'; // Show form
-        document.body.classList.add('no-scroll'); // Disable scrolling
-    }
-});
-
-
