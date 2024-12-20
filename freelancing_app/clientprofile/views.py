@@ -23,7 +23,7 @@ class EditProfileImageView(View):
                 return render(request, 'clientprofile/basic-info.html')
 
             if User.objects.filter(username=username).exclude(id=request.user.id).exists():
-                messages.error(request, "This username is already taken. Please choose another one.")
+                messages.error(request, "Username already taken.")
                 return render(request, 'clientprofile/basic-info.html')
 
             try:
@@ -31,14 +31,13 @@ class EditProfileImageView(View):
                 user.username = username
 
                 if profile_image:
-                    fs = FileSystemStorage(location='media/profile_images')  # Optional: Specify the subdirectory
-                    filename = fs.save(profile_image.name, profile_image)  # Save the file and get the filename
-                    file_name_only = filename.split('/')[-1]  # Extract just the filename (e.g., 'image.png')
-                    user.profile_image = file_name_only  # Store the filename in the database
-
+                    fs = FileSystemStorage(location='media/profile_images')  
+                    filename = fs.save(profile_image.name, profile_image)  
+                    file_name_only = filename.split('/')[-1]  
+                    user.profile_image = file_name_only  
                 user.save()
 
-                messages.success(request, "Your profile has been updated successfully.")
+                messages.success(request, "Profile Updated Successfully!")
                 return redirect('client:profile')  
 
             except ValidationError as e:

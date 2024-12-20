@@ -194,11 +194,11 @@
             {% if user.is_authenticated %}
             <div class="profile-main">
                 <div class="icon">
-                    <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
+                    <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
                 </div>
                 <div class="user-box">
                     <div class="username">
-                        <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
+                        <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
                         <div class="user-info">
                             <p>{{ user.username }}</p>
                             <span>{{ user.role.capitalize }}</span>
