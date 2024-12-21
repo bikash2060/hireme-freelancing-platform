@@ -21,7 +21,9 @@
                     <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
 
                     <div class="details">
-                        <p class="name">{{user.first_name|add:" "}}{{user.last_name}}</p>
+                        {% if user.first_name and user.last_name %}
+                            <p class="name">{{ user.first_name }} {{ user.last_name }}</p>
+                        {% endif %}
                         <p class="position">{{user.username}}</p>
                         {% if client.city and client.country %}
                             <p class="address">{{client.city|add:","}}{{client.country}}</p>
@@ -43,11 +45,15 @@
                 <div class="body-content">
                     <div class="col-1">
                         <p><strong>First Name</strong></p>
-                        <p>{{user.first_name|default:" " }}</p>
+                        <p>{{user.first_name|default:"" }}</p>
                     </div>
                     <div class="col-2">
+                        <p><strong>Middle Name</strong></p>
+                        <p>{{user.middle_name|default:"" }}</p>
+                    </div>
+                    <div class="col-3">
                         <p><strong>Last Name</strong></p>
-                        <p>{{user.last_name|default:" " }}</p>
+                        <p>{{user.last_name}}</p>
                     </div>
                     <div class="col-3">
                         <p><strong>Email Address</strong></p>
@@ -55,16 +61,16 @@
                     </div>
                     <div class="col-4">
                         <p><strong>Phone</strong></p>
-                        <p>{{client.phone_number|default:" " }}</p>
+                        <p>{{user.phone_number|default:"" }}</p>
                     </div>
                     <div class="col-6">
                         <p><strong>Languages</strong></p>
-                        <p>{{client.languages|default:" " }}</p>
+                        <p>{{client.languages|default:"" }}</p>
                     </div>                    
                     <div class="col-7">
                         <p><strong>Bio</strong></p>
                         <p id="bio" class="bio-text">
-                            {{client.bio|default:" " }}
+                            {{client.bio|default:"" }}
                         </p> 
                         <a href="javascript:void(0);" id="read-more" class="read-more">Read More</a>
                     </div>   
@@ -81,15 +87,15 @@
                 <div class="body-content">
                     <div class="col-1">
                         <p><strong>Country</strong></p>
-                        <p>{{client.country|default:" " }}</p>
+                        <p>{{client.country|default:"" }}</p>
                     </div>
                     <div class="col-2">
                         <p><strong>City/State</strong></p>
-                        <p>{{client.city|default:" " }}</p>
+                        <p>{{client.city|default:"" }}</p>
                     </div>
                     <div class="col-3">
                         <p><strong>Postal Code</strong></p>
-                        <p>{{client.postal_code|default:" " }}</p>
+                        <p>{{client.postal_code|default:"" }}</p>
                     </div>
                 </div>
             </div>

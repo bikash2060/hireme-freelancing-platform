@@ -33,13 +33,14 @@ class CustomUserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-    
     username = models.CharField(max_length=150, unique=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, null=True)
+    middle_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=128)
     role = models.CharField(max_length=50)
+    phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
     profile_image = models.ImageField(upload_to='user_images/', null=True, blank=True)
@@ -58,8 +59,7 @@ class User(AbstractBaseUser):
 class Client(models.Model):
     client_ID = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-    languages = models.CharField(max_length=255, blank=True, null=True)  # Store multiple languages as a comma-separated string
+    languages = models.CharField(max_length=255, blank=True, null=True)  
     bio = models.TextField(blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)

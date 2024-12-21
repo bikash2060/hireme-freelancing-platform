@@ -15,11 +15,14 @@ window.onload = formatEmail;
 
 document.addEventListener('DOMContentLoaded', function () {
     const bioText = document.getElementById('bio');
+    console.log(bioText)
     const readMoreLink = document.getElementById('read-more');
 
-    if (!bioText || bioText.textContent.trim() === "") {
+    if (!bioText || bioText.textContent.trim() === "" || bioText.textContent.trim() === "None") {
         readMoreLink.style.display = 'none';
     } else {
+        // Show the "Read More" link and toggle functionality
+        readMoreLink.style.display = 'inline'; // Ensure it's visible
         readMoreLink.addEventListener('click', function () {
             if (bioText.style.maxHeight === 'none') {
                 bioText.style.maxHeight = '6.4em';  
@@ -31,4 +34,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
 
