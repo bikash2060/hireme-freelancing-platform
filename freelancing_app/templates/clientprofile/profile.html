@@ -4,9 +4,9 @@
 {% block title %}HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/basicinfo.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/profile.css' %}">
 <link rel="stylesheet" href="{% static 'css/message.css' %}">
-<link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -82,7 +82,7 @@
             <div class="box">
                 <div class="header">
                     <p class="caption"><i class="fa-solid fa-location-dot"></i>Address</p>
-                    <a href="#" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
+                    <a href="{% url 'client:edit-address' %}" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
                 </div>
                 <div class="body-content">
                     <div class="col-1">

@@ -1,4 +1,5 @@
 import os
+import re
 
 def validate_username(username):
     reserved_words = {"admin", "root", "user", "support", "client", "freelancer"}
@@ -74,5 +75,12 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
     
     if bio and len(bio) > 500:
         return False, "Bio should not exceed 500 characters."
+    
+    return True, ""
+
+def validate_postal_code(postal_code):
+    
+    if not re.match(r'^[a-zA-Z0-9]{4,10}$', postal_code):
+        return False, "Invalid postal code. It must be alphanumeric and between 4-10 characters."
     
     return True, ""

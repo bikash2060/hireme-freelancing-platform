@@ -1,0 +1,110 @@
+.edit-personal-container {
+    width: calc(100% - 260px);
+    max-width: 500px;
+    position: relative;
+    top: 120px;
+    left: 300px;
+}
+
+.edit-personal-container .back-button a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    color: #1E88E5;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.edit-personal-container .back-button i {
+    margin-right: 8px;
+}
+
+.personal-info-form {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+}
+
+.personal-info-form .form-group {
+    margin-bottom: 20px;
+}
+
+.personal-info-form .form-group label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.personal-info-form .form-group input,
+.personal-info-form .form-group textarea,
+.personal-info-form .form-group select {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.personal-info-form .form-group input[type="text"]:focus {
+    border-color: #626cd6;
+}
+
+
+.personal-info-form .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.personal-info-form .form-group select {
+    height: 200px; 
+    overflow-y: auto;
+}
+
+.personal-info-form .form-group input[readonly] {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.personal-info-form .form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.personal-info-form .form-actions button,
+.personal-info-form .form-actions a {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.personal-info-form .form-actions button {
+    background-color: #1E88E5;
+    color: #fff;
+    border: none;
+}
+
+.personal-info-form .form-actions button:hover {
+    background-color: #1565C0;
+}
+
+.personal-info-form .form-actions a {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.personal-info-form .form-actions a:hover {
+    background-color: #d32f2f;
+}

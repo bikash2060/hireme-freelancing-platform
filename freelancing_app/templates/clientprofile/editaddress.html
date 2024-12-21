@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/editaddress.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'clientprofile/sidebar.html' %}
+<div class="edit-address-container">
+    <div class="back-button">
+        <a href="{% url 'client:profile' %}">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="edit-address-form" id="edit-profile-form">
+        {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        <span>{{ message }}</span>
+                        <i class="fa fa-times close-message"></i>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form action="{% url 'client:edit-address' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="country">Country</label>
+                <select id="country" name="country">
+                    <option value="">Select a country</option>
+                    {% for country, cities in countries_and_cities.items %}
+                        <option value="{{ country }}" {% if client.country == country %}selected{% endif %}>
+                            {{ country }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="city">City/State</label>
+                <select id="city" name="city" >
+                    <option value="">Select a city</option>
+                    {% if client.city %}
+                        <option value="{{ client.city }}" selected>{{ client.city }}</option>
+                    {% endif %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="postal_code">Postal Code</label>
+                <input type="text" id="postal_code" name="postal_code" value="{{ client.postal_code|default:'' }}">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Save Changes</button>
+                <a href="{% url 'client:profile' %}" id="cancel-edit" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const countrySelect = document.getElementById("country");
+        const citySelect = document.getElementById("city");
+    
+        const citiesByCountry = {{ countries_and_cities_json|safe }};
+    
+        countrySelect.addEventListener("change", function () {
+            const selectedCountry = this.value;
+            citySelect.innerHTML = "<option value=''>Select a city</option>";
+            if (citiesByCountry[selectedCountry]) {
+                citiesByCountry[selectedCountry].forEach(city => {
+                    const option = document.createElement("option");
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        });
+
+        // Pre-fill cities based on pre-selected country
+        const preSelectedCountry = countrySelect.value;
+        if (citiesByCountry[preSelectedCountry]) {
+            citiesByCountry[preSelectedCountry].forEach(city => {
+                const option = document.createElement("option");
+                option.value = city;
+                option.textContent = city;
+                option.selected = city === "{{ client.city }}";
+                citySelect.appendChild(option);
+            });
+        }
+    });
+</script>
+{% endblock %}
