@@ -5,6 +5,8 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from .utils import validate_username, validate_personal_info, validate_profile_image, validate_postal_code
 import json
+from datetime import datetime
+
 
 class UserBasicInfoView(View):
     rendered_template = 'clientprofile/profile.html'
@@ -100,7 +102,7 @@ class EditPersonalInfoView(View):
             messages.error(request, error_message)
             return render(request, self.rendered_template, {'form_data': form_data, 'client': client})
 
-        if phone_number and User.objects.filter(phone_number=phone_number).exclude(id=request.user.id).exists():
+        if phone_number and User.objects.filter(phone_number=phone_number).exclude(id=user.id).exists():
             messages.error(request, 'This phone number is already registered.')
             return render(request, self.rendered_template, {'form_data': form_data, 'client': client})
 
@@ -367,13 +369,15 @@ class EditUserAddressView(View):
                 'countries_and_cities_json': json.dumps(self.countries_and_cities)
             })
         
-        if Client.objects.filter(postal_code=postal_code).exists():
+        if Client.objects.filter(postal_code=postal_code).exclude(client_ID=client.client_ID).exists():
             messages.error(request, "This postal code is already in use. Please enter a unique postal code.")
             return render(request, self.rendered_template, {
                 'client': client,
                 'countries_and_cities': self.countries_and_cities,
                 'countries_and_cities_json': json.dumps(self.countries_and_cities)
             })
+
+
             
         try:
             client.country = country
@@ -392,4 +396,33 @@ class EditUserAddressView(View):
             
             
 #Full Testing In Progress
-      
+class AddCompanyView(View):
+    rendered_template = 'clientprofile/addcompany.html'
+    
+    months = {
+        "jan": "January",
+        "feb": "February",
+        "mar": "March",
+        "apr": "April",
+        "may": "May",
+        "jun": "June",
+        "jul": "July",
+        "aug": "August",
+        "sep": "September",
+        "oct": "October",
+        "nov": "November",
+        "dec": "December",
+    }
+    current_year = datetime.now().year
+    years = {str(year): year for year in range(current_year, 1979, -1)}  
+    
+    def get(self, request):
+        context = {
+            'months': self.months,
+            'years': self.years,
+        }
+
+        return render(request, self.rendered_template, context)
+    
+    
+            

@@ -13,7 +13,11 @@
 <div class="hero-section">
     <div class="container">
         <div class="hero-content">
-            <h3>{{ greeting }}, Bikash</h3>
+            {% if user.first_name %}
+                <h3>{{ greeting }}, {{user.first_name}}</h3>
+            {% else %}
+                <h3>{{ greeting }}, {{user.username}}</h3>
+            {% endif %}
             <a href="#" class="post-project-btn">
                 <i class="fas fa-plus"></i> Post a Project
             </a>
