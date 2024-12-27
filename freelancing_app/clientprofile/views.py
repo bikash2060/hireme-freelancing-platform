@@ -3,9 +3,10 @@ from django.views import View
 from accounts.models import User, Client
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
-from .utils import validate_username, validate_personal_info, validate_profile_image, validate_postal_code
+from .utils import *
 import json
 from datetime import datetime
+from .models import Company
 
 
 class UserBasicInfoView(View):
@@ -13,8 +14,25 @@ class UserBasicInfoView(View):
     
     def get(self, request):
         client = Client.objects.get(user=request.user)  
+        company = Company.objects.filter(client_id=client)
+        current_year = datetime.now().year  
+        companies_with_duration = []
+
+        for comp in company:
+            if comp.end_date:
+                duration = comp.end_date.year - comp.start_date.year
+            else:
+                duration = current_year - comp.start_date.year
+            companies_with_duration.append({
+                'company': comp,
+                'duration': duration
+            })
         
-        return render(request, self.rendered_template, {'client': client})
+        return render(request, self.rendered_template, {
+            'client': client,
+            'companies_with_duration': companies_with_duration,
+            'current_year': current_year
+        })
 
 # Full Testing In Progress
 class EditProfileImageView(View):
@@ -398,6 +416,7 @@ class EditUserAddressView(View):
 #Full Testing In Progress
 class AddCompanyView(View):
     rendered_template = 'clientprofile/addcompany.html'
+    redirected_URL = 'client:addcompany'
     
     months = {
         "jan": "January",
@@ -421,8 +440,79 @@ class AddCompanyView(View):
             'months': self.months,
             'years': self.years,
         }
-
         return render(request, self.rendered_template, context)
     
-    
+    def post(self, request):
+        client = Client.objects.get(user=request.user)
+        
+        company_logo = request.FILES.get('company_logo')  
+        company_name = request.POST.get('company_name')  
+        position = request.POST.get('position')  
+        start_month = request.POST.get('start_month')  
+        start_year = request.POST.get('start_year')  
+        end_month = request.POST.get('end_month')  
+        end_year = request.POST.get('end_year')  
+        location = request.POST.get('location')  
+        url = request.POST.get('url')  
+        currently_working = request.POST.get('currently_working')
+        
+        context = {
+            'company_logo': company_logo,
+            'company_name': company_name,
+            'position': position,
+            'start_month': start_month,
+            'start_year': start_year,
+            'end_month': end_month,
+            'end_year': end_year,
+            'location': location,
+            'url': url,
+            'currently_working': currently_working,
+            'months': self.months,
+            'years': self.years,
+        }
+        
+        valid, error_message = create_company(
+            company_logo, company_name, position, start_month, start_year, 
+            end_month, end_year, location, url, currently_working, self.months
+        )
+        
+        if not valid:
+            messages.error(request, error_message)
+            return render(request, self.rendered_template, context)
+        
+        if start_month and start_year:
+            start_month_name = self.months.get(start_month)
+            start_date_str = f"{start_month_name}-{start_year}"
+            start_date = datetime.strptime(start_date_str, "%B-%Y").date()
+        else:
+            start_date = None
+        
+        if not currently_working and end_month and end_year:
+            end_month_name = self.months.get(end_month)
+            end_date_str = f"{end_month_name}-{end_year}"
+            end_date = datetime.strptime(end_date_str, "%B-%Y").date()
+        else:
+            end_date = None
             
+        try:
+            company = Company.objects.create(
+                name=company_name,
+                position=position,
+                start_date=start_date,
+                end_date=end_date,
+                location=location,
+                url=url,
+                client=client 
+            )
+            
+            if company_logo:
+                fs = FileSystemStorage(location='media/company_images')
+                filename = fs.save(company_logo.name, company_logo)
+                company.logo = filename.split('/')[-1]
+            company.save()
+                
+            messages.success(request, "Company added successfully.")
+            return redirect(self.redirected_URL)  
+        except Exception as e:
+            messages.error(request, f"Error: {str(e)}")
+            return render(request, self.rendered_template, context)

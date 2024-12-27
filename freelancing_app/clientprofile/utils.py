@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime
 
 def validate_username(username):
     reserved_words = {"admin", "root", "user", "support", "client", "freelancer"}
@@ -82,5 +83,44 @@ def validate_postal_code(postal_code):
     
     if not re.match(r'^[a-zA-Z0-9]{4,10}$', postal_code):
         return False, "Invalid postal code. It must be alphanumeric and between 4-10 characters."
+    
+    return True, ""
+
+def create_company(company_logo, company_name, position, start_month, start_year, end_month, end_year, location, url, currently_working, months):
+    if company_logo:
+        valid_extensions = ['.png', '.jpg', '.jpeg']
+        file_extension = os.path.splitext(company_logo.name)[1].lower()
+        
+        if file_extension not in valid_extensions:
+            return False, "Only JPG, PNG, or JPEG file types are allowed."
+        
+        max_size = 10 * 1024 * 1024  # 10MB
+        if company_logo.size > max_size:
+            return False, "File size exceeds the 10MB limit."
+    
+    if not company_name or len(company_name.strip()) == 0:
+        return False, "Company name is required."
+    
+    if not position or len(position.strip()) == 0:
+        return False, "Position is required."
+    
+    if not start_month or not start_year:
+        return False, "Start date is required."
+    
+    start_month_num = list(months.keys()).index(start_month) + 1  
+    start_date = (int(start_year), start_month_num)
+    
+    if not currently_working and (not end_month or not end_year):
+        return False, "End date is required if not currently working."
+    
+    if end_month and end_year:
+        end_month_num = list(months.keys()).index(end_month) + 1  
+        end_date = (int(end_year), end_month_num)
+        
+        if end_date < start_date:
+            return False, "End date cannot be earlier than start date."
+    
+    if url and not url.startswith(("http://", "https://")):
+        return False, "Invalid URL. Ensure the URL starts with http:// or https://."
     
     return True, ""

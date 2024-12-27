@@ -28,7 +28,7 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <form action="#" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'client:addcompany' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="company_logo">Company Logo</label>
@@ -36,15 +36,15 @@
             </div>
             <div class="form-group">
                 <label for="company_name">Company Name</label>
-                <input type="text" id="company_name" name="company_name" placeholder="Enter company name">
+                <input type="text" id="company_name" name="company_name" placeholder="Enter company name" value="{{ company_name }}">
             </div>
             <div class="form-group">
                 <label for="position">Position</label>
-                <input type="text" id="position" name="position" placeholder="Enter your position">
+                <input type="text" id="position" name="position" placeholder="Enter your position" value="{{ position }}">
             </div>
             <div class="form-group currently_working">
                 <label>
-                    <input type="checkbox" id="currently_working" name="currently_working" onclick="toggleEndDate()">
+                    <input type="checkbox" id="currently_working" name="currently_working" onclick="toggleEndDate()" {% if currently_working %}checked{% endif %}>
                 </label>
                 <span>I am currently working in this role</span>
             </div>            
@@ -54,13 +54,13 @@
                     <select id="start_month" name="start_month">
                         <option value="">Month</option>
                         {% for key, value in months.items %}
-                            <option value="{{ key }}">{{ value }}</option>
+                            <option value="{{ key }}" {% if key == start_month %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
                     <select id="start_year" name="start_year">
                         <option value="">Year</option>
                         {% for key, value in years.items %}
-                            <option value="{{ key }}">{{ value }}</option>
+                            <option value="{{ key }}" {% if key == start_year %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -71,30 +71,30 @@
                     <select id="end_month" name="end_month">
                         <option value="">Month</option>
                         {% for key, value in months.items %}
-                            <option value="{{ key }}">{{ value }}</option>
+                            <option value="{{ key }}" {% if key == end_month %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
                     <select id="end_year" name="end_year">
                         <option value="">Year</option>
                         {% for key, value in years.items %}
-                            <option value="{{ key }}">{{ value }}</option>
+                            <option value="{{ key }}" {% if key == end_year %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label for="location">Company Location</label>
-                <input type="text" id="location" name="location" placeholder="Enter location">
+                <input type="text" id="location" name="location" placeholder="Enter location" value="{{ location }}">
             </div>
             <div class="form-group">
                 <label for="url">URL</label>
-                <input type="text" id="url" name="url" placeholder="Enter url">
+                <input type="text" id="url" name="url" placeholder="Enter url" value="{{ url }}">
             </div>
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>
                 <a href="{% url 'client:profile' %}">Cancel</a>
             </div>
-        </form>
+        </form>        
     </div>
 </div>
 {% endblock %}
@@ -112,15 +112,17 @@
         const endYear = document.getElementById('end_year');
 
         if (checkbox.checked) {
-            // Disable end date fields if checkbox is checked
             endMonth.disabled = true;
             endYear.disabled = true;
         } else {
-            // Enable end date fields if checkbox is unchecked
             endMonth.disabled = false;
             endYear.disabled = false;
         }
     }
+
+    window.onload = function() {
+        toggleEndDate();
+    };
 </script>
 
 {% endblock %}

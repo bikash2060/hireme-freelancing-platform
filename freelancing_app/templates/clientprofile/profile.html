@@ -108,37 +108,40 @@
                     <a href="{% url 'client:addcompany' %}" class="add-link">Add<i class="fas fa-plus"></i></a>
                 </div>
                 <div class="body-content">
+                    {% for company_info in companies_with_duration %}
                     <div class="company-item">
                         <div class="company-logo">
-                            <img src="{% static 'images/facebook.png' %}" alt="facebook Logo">
+                            {% if company_info.company.logo %}
+                            <img src="{% get_media_prefix %}company_images/{{ company_info.company.logo }}" alt="{{ company_info.company.name }} Logo">
+                            {% else %}
+                                <img src="{% static 'images/default_logo.jpg' %}" alt="Default Logo">
+                            {% endif %}
                         </div>
                         <div class="company-details">
-                            <p class="position">Software Engineer</p>
-                            <p class="company-name">Facebook · Full-time</p>
-                            <p class="duration">Jan 2024 - Present · 1 yrs</p>
-                            <p class="location">Oregon, United States</p>
+                            <p class="position">{{ company_info.company.position }}</p>
+                            <p class="company-name">{{ company_info.company.name }}</p>
+                            <p class="duration">
+                                {% if company_info.company.end_date %}
+                                    {{ company_info.company.start_date|date:"M Y" }} - {{ company_info.company.end_date|date:"M Y" }} ·
+                                    {{ company_info.duration }} yrs
+                                {% else %}
+                                    {{ company_info.company.start_date|date:"M Y" }} - Present ·
+                                    {{ company_info.duration }} yrs
+                                {% endif %}
+                            </p>
+                            <p class="location">{{ company_info.company.location }}</p>
                         </div>
                         <a href="#" class="edit-icon"><i class="bx bx-pencil"></i></a>
                     </div>
-                    <div class="company-item">
-                        <div class="company-logo">
-                            <img src="{% static 'images/code himalaya.png' %}" alt="codehimalaya Logo">
-                        </div>
-                        <div class="company-details">
-                            <p class="position">Backend Developer</p>
-                            <p class="company-name">Code Himalaya · Self-employed</p>
-                            <p class="duration">Jan 2023 - Jan 2024 · 1 yr</p>
-                            <p class="location">Kathmandu, Nepal</p>
-                        </div>
-                        <a href="#" class="edit-icon"><i class="bx bx-pencil"></i></a>
-                    </div>
+                    {% empty %}
+                    <p>No companies added yet.</p>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
+        </div>       
+        
     </div>
 </div>
-
-
 
 {% endblock %}
 
