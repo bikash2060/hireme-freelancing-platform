@@ -504,7 +504,7 @@ body {
 
 /* Detailed Chat Box */
 .detailed-chat .main-box {
-    /* display: none; */
+    display: none;
     position: fixed;
     bottom: 10px;
     right: 20px;

@@ -22,32 +22,12 @@
 <div class="nav-container">
     <nav class="navbar">
         <div class="logo">
-            {% if user.is_authenticated %}
-                {% if user.role == "client" %}
-                <a href="{% url 'dashboard:client' %}">
-                    <img src="{% static 'images/Logo.png' %}" alt="company-logo">
-                </a>
-                {% else %}
-                    <a href="{% url 'dashboard:freelancer' %}">
-                        <img src="{% static 'images/Logo.png' %}" alt="company-logo">
-                    </a>
-                {% endif %}
-            {% else %}
-                <a href="{% url 'homes:home' %}">
-                    <img src="{% static 'images/Logo.png' %}" alt="company-logo">
-                </a>
-            {% endif %}
+            <a href="{% url 'homes:home' %}">
+                <img src="{% static 'images/Logo.png' %}" alt="company-logo">
+            </a>
         </div>
         <div class="links">
-            {% if user.is_authenticated %}
-                {% if user.role == "client" %}
-                    <a href="{% url 'dashboard:client' %}">Home</a>
-                {% else %}
-                    <a href="{% url 'dashboard:freelancer' %}">Home</a>
-                {% endif %}
-            {% else %}
-                <a href="{% url 'homes:home' %}">Home</a>
-            {% endif %}
+            <a href="{% url 'homes:home' %}">Home</a>
             <a href="#">Find Freelancers</a>
             <a href="#">Find Projects</a>
             <a href="#">Help</a>
@@ -182,13 +162,57 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="chat-row">
+                                    <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minima molestias quisquam cupiditate, ullam itaque inventore eaque illo iusto magnam minus laborum saepe facilis nihil non ut, placeat fugiat quod praesentium.</span>
+                                            <span class="time">1d</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-row">
+                                    <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minima molestias quisquam cupiditate, ullam itaque inventore eaque illo iusto magnam minus laborum saepe facilis nihil non ut, placeat fugiat quod praesentium.</span>
+                                            <span class="time">1d</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-row">
+                                    <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minima molestias quisquam cupiditate, ullam itaque inventore eaque illo iusto magnam minus laborum saepe facilis nihil non ut, placeat fugiat quod praesentium.</span>
+                                            <span class="time">1d</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-row">
+                                    <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile">
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minima molestias quisquam cupiditate, ullam itaque inventore eaque illo iusto magnam minus laborum saepe facilis nihil non ut, placeat fugiat quod praesentium.</span>
+                                            <span class="time">1d</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
             
             </div>
-            {% endif %}
             
             <!-- User Profile Section -->
             {% if user.is_authenticated %}
