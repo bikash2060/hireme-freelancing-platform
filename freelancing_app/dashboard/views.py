@@ -2,6 +2,8 @@ from django.views import View
 from django.shortcuts import render, redirect, HttpResponse
 from datetime import datetime
 from accounts.mixins import CustomLoginRequiredMixin
+from projects.models import Project
+from accounts.models import Client
 
 class ClientDashboardView(CustomLoginRequiredMixin, View):
     def get(self, request):
@@ -14,8 +16,12 @@ class ClientDashboardView(CustomLoginRequiredMixin, View):
         else:
             greeting = "Good Evening"
 
+        client = Client.objects.get(user=request.user)
+        projects = Project.objects.filter(client=client)
+
         context = {
             'greeting': greeting,
+            'projects': projects,  
         }
         return render(request, 'dashboard/clientdashboard.html', context)
     

@@ -336,12 +336,12 @@ body {
 .job-box .project-status {
     font-size: 14px;
     font-weight: bold;
-    border-radius: 15px;
     padding: 6px 12px;
     margin-top: 15px;
     text-align: center;
     width: 100%;
     color: white;
+    border-radius: 5px;
 }
 
 .job-box .project-status.completed {

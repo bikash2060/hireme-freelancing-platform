@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "accounts",
     "dashboard",
     "clientprofile",
+    "projects",
 ]
 
 # Middleware stack for request/response processing

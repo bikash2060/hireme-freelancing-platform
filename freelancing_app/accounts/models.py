@@ -43,7 +43,7 @@ class User(AbstractBaseUser):
     phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False)
-    profile_image = models.ImageField(upload_to='user_images/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
 
     objects = CustomUserManager()
 

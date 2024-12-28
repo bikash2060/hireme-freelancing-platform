@@ -7,7 +7,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('account/', include('accounts.urls', namespace='account')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
-    path('client/', include('clientprofile.urls', namespace='client'))
+    path('client/', include('clientprofile.urls', namespace='client')),
+    path('project/', include('projects.urls', namespace='project')),
 ]
 
 handler404 = 'home.views.handling_404'

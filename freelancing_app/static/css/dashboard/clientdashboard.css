@@ -149,15 +149,73 @@
     }
 }
 
-/* Styling Recommended Section */
-.recommended-section{
+/* Styling Overview Section */
+.overview{
     margin-bottom: 50px;
 }
-.recommended-section h3 {
-    text-align: center;
+
+.overview h3{
+    text-align: left;
     font-size: 2rem;
     color: #1E88E5;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+    font-weight: 520;
+}
+
+.overview .no-projects{
+    width: 100%;
+    height: 300px;
+    border: 1px solid #b8b8b8;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.no-projects i.fa-briefcase {
+    font-size: 3rem;
+    color: #bebdba; 
+}
+
+.no-projects p{
+    font-size: 18px;
+    color: #212121;
+}
+
+.no-projects a{
+    background-color: #fff; 
+    color: black;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #155724;
+    text-decoration: none;
+    display: flex;
+    align-items: center; 
+    transition: all 0.3s ease, transform 0.3s ease;
+}
+
+.no-projects a i {
+    margin-right: 8px; 
+}
+
+.no-projects a:hover {
+    background-color: #dbeee0; 
+    opacity: 0.85;
+}
+
+/* Styling Projects Section */
+.projects-section {
+    margin-bottom: 50px;
+}
+
+.projects-section h3 {
+    text-align: left;
+    font-size: 2rem;
+    color: #1E88E5;
+    margin-bottom: 30px;
     font-weight: 520;
 }
 
@@ -168,7 +226,149 @@
     padding: 0 10px;
 }
 
-.freelancer-card {
+.project-card {
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.project-image img {
+    width: 300px;
+    height: 250px;
+    object-fit: cover;
+}
+
+.project-info h4 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.category {
+    font-size: 0.9rem;
+    color: gray;
+    margin-bottom: 10px;
+}
+
+.proposals-info {
+    font-size: 0.9rem;
+    color: #212121;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.status {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px 12px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px;
+    color: white;
+    width: auto;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-draft {
+    background-color: #9E9E9E;
+}
+
+.status-pending {
+    background-color: #FFC107;
+    color: #3d3d3d;
+}
+
+.status-ongoing {
+    background-color: #FF9800;
+}
+
+.status-under-review {
+    background-color: #03A9F4;
+}
+
+.status-completed {
+    background-color: #4CAF50;
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.card-buttons a {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: white;
+    flex: 1;
+    margin: 0 5px;
+}
+
+.edit-project-btn {
+    background-color: #1976D2;
+}
+
+.card-buttons a:hover {
+    opacity: 0.9;
+}
+
+.view-all-button {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.view-all-projects-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background-color: #1E88E5; 
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.view-all-projects-btn:hover {
+    background-color: #1565C0; 
+}
+
+/* Styling Recommended Section */
+.recommended-section{
+    margin-bottom: 50px;
+}
+
+.recommended-section h3 {
+    text-align: left;
+    font-size: 2rem;
+    color: #1E88E5;
+    margin-bottom: 30px;
+    font-weight: 520;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 0 10px;
+}
+
+.freelancer-card, .project-card {
     width: 100%;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -237,7 +437,7 @@
     pointer-events: all;
 }
 
-.freelancer-info {
+.freelancer-info, .project-info {
     padding: 15px;
 }
 
@@ -269,7 +469,7 @@
 
 .description {
     display: -webkit-box;
-    -webkit-line-clamp: 2; 
+    -webkit-line-clamp: 3; 
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;

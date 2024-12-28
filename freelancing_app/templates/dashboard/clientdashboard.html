@@ -18,7 +18,7 @@
             {% else %}
                 <h3>{{ greeting }}, {{user.username}}</h3>
             {% endif %}
-            <a href="#" class="post-project-btn">
+            <a href="{% url 'project:add-new-project' %}" class="post-project-btn">
                 <i class="fas fa-plus"></i> Post a Project
             </a>
         </div>
@@ -39,7 +39,7 @@
                 <i class="fas fa-briefcase"></i>
                 <h3>Post a Project</h3>
                 <p>Get proposals from skilled professionals</p>
-                <a href="#" class="btn">Create Project</a>
+                <a href="{% url 'project:add-new-project' %}" class="btn">Create Project</a>
             </div>
             <div class="action-card">
                 <i class="fas fa-clipboard-list"></i>
@@ -56,6 +56,59 @@
         </div>
     </div>
 </div>
+
+
+{% if projects %}
+<!-- Projects Section -->
+<div class="projects-section">
+    <div class="container">
+        <div class="text">
+            <h3>Recent Projects</h3>
+        </div>
+        <div class="card-grid">
+            {% for project in projects %}
+                <div class="project-card">
+                    <div class="project-image">
+                        {% if project.image %}
+                            <img src="{% get_media_prefix %}project_images/{{ project.image }}" alt="{{ project.image }}">
+                        {% else %}
+                            <img src="{% static 'images/programming.png' %}" alt="Default Project Image">
+                        {% endif %}
+                    </div>
+                    <div class="project-info">
+                        <h4>{{ project.title|capfirst }}</h4>
+                        <p class="category">{{ project.category|capfirst }}</p>
+                        <div class="status {% if project.status == 'draft' %}status-draft{% elif project.status == 'pending' %}status-pending{% elif project.status == 'ongoing' %}status-ongoing{% else %}status-completed{% endif %}">
+                            {{ project.status|title }}
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <a href="" class="edit-project-btn">Manage Project</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="view-all-button">
+            <a href="" class="view-all-projects-btn">View All Projects</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- Overview Section -->
+<div class="overview">
+    <div class="container">
+        <h3>Overview</h3>
+        <div class="no-projects">
+            <i class="fas fa-briefcase"></i> 
+            <p>You've not posted any jobs yet</p>
+            <a href="{% url 'project:add-new-project' %}" class="post-project-btn">
+                <i class="fas fa-plus"></i> Post a Project
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 
 <div class="recommended-section">
     <div class="container">
