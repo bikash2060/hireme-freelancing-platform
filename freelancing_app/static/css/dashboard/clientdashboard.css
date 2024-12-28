@@ -52,7 +52,12 @@
     font-size: 2rem;
     color: #1E88E5; 
     margin-bottom: 40px;
-    font-weight: bold;
+    font-weight: 520;
+    transition: color 0.3s ease;
+}
+
+.quick-actions h2:hover {
+    color: #1565C0;
 }
 
 .action-grid {
@@ -68,19 +73,36 @@
     padding: 30px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15); 
+    background-color: #BBDEFB; 
 }
 
 .action-card i {
     font-size: 3rem;
     color: #FFC107; 
     margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+.action-card:hover i {
+    color: #FF9800; 
 }
 
 .action-card h3 {
     font-size: 1.5rem;
     color: #212121; 
     margin-bottom: 15px;
+    font-weight: 550;
+    transition: color 0.3s ease;
+}
+
+.action-card:hover h3 {
+    color: #1565C0;
 }
 
 .action-card p {
@@ -98,17 +120,14 @@
     border-radius: 5px;
     text-decoration: none;
     display: inline-block;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .action-card .btn:hover {
     background-color: #1565C0; 
     transform: translateY(-3px); 
-}
-
-.action-card:hover {
-    transform: translateY(-5px); 
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -130,106 +149,182 @@
     }
 }
 
-/* Recent Project Section */
-.project-filter{
-    margin-top: 10px;
+/* Styling Recommended Section */
+.recommended-section{
+    margin-bottom: 50px;
+}
+.recommended-section h3 {
+    text-align: center;
+    font-size: 2rem;
+    color: #1E88E5;
+    margin-bottom: 40px;
+    font-weight: 520;
 }
 
-.filter .filter-box{
-    border: 1px solid #ccc; 
-    background-color: #f9f9f9; 
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 0 10px;
+}
+
+.freelancer-card {
+    width: 100%;
     border-radius: 10px;
-    width: 300px; 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-}
-
-.filter-box .buttons{
-    display: flex;
-    gap: 10px; 
-    justify-content: flex-end; 
-    padding: 20px;
-}
-
-.filter-box .buttons .reset-btn, .apply-btn{
-    width: 140px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s; 
-}
-
-.filter-box .buttons .reset-btn {
-    background-color: #f44336; 
-    color: white;
-}
-
-.filter-box .buttons .apply-btn {
-    background-color: #4CAF50; 
-    color: white;
-}
-
-.filter-box .buttons .reset-btn:hover {
-    background-color: #d32f2f; 
-}
-
-.filter-box .buttons .apply-btn:hover {
-    background-color: #388e3c; 
-}
-
-.filter-box hr{
-    border: 0; 
-    height: 1.5px; 
-    background: #ccc; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: white;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-.filter-box .category {
-    padding: 20px;
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
 }
 
-.filter-box .category p {
-    font-weight: 500;
-    font-size: 22px;
-    margin-bottom: 10px; 
+.slider {
+    display: flex;
+    transition: transform 0.3s ease;
 }
 
-.filter-box .category select {
+.slider-item {
+    min-width: 100%;
+}
+
+.slider-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px; 
+    height: 40px; 
+    background-color: rgba(255, 255, 255, 0.8); 
+    color: black; 
+    border: none;
+    padding: 0; 
+    font-size: 18px;
     cursor: pointer;
-    outline: none;
-    width: 100%; 
+    border-radius: 50%; 
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+.slider-container:hover .prev-btn,
+.slider-container:hover .next-btn {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.freelancer-info {
+    padding: 15px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.profile img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile h4 {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.profile p {
+    font-size: 0.9rem;
+    color: gray;
+    margin: 0;
+}
+
+.description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.rating {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #FFC107;
+}
+
+.rating span {
+    color: #212121;
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.card-buttons button {
+    width: 48%;
     padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
     border-radius: 5px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    background-color: #fff;
-}
-
-.filter-box .category select option {
+    border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.category #category {
-    width: 100%;  
-    height: 150px; 
-    overflow-y: auto; 
-}
-
-.category #category option {
-    padding: 10px;
-}
-
-.category #category::-webkit-scrollbar {
-    width: 8px;
-}
-
-.category #category::-webkit-scrollbar-thumb {
+.view-profile-btn {
     background-color: #1E88E5;
-    border-radius: 4px;
+    color: white;
 }
 
-.category #category::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-    border-radius: 4px;
+.view-profile-btn:hover {
+    background-color: #1565C0;
 }
+
+.send-message-btn {
+    background-color: #155724;
+    color: #fff;
+}
+
+.send-message-btn:hover {
+    opacity: 0.9;
+}
+
