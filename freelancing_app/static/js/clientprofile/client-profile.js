@@ -21,8 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!bioText || bioText.textContent.trim() === "" || bioText.textContent.trim() === "None") {
         readMoreLink.style.display = 'none';
     } else {
-        // Show the "Read More" link and toggle functionality
-        readMoreLink.style.display = 'inline'; // Ensure it's visible
+        readMoreLink.style.display = 'inline'; 
         readMoreLink.addEventListener('click', function () {
             if (bioText.style.maxHeight === 'none') {
                 bioText.style.maxHeight = '6.4em';  

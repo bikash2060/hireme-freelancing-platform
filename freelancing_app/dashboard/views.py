@@ -1,8 +1,9 @@
 from django.views import View
 from django.shortcuts import render, redirect, HttpResponse
 from datetime import datetime
+from accounts.mixins import CustomLoginRequiredMixin
 
-class ClientDashboardView(View):
+class ClientDashboardView(CustomLoginRequiredMixin, View):
     def get(self, request):
         current_hour = datetime.now().hour
 

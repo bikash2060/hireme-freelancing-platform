@@ -86,10 +86,16 @@ class ForgotPasswordView(View):
     error_redirect_URL = 'account:login'
     
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Renders the password reset request page when the user visits the reset password URL
         return render(request, self.rendered_template)
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Retrieves the email address from the POST request
         email_address = request.POST.get('email')
         
@@ -153,10 +159,16 @@ class PasswordResetOTPVerifyView(View):
     error_redirect_URL = 'account:login'
     
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Renders the OTP verification page when the user visits the OTP verification URL
         return render(request, self.rendered_template)
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Retrieves the email address stored in the session
         email_address = request.session.get('email_address')
 
@@ -279,10 +291,16 @@ class ChangePasswordView(View):
     error_redirect_URL = 'account:forgotpassword'
     
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Renders the change password page when the user accesses the URL
         return render(request, self.rendered_template)
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Retrieves the email address stored in the session
         email_address = request.session.get('email_address')
 
@@ -424,12 +442,18 @@ class VerifyOTPView(View):
     error_redirect_URL = 'account:signup'
     
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         """
         Handles GET requests to display the OTP verification form. 
         """
         return render(request, self.rendered_template)
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         """
         Handles POST requests to validate the OTP entered by the user.
         - Extracts OTP from the form input.
@@ -553,10 +577,16 @@ class UserRoleRedirectView(View):
     error_redirect_URL = 'account:signup'  
 
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Renders the role selection page (GET request)
         return render(request, self.rendered_template)
 
     def post(self, request):
+        if request.user.is_authenticated:
+            return redirect('homes:home')
+        
         # Handles the form submission for selecting user role (POST request)
         
         # Retrieve signup data from session

@@ -15,7 +15,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 SITE_ID = 1
 
-# Installed apps for the project, including Django and custom apps.
+# Installed apps for the project, including Django and custom apps
 INSTALLED_APPS = [
     # Django built-in apps
     "django.contrib.admin",
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "clientprofile",
 ]
 
-# Middleware stack for request/response processing.
+# Middleware stack for request/response processing
 MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -52,12 +52,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# Define message storage backend for the project.
+# Message storage backend for the project
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-# Root URL configuration for the project.
+# Root URL configuration for the project
 ROOT_URLCONF = "freelancing_app.urls"
 
+# Templates configuration
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -76,10 +77,10 @@ TEMPLATES = [
     },
 ]
 
-# WSGI application entry point for the project.
+# WSGI application entry point for the project
 WSGI_APPLICATION = "freelancing_app.wsgi.application"
 
-# Database configuration for MySQL backend.
+# Database configuration for MySQL backend
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -91,7 +92,7 @@ DATABASES = {
     }
 }
 
-# Validators for enforcing strong user passwords.
+# Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -107,19 +108,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# settings.py
-AUTH_USER_MODEL = 'accounts.User' 
+# Custom user model
+AUTH_USER_MODEL = 'accounts.User'
 
+# Authentication backends
 AUTHENTICATION_BACKENDS = [
-    'accounts.utils.EmailBackend',  
+    'accounts.utils.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Login and redirect URLs
+LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/account/choose-role/'
 LOGOUT_REDIRECT_URL = '/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+# Social account providers
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['email'],
@@ -127,44 +132,35 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     },
     'github': {
-        'SCOPE': ['user', 'repo', 'read:org'],  
-        'AUTH_PARAMS': {'allow_signup': 'true'},  
+        'SCOPE': ['user', 'repo', 'read:org'],
+        'AUTH_PARAMS': {'allow_signup': 'true'},
     },
 }
 
-# Language and timezone settings for the application.
+# Language and timezone settings
 LANGUAGE_CODE = "en-us"
-
-# Timezone setting for Nepal.
 TIME_ZONE = 'Asia/Kathmandu'
-
-# Enable internationalization support.
 USE_I18N = True
-
-# Disable timezone-aware datetimes.
 USE_TZ = False
 
-# Static file URL and directories for CSS, JavaScript, and images.
+# Static files settings
 STATIC_URL = "static/"
-
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  
+    BASE_DIR / "static",
 ]
-
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# settings.py
-MEDIA_URL = '/media/'  # URL to access media files in the browser
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory where media files are stored
+# Media files settings
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# Default type for auto-incrementing primary key fields.
+# Default auto field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Configuration for sending emails using Gmail's SMTP server.
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "bishalbhattarai472@gmail.com"
-EMAIL_HOST_PASSWORD = "cdjeylhnykmsmjbm"
+EMAIL_HOST_USER = os.getenv('DJANGO_EMAIL_HOST_USER', 'your-email@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('DJANGO_EMAIL_HOST_PASSWORD', 'your-email-password')

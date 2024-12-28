@@ -7,9 +7,9 @@ from .utils import *
 import json
 from datetime import datetime
 from .models import Company
+from accounts.mixins import CustomLoginRequiredMixin
 
-
-class UserBasicInfoView(View):
+class UserBasicInfoView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/profile.html'
     
     def get(self, request):
@@ -35,7 +35,7 @@ class UserBasicInfoView(View):
         })
 
 # Full Testing In Progress
-class EditProfileImageView(View):
+class EditProfileImageView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/editprofileimage.html'
     redirected_URL = 'client:edit-profile-image'
 
@@ -88,7 +88,7 @@ class EditProfileImageView(View):
 
 
 #Full Testing In Progress
-class EditPersonalInfoView(View):
+class EditPersonalInfoView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/editpersonalinfo.html'
     redirected_URL = 'client:edit-personal-info'
 
@@ -141,7 +141,7 @@ class EditPersonalInfoView(View):
             return render(request, self.rendered_template, {'client': client})
 
 #Full Testing In Progress
-class EditUserAddressView(View):
+class EditUserAddressView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/editaddress.html'
     redirected_URL = 'client:edit-address'
     
@@ -414,7 +414,7 @@ class EditUserAddressView(View):
             
             
 #Full Testing In Progress
-class AddCompanyView(View):
+class AddCompanyView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/addcompany.html'
     redirected_URL = 'client:addcompany'
     
