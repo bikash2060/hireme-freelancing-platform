@@ -22,7 +22,8 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
         project_image = request.FILES.get('project-image')  
         project_budget = request.POST.get('project-budget')
         project_duration = request.POST.get('project-duration')
-        skills_select = request.POST.getlist('skills-select')  
+        skills_select = request.POST.getlist('skills-select') 
+        print(skills_select) 
         project_category = request.POST.get('project-category')
         
         action = request.POST.get('action')  # "submit" or "draft"
@@ -60,6 +61,9 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
                 fs = FileSystemStorage(location='media/project_images')
                 filename = fs.save(project_image.name, project_image)
                 project.image = filename.split('/')[-1]
+                
+            project.skills = ','.join(skills_select)  
+            project.save()
                 
             project.save()
             

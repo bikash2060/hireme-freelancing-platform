@@ -23,7 +23,7 @@ def validate_form(project_name, project_description, project_image, project_budg
         return True, ''
 
     # Validate project name length
-    if len(project_name) < 5 or len(project_name) > 20:
+    if len(project_name) < 5 or len(project_name) > 50:
         return False, 'Project name must be between 5 and 20 characters.'
     
     # Validate project description length

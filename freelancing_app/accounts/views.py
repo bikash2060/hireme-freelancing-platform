@@ -5,8 +5,9 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import make_password
-from . import utils, formvalidation
-from .models import User, OTPCode, Client, Freelancer
+from .utils import *
+from .formvalidation import *
+from .models import *
 from django.utils import timezone
 
 # Testing Completed
@@ -35,7 +36,7 @@ class UserLoginView(View):
         }
         
         # Validate the login form (check if email and password are valid)
-        valid, error_message = formvalidation.validate_login_form(email, password)
+        valid, error_message = validate_login_form(email, password)
         
         if not valid:
             # If validation fails, display an error message and re-render the login page
@@ -119,11 +120,11 @@ class ForgotPasswordView(View):
             OTPCode.objects.filter(email=email_address).delete()
 
             # Generate and save a new OTP for the provided email address
-            otp_code = utils.generate_and_save_otp(email_address)
+            otp_code = generate_and_save_otp(email_address)
 
             try:
                 # Attempt to send the OTP to the user's email address
-                utils.send_reset_password_email(email_address, otp_code)
+                send_reset_password_email(email_address, otp_code)
             except SMTPException as e:
                 # If there is an error sending the email, display a server error message
                 messages.error(request, 'Failed to send verification email due to a server issue.')
@@ -161,6 +162,15 @@ class PasswordResetOTPVerifyView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('homes:home')
+        
+        # Retrieves the email address stored in the session
+        email_address = request.session.get('email_address')
+
+        # Check if the session has expired (i.e., email_address is not in the session)
+        if not email_address:
+            # If session expired, display an error message and redirect to the forgot password page
+            messages.error(request, "Session expired. Please request the OTP again.")
+            return redirect('account:forgotpassword')
         
         # Renders the OTP verification page when the user visits the OTP verification URL
         return render(request, self.rendered_template)
@@ -255,10 +265,10 @@ class ForgotPasswordResendOTPView(View):
             OTPCode.objects.filter(email=email_address).delete()
 
             # Generate a new OTP and save it to the database
-            otp_code = utils.generate_and_save_otp(email_address)
+            otp_code = generate_and_save_otp(email_address)
 
             # Send the OTP via email
-            utils.send_reset_password_email(email_address, otp_code)
+            send_reset_password_email(email_address, otp_code)
 
             # Display success message and render the OTP verification page
             messages.success(request, 'A new OTP has been sent to your email.')
@@ -294,6 +304,15 @@ class ChangePasswordView(View):
         if request.user.is_authenticated:
             return redirect('homes:home')
         
+        # Retrieves the email address stored in the session
+        email_address = request.session.get('email_address')
+
+        # Check if the session has expired (i.e., email_address is not in the session)
+        if not email_address:
+            # If session expired, display an error message and redirect to forgot password page
+            messages.error(request, "Session expired. Please request the OTP again.")
+            return redirect(self.error_redirect_URL)
+        
         # Renders the change password page when the user accesses the URL
         return render(request, self.rendered_template)
 
@@ -315,7 +334,7 @@ class ChangePasswordView(View):
         confirm_password = request.POST.get('confirmpassword')
 
         # Validate the new password and confirmation password (check for match and strength)
-        valid, error_message = formvalidation.validate_reset_password_form(new_password, confirm_password)
+        valid, error_message = validate_reset_password_form(new_password, confirm_password)
         
         if not valid:
             # If validation fails, display an error message and re-render the change password page
@@ -393,7 +412,7 @@ class UserSignupView(View):
         }
 
         # Validate the form
-        valid, error_message = formvalidation.validate_signup_form(
+        valid, error_message = validate_signup_form(
             email_address, username, password, confirm_password
         )
 
@@ -412,11 +431,11 @@ class UserSignupView(View):
             OTPCode.objects.filter(email=email_address).delete()
             
             # Generate OTP
-            otp_code = utils.generate_and_save_otp(email_address)
+            otp_code = generate_and_save_otp(email_address)
 
             # Send the OTP email
             try:
-                utils.send_verification_email(username, email_address, otp_code)
+                send_verification_email(username, email_address, otp_code)
             except SMTPException as e:
                 # Handle email-related errors
                 messages.error(request, "Failed to send verification email due to a server issue.")
@@ -444,6 +463,14 @@ class VerifyOTPView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('homes:home')
+        
+        # Retrieve signup data from the session
+        signup_data = request.session.get('signup_data')
+
+        # Check if signup data exists in the session (session should not be expired)
+        if not signup_data:
+            messages.error(request, 'Session expired. Please sign up again.')
+            return redirect(self.error_redirect_URL)  # Redirect to signup page if session expired
         
         """
         Handles GET requests to display the OTP verification form. 
@@ -546,11 +573,11 @@ class GenerateNewOTPView(View):
             OTPCode.objects.filter(email=email_address).delete()
             
             # Generate and save the new OTP for the user
-            otp_code = utils.generate_and_save_otp(email_address)
+            otp_code = generate_and_save_otp(email_address)
             
             # Send the OTP to the user's email for verification
             try:
-                utils.send_verification_email(username, email_address, otp_code)
+                send_verification_email(username, email_address, otp_code)
             except Exception as e:
                 messages.error(request, "Failed to send verification email. Please try again.")
                 return render(request, self.rendered_template, {'form_data': signup_data})
@@ -579,6 +606,14 @@ class UserRoleRedirectView(View):
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('homes:home')
+        
+        # Retrieve signup data from session
+        signup_data = request.session.get('signup_data')  
+
+        if not signup_data:
+            # If signup data is missing or session expired, redirect to signup page
+            messages.error(request, 'Session expired. Please sign up again.')
+            return redirect(self.error_redirect_URL)
         
         # Renders the role selection page (GET request)
         return render(request, self.rendered_template)
@@ -640,11 +675,12 @@ class UserRoleRedirectView(View):
                 return redirect(self.successful_redirect_URL)  # Redirect to login page after successful signup
 
         except Exception as e:
-            messages.error(request, 'An error occurred while creating your profile.')
+            messages.error(request, f'An error occurred while creating your profile.{e}')
             return redirect(self.error_redirect_URL)
 
 class UserLogOutView(View):
     def get(self, request):
         logout(request)
         return redirect('homes:home')
+
 
