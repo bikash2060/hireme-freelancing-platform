@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="{% static 'css/message.css' %}">
 {% endblock %}
 
-
 {% block content %}
+<!-- Hero Section -->
 <div class="hero-section">
     <div class="container">
         <div class="hero-content">
@@ -25,6 +25,7 @@
     </div>
 </div>
 
+<!-- Quick Actions Section -->
 <div class="quick-actions">
     <div class="container">
         <h2>What would you like to do?</h2>
@@ -57,9 +58,8 @@
     </div>
 </div>
 
-
+<!-- Recent Projects Section -->
 {% if projects %}
-<!-- Projects Section -->
 <div class="projects-section">
     <div class="container">
         <div class="text">
@@ -78,6 +78,8 @@
                     <div class="project-info">
                         <h4>{{ project.title|capfirst }}</h4>
                         <p class="category">{{ project.category|capfirst }}</p>
+                        <p class="deadline">Deadline: {{ project.deadline|date:"M j, Y" }}</p>
+                        <p class="budget">Budget: {{ project.budget }}</p>
                         <div class="status {% if project.status == 'draft' %}status-draft{% elif project.status == 'pending' %}status-pending{% elif project.status == 'ongoing' %}status-ongoing{% else %}status-completed{% endif %}">
                             {{ project.status|title }}
                         </div>
@@ -94,7 +96,6 @@
     </div>
 </div>
 {% else %}
-<!-- Overview Section -->
 <div class="overview">
     <div class="container">
         <h3>Overview</h3>
@@ -109,7 +110,7 @@
 </div>
 {% endif %}
 
-
+<!-- Recommended Freelancers Section -->
 <div class="recommended-section">
     <div class="container">
         <div class="text">
@@ -121,13 +122,10 @@
                 <div class="slider-container">
                     <div class="slider">
                         <div class="slider-item">
-                            <img src="{% static 'images/ronaldo.jpg' %}" alt="Freelancer Image">
+                            <img src="{% static 'images/demowork/work1/work1.jpg' %}" alt="Work Screenshot 1">
                         </div>
                         <div class="slider-item">
-                            <img src="{% static 'images/messi.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/neymar.jpeg' %}" alt="Work Screenshot 1">
+                            <img src="{% static 'images/demowork/work1/work2.jpg' %}" alt="Work Screenshot 1">
                         </div>
                     </div>
                     <button class="prev-btn">&#10094;</button>
@@ -137,13 +135,16 @@
                     <div class="profile">
                         <img src="{% static 'images/ronaldo.jpg' %}" alt="Profile Picture">
                         <div>
-                            <h4>Hasibul Islam</h4>
+                            <h4>Cristiano Ronaldo</h4>
                             <p>Software Engineer</p>
                         </div>
                     </div>
                     <p class="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
                     </p>
+                    <p class="skills">Skills: JavaScript, React, Python, MERN Stack</p>
+                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                    <p class="experience">Experience: 5+ Years</p>
                     <div class="rating">
                         <span>&#9733; 4.9</span>
                         <span>(503)</span>
@@ -159,13 +160,10 @@
                 <div class="slider-container">
                     <div class="slider">
                         <div class="slider-item">
-                            <img src="{% static 'images/ronaldo.jpg' %}" alt="Freelancer Image">
+                            <img src="{% static 'images/demowork/work2/work1.jpg' %}" alt="Work Screenshot 1">
                         </div>
                         <div class="slider-item">
-                            <img src="{% static 'images/messi.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/neymar.jpeg' %}" alt="Work Screenshot 1">
+                            <img src="{% static 'images/demowork/work2/work2.jpeg' %}" alt="Work Screenshot 1">
                         </div>
                     </div>
                     <button class="prev-btn">&#10094;</button>
@@ -173,15 +171,18 @@
                 </div>
                 <div class="freelancer-info">
                     <div class="profile">
-                        <img src="{% static 'images/ronaldo.jpg' %}" alt="Profile Picture">
+                        <img src="{% static 'images/messi.jpg' %}" alt="Profile Picture">
                         <div>
-                            <h4>Hasibul Islam</h4>
+                            <h4>Lionel Messi</h4>
                             <p>Devops Developer</p>
                         </div>
                     </div>
                     <p class="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
                     </p>
+                    <p class="skills">Skills: JavaScript, React, Python</p>
+                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                    <p class="experience">Experience: 5+ Years</p>
                     <div class="rating">
                         <span>&#9733; 4.9</span>
                         <span>(503)</span>
@@ -197,13 +198,10 @@
                 <div class="slider-container">
                     <div class="slider">
                         <div class="slider-item">
-                            <img src="{% static 'images/ronaldo.jpg' %}" alt="Freelancer Image">
+                            <img src="{% static 'images/demowork/work3/work1.png' %}" alt="Work Screenshot 1">
                         </div>
                         <div class="slider-item">
-                            <img src="{% static 'images/messi.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/neymar.jpeg' %}" alt="Work Screenshot 1">
+                            <img src="{% static 'images/demowork/work3/work2.jpg' %}" alt="Work Screenshot 1">
                         </div>
                     </div>
                     <button class="prev-btn">&#10094;</button>
@@ -211,15 +209,18 @@
                 </div>
                 <div class="freelancer-info">
                     <div class="profile">
-                        <img src="{% static 'images/ronaldo.jpg' %}" alt="Profile Picture">
+                        <img src="{% static 'images/neymar.jpeg' %}" alt="Profile Picture">
                         <div>
-                            <h4>Hasibul Islam</h4>
+                            <h4>Neymar Kafle</h4>
                             <p>UI/UX Developer</p>
                         </div>
                     </div>
                     <p class="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
                     </p>
+                    <p class="skills">Skills: JavaScript, React, Python</p>
+                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                    <p class="experience">Experience: 5+ Years</p>
                     <div class="rating">
                         <span>&#9733; 4.9</span>
                         <span>(503)</span>
@@ -235,13 +236,10 @@
                 <div class="slider-container">
                     <div class="slider">
                         <div class="slider-item">
-                            <img src="{% static 'images/ronaldo.jpg' %}" alt="Freelancer Image">
+                            <img src="{% static 'images/demowork/work4/work1.jpg' %}" alt="Work Screenshot 1">
                         </div>
                         <div class="slider-item">
-                            <img src="{% static 'images/messi.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/neymar.jpeg' %}" alt="Work Screenshot 1">
+                            <img src="{% static 'images/demowork/work4/work2.png' %}" alt="Work Screenshot 1">
                         </div>
                     </div>
                     <button class="prev-btn">&#10094;</button>
@@ -249,7 +247,7 @@
                 </div>
                 <div class="freelancer-info">
                     <div class="profile">
-                        <img src="{% static 'images/ronaldo.jpg' %}" alt="Profile Picture">
+                        <img src="{% static 'images/default-user-pic.png' %}" alt="Profile Picture">
                         <div>
                             <h4>Hasibul Islam</h4>
                             <p>Frontend Developer</p>
@@ -258,6 +256,9 @@
                     <p class="description">
                         Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
                     </p>
+                    <p class="skills">Skills: JavaScript, React, Python</p>
+                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                    <p class="experience">Experience: 5+ Years</p>
                     <div class="rating">
                         <span>&#9733; 4.9</span>
                         <span>(503)</span>
