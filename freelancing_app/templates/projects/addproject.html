@@ -68,82 +68,44 @@
                 <h2>Skills Required</h2>
                 <div class="form-group">
                     <label for="skills-search">Search Skills</label>
-                    <input type="text" id="skills-search" name="skills-search" placeholder="Search skills...">
+                    <input type="text" id="skills-search" name="skills-search" placeholder="Search skills..." autocomplete="off">
                 </div>
-                <div class="form-group" id="selected-skills"></div>
+                <div class="form-group" id="selected-skills">
+                    
+                </div>
                 <div class="form-group">
                     <div id="skills-list">
-                        <label><input type="checkbox" name="skills-select" value="seo" {% if 'seo' in skills_select %}checked{% endif %}> SEO</label>
-                        <label><input type="checkbox" name="skills-select" value="python" {% if 'python' in skills_select %}checked{% endif %}> Python</label>
-                        <label><input type="checkbox" name="skills-select" value="graphic-design" {% if 'graphic-design' in skills_select %}checked{% endif %}> Graphic Design</label>
-                        <label><input type="checkbox" name="skills-select" value="marketing" {% if 'marketing' in skills_select %}checked{% endif %}> Marketing</label>
-                        <label><input type="checkbox" name="skills-select" value="ui-ux" {% if 'ui-ux' in skills_select %}checked{% endif %}> UI/UX Design</label>
-                        <label><input type="checkbox" name="skills-select" value="mobile-app-development" {% if 'mobile-app-development' in skills_select %}checked{% endif %}> Mobile App Development</label>
-                        <label><input type="checkbox" name="skills-select" value="content-writing" {% if 'content-writing' in skills_select %}checked{% endif %}> Content Writing</label>
-                        <label><input type="checkbox" name="skills-select" value="data-analysis" {% if 'data-analysis' in skills_select %}checked{% endif %}> Data Analysis</label>
-                        <label><input type="checkbox" name="skills-select" value="web-development" {% if 'web-development' in skills_select %}checked{% endif %}> Web Development</label>
-                        <label><input type="checkbox" name="skills-select" value="project-management" {% if 'project-management' in skills_select %}checked{% endif %}> Project Management</label>
-                        <label><input type="checkbox" name="skills-select" value="app-development" {% if 'app-development' in skills_select %}checked{% endif %}> App Development</label>
-                        <label><input type="checkbox" name="skills-select" value="cloud-computing" {% if 'cloud-computing' in skills_select %}checked{% endif %}> Cloud Computing</label>
-                        <label><input type="checkbox" name="skills-select" value="artificial-intelligence" {% if 'artificial-intelligence' in skills_select %}checked{% endif %}> Artificial Intelligence</label>
-                        <label><input type="checkbox" name="skills-select" value="machine-learning" {% if 'machine-learning' in skills_select %}checked{% endif %}> Machine Learning</label>
-                        <label><input type="checkbox" name="skills-select" value="deep-learning" {% if 'deep-learning' in skills_select %}checked{% endif %}> Deep Learning</label>
-                        <label><input type="checkbox" name="skills-select" value="data-science" {% if 'data-science' in skills_select %}checked{% endif %}> Data Science</label>
-                        <label><input type="checkbox" name="skills-select" value="database-management" {% if 'database-management' in skills_select %}checked{% endif %}> Database Management</label>
-                        <label><input type="checkbox" name="skills-select" value="networking" {% if 'networking' in skills_select %}checked{% endif %}> Networking</label>
-                        <label><input type="checkbox" name="skills-select" value="cybersecurity" {% if 'cybersecurity' in skills_select %}checked{% endif %}> Cybersecurity</label>
-                        <label><input type="checkbox" name="skills-select" value="digital-marketing" {% if 'digital-marketing' in skills_select %}checked{% endif %}> Digital Marketing</label>
-                        <label><input type="checkbox" name="skills-select" value="video-editing" {% if 'video-editing' in skills_select %}checked{% endif %}> Video Editing</label>
-                        <label><input type="checkbox" name="skills-select" value="photo-editing" {% if 'photo-editing' in skills_select %}checked{% endif %}> Photo Editing</label>
-                        <label><input type="checkbox" name="skills-select" value="copywriting" {% if 'copywriting' in skills_select %}checked{% endif %}> Copywriting</label>
-                        <label><input type="checkbox" name="skills-select" value="ecommerce" {% if 'ecommerce' in skills_select %}checked{% endif %}> E-commerce</label>
-                        <label><input type="checkbox" name="skills-select" value="business-analysis" {% if 'business-analysis' in skills_select %}checked{% endif %}> Business Analysis</label>
-                        <label><input type="checkbox" name="skills-select" value="agile-methodology" {% if 'agile-methodology' in skills_select %}checked{% endif %}> Agile Methodology</label>
-                        <label><input type="checkbox" name="skills-select" value="blockchain" {% if 'blockchain' in skills_select %}checked{% endif %}> Blockchain</label>
-                        <label><input type="checkbox" name="skills-select" value="iot" {% if 'iot' in skills_select %}checked{% endif %}> IoT</label>
-                        <label><input type="checkbox" name="skills-select" value="data-visualization" {% if 'data-visualization' in skills_select %}checked{% endif %}> Data Visualization</label>
-                        <label><input type="checkbox" name="skills-select" value="voice-search-optimization" {% if 'voice-search-optimization' in skills_select %}checked{% endif %}> Voice Search Optimization</label>
-                        <label><input type="checkbox" name="skills-select" value="chatbots" {% if 'chatbots' in skills_select %}checked{% endif %}> Chatbots</label>
-                        <label><input type="checkbox" name="skills-select" value="automation" {% if 'automation' in skills_select %}checked{% endif %}> Automation</label>
-                        <label><input type="checkbox" name="skills-select" value="augmented-reality" {% if 'augmented-reality' in skills_select %}checked{% endif %}> Augmented Reality</label>
-                        <label><input type="checkbox" name="skills-select" value="virtual-reality" {% if 'virtual-reality' in skills_select %}checked{% endif %}> Virtual Reality</label>
-                    </div>                    
+                        {% for skill in skills %}
+                            <label class="skill-item" data-skill-name="{{ skill.name | lower }}">
+                                <input 
+                                    type="checkbox" 
+                                    name="skills-select" 
+                                    value="{{ skill.id }}" 
+                                    data-skill-name="{{ skill.name }}" 
+                                    {% if skill.id|stringformat:"s" in skills_select %}checked{% endif %}
+                                >
+                                {{ skill.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
                 </div>
-            </section>            
-        
+            </section>
+                        
             <section class="section">
                 <h2>Category</h2>
                 <div class="form-group">
                     <label for="project-category">Project Category</label>
                     <select id="project-category" name="project-category">
                         <option value="" {% if not project_category %}selected{% endif %}>Select a category</option>
-                        <option value="web-development" {% if project_category == 'web-development' %}selected{% endif %}>Web Development</option>
-                        <option value="graphic-design" {% if project_category == 'graphic-design' %}selected{% endif %}>Graphic Design</option>
-                        <option value="seo" {% if project_category == 'seo' %}selected{% endif %}>SEO</option>
-                        <option value="writing" {% if project_category == 'writing' %}selected{% endif %}>Writing</option>
-                        <option value="marketing" {% if project_category == 'marketing' %}selected{% endif %}>Marketing</option>
-                        <option value="ui-ux" {% if project_category == 'ui-ux' %}selected{% endif %}>UI/UX Design</option>
-                        <option value="mobile-app-development" {% if project_category == 'mobile-app-development' %}selected{% endif %}>Mobile App Development</option>
-                        <option value="content-writing" {% if project_category == 'content-writing' %}selected{% endif %}>Content Writing</option>
-                        <option value="data-analysis" {% if project_category == 'data-analysis' %}selected{% endif %}>Data Analysis</option>
-                        <option value="web-design" {% if project_category == 'web-design' %}selected{% endif %}>Web Design</option>
-                        <option value="project-management" {% if project_category == 'project-management' %}selected{% endif %}>Project Management</option>
-                        <option value="app-development" {% if project_category == 'app-development' %}selected{% endif %}>App Development</option>
-                        <option value="cloud-computing" {% if project_category == 'cloud-computing' %}selected{% endif %}>Cloud Computing</option>
-                        <option value="artificial-intelligence" {% if project_category == 'artificial-intelligence' %}selected{% endif %}>Artificial Intelligence</option>
-                        <option value="machine-learning" {% if project_category == 'machine-learning' %}selected{% endif %}>Machine Learning</option>
-                        <option value="digital-marketing" {% if project_category == 'digital-marketing' %}selected{% endif %}>Digital Marketing</option>
-                        <option value="video-editing" {% if project_category == 'video-editing' %}selected{% endif %}>Video Editing</option>
-                        <option value="photo-editing" {% if project_category == 'photo-editing' %}selected{% endif %}>Photo Editing</option>
-                        <option value="ecommerce" {% if project_category == 'ecommerce' %}selected{% endif %}>E-commerce</option>
-                        <option value="business-analysis" {% if project_category == 'business-analysis' %}selected{% endif %}>Business Analysis</option>
-                        <option value="agile-methodology" {% if project_category == 'agile-methodology' %}selected{% endif %}>Agile Methodology</option>
-                        <option value="blockchain" {% if project_category == 'blockchain' %}selected{% endif %}>Blockchain</option>
-                        <option value="iot" {% if project_category == 'iot' %}selected{% endif %}>IoT</option>
-                    </select>
+                        {% for category in project_categories %}
+                            <option value="{{ category.id }}" {% if project_category|stringformat:"s" == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>                    
                 </div>
-            </section>            
-        
+            </section>
+                        
             <div class="form-group">
                 <button type="submit" name="action" value = "submit" class="submit-btn submit-btn-submit">Submit Project</button>
                 <button type="submit" name="action" value = "draft" class="submit-btn submit-btn-draft">Save as Draft</button>

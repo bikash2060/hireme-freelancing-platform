@@ -678,7 +678,7 @@ class UserRoleRedirectView(View):
             messages.error(request, f'An error occurred while creating your profile.{e}')
             return redirect(self.error_redirect_URL)
 
-class UserLogOutView(View):
+class UserLogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('homes:home')

@@ -5,7 +5,7 @@ app_name = 'account'
 
 urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogOutView.as_view(), name='logout'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
     path('signup/', UserSignupView.as_view(), name='signup'),
     path('verify-otp/', VerifyOTPView.as_view(), name='otp_verification'),
     path("resend-otp/", GenerateNewOTPView.as_view(), name='otp_resend'),  

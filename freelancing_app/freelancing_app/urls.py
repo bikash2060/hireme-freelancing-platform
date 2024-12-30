@@ -1,8 +1,10 @@
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path("", include("home.urls", namespace="homes")),
     path('accounts/', include('allauth.urls')),
     path('account/', include('accounts.urls', namespace='account')),

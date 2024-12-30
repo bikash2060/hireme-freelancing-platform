@@ -1,58 +1,95 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('skills-search');
-    const skillsSelect = document.getElementById('skills-select');
-    const selectedSkillsContainer = document.getElementById('selected-skills');
-    let selectedSkills = [];
+document.addEventListener("DOMContentLoaded", () => {
+    const skillsSearchInput = document.getElementById("skills-search");
+    const skillsList = document.getElementById("skills-list");
+    const noSkillsMessage = document.createElement('div');
+    noSkillsMessage.className = 'no-skills-message';
+    noSkillsMessage.innerText = 'No skills found';
 
-    // Function to filter the skills based on search input
-    searchInput.addEventListener('input', function () {
-        const query = searchInput.value.toLowerCase();
-        const options = skillsSelect.querySelectorAll('option');
-        let matches = false;
+    const filterSkills = () => {
+        const searchValue = skillsSearchInput.value.toLowerCase().trim();
+        const skillItems = skillsList.querySelectorAll(".skill-item");
+        let foundMatchingSkills = false;
 
-        options.forEach(option => {
-            const skill = option.value.toLowerCase();
-            const isMatch = skill.includes(query);
-            option.style.display = isMatch ? 'block' : 'none';
-            if (isMatch) matches = true;
+        skillItems.forEach((item) => {
+            const skillName = item.dataset.skillName;
+
+            if (skillName.includes(searchValue)) {
+                item.style.display = "block";
+                foundMatchingSkills = true;
+            } else {
+                item.style.display = "none";
+            }
         });
 
-        // Show the select dropdown if there are matches
-        skillsSelect.style.display = matches && query.length > 0 ? 'block' : 'none';
-    });
-
-    // Event listener for selecting a skill from the dropdown
-    skillsSelect.addEventListener('change', function () {
-        const selectedOption = skillsSelect.options[skillsSelect.selectedIndex];
-        const selectedSkill = selectedOption.value;
-
-        if (!selectedSkills.includes(selectedSkill)) {
-            selectedSkills.push(selectedSkill);
-            updateSelectedSkills();
+        if (searchValue && !foundMatchingSkills) {
+            if (!document.querySelector('.no-skills-message')) {
+                skillsList.appendChild(noSkillsMessage);
+            }
+        } else {
+            const existingMessage = document.querySelector('.no-skills-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
         }
+    };
 
-        // Hide the dropdown after selection
-        skillsSelect.style.display = 'none';
-        searchInput.value = ''; // Clear the search input
+    skillsSearchInput.addEventListener("input", filterSkills);
+
+    skillsSearchInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
     });
+});
 
-    // Function to update the displayed selected skills
-    function updateSelectedSkills() {
-        selectedSkillsContainer.innerHTML = ''; // Clear current selected skills
+document.addEventListener("DOMContentLoaded", () => {
+    const skillsList = document.getElementById("skills-list");
+    const selectedSkillsContainer = document.getElementById("selected-skills");
 
-        selectedSkills.forEach(skill => {
-            const skillDiv = document.createElement('div');
-            skillDiv.classList.add('selected-skill');
-            skillDiv.textContent = skill;
-            const removeButton = document.createElement('span');
-            removeButton.textContent = '×';
-            removeButton.classList.add('remove');
-            removeButton.addEventListener('click', function () {
-                selectedSkills = selectedSkills.filter(s => s !== skill);
-                updateSelectedSkills();
-            });
-            skillDiv.appendChild(removeButton);
-            selectedSkillsContainer.appendChild(skillDiv);
+    function addSkill(skillId, skillName) {
+        if (document.querySelector(`[data-skill-id="${skillId}"]`)) return;
+
+        const skillChip = document.createElement("div");
+        skillChip.className = "skill-chip";
+        skillChip.dataset.skillId = skillId;
+        skillChip.innerHTML = `
+            ${skillName}
+            <span class="remove-skill" data-skill-id="${skillId}">
+                <i class="fa-solid fa-minus"></i>
+            </span>
+        `;
+
+        selectedSkillsContainer.appendChild(skillChip);
+
+        skillChip.querySelector(".remove-skill").addEventListener("click", () => {
+            removeSkill(skillId);
         });
     }
+
+    function removeSkill(skillId) {
+        const skillChip = document.querySelector(`[data-skill-id="${skillId}"]`);
+        if (skillChip) skillChip.remove();
+
+        const checkbox = skillsList.querySelector(`input[value="${skillId}"]`);
+        if (checkbox) checkbox.checked = false;
+    }
+
+    skillsList.addEventListener("change", (event) => {
+        const checkbox = event.target;
+        const skillId = checkbox.value;
+        const skillName = checkbox.dataset.skillName;
+
+        if (checkbox.checked) {
+            addSkill(skillId, skillName);
+        } else {
+            removeSkill(skillId);
+        }
+    });
+
+    const checkedSkills = skillsList.querySelectorAll("input[name='skills-select']:checked");
+    checkedSkills.forEach((checkbox) => {
+        const skillId = checkbox.value;
+        const skillName = checkbox.dataset.skillName;
+        addSkill(skillId, skillName);
+    });
 });

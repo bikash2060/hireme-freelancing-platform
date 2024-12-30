@@ -3,7 +3,7 @@ from django.views import View
 from accounts.mixins import CustomLoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
-from .models import Project
+from .models import Project, ProjectCategory, Skill
 from .utils import *
 from accounts.models import Client
 
@@ -14,19 +14,31 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
     redirected_URL = 'project:add-new-project'
     
     def get(self, request):
-        return render(request, self.rendered_template)
+        
+        project_categories = ProjectCategory.objects.all().order_by('name')
+        skills = Skill.objects.all().order_by('name')
+        
+        context = {
+            'project_categories': project_categories,
+            'skills': skills,
+        }
+        
+        return render(request, self.rendered_template, context)
         
     def post(self, request):
+        project_categories = ProjectCategory.objects.all().order_by('name')
+        skills = Skill.objects.all().order_by('name')
+        
         project_name = request.POST.get('project-name').strip()
         project_description = request.POST.get('project-description')
         project_image = request.FILES.get('project-image')  
         project_budget = request.POST.get('project-budget')
         project_duration = request.POST.get('project-duration')
         skills_select = request.POST.getlist('skills-select') 
-        print(skills_select) 
         project_category = request.POST.get('project-category')
         
-        action = request.POST.get('action')  # "submit" or "draft"
+        action = request.POST.get('action') 
+        
         
         context = {
             'project_name': project_name,
@@ -35,7 +47,9 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
             'project_duration': project_duration,
             'skills_select': skills_select,
             'project_category': project_category,
-            'project_image': project_image
+            'project_image': project_image,
+            'project_categories': project_categories,  
+            'skills': skills,  
         }
 
         valid, error_message = validate_form(project_name, project_description, project_image, project_budget, project_duration, skills_select, project_category)
@@ -46,15 +60,15 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
         
         try:
             client = Client.objects.get(user=request.user)
-            
+                        
             project = Project.objects.create(
                 title=project_name,
                 description=project_description,
                 budget=project_budget,
-                category=project_category,
+                status='draft' if action == 'draft' else 'processing',
+                category=ProjectCategory.objects.get(id=project_category),
                 deadline=project_duration,
                 client=client,
-                status='draft' if action == 'draft' else 'processing'  
             )
             
             if project_image:
@@ -62,11 +76,9 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
                 filename = fs.save(project_image.name, project_image)
                 project.image = filename.split('/')[-1]
                 
-            project.skills = ','.join(skills_select)  
+            project.skills.set(Skill.objects.filter(id__in=skills_select))  
             project.save()
-                
-            project.save()
-            
+                            
             messages.success(request, "New project added successfully.")
             return redirect(self.redirected_URL)
         except Exception as e:
