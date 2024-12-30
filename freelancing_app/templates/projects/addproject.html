@@ -43,7 +43,7 @@
                 </div>
         
                 <div class="form-group">
-                    <label for="project-image">Project Image</label>
+                    <label for="project-image">Project Demo Image</label>
                     <input type="file" id="project-image" name="project-image" accept="image/*">
                     {% if project_image %}
                     <p>Current Image: {{ project_image.name }}</p>
@@ -54,7 +54,7 @@
             <section class="section">
                 <h2>Budget & Duration</h2>
                 <div class="form-group">
-                    <label for="project-budget">Budget (NPR)</label>
+                    <label for="project-budget">Budget</label>
                     <input type="number" id="project-budget" name="project-budget" placeholder="Enter your budget" min="0" value="{{ project_budget }}">
                 </div>
         
