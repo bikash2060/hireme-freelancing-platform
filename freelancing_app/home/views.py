@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from django.urls import reverse
+from projects.models import Skill
 
 class HomeView(View):
     
@@ -26,4 +26,9 @@ class FreelancerView(View):
     rendered_template = 'home/freelancers.html'
     
     def get(self, request):
-        return render(request, self.rendered_template)
+        skills = Skill.objects.all().order_by('name')
+        
+        context = {
+            'skills': skills
+        }
+        return render(request, self.rendered_template, context)

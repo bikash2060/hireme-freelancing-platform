@@ -16,4 +16,5 @@ document.addEventListener('DOMContentLoaded', function () {
       loadingScreen.style.display = 'flex';
     });
   }
+
 });
