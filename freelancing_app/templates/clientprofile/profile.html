@@ -7,10 +7,16 @@
 <link rel="stylesheet" href="{% static 'css/clientprofile/profile.css' %}">
 <link rel="stylesheet" href="{% static 'css/message.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
 {% include 'clientprofile/sidebar.html' %}
+<!-- Loader -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
 <div class="user-basic-info">
     <div class="settings-container">
         <p class="title">My Profile</p>
@@ -152,4 +158,5 @@
 {% block js_files %}
 <script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/clientprofile/client-profile.js' %}"></script>
+<script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}

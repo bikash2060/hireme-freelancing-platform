@@ -127,7 +127,7 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
         try:
             
             user.first_name = first_name
-            user.middle_name = middle_name if middle_name else user.middle_name  
+            user.middle_name = middle_name 
             user.last_name = last_name
             user.phone_number = phone_number
             user.save()

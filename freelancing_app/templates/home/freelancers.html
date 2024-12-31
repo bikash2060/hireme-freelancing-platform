@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/home/freelancers.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Loader -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<!-- Hero Section -->
+<div class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Find Your Perfect Freelancer</h1>
+            <p>Explore top freelancers with the skills you need.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Freelancer Filter Section -->
+<div class="freelancer-filter">
+    <div class="container">
+        <div class="filter-box">
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <p>Filter</p>
+                
+            </div>            
+
+            <!-- Freelancer Profile Section -->
+            <div class="card-grid">
+
+                <div class="freelancer-card">
+                    <div class="slider-container">
+                        <div class="slider">
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work1/work1.jpg' %}" alt="Work Screenshot 1">
+                            </div>
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work1/work2.jpg' %}" alt="Work Screenshot 1">
+                            </div>
+                        </div>
+                        <button class="prev-btn">&#10094;</button>
+                        <button class="next-btn">&#10095;</button>
+                    </div>
+                    <div class="freelancer-info">
+                        <div class="profile">
+                            <img src="{% static 'images/ronaldo.jpg' %}" alt="Profile Picture">
+                            <div>
+                                <h4>Cristiano Ronaldo</h4>
+                                <p>Software Engineer</p>
+                            </div>
+                        </div>
+                        <p class="skills">Skills: JavaScript, React, Python, MERN Stack</p>
+                        <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                        <p class="experience">Experience: 5+ Years</p>
+                        <div class="rating">
+                            <span>&#9733; 4.9</span>
+                            <span>(503)</span>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="view-profile-btn">View Profile</button>
+                    </div>
+                </div>
+                
+                <div class="freelancer-card">
+                    <div class="slider-container">
+                        <div class="slider">
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work2/work1.jpg' %}" alt="Work Screenshot 1">
+                            </div>
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work2/work2.jpeg' %}" alt="Work Screenshot 1">
+                            </div>
+                        </div>
+                        <button class="prev-btn">&#10094;</button>
+                        <button class="next-btn">&#10095;</button>
+                    </div>
+                    <div class="freelancer-info">
+                        <div class="profile">
+                            <img src="{% static 'images/messi.jpg' %}" alt="Profile Picture">
+                            <div>
+                                <h4>Lionel Messi</h4>
+                                <p>Devops Developer</p>
+                            </div>
+                        </div>
+                        <p class="skills">Skills: JavaScript, React, Python</p>
+                        <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                        <p class="experience">Experience: 5+ Years</p>
+                        <div class="rating">
+                            <span>&#9733; 4.9</span>
+                            <span>(503)</span>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="view-profile-btn">View Profile</button>
+                    </div>
+                </div>
+    
+                <div class="freelancer-card">
+                    <div class="slider-container">
+                        <div class="slider">
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work3/work1.png' %}" alt="Work Screenshot 1">
+                            </div>
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work3/work2.jpg' %}" alt="Work Screenshot 1">
+                            </div>
+                        </div>
+                        <button class="prev-btn">&#10094;</button>
+                        <button class="next-btn">&#10095;</button>
+                    </div>
+                    <div class="freelancer-info">
+                        <div class="profile">
+                            <img src="{% static 'images/neymar.jpeg' %}" alt="Profile Picture">
+                            <div>
+                                <h4>Neymar Kafle</h4>
+                                <p>UI/UX Developer</p>
+                            </div>
+                        </div>
+                        <p class="skills">Skills: JavaScript, React, Python</p>
+                        <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                        <p class="experience">Experience: 5+ Years</p>
+                        <div class="rating">
+                            <span>&#9733; 4.9</span>
+                            <span>(503)</span>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="view-profile-btn">View Profile</button>
+                    </div>
+                </div>
+    
+                <div class="freelancer-card">
+                    <div class="slider-container">
+                        <div class="slider">
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work4/work1.jpg' %}" alt="Work Screenshot 1">
+                            </div>
+                            <div class="slider-item">
+                                <img src="{% static 'images/demowork/work4/work2.png' %}" alt="Work Screenshot 1">
+                            </div>
+                        </div>
+                        <button class="prev-btn">&#10094;</button>
+                        <button class="next-btn">&#10095;</button>
+                    </div>
+                    <div class="freelancer-info">
+                        <div class="profile">
+                            <img src="{% static 'images/default-user-pic.png' %}" alt="Profile Picture">
+                            <div>
+                                <h4>Hasibul Islam</h4>
+                                <p>Frontend Developer</p>
+                            </div>
+                        </div>
+                        <p class="skills">Skills: JavaScript, React, Python</p>
+                        <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                        <p class="experience">Experience: 5+ Years</p>
+                        <div class="rating">
+                            <span>&#9733; 4.9</span>
+                            <span>(503)</span>
+                        </div>
+                    </div>
+                    <div class="card-buttons">
+                        <button class="view-profile-btn">View Profile</button>
+                    </div>
+                </div>           
+    
+            </div>      
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/dashboard/freelancer-profile-slider.js'%}"></script>
+<script src="{% static 'js/loader.js' %}"></script>
+<script>
+    const rateSlider = document.getElementById('hourly-rate');
+    const rateValue = document.getElementById('rate-value');
+
+    rateSlider.addEventListener('input', function() {
+        rateValue.textContent = rateSlider.value;
+    });
+</script>
+
+{% endblock %}

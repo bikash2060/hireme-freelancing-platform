@@ -97,24 +97,18 @@ class ForgotPasswordView(View):
         if request.user.is_authenticated:
             return redirect('homes:home')
         
-        # Retrieves the email address from the POST request
+        # Retrieve the email address from the POST request
         email_address = request.POST.get('email')
         
         # Check if the email field is empty
         if not email_address:
             # If no email is provided, display an error message
-            messages.error(request, 'Please enter email address.')
+            messages.error(request, 'Please enter your email address.')
             return render(request, self.rendered_template)
 
         try:
             # Retrieve the user object associated with the provided email
             user = User.objects.get(email=email_address)
-
-            # Check if the user exists in the database
-            if not user:
-                # If user is not found, display an error message
-                messages.error(request, 'Email not found. Please enter correct email.')
-                return render(request, self.rendered_template)
 
             # Delete any existing OTP records for the email address
             OTPCode.objects.filter(email=email_address).delete()
@@ -125,7 +119,7 @@ class ForgotPasswordView(View):
             try:
                 # Attempt to send the OTP to the user's email address
                 send_reset_password_email(email_address, otp_code)
-            except SMTPException as e:
+            except SMTPException:
                 # If there is an error sending the email, display a server error message
                 messages.error(request, 'Failed to send verification email due to a server issue.')
                 return render(request, self.rendered_template)
@@ -135,9 +129,15 @@ class ForgotPasswordView(View):
             # Set the session expiration to 5 minutes (300 seconds)
             request.session.set_expiry(300)
             # Redirect the user to the OTP verification page
+            messages.success(request, 'An OTP has been sent to your email address.')
             return redirect(self.success_redirect_URL)
 
-        except DatabaseError as e:
+        except User.DoesNotExist:
+            # If the user is not found, display an error message
+            messages.error(request, 'Email not found. Please enter a correct email.')
+            return render(request, self.rendered_template)
+
+        except DatabaseError:
             # If there is a database error while checking the email address, display a generic error message
             messages.error(request, 'An error occurred while checking the email address. Please try again.')
             return redirect(self.error_redirect_URL)
@@ -145,6 +145,7 @@ class ForgotPasswordView(View):
         except Exception as e:
             # Catch any other unexpected errors and display a generic error message
             messages.error(request, 'An unexpected error occurred. Please try again later.')
+            print(e)  # Log the error for debugging purposes
             return redirect(self.error_redirect_URL)
 
 # Testing Completed
@@ -447,6 +448,7 @@ class UserSignupView(View):
             return render(request, self.rendered_template, {'form_data': signup_data})
 
         # Redirect the user to the OTP verification page
+        messages.success(request, 'An OTP has been sent to your email address.')
         return redirect(self.successful_redirect_URL)
 
 # Testing Completed

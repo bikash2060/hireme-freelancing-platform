@@ -6,9 +6,15 @@
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/projects/addproject.css' %}">
 <link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
+<!-- Loader -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
 <div class="home-button">
     <div class="container">
         <div class="back-button">
@@ -121,4 +127,5 @@
 {% block js_files %}
 <script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/projects/search-skill.js' %}"></script>
+<script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}

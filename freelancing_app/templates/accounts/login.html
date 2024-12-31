@@ -7,10 +7,17 @@
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/login.css' %}">
 <link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="login">
+
+  <!-- Loader -->
+  <div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+  
   <div class="container">
     <div class="login_form">
       <form action="{% url 'account:login' %}" method="POST">
@@ -70,4 +77,5 @@
 {% block js_files %}
 <script src="{% static 'js/accounts/password-visibility.js'%}"></script>
 <script src="{% static 'js/message.js'%}"></script>
+<script src="{% static 'js/loader.js'%}"></script>
 {% endblock %}

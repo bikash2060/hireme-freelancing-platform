@@ -7,10 +7,16 @@
 <link rel="stylesheet" href="{% static 'css/message.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/editaddress.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
 {% include 'clientprofile/sidebar.html' %}
+<!-- Loader -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
 <div class="edit-address-container">
     <div class="back-button">
         <a href="{% url 'client:profile' %}">
@@ -101,4 +107,5 @@
         }
     });
 </script>
+<script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}

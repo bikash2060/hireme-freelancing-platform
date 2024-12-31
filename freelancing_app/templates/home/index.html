@@ -4,10 +4,16 @@
 {% block title %}HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/home/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
+<!-- Loader -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading, please wait...</div>
+</div>
 
 <!-- Hero Section -->
 <div class="hero">
@@ -413,4 +419,5 @@
 {% block js_files %}
 <script src="{% static 'js/home/job-slider.js'%}"></script>
 <script src="{% static 'js/home/faq-loader.js'%}"></script>
+<script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}

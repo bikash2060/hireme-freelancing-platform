@@ -25,7 +25,7 @@ class ClientDashboardView(CustomLoginRequiredMixin, View):
         }
         return render(request, 'dashboard/clientdashboard.html', context)
     
-class FreelancerDashboardView(View):
+class FreelancerDashboardView(CustomLoginRequiredMixin, View):
     
     def get(self, request):
         return HttpResponse('freelancer/dashboard')

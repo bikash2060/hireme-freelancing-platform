@@ -256,6 +256,17 @@
     margin-bottom: 10px;
 }
 
+.deadline, .budget {
+    font-size: 0.9rem;
+    color: #212121;
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.budget{
+    margin-bottom: 10px;
+}
+
 .proposals-info {
     font-size: 0.9rem;
     color: #212121;
@@ -465,6 +476,34 @@
     font-size: 0.9rem;
     color: gray;
     margin: 0;
+}
+
+.skills, .hourly-rate, .experience {
+    font-size: 0.9rem;
+    color: #212121;
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.skills{
+    font-size: 0.9rem;
+    margin: 5px 0;
+    font-weight: 500;
+    white-space: nowrap; 
+    overflow: hidden;    
+    text-overflow: ellipsis;
+}
+
+.skills {
+    color: #FF8A65; 
+}
+
+.hourly-rate {
+    color: #388E3C ; 
+}
+
+.experience {
+    color: #757575 ;
 }
 
 .description {

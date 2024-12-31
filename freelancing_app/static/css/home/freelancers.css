@@ -1,0 +1,352 @@
+/* Hero Section */
+.hero {
+    margin-top: 95px; 
+    padding: 30px 0;
+    /* background: #E3F2FD; */
+    background: linear-gradient(to right, #1E88E5, #FFC107); 
+    color: #fff; 
+    text-align: center; 
+}
+
+.hero h1 {
+    font-size: 48px; 
+    margin-bottom: 15px; 
+    font-weight: bold;
+}
+
+.hero p {
+    font-size: 18px; 
+    margin-bottom: 20px; 
+}
+
+/* Styling Filter Box Section */
+.freelancer-filter .filter-box {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.card-grid {
+    width: 75%; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px;
+    padding: 0 10px;
+}
+
+/* Styling Filter Section */
+.filter-section {
+    width: 25%; 
+    height: 100%;
+    padding: 20px;
+    background-color: #f5f5f5; 
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Styling Freelancer Card */
+.freelancer-card {
+    width: 100%;
+    max-width: 280px; 
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.3s ease;
+}
+
+.slider-item {
+    min-width: 100%;
+}
+
+.slider-item img {
+    width: 280px;
+    height: 200px;
+    object-fit: cover;
+}
+
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: black;
+    border: none;
+    padding: 0;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
+
+.slider-container:hover .prev-btn,
+.slider-container:hover .next-btn {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Styling Freelancer Info */
+.freelancer-info, .project-info {
+    padding: 15px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.profile img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile h4 {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.profile p {
+    font-size: 0.9rem;
+    color: gray;
+    margin: 0;
+}
+
+.skills, .hourly-rate, .experience {
+    font-size: 0.9rem;
+    color: #212121;
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.skills {
+    font-size: 0.9rem;
+    margin: 5px 0;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #FF8A65;
+}
+
+.hourly-rate {
+    color: #388E3C;
+}
+
+.experience {
+    color: #757575;
+}
+
+.description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.rating {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #FFC107;
+}
+
+.rating span {
+    color: #212121;
+}
+
+/* Styling Card Buttons */
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.card-buttons button {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.view-profile-btn {
+    background-color: #1E88E5;
+    color: white;
+}
+
+.view-profile-btn:hover {
+    background-color: #1565C0;
+}
+
+.send-message-btn {
+    background-color: #155724;
+    color: #fff;
+}
+
+.send-message-btn:hover {
+    opacity: 0.9;
+}
