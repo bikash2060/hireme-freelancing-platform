@@ -1,6 +1,20 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from projects.models import Skill
+from accounts.mixins import LoginRequiredMixin
+from .models import Notification    
+
+
+class MarkAllAsReadView(LoginRequiredMixin, View):
+    
+    def get(self, request):
+        try:
+            unread_notifications = Notification.objects.filter(user=request.user, is_read=False)
+            unread_notifications.update(is_read=True)
+            return redirect('homes:home')  
+        except Exception as e:
+            return redirect('homes:home')  
+        
 
 class HomeView(View):
     

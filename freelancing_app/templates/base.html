@@ -44,46 +44,44 @@
         
         <div class="side-icons">
             <div class="icon-container">
-                
                 {% if user.is_authenticated %}
-                <!-- Notification Box -->
-                <div class="notification-main">
-                    <div class="icon notification-icon">
-                        <i class="fa-regular fa-bell"><span>1</span></i>
-                    </div>
-                    <div class="notification-box">
-                        <div class="notification-header">
-                            <span>Notifications</span>
-                            <a href="#" class="mark-read">Mark all as read</a>
+                    <div class="notification-main">
+                        <div class="icon notification-icon">
+                            <i class="fa-regular fa-bell">
+                                {% if unread_count > 0 %}
+                                    <span>{{ unread_count }}</span>
+                                {% endif %}
+                            </i>
                         </div>
-                        <hr>
-                        <div class="notification-content">
-                            <div class="notification-item">
-                                <p><strong>Your deadline for the assignment Project Proposal for CS6P05NI</strong></p>
-                                <p>Project_Assessment_AU_24 is due within 24 hours. Please make sure to submit it before the deadline.</p>
-                                <span>December 3, 2024 at 01:07 PM</span>
+                        <div class="notification-box">
+                            <div class="notification-header">
+                                <span>Notifications</span>
+                                <a href="{% url 'homes:mark_all_as_read' %}" class="mark-read" 
+                                    {% if unread_count == 0 %}
+                                        style="cursor: not-allowed; opacity: 0.5;"
+                                        onclick="return false;"
+                                    {% endif %}>
+                                    Mark All as Read
+                                </a>
                             </div>
-                            <hr />
-                            <div class="notification-item">
-                                <p><strong>Your deadline for the assignment Project Proposal for CS6P05NI</strong></p>
-                                <p>Project_Assessment_AU_24 is due within 24 hours. Please make sure to submit it before the deadline.</p>
-                                <span>December 3, 2024 at 01:02 PM</span>
-                            </div>
-                            <hr />
-                            <div class="notification-item">
-                                <p><strong>A new teaching resource has been shared with you.</strong></p>
-                                <p>December 2, 2024 at 07:08 AM</p>
-                            </div>
-                            <hr />
-                            <div class="notification-item">
-                                <p><strong>Your deadline for the assignment Introduction Section - Interim Report</strong></p>
-                                <span>December 2, 2024 at 02:15 PM</span>
+                            <hr>
+                            <div class="notification-content" {% if unread_count == 0 %} style="opacity: 0.85;" {% endif %}>
+                                {% if all_notifications.count > 0 %}
+                                    {% for notification in all_notifications %}
+                                        <div class="notification-item {% if notification.is_read == False %}unread{% endif %}">
+                                            <p><strong>{{ notification.message }}</strong></p>
+                                            <span>{{ notification.timestamp|date:"F j, Y, g:i a" }}</span>
+                                        </div>
+                                        <hr />
+                                    {% endfor %}
+                                {% else %}
+                                    <p style="text-align: center;">No notifications</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                </div>
                 {% endif %}
-                
+
                 <!-- Change Language Box -->
                 <div class="language-main">
                     <div class="language-selector">

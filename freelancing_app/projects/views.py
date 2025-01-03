@@ -4,6 +4,7 @@ from accounts.mixins import CustomLoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from .models import Project, ProjectCategory, Skill
+from home.models import Notification
 from .utils import *
 from accounts.models import Client
 
@@ -36,9 +37,7 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
         project_duration = request.POST.get('project-duration')
         skills_select = request.POST.getlist('skills-select') 
         project_category = request.POST.get('project-category')
-        
         action = request.POST.get('action') 
-        
         
         context = {
             'project_name': project_name,
@@ -78,7 +77,10 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
                 
             project.skills.set(Skill.objects.filter(id__in=skills_select))  
             project.save()
-                            
+            Notification.objects.create(
+                user=request.user,
+                message=f"Your project '{project.title}' has been successfully uploaded.",
+            )                            
             messages.success(request, "New project added successfully.")
             return redirect(self.redirected_URL)
         except Exception as e:
