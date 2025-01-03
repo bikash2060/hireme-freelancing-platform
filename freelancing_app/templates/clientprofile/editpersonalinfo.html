@@ -57,6 +57,29 @@
                 <input type="text" id="phone-number" name="phone_number" value="{{ form_data.phone_number|default:user.phone_number|default:'' }}">
             </div>
             <div class="form-group">
+                <label for="language">Languages</label>
+                <div class="form-group">
+                    <input type="text" id="language-search" name="language-search" placeholder="Search languages..." autocomplete="off">
+                </div>
+                <div class="form-group" id="selected-languages">
+                </div>
+                <div class="form-group">
+                    <div id="languages-list">
+                        {% for language in available_languages %}
+                            <label class="language-item" data-language-name="{{ language }}">
+                                <input type="checkbox" 
+                                       name="languages-select" 
+                                       value="{{ language }}"
+                                       data-language-name="{{ language }}"
+                                       {% if selected_languages and language in selected_languages %}checked{% endif %}> 
+                                {{ language }}
+                            </label>
+                        {% endfor %}
+                    </div>                    
+                </div>
+            </div>
+            
+            <div class="form-group">
                 <label for="bio">Bio</label>
                 <textarea id="bio" name="bio">{{ form_data.bio|default:client.bio|default:"" }}</textarea>
             </div>
@@ -78,4 +101,5 @@
 {% block js_files %}
 <script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/loader.js' %}"></script>
+<script src="{% static 'js/clientprofile/search-language.js' %}"></script>
 {% endblock %}

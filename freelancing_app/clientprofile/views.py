@@ -86,16 +86,28 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
 
         return render(request, self.rendered_template, {'last_username': username})
 
-
 #Full Testing In Progress
 class EditPersonalInfoView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/editpersonalinfo.html'
     redirected_URL = 'client:edit-personal-info'
+    available_languages = [
+        'English', 'Nepali', 'Hindi', 'Chinese', 'Urdu', 'Spanish', 'French', 
+        'Arabic', 'German', 'Russian', 'Portuguese', 'Japanese', 'Korean', 
+        'Italian', 'Dutch', 'Turkish', 'Persian', 'Bengali', 'Swahili', 'Polish',
+        'Thai', 'Vietnamese', 'Tagalog', 'Greek', 'Swedish', 'Czech'
+    ]
 
     def get(self, request):
         client = Client.objects.get(user=request.user)
-        return render(request, self.rendered_template, {'client': client})
-    
+        selected_languages = client.languages.split(',') if client.languages else []
+        selected_languages = [lang.strip() for lang in selected_languages if lang.strip()]
+        
+        return render(request, self.rendered_template, {
+            'client': client,
+            'available_languages': self.available_languages,
+            'selected_languages': selected_languages
+        })
+        
     def post(self, request):
         user = request.user
         client = Client.objects.get(user=request.user)
@@ -105,40 +117,58 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
         last_name = request.POST.get('last_name')
         phone_number = request.POST.get('phone_number')
         bio = request.POST.get('bio')
+        languages_selected = request.POST.getlist('languages-select')  
+        print(languages_selected)
 
         form_data = {
             'first_name': first_name,
             'middle_name': middle_name,
             'last_name': last_name,
             'phone_number': phone_number,
-            'bio': bio
+            'bio': bio,
+            'languages_selected': languages_selected
         }
 
-        valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio)
+        valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages_selected)
 
         if not valid:
             messages.error(request, error_message)
-            return render(request, self.rendered_template, {'form_data': form_data, 'client': client})
+            return render(request, self.rendered_template, {
+                'form_data': form_data,
+                'client': client,
+                'selected_languages': languages_selected,  
+                'available_languages': self.available_languages
+            })
 
         if phone_number and User.objects.filter(phone_number=phone_number).exclude(id=user.id).exists():
             messages.error(request, 'This phone number is already registered.')
-            return render(request, self.rendered_template, {'form_data': form_data, 'client': client})
+            return render(request, self.rendered_template, {
+                'form_data': form_data,
+                'client': client,
+                'selected_languages': languages_selected,  
+                'available_languages': self.available_languages
+            })
 
         try:
-            
             user.first_name = first_name
-            user.middle_name = middle_name 
+            user.middle_name = middle_name
             user.last_name = last_name
             user.phone_number = phone_number
             user.save()
 
             client.bio = bio
+            client.languages = ','.join(languages_selected)  
             client.save()
             messages.success(request, 'Profile Updated Successfully.')
             return redirect(self.redirected_URL)
         except Exception as e:
             messages.error(request, "Unable to update your profile.")
-            return render(request, self.rendered_template, {'client': client})
+            return render(request, self.rendered_template, {
+                'form_data': form_data,
+                'client': client,
+                'selected_languages': languages_selected,  
+                'available_languages': self.available_languages
+            })
 
 #Full Testing In Progress
 class EditUserAddressView(CustomLoginRequiredMixin, View):
@@ -359,7 +389,6 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
         
         country = request.POST.get('country')
         city = request.POST.get('city')
-        postal_code = request.POST.get('postal_code')
         
         if not country or not city:
             messages.error(request, "Both country and city are required.")
@@ -368,39 +397,10 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
                 'countries_and_cities': self.countries_and_cities,
                 'countries_and_cities_json': json.dumps(self.countries_and_cities)
             })
-        
-        if not postal_code:
-            messages.error(request, "Postal code is required.")
-            return render(request, self.rendered_template, {
-                'client': client,
-                'countries_and_cities': self.countries_and_cities,
-                'countries_and_cities_json': json.dumps(self.countries_and_cities)
-            })
-            
-        valid, error_message = validate_postal_code(postal_code)
-        
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.rendered_template, {
-                'client': client,
-                'countries_and_cities': self.countries_and_cities,
-                'countries_and_cities_json': json.dumps(self.countries_and_cities)
-            })
-        
-        if Client.objects.filter(postal_code=postal_code).exclude(client_ID=client.client_ID).exists():
-            messages.error(request, "This postal code is already in use. Please enter a unique postal code.")
-            return render(request, self.rendered_template, {
-                'client': client,
-                'countries_and_cities': self.countries_and_cities,
-                'countries_and_cities_json': json.dumps(self.countries_and_cities)
-            })
-
-
-            
+ 
         try:
             client.country = country
             client.city = city
-            client.postal_code = postal_code
             client.save()
             messages.success(request, 'Profile Updated Successfully.')
             return redirect(self.redirected_URL)

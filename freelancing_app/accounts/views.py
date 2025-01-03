@@ -60,6 +60,7 @@ class UserLoginView(View):
                         
             # Redirect based on user role
             if user.role == 'client':
+                # messages.success(request, "You'r logged in successfully")
                 return redirect('dashboard:client')
             else:
                 return redirect('dashboard:freelancer')
@@ -683,6 +684,7 @@ class UserRoleRedirectView(View):
 class UserLogoutView(View):
     def get(self, request):
         logout(request)
+        messages.success(request, "You'r logged out successfully")
         return redirect('homes:home')
 
 

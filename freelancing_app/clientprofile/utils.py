@@ -41,7 +41,7 @@ def validate_profile_image(profile_image):
 
     return True, "File is valid."
 
-def validate_personal_info(first_name, middle_name, last_name, phone_number, bio):
+def validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages):
     
     # First Name Validation
     if not first_name or first_name.lower() == "none":
@@ -74,17 +74,15 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
     if not phone_number.startswith(('98', '97', '99')):
         return False, "Phone number must start with a valid prefix (e.g., 98, 97, 99)."
     
+    # Languages Validation
+    if not languages:
+        return False, "At least one language is required."
+    
     if bio and len(bio) > 500:
         return False, "Bio should not exceed 500 characters."
     
     return True, ""
 
-def validate_postal_code(postal_code):
-    
-    if not re.match(r'^[a-zA-Z0-9]{4,10}$', postal_code):
-        return False, "Invalid postal code. It must be alphanumeric and between 4-10 characters."
-    
-    return True, ""
 
 def create_company(company_logo, company_name, position, start_month, start_year, end_month, end_year, location, url, currently_working, months):
     if company_logo:
