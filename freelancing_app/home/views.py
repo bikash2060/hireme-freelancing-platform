@@ -21,7 +21,7 @@ class HomeView(View):
 def handling_404(request, exception):
     return render(request, '404.html', {})
 
-class FreelancerView(View):
+class FreelancersView(View):
     
     rendered_template = 'home/freelancers.html'
     
@@ -32,3 +32,10 @@ class FreelancerView(View):
             'skills': skills
         }
         return render(request, self.rendered_template, context)
+    
+class ProjectsView(View):
+    
+    rendered_template = 'home/projects.html'
+    
+    def get(self, request):
+        return render(request, self.rendered_template)
