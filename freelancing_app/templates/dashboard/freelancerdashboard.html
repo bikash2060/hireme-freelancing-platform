@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}My Dashboard{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/dashboard/freelancerdashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            {% if user.first_name %}
+                <h3>{{ greeting }}, {{user.first_name}}</h3>
+            {% else %}
+                <h3>{{ greeting }}, {{user.username}}</h3>
+            {% endif %}
+            <a href="{% url 'homes:projects' %}" class="browse-projects-btn">
+                <i class="fas fa-search"></i> Browse Projects
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Freelancer Quick Actions Section -->
+<div class="quick-actions">
+    <div class="container">
+        <h2>What would you like to do?</h2>
+        <div class="action-grid">
+            <div class="action-card">
+                <i class="fas fa-search"></i>
+                <h3>Browse Projects</h3>
+                <p>Find projects that match your skills and interests</p>
+                <a href="#" class="btn">Browse Projects</a>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>Create Proposal</h3>
+                <p>Submit proposals for projects you're interested in</p>
+                <a href="#" class="btn">Create Proposal</a>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>My Proposals</h3>
+                <p>Track and manage your submitted proposals</p>
+                <a href="#" class="btn">View Proposals</a>
+            </div>
+            <div class="action-card">
+                <i class="fas fa-dollar-sign"></i>
+                <h3>My Earnings</h3>
+                <p>View and track your earnings and payment history</p>
+                <a href="#" class="btn">View Earnings</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Projects Recommendation Section -->
+<div class="recommended-section">
+    <div class="container">
+        <div class="text">
+            <h3>Just For You</h3>
+        </div>
+        <div class="card-grid">
+            {% for project in projects %}
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="{% if project.image %}{% get_media_prefix %}project_images/{{ project.image }}{% else %}{% static 'images/programming.png' %}{% endif %}" alt="Project Image">
+                    </div>
+                    <div class="poster-info">
+                        <img class="poster-profile" src="{% if project.client.user.profile_image %}{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="Project Poster Profile Picture">
+                        <p class="poster-name">{{ project.client.user.first_name }} {{ project.client.user.last_name }}</p>
+                    </div>
+                    <div class="project-info">
+                        <h4>{{ project.title }}</h4>
+                        <p class="category">{{ project.category }}</p>
+                        <p class="deadline">Deadline: {{ project.deadline }}</p>
+                        <p class="budget">Budget: {{ project.budget }}</p>
+                        <div class="status status-ongoing">{{ project.status }}</div>
+                    </div>
+                    <div class="card-buttons">
+                        <a href="{% url 'dashboard:send_proposal' proposal_id=project.id %}" class="edit-project-btn">Apply Proposal</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No projects available.</p>
+            {% endfor %}
+        </div>        
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer%}
+{% endblock %}
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+<script src="{% static 'js/dashboard/freelancer-profile-slider.js' %}"></script>
+{% endblock %}

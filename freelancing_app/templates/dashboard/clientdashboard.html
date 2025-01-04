@@ -80,6 +80,9 @@
                         <p class="category">{{ project.category|capfirst }}</p>
                         <p class="deadline">Deadline: {{ project.deadline|date:"M j, Y" }}</p>
                         <p class="budget">Budget: {{ project.budget }}</p>
+                        <p class="proposals-count">
+                            Proposals: {{ project.num_proposals }}
+                        </p>
                         <div class="status {% if project.status == 'draft' %}status-draft{% elif project.status == 'pending' %}status-pending{% elif project.status == 'ongoing' %}status-ongoing{% else %}status-completed{% endif %}">
                             {{ project.status|title }}
                         </div>

@@ -27,7 +27,7 @@ class HomeView(View):
             if user_role == 'client':
                 return redirect('dashboard:client')
             elif user_role == 'freelancer':
-                return redirect('freelancer_dashboard')
+                return redirect('dashboard:freelancer')
         
         # Render the default home page if the user is not authenticated
         return render(request, 'home/index.html')

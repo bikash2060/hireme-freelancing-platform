@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/proposals/proposalsform.css' %}">
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Loader -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<div class="home-button">
+    <div class="container">
+        <div class="back-button">
+            <a href="{% url 'homes:home' %}">
+                <i class="fa fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <form action="{% url 'dashboard:send_proposal' proposal_id=project.id %}" method="POST" class="project-form">
+            {% csrf_token %}
+            {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    <span>{{ message }}</span>
+                    <i class="fa fa-times close-message"></i>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        
+            <section class="section">
+                <h2>Proposals Overview</h2>
+                <div class="form-group">
+                    <label for="project-name">Project Name</label>
+                    <input type="text" id="project-name" name="project-name" placeholder="Enter project name" value="{{ project.title }}" disabled>
+                </div>
+        
+                <div class="form-group">
+                    <label for="proposal-description">Proposal Description</label>
+                    <textarea id="proposal-description" name="proposal-description" placeholder="Describe your proposal..." rows="4">{{ proposal_description }}</textarea>
+                </div>
+        
+                <div class="form-group">
+                    <label for="bid-amount">Bid Amount</label>
+                    <input type="number" id="bid-amount" name="bid-amount" placeholder="Enter your bid amount" min="0" value="{{ bid_amount }}">
+                </div>
+        
+                <div class="form-group">
+                    <label for="estimated-delivery-time">Estimated Delivery Time</label>
+                    <input type="date" id="estimated-delivery-time" name="estimated-delivery-time" value="{{ estimated_delivery_time }}">
+                </div>
+            </section>
+
+            <div class="form-group">
+                <button type="submit" name="action" value="submit" class="submit-btn submit-btn-submit">Submit Proposal</button>
+            </div>
+        </form>        
+    </div>
+</div>
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+<script src="{% static 'js/projects/search-skill.js' %}"></script>
+<script src="{% static 'js/loader.js' %}"></script>
+{% endblock %}

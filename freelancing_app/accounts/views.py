@@ -624,9 +624,7 @@ class UserRoleRedirectView(View):
     def post(self, request):
         if request.user.is_authenticated:
             return redirect('homes:home')
-        
-        # Handles the form submission for selecting user role (POST request)
-        
+                
         # Retrieve signup data from session
         signup_data = request.session.get('signup_data')  
 
@@ -642,7 +640,7 @@ class UserRoleRedirectView(View):
         
         # Get the selected role from the form (client or freelancer)
         role = request.POST.get('role', '').strip()
-
+        
         # Create a new User instance and save it to the database
         try:
             user = User.objects.create_user(
@@ -650,7 +648,6 @@ class UserRoleRedirectView(View):
                 username=username,
                 password=password,
                 role=role,
-                is_verified=True  
             )
         except Exception as e:
             messages.error(request, 'An error occurred while creating your account.')
