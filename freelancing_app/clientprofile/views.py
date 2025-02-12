@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from accounts.models import User, Client
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from .utils import *
 import json
@@ -9,25 +10,40 @@ from datetime import datetime
 from .models import Company
 from accounts.mixins import CustomLoginRequiredMixin
 
+#Testing InProgress
 class UserBasicInfoView(CustomLoginRequiredMixin, View):
+    # Template used for rendering the client profile page
     rendered_template = 'clientprofile/profile.html'
     
     def get(self, request):
-        client = Client.objects.get(user=request.user)  
+        # Retrieves the client associated with the logged-in user
+        client = Client.objects.get(user=request.user)
+        
+        # Fetches all companies associated with the client
         company = Company.objects.filter(client_id=client)
-        current_year = datetime.now().year  
+        
+        # Gets the current year to calculate the duration of company experience
+        current_year = datetime.now().year
+        
+        # List to store companies along with their calculated duration
         companies_with_duration = []
 
+        # Loop through each company to calculate the duration
         for comp in company:
+            # If the company has an end date, calculate the duration using start and end dates
             if comp.end_date:
                 duration = comp.end_date.year - comp.start_date.year
             else:
+                # If no end date, calculate the duration based on the current year
                 duration = current_year - comp.start_date.year
+            
+            # Append company and its duration to the list
             companies_with_duration.append({
                 'company': comp,
                 'duration': duration
             })
         
+        # Renders the profile page with client information and company experience duration
         return render(request, self.rendered_template, {
             'client': client,
             'companies_with_duration': companies_with_duration,
@@ -36,71 +52,103 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
 
 # Testing Completed
 class EditProfileImageView(CustomLoginRequiredMixin, View):
+    # Template used for rendering the profile image edit page
     rendered_template = 'clientprofile/editprofileimage.html'
+    
+    # URL to redirect to upon successful profile update
     redirected_URL = 'client:edit-profile-image'
+    
+    # URL to redirect to in case of an error
     error_redirect_URL = 'homes:home'
 
     def get(self, request):
         try:
+            # Retrieves the client associated with the logged-in user
             client = Client.objects.get(user=request.user)
+            # Renders the profile image edit page with the client information
             return render(request, self.rendered_template, {'client': client})
         except Exception:
+            # If an error occurs while fetching the client profile, display an error message
             messages.error(request, "Unable to fetch your profile.")
-            return redirect(self.error_redirect_URL)    
+            # Redirect to the error page
+            return redirect(self.error_redirect_URL)
 
     def post(self, request):
+        # Retrieves the uploaded profile image and the new username from the POST request
         profile_image = request.FILES.get('profile_image')
         username = request.POST.get('username')
 
         if profile_image:
+            # Validates the uploaded profile image
             valid, error_message = validate_profile_image(profile_image)
             if not valid:
+                # If validation fails, display an error message and re-render the page
                 messages.error(request, error_message)
                 return render(request, self.rendered_template, {'last_username': username})
         
         if not username:
+            # If no username is provided, display an error message
             messages.error(request, "Username cannot be empty.")
             return render(request, self.rendered_template, {'last_username': username})
 
+        # Validates the new username
         valid, error_message = validate_username(username)
         if not valid:
+            # If username validation fails, display an error message and re-render the page
             messages.error(request, error_message)
             return render(request, self.rendered_template, {'last_username': username})
 
+        # Checks if the new username is already taken by another user
         if User.objects.filter(username=username).exclude(id=request.user.id).exists():
             messages.error(request, "Username already taken.")
             return render(request, self.rendered_template, {'last_username': username})
 
         try:
+            # Updates the logged-in user's profile information
             user = request.user
             user.username = username
 
             if profile_image:
                 try:
+                    # Saves the uploaded profile image to the file system
                     fs = FileSystemStorage(location='media/profile_images')
                     filename = fs.save(profile_image.name, profile_image)
+                    # Updates the user's profile image field
                     user.profile_image = filename.split('/')[-1]
                 except Exception as e:
+                    # If an error occurs while uploading the image, display an error message
                     print(f"File upload error: {e}")
                     messages.error(request, "Error uploading profile image. Please try again.")
                     return render(request, self.rendered_template, {'last_username': username})
 
+            # Saves the updated user information to the database
             user.save()
+            # Displays a success message and redirects to the profile edit page
             messages.success(request, "Profile updated successfully.")
             return redirect(self.redirected_URL)
         except FileNotFoundError:
+            # Handles errors related to file uploads
             messages.error(request, "There was an issue uploading the profile image. Please try again.")
         except Exception as e:
+            # Handles any other unexpected errors
             print(f"Exception: {e}")
             messages.error(request, "Something went wrong. Please try again later.")
 
+        # In case of an error, re-render the profile edit page with the last entered username
         return render(request, self.rendered_template, {'last_username': username})
 
 #Testing Completed
 class EditPersonalInfoView(CustomLoginRequiredMixin, View):
+    # Template used for rendering the personal info edit page
     rendered_template = 'clientprofile/editpersonalinfo.html'
+    
+    # URL to redirect to upon successful profile update
     redirected_URL = 'client:edit-personal-info'
+    
+    # URL to redirect to in case of an error
     error_redirect_URL = 'homes:home'
+    
+    # List of available languages for the user to choose from
     available_languages = [
         'English', 'Nepali', 'Hindi', 'Chinese', 'Urdu', 'Spanish', 'French', 
         'Arabic', 'German', 'Russian', 'Portuguese', 'Japanese', 'Korean', 
@@ -110,34 +158,44 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
 
     def get(self, request):
         try:
+            # Retrieves the client associated with the logged-in user
             client = Client.objects.get(user=request.user)
+            # Splits the saved languages into a list, if any
             selected_languages = client.languages.split(',') if client.languages else []
             selected_languages = [lang.strip() for lang in selected_languages if lang.strip()]
             
+            # Renders the personal info edit page with the available and selected languages
             return render(request, self.rendered_template, {
                 'client': client,
                 'available_languages': self.available_languages,
                 'selected_languages': selected_languages
             })
         except Exception:
+            # If an error occurs while fetching the client profile, display an error message
             messages.error(request, "Unable to fetch your profile.")
+            # Redirect to the error page
             return redirect(self.error_redirect_URL)
-        
+
     def post(self, request):
         try:
+            # Retrieves the logged-in user and their client profile
             user = request.user
             client = Client.objects.get(user=request.user)
         except Exception:
+            # If an error occurs while fetching the client profile, display an error message
             messages.error(request, "Unable to fetch your profile.")
+            # Redirect to the error page
             return redirect(self.error_redirect_URL)
 
+        # Retrieves the updated personal information from the form
         first_name = request.POST.get('first_name')
         middle_name = request.POST.get('middle_name')
         last_name = request.POST.get('last_name')
         phone_number = request.POST.get('phone_number')
         bio = request.POST.get('bio')
-        languages_selected = request.POST.getlist('languages-select')  
+        languages_selected = request.POST.getlist('languages-select')
 
+        # Prepares the form data to be passed back to the template in case of an error
         form_data = {
             'first_name': first_name,
             'middle_name': middle_name,
@@ -147,51 +205,64 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
             'languages_selected': languages_selected
         }
 
+        # Validates the updated personal information
         valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages_selected)
 
         if not valid:
+            # If validation fails, display an error message and re-render the page with the form data
             messages.error(request, error_message)
             return render(request, self.rendered_template, {
                 'form_data': form_data,
                 'client': client,
-                'selected_languages': languages_selected,  
+                'selected_languages': languages_selected,
                 'available_languages': self.available_languages
             })
 
+        # Checks if the phone number is already registered with another user
         if phone_number and User.objects.filter(phone_number=phone_number).exclude(id=user.id).exists():
             messages.error(request, 'This phone number is already registered.')
             return render(request, self.rendered_template, {
                 'form_data': form_data,
                 'client': client,
-                'selected_languages': languages_selected,  
+                'selected_languages': languages_selected,
                 'available_languages': self.available_languages
             })
 
         try:
+            # Updates the user and client profile with the new data
             user.first_name = first_name
             user.middle_name = middle_name
             user.last_name = last_name
             user.phone_number = phone_number
             user.save()
 
+            # Updates the client's bio and selected languages
             client.bio = bio
-            client.languages = ','.join(languages_selected)  
+            client.languages = ','.join(languages_selected)
             client.save()
+
+            # Displays a success message and redirects to the profile edit page
             messages.success(request, 'Profile Updated Successfully.')
             return redirect(self.redirected_URL)
         except Exception as e:
+            # If an error occurs while updating the profile, display an error message
             messages.error(request, "Unable to update your profile.")
             return render(request, self.rendered_template, {
                 'form_data': form_data,
                 'client': client,
-                'selected_languages': languages_selected,  
+                'selected_languages': languages_selected,
                 'available_languages': self.available_languages
             })
-
+            
 #Testing Completed
 class EditUserAddressView(CustomLoginRequiredMixin, View):
+    # Template used for rendering the address edit page
     rendered_template = 'clientprofile/editaddress.html'
+    
+    # URL to redirect to upon successful address update
     redirected_URL = 'client:edit-address'
+    
+    # URL to redirect to in case of an error
     error_redirect_URL = 'homes:home'
     
     countries_and_cities = {
@@ -394,30 +465,43 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
     }
 
     def get(self, request):
-        try: 
+        try:
+            # Retrieves the client associated with the logged-in user
             client = Client.objects.get(user=request.user)
-            countries_and_cities_json = json.dumps(self.countries_and_cities)  
+            
+            # Converts the countries and cities data to JSON format for frontend use
+            countries_and_cities_json = json.dumps(self.countries_and_cities)
+            
+            # Renders the address edit page with the client's existing address and available countries and cities
             return render(request, self.rendered_template, {
                 'client': client,
                 'countries_and_cities': self.countries_and_cities,
                 'countries_and_cities_json': countries_and_cities_json,
             })
         except Exception:
+            # If an error occurs while fetching the client profile, display an error message
             messages.error(request, "Unable to get your profile.")
+            # Redirect to the error page
             return redirect(self.error_redirect_URL)
-        
+
     def post(self, request):
         try:
+            # Retrieves the logged-in user's client profile
             client = Client.objects.get(user=request.user)
         except Exception:
+            # If an error occurs while fetching the client profile, display an error message
             messages.error(request, "Unable to get your profile.")
+            # Redirect to the error page
             return redirect(self.error_redirect_URL)
-    
+
+        # Retrieves the updated country and city values from the form
         country = request.POST.get('country')
         city = request.POST.get('city')
         
+        # Checks if both country and city are provided
         if not country or not city:
             messages.error(request, "Both country and city are required.")
+            # Re-renders the form with the error message and current data
             return render(request, self.rendered_template, {
                 'client': client,
                 'countries_and_cities': self.countries_and_cities,
@@ -425,12 +509,16 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
             })
  
         try:
+            # Updates the client's country and city in the database
             client.country = country
             client.city = city
             client.save()
+            
+            # Displays a success message and redirects to the address edit page
             messages.success(request, 'Profile Updated Successfully.')
             return redirect(self.redirected_URL)
         except Exception:
+            # If an error occurs while updating the profile, display an error message
             messages.error(request, "Unable to update your profile.")
             return render(request, self.rendered_template, {
                 'client': client,
@@ -438,7 +526,7 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
                 'countries_and_cities_json': json.dumps(self.countries_and_cities)
             })
             
-#Testing Ongoing
+#Testing Completed
 class AddCompanyView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/addcompany.html'
     redirected_URL = 'client:addcompany'
@@ -541,3 +629,63 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
             return render(request, self.rendered_template, context)
+
+#Testing Completed
+class PasswordChangeView(CustomLoginRequiredMixin, View):
+    # Template used for rendering the password change page
+    rendered_template = 'clientprofile/passwordchange.html'
+    
+    # URL to redirect to after successful password change
+    redirected_URL = 'client:change-password'
+    
+    # URL to redirect to in case of an error (home page)
+    error_redirect_URL = 'homes:home'
+
+    def get(self, request):
+        # Renders the password change page
+        return render(request, self.rendered_template)
+    
+    def post(self, request):
+        # Retrieves the old password, new password, and confirmation from the form
+        old_password = request.POST.get('oldpassword')
+        new_password = request.POST.get('newpassword')
+        confirm_password = request.POST.get('confirmpassword')
+        
+        # Checks if any required fields are missing
+        if not old_password or not new_password or not confirm_password:
+            messages.error(request, "All fields are required.")
+            return render(request, self.rendered_template)
+        
+        # Checks if new password and confirmation match
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return render(request, self.rendered_template)
+        
+        # Verifies the old password entered by the user
+        user = request.user
+        if not user.check_password(old_password):
+            messages.error(request, "Old Password doesn't match.")
+            return render(request, self.rendered_template)
+        
+        # Validates the new password based on custom password criteria
+        valid, error_message = validate_password(new_password)
+        if not valid:
+            messages.error(request, error_message)
+            return render(request, self.rendered_template)
+
+        try:
+            # Sets and saves the new password
+            user.set_password(new_password)
+            user.save()
+
+            # Updates the session to keep the user logged in after password change
+            update_session_auth_hash(request, user)
+
+            # Success message and redirect after successful password change
+            messages.success(request, "Your password has been changed successfully.")
+            return redirect(self.redirected_URL)
+        except Exception as e:
+            # If an error occurs during password change, log and show an error message
+            print(f"Unexpected error: {e}")
+            messages.error(request, "Something went wrong. Please try again later.")
+            return render(request, self.rendered_template)

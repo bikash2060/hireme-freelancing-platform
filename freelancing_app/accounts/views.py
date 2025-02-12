@@ -10,7 +10,7 @@ from .formvalidation import *
 from .models import *
 from django.utils import timezone
 
-# Testing Ongoing
+# Testing Completed
 class UserLoginView(View):
     # Template used for rendering the login page
     rendered_template = 'accounts/login.html'
@@ -683,8 +683,14 @@ class UserRoleRedirectView(View):
 # Testing Completed
 class UserLogoutView(View):
     def get(self, request):
+        # Logs out the user from the current session
         logout(request)
+        
+        # Displays a success message indicating successful logout
         messages.success(request, "You have been logged out successfully.")
+        
+        # Redirects the user to the login page after logging out
         return redirect('account:login')
+
 
 
