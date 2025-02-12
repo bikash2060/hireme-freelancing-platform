@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils.timezone import now, timedelta
 
@@ -32,33 +32,18 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-    def create_superuser(self, username, email, password=None, **extra_fields):
-        """
-        Creates and returns a superuser with the necessary permissions.
-        """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)  # Ensure superuser is active
 
-        return self.create_user(username, email, password, **extra_fields)
-
-
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser):
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=100, null=True)
     middle_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)
     role = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
-
-    # Permission-related fields
-    is_staff = models.BooleanField(default=False)  # Staff user can log in to admin panel
-    is_superuser = models.BooleanField(default=False)  # Superuser has all permissions
-    is_active = models.BooleanField(default=True)  # Indicates if the user is active or not
+    last_login = None
 
     objects = CustomUserManager()
 

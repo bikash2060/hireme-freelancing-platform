@@ -1,7 +1,7 @@
 from django.views import View
 from smtplib import SMTPException
 from django.db import DatabaseError
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import make_password
@@ -10,7 +10,7 @@ from .formvalidation import *
 from .models import *
 from django.utils import timezone
 
-# Testing Completed
+# Testing Ongoing
 class UserLoginView(View):
     # Template used for rendering the login page
     rendered_template = 'accounts/login.html'
@@ -25,6 +25,7 @@ class UserLoginView(View):
     def post(self, request):
         if request.user.is_authenticated:
             return redirect('homes:home')
+        
         # Retrieves email and password from the POST request
         email = request.POST.get('emailaddress').strip().lower()
         password = request.POST.get('password').strip()
@@ -48,7 +49,7 @@ class UserLoginView(View):
             user = authenticate(request, email=email, password=password)
         except Exception as e:
             # Catch any unexpected errors during authentication
-            messages.error(request, 'An error occurred while authenticating your credentials. Please try again.')
+            messages.error(request, 'An error occurred while authenticating your credentials.')
             return render(request, self.rendered_template, {'form_data': login_data})
         
         if user is not None:
@@ -454,6 +455,7 @@ class UserSignupView(View):
 
 # Testing Completed
 class VerifyOTPView(View):
+    
     # Template for rendering the OTP verification form
     rendered_template = 'accounts/otp_verification.html'
     
@@ -661,7 +663,7 @@ class UserRoleRedirectView(View):
             if role == 'client':
                 # Create and save the Client profile
                 Client.objects.create(user=user)
-                messages.success(request, 'You have successfully signed up as a client.')
+                messages.success(request, 'You have successfully created an account as a client.')
                 # Delete the specific session data after successful signup
                 del request.session['signup_data']
                 return redirect(self.successful_redirect_URL)  # Redirect to login page after successful signup
@@ -669,19 +671,20 @@ class UserRoleRedirectView(View):
             else:
                 # Create and save the Freelancer profile
                 Freelancer.objects.create(user=user)
-                messages.success(request, 'You have successfully signed up as a freelancer.')
+                messages.success(request, 'You have successfully created an account as a freelancer.')
                 # Delete the specific session data after successful signup
                 del request.session['signup_data']
                 return redirect(self.successful_redirect_URL)  # Redirect to login page after successful signup
 
         except Exception as e:
-            messages.error(request, f'An error occurred while creating your profile.{e}')
+            messages.error(request, 'An error occurred while creating your profile.')
             return redirect(self.error_redirect_URL)
 
+# Testing Completed
 class UserLogoutView(View):
     def get(self, request):
         logout(request)
-        messages.success(request, "You'r logged out successfully")
+        messages.success(request, "You have been logged out successfully.")
         return redirect('account:login')
 
 
