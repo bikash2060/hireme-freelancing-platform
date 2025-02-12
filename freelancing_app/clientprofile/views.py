@@ -34,14 +34,19 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
             'current_year': current_year
         })
 
-# Full Testing In Progress
+# Testing Completed
 class EditProfileImageView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/editprofileimage.html'
     redirected_URL = 'client:edit-profile-image'
+    error_redirect_URL = 'homes:home'
 
     def get(self, request):
-        client = Client.objects.get(user=request.user)
-        return render(request, self.rendered_template, {'client': client})
+        try:
+            client = Client.objects.get(user=request.user)
+            return render(request, self.rendered_template, {'client': client})
+        except Exception:
+            messages.error(request, "Unable to fetch your profile.")
+            return redirect(self.error_redirect_URL)    
 
     def post(self, request):
         profile_image = request.FILES.get('profile_image')
@@ -71,9 +76,14 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
             user.username = username
 
             if profile_image:
-                fs = FileSystemStorage(location='media/profile_images')
-                filename = fs.save(profile_image.name, profile_image)
-                user.profile_image = filename.split('/')[-1]
+                try:
+                    fs = FileSystemStorage(location='media/profile_images')
+                    filename = fs.save(profile_image.name, profile_image)
+                    user.profile_image = filename.split('/')[-1]
+                except Exception as e:
+                    print(f"File upload error: {e}")
+                    messages.error(request, "Error uploading profile image. Please try again.")
+                    return render(request, self.rendered_template, {'last_username': username})
 
             user.save()
             messages.success(request, "Profile updated successfully.")
@@ -86,10 +96,11 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
 
         return render(request, self.rendered_template, {'last_username': username})
 
-#Full Testing In Progress
+#Testing Completed
 class EditPersonalInfoView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/editpersonalinfo.html'
     redirected_URL = 'client:edit-personal-info'
+    error_redirect_URL = 'homes:home'
     available_languages = [
         'English', 'Nepali', 'Hindi', 'Chinese', 'Urdu', 'Spanish', 'French', 
         'Arabic', 'German', 'Russian', 'Portuguese', 'Japanese', 'Korean', 
@@ -98,19 +109,27 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
     ]
 
     def get(self, request):
-        client = Client.objects.get(user=request.user)
-        selected_languages = client.languages.split(',') if client.languages else []
-        selected_languages = [lang.strip() for lang in selected_languages if lang.strip()]
-        
-        return render(request, self.rendered_template, {
-            'client': client,
-            'available_languages': self.available_languages,
-            'selected_languages': selected_languages
-        })
+        try:
+            client = Client.objects.get(user=request.user)
+            selected_languages = client.languages.split(',') if client.languages else []
+            selected_languages = [lang.strip() for lang in selected_languages if lang.strip()]
+            
+            return render(request, self.rendered_template, {
+                'client': client,
+                'available_languages': self.available_languages,
+                'selected_languages': selected_languages
+            })
+        except Exception:
+            messages.error(request, "Unable to fetch your profile.")
+            return redirect(self.error_redirect_URL)
         
     def post(self, request):
-        user = request.user
-        client = Client.objects.get(user=request.user)
+        try:
+            user = request.user
+            client = Client.objects.get(user=request.user)
+        except Exception:
+            messages.error(request, "Unable to fetch your profile.")
+            return redirect(self.error_redirect_URL)
 
         first_name = request.POST.get('first_name')
         middle_name = request.POST.get('middle_name')
@@ -118,7 +137,6 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
         phone_number = request.POST.get('phone_number')
         bio = request.POST.get('bio')
         languages_selected = request.POST.getlist('languages-select')  
-        print(languages_selected)
 
         form_data = {
             'first_name': first_name,
@@ -170,10 +188,11 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
                 'available_languages': self.available_languages
             })
 
-#Full Testing In Progress
+#Testing Completed
 class EditUserAddressView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/editaddress.html'
     redirected_URL = 'client:edit-address'
+    error_redirect_URL = 'homes:home'
     
     countries_and_cities = {
         "Afghanistan": ["Kabul", "Kandahar", "Herat", "Mazar-i-Sharif", "Jalalabad", "Other"],
@@ -374,19 +393,26 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
         "Zimbabwe": ["Harare", "Bulawayo", "Chitungwiza", "Mutare", "Gweru", "Other"]
     }
 
-  
     def get(self, request):
-        client = Client.objects.get(user=request.user)
-        countries_and_cities_json = json.dumps(self.countries_and_cities)  
-        return render(request, self.rendered_template, {
-            'client': client,
-            'countries_and_cities': self.countries_and_cities,
-            'countries_and_cities_json': countries_and_cities_json,
-        })
+        try: 
+            client = Client.objects.get(user=request.user)
+            countries_and_cities_json = json.dumps(self.countries_and_cities)  
+            return render(request, self.rendered_template, {
+                'client': client,
+                'countries_and_cities': self.countries_and_cities,
+                'countries_and_cities_json': countries_and_cities_json,
+            })
+        except Exception:
+            messages.error(request, "Unable to get your profile.")
+            return redirect(self.error_redirect_URL)
         
     def post(self, request):
-        client = Client.objects.get(user=request.user)
-        
+        try:
+            client = Client.objects.get(user=request.user)
+        except Exception:
+            messages.error(request, "Unable to get your profile.")
+            return redirect(self.error_redirect_URL)
+    
         country = request.POST.get('country')
         city = request.POST.get('city')
         
@@ -412,8 +438,7 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
                 'countries_and_cities_json': json.dumps(self.countries_and_cities)
             })
             
-            
-#Full Testing In Progress
+#Testing Ongoing
 class AddCompanyView(CustomLoginRequiredMixin, View):
     rendered_template = 'clientprofile/addcompany.html'
     redirected_URL = 'client:addcompany'

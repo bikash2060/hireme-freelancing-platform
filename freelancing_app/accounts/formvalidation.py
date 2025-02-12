@@ -7,7 +7,15 @@ def validate_signup_form(email, username, password, confirm_password):
     Validates the user signup form by checking required fields, email, username, password, and their respective formats.
     Ensures password complexity, checks for existing email/username, and handles database errors.
     """
-    reserved_words = {"admin", "root", "user", "support", "client", "freelancer"}
+    reserved_words = {
+        "admin", "administrator", "root", "superuser", "sysadmin", "moderator", "mod",
+        "support", "helpdesk", "service", "client", "freelancer", "user", "guest",
+        "owner", "manager", "staff", "team", "developer", "dev", "test", "tester",
+        "system", "operator", "security", "bot", "automated", "anonymous", "null",
+        "banned", "blocked", "unknown", "default", "account", "password", "database",
+        "server", "host", "network", "api", "master", "backup", "debug", "trial",
+        "free", "premium", "vip", "official", "mod", "admin1", "admin2"
+    }
 
     if not email or not username or not password or not confirm_password:
         return False, "All fields are required."

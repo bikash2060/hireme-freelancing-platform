@@ -51,36 +51,36 @@
                 <div class="body-content">
                     <div class="col-1">
                         <p><strong>First Name</strong></p>
-                        <p>{{user.first_name|default:"" }}</p>
+                        <p>{{ user.first_name|default:"Not Provided" }}</p>
                     </div>
                     <div class="col-2">
                         <p><strong>Middle Name</strong></p>
-                        <p>{{user.middle_name|default:"" }}</p>
+                        <p>{{ user.middle_name|default:"(No Middle Name)" }}</p>
                     </div>
                     <div class="col-3">
                         <p><strong>Last Name</strong></p>
-                        <p>{{user.last_name}}</p>
+                        <p>{{ user.last_name|default:"Not Provided" }}</p>
                     </div>
                     <div class="col-3">
                         <p><strong>Email Address</strong></p>
-                        <p id="email">{{user.email}}</p>
+                        <p id="email">{{ user.email }}</p>
                     </div>
                     <div class="col-4">
                         <p><strong>Phone</strong></p>
-                        <p>{{user.phone_number|default:"" }}</p>
+                        <p>{{ user.phone_number|default:"No Phone Number Added" }}</p>
                     </div>
                     <div class="col-6">
                         <p><strong>Languages</strong></p>
-                        <p>{{client.languages|default:"" }}</p>
+                        <p>{{ client.languages|default:"Not Specified" }}</p>
                     </div>                    
                     <div class="col-7">
                         <p><strong>Bio</strong></p>
                         <p id="bio" class="bio-text">
-                            {{client.bio|default:"" }}
+                            {{ client.bio|default:"No bio available. Add a short description about yourself!" }}
                         </p> 
                         <a href="javascript:void(0);" id="read-more" class="read-more">Read More</a>
                     </div>   
-                </div>
+                </div>                
             </div>
         </div>
 

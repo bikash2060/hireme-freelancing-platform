@@ -3,7 +3,15 @@ import re
 from datetime import datetime
 
 def validate_username(username):
-    reserved_words = {"admin", "root", "user", "support", "client", "freelancer"}
+    reserved_words = {
+        "admin", "administrator", "root", "superuser", "sysadmin", "moderator", "mod",
+        "support", "helpdesk", "service", "client", "freelancer", "user", "guest",
+        "owner", "manager", "staff", "team", "developer", "dev", "test", "tester",
+        "system", "operator", "security", "bot", "automated", "anonymous", "null",
+        "banned", "blocked", "unknown", "default", "account", "password", "database",
+        "server", "host", "network", "api", "master", "backup", "debug", "trial",
+        "free", "premium", "vip", "official", "mod", "admin1", "admin2"
+    }
     
     if " " in username:
         return False, "Username should not contain spaces."
@@ -26,8 +34,6 @@ def validate_username(username):
     return True, ""
 
 def validate_profile_image(profile_image):
-    if not profile_image:
-        return False, "No file uploaded. Please upload a valid image."
     
     valid_extensions = ['.png', '.jpg', '.jpeg']
     file_extension = os.path.splitext(profile_image.name)[1].lower()

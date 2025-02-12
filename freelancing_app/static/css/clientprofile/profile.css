@@ -8,7 +8,6 @@
 }
 
 .user-basic-info .settings-container {
-    max-width: 1200px; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
