@@ -39,7 +39,6 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
             project_name = request.POST.get('project-name').strip()
             project_description = request.POST.get('project-description')
             project_image = request.FILES.get('project-image')  
-            print(project_image)
             project_budget = request.POST.get('project-budget')
             project_duration = request.POST.get('project-duration')
             skills_select = request.POST.getlist('skills-select') 

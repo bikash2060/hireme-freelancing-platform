@@ -48,11 +48,14 @@
                     <div class="notification-main">
                         <div class="icon notification-icon">
                             <i class="fa-regular fa-bell">
-                                {% if unread_count > 0 %}
+                                {% if unread_count > 9 %}
+                                    <span>9+</span>
+                                {% elif unread_count > 0 %}
                                     <span>{{ unread_count }}</span>
                                 {% endif %}
                             </i>
                         </div>
+                        
                         <div class="notification-box">
                             <div class="notification-header">
                                 <span>Notifications</span>
