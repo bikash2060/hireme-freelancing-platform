@@ -14,75 +14,89 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
     
     redirected_URL = 'project:add-new-project'
     
+    error_redirect_URL = 'homes:home'
+    
     def get(self, request):
         
-        project_categories = ProjectCategory.objects.all().order_by('name')
-        skills = Skill.objects.all().order_by('name')
+        try:
+            project_categories = ProjectCategory.objects.all().order_by('name')
+            skills = Skill.objects.all().order_by('name')
+            
+            context = {
+                'project_categories': project_categories,
+                'skills': skills,
+            }
+            return render(request, self.rendered_template, context)
         
-        context = {
-            'project_categories': project_categories,
-            'skills': skills,
-        }
-        
-        return render(request, self.rendered_template, context)
+        except Exception as e:
+            return redirect(self.error_redirect_URL)
         
     def post(self, request):
-        project_categories = ProjectCategory.objects.all().order_by('name')
-        skills = Skill.objects.all().order_by('name')
-        
-        project_name = request.POST.get('project-name').strip()
-        project_description = request.POST.get('project-description')
-        project_image = request.FILES.get('project-image')  
-        project_budget = request.POST.get('project-budget')
-        project_duration = request.POST.get('project-duration')
-        skills_select = request.POST.getlist('skills-select') 
-        project_category = request.POST.get('project-category')
-        action = request.POST.get('action') 
-        
-        context = {
-            'project_name': project_name,
-            'project_description': project_description,
-            'project_budget': project_budget,
-            'project_duration': project_duration,
-            'skills_select': skills_select,
-            'project_category': project_category,
-            'project_image': project_image,
-            'project_categories': project_categories,  
-            'skills': skills,  
-        }
-
-        valid, error_message = validate_form(project_name, project_description, project_image, project_budget, project_duration, skills_select, project_category)
-        
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.rendered_template, context)
-        
         try:
-            client = Client.objects.get(user=request.user)
-                        
-            project = Project.objects.create(
-                title=project_name,
-                description=project_description,
-                budget=project_budget,
-                status='draft' if action == 'draft' else 'processing',
-                category=ProjectCategory.objects.get(id=project_category),
-                deadline=project_duration,
-                client=client,
-            )
+            project_categories = ProjectCategory.objects.all().order_by('name')
+            skills = Skill.objects.all().order_by('name')
             
-            if project_image:
-                fs = FileSystemStorage(location='media/project_images')
-                filename = fs.save(project_image.name, project_image)
-                project.image = filename.split('/')[-1]
+            project_name = request.POST.get('project-name').strip()
+            project_description = request.POST.get('project-description')
+            project_image = request.FILES.get('project-image')  
+            print(project_image)
+            project_budget = request.POST.get('project-budget')
+            project_duration = request.POST.get('project-duration')
+            skills_select = request.POST.getlist('skills-select') 
+            project_category = request.POST.get('project-category')
+            action = request.POST.get('action') 
+            
+            context = {
+                'project_name': project_name,
+                'project_description': project_description,
+                'project_budget': project_budget,
+                'project_duration': project_duration,
+                'skills_select': skills_select,
+                'project_category': project_category,
+                'project_image': project_image,
+                'project_categories': project_categories,  
+                'skills': skills,  
+            }
+
+            valid, error_message = validate_form(project_name, project_description, project_image, project_budget, project_duration, skills_select, project_category)
+            
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.rendered_template, context)
+            
+            try:
+                client = Client.objects.get(user=request.user)
+                    
+                project = Project.objects.create(
+                    title=project_name,
+                    description=project_description,
+                    budget=project_budget,
+                    status='draft' if action == 'draft' else 'processing',
+                    category=ProjectCategory.objects.get(id=project_category),
+                    deadline=project_duration,
+                    client=client,
+                )
                 
-            project.skills.set(Skill.objects.filter(id__in=skills_select))  
-            project.save()
-            Notification.objects.create(
-                user=request.user,
-                message=f"Your project '{project.title}' has been successfully uploaded.",
-            )                            
-            messages.success(request, "New project added successfully.")
-            return redirect(self.redirected_URL)
+                if project_image:
+                    fs = FileSystemStorage(location='media/project_images')
+                    filename = fs.save(project_image.name, project_image)
+                    project.image = filename.split('/')[-1]
+                    
+                project.skills.set(Skill.objects.filter(id__in=skills_select))  
+                project.save()
+
+                Notification.objects.create(
+                    user=request.user,
+                    message=f"Your project '{project.title}' has been successfully uploaded.",
+                )                            
+
+                messages.success(request, "New project added successfully.")
+                return redirect(self.redirected_URL)
+                
+            except Exception as e:
+                messages.error(request, f"Unexpected error: {str(e)}")
+                return render(request, self.rendered_template, context)
+
         except Exception as e:
             messages.error(request, f"Error: {str(e)}")
-            return render(request, self.rendered_template, context)
+            return redirect(self.error_redirect_URL)

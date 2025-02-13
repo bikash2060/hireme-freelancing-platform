@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}My Dashboard{% endblock %}
+{% block title %}HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/dashboard/clientdashboard.css' %}">
@@ -40,7 +40,7 @@
                 <i class="fas fa-briefcase"></i>
                 <h3>Post a Project</h3>
                 <p>Get proposals from skilled professionals</p>
-                <a href="{% url 'project:add-new-project' %}" class="btn">Create Project</a>
+                <a href="{% url 'project:add-new-project' %}" class="btn">Add New Project</a>
             </div>
             <div class="action-card">
                 <i class="fas fa-clipboard-list"></i>
