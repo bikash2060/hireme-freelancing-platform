@@ -9,5 +9,6 @@ urlpatterns = [
     path('edit-info/', EditPersonalInfoView.as_view(), name='edit-personal-info'),
     path('edit-address/', EditUserAddressView.as_view(), name='edit-address'),
     path('add-company/', AddCompanyView.as_view(), name='addcompany'),
+    path('edit-company/<int:company_id>/', EditCompanyView.as_view(), name='editcompany'),
     path('change-password/', PasswordChangeView.as_view(), name='change-password'),
 ]
