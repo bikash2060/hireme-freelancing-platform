@@ -444,6 +444,3 @@ class UserLogoutView(View):
         logout(request)
         messages.success(request, 'You have been logged out successfully.')
         return redirect(self.login_url)
-
-
-
