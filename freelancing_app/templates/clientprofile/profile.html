@@ -132,7 +132,7 @@
                             </p>
                             <p class="location">{{ company_info.company.location }}</p>
                         </div>
-                        <a href="#" class="edit-icon"><i class="bx bx-pencil"></i></a>
+                        <a href="{% url 'client:editcompany' company_info.company.id %}" class="edit-icon"><i class="bx bx-pencil"></i></a>
                     </div>
                     {% empty %}
                     <p>No companies added yet.</p>

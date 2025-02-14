@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/editcompany.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'clientprofile/sidebar.html' %}
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<div class="edit-company-container">
+    <div class="back-button">
+        <a href="{% url 'client:profile' %}">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="edit-company-form">
+        {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        <span>{{ message }}</span>
+                        <i class="fa fa-times close-message"></i>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form action="" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="company_logo">Company Logo</label>
+                <input type="file" id="company_logo" name="company_logo" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="company_name">Company Name</label>
+                <input type="text" id="company_name" name="company_name" placeholder="Enter company name" value="{{ company.name }}">
+            </div>
+            <div class="form-group">
+                <label for="position">Position</label>
+                <input type="text" id="position" name="position" placeholder="Enter your position" value="{{ company.position }}">
+            </div>
+            <div class="form-group currently_working">
+                <label>
+                    <input type="checkbox" id="currently_working" name="currently_working" onclick="toggleEndDate()" {% if currently_working %}checked{% endif %}>
+                </label>
+                <span>I am currently working in this role</span>
+            </div>            
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <div class="date-select">
+                    <select id="start_month" name="start_month">
+                        <option value="">Month</option>
+                        {% for key, value in months.items %}
+                            <option value="{{ key }}" {% if key == start_month %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="start_year" name="start_year">
+                        <option value="">Year</option>
+                        {% for key, value in years.items %}
+                            <option value="{{ key }}" {% if key == start_year %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <div class="date-select">
+                    <select id="end_month" name="end_month">
+                        <option value="">Month</option>
+                        {% for key, value in months.items %}
+                            <option value="{{ key }}" {% if key == end_month %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="end_year" name="end_year">
+                        <option value="">Year</option>
+                        {% for key, value in years.items %}
+                            <option value="{{ key }}" {% if key == end_year %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="location">Company Location</label>
+                <input type="text" id="location" name="location" placeholder="Enter location" value="{{ company.location }}">
+            </div>
+            <div class="form-group">
+                <label for="url">URL</label>
+                <input type="text" id="url" name="url" placeholder="Enter url" value="{{ company.url|default:"" }}">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Save Changes</button>
+                <a href="{% url 'client:profile' %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+<script src="{% static 'js/loader.js' %}"></script>
+{% endblock %}

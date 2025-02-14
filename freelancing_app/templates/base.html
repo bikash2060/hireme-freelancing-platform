@@ -225,7 +225,12 @@
                     <div class="username">
                         <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="">
                         <div class="user-info">
-                            <p>{{ user.username }}</p>
+                            {% if user.first_name and user.last_name %}
+                                <p>{{ user.first_name }} {{ user.last_name }}</p>
+                            {% else %}
+                                <p>{{ user.username }}</p>
+                            {% endif %}
+
                             <span>{{ user.role.capitalize }}</span>
                         </div>
                     </div>
