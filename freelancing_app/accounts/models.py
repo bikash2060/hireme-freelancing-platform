@@ -32,7 +32,6 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-
 class User(AbstractBaseUser):
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=100, null=True)
