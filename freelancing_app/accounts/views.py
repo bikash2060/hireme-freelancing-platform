@@ -39,6 +39,7 @@ class UserLoginView(View):
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
+                messages.success(request, 'You have successfully logged in.')
                 return redirect(self.client_dashboard_url if user.role == 'client' else self.freelancer_dashboard_url)
             
             if User.objects.filter(email=email).exists():
