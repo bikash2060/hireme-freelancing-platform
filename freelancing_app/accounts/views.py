@@ -159,13 +159,14 @@ class PasswordResetOTPVerifyView(View):
 class ForgotPasswordResendOTPView(View):
     otp_verification_template = 'accounts/reset_password_otp_verification.html'
     password_reset_url = 'account:change-password'
+    reset_password_request_url = 'account:forgotpassword'
     login_url = 'account:login'
         
     def get(self, request):
         email_address = request.session.get('email_address')
         if not email_address:
             messages.error(request, 'Session expired. Please request a new OTP.')
-            return redirect('account:forgotpassword')
+            return redirect(self.reset_password_request_url)
 
         try:
             OTPCode.objects.filter(email=email_address).delete()
@@ -212,7 +213,7 @@ class ChangePasswordView(View):
         email_address = request.session.get('email_address')
         if not email_address:
             messages.error(request, 'Session expired. Please request a new OTP.')
-            return redirect(self.error_redirect_URL)
+            return redirect(self.reset_password_request_url)
         
         new_password = request.POST.get('newpassword')
         confirm_password = request.POST.get('confirmpassword')
