@@ -9,15 +9,11 @@ from .utils import *
 from accounts.models import Client
 
 class AddNewProjectView(CustomLoginRequiredMixin, View):
-    
-    rendered_template = 'projects/addproject.html'
-    
-    redirected_URL = 'project:add-new-project'
-    
-    error_redirect_URL = 'homes:home'
+    new_project_template = 'projects/addproject.html'
+    new_project_url = 'project:add-new-project'
+    home_url = 'homes:home'
     
     def get(self, request):
-        
         try:
             project_categories = ProjectCategory.objects.all().order_by('name')
             skills = Skill.objects.all().order_by('name')
@@ -26,10 +22,11 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
                 'project_categories': project_categories,
                 'skills': skills,
             }
-            return render(request, self.rendered_template, context)
+            return render(request, self.new_project_template, context)
         
         except Exception as e:
-            return redirect(self.error_redirect_URL)
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)
         
     def post(self, request):
         try:
@@ -61,41 +58,36 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
             
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.rendered_template, context)
+                return render(request, self.new_project_template, context)
             
-            try:
-                client = Client.objects.get(user=request.user)
-                    
-                project = Project.objects.create(
-                    title=project_name,
-                    description=project_description,
-                    budget=project_budget,
-                    status='draft' if action == 'draft' else 'processing',
-                    category=ProjectCategory.objects.get(id=project_category),
-                    deadline=project_duration,
-                    client=client,
-                )
+            client = Client.objects.get(user=request.user)
+            
+            project = Project.objects.create(
+                title=project_name,
+                description=project_description,
+                budget=project_budget,
+                status='draft' if action == 'draft' else 'processing',
+                category=ProjectCategory.objects.get(id=project_category),
+                deadline=project_duration,
+                client=client,
+            )
+            
+            if project_image:
+                fs = FileSystemStorage(location='media/project_images')
+                filename = fs.save(project_image.name, project_image)
+                project.image = filename.split('/')[-1]
                 
-                if project_image:
-                    fs = FileSystemStorage(location='media/project_images')
-                    filename = fs.save(project_image.name, project_image)
-                    project.image = filename.split('/')[-1]
-                    
-                project.skills.set(Skill.objects.filter(id__in=skills_select))  
-                project.save()
+            project.skills.set(Skill.objects.filter(id__in=skills_select))  
+            project.save()
 
-                Notification.objects.create(
-                    user=request.user,
-                    message=f"Your project '{project.title}' has been successfully uploaded.",
-                )                            
+            Notification.objects.create(
+                user=request.user,
+                message=f"Your project '{project.title}' has been successfully uploaded.",
+            )                            
 
-                messages.success(request, "New project added successfully.")
-                return redirect(self.redirected_URL)
-                
-            except Exception as e:
-                messages.error(request, f"Unexpected error: {str(e)}")
-                return render(request, self.rendered_template, context)
+            messages.success(request, 'New project added successfully.')
+            return redirect(self.home_url)
 
         except Exception as e:
-            messages.error(request, f"Error: {str(e)}")
-            return redirect(self.error_redirect_URL)
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.new_project_url)
