@@ -97,7 +97,7 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
     except Exception as e:
         return False, "Something went wrong. Please try again later."
 
-def create_company(company_logo, company_name, position, start_month, start_year, end_month, end_year, location, url, currently_working, months):
+def create_company(company_logo, company_name, position, start_month, start_year, end_month, end_year, location, currently_working, months):
     if company_logo:
         valid_extensions = ['.png', '.jpg', '.jpeg']
         file_extension = os.path.splitext(company_logo.name)[1].lower()
@@ -133,9 +133,6 @@ def create_company(company_logo, company_name, position, start_month, start_year
     
     if not location or len(location.strip()) == 0:
         return False, "Location is required."
-    
-    if url and not url.startswith(("http://", "https://")):
-        return False, "Invalid URL. Ensure the URL starts with http:// or https://."
     
     return True, ""
 

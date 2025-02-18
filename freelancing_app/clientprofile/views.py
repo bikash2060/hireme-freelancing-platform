@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from accounts.models import User, Client
+from django.shortcuts import reverse
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
@@ -9,6 +10,7 @@ import json
 from datetime import datetime
 from .models import Company
 from accounts.mixins import CustomLoginRequiredMixin
+from dateutil.relativedelta import relativedelta
 
 # Testing Complete
 class UserBasicInfoView(CustomLoginRequiredMixin, View):
@@ -23,24 +25,29 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Unable to fetch your profile details.')
             return redirect(self.home_url)
         
-        current_year = datetime.now().year
+        current_date = datetime.now()
         companies_with_duration = []
 
         for comp in company:
-            if comp.end_date:
-                duration = comp.end_date.year - comp.start_date.year
+            end_date = comp.end_date if comp.end_date else current_date
+            duration = relativedelta(end_date, comp.start_date)  
+
+            if duration.years > 0:
+                duration_str = f"{duration.years} year{'s' if duration.years > 1 else ''}"
+                if duration.months > 0:
+                    duration_str += f" {duration.months} month{'s' if duration.months > 1 else ''}"
             else:
-                duration = current_year - comp.start_date.year
+                duration_str = f"{duration.months} month{'s' if duration.months > 1 else ''}"
             
             companies_with_duration.append({
                 'company': comp,
-                'duration': duration
+                'duration': duration_str
             })
         
         return render(request, self.profile_template, {
             'client': client,
             'companies_with_duration': companies_with_duration,
-            'current_year': current_year
+            'current_year': current_date.year
         })
 
 # Testing Complete
@@ -456,7 +463,6 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
         end_month = request.POST.get('end_month')  
         end_year = request.POST.get('end_year')  
         location = request.POST.get('location')  
-        url = request.POST.get('url')  
         currently_working = request.POST.get('currently_working')
         
         context = {
@@ -468,7 +474,6 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
             'end_month': end_month,
             'end_year': end_year,
             'location': location,
-            'url': url,
             'currently_working': currently_working,
             'months': self.months,
             'years': self.years,
@@ -476,7 +481,7 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
         
         valid, error_message = create_company(
             company_logo, company_name, position, start_month, start_year, 
-            end_month, end_year, location, url, currently_working, self.months
+            end_month, end_year, location, currently_working, self.months
         )
         
         if not valid:
@@ -506,7 +511,6 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
                 start_date=start_date,
                 end_date=end_date,
                 location=location,
-                url=url,
                 client=client 
             )
             
@@ -516,7 +520,7 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
                 company.logo = filename.split('/')[-1]
             company.save()
                 
-            messages.success(request, "Company added successfully.")
+            messages.success(request, 'Company added successfully.')
             return redirect(self.company_url)  
         except Exception as e:
             messages.error(request, 'Something went wrong. Please try again later.')
@@ -525,9 +529,120 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
 # Testing In Progress
 class EditCompanyView(CustomLoginRequiredMixin, View):
     edit_company_template = 'clientprofile/editcompany.html'
+    edit_company_url = 'client:editcompany'
+    home_url = 'homes:home'
+    
+    months = {
+        "jan": "January", 
+        "feb": "February", 
+        "mar": "March", 
+        "apr": "April",
+        "may": "May", 
+        "jun": "June", 
+        "jul": "July", 
+        "aug": "August",
+        "sep": "September", 
+        "oct": "October", 
+        "nov": "November", 
+        "dec": "December",
+    }
+    current_year = datetime.now().year
+    years = {str(year): year for year in range(current_year, 1979, -1)}
+    
     def get(self, request, company_id):
-        company = Company.objects.get(id=company_id)
-        return render(request, self.edit_company_template, {'company': company})
+        try:
+            company = Company.objects.get(id=company_id)
+        except Exception:
+            messages.error(request, 'Unable to fetch your profile details.')
+            return redirect(self.home_url)
+        
+        start_month = company.start_date.strftime("%b").lower() if company.start_date else ""
+        start_year = str(company.start_date.year) if company.start_date else ""
+
+        end_month = company.end_date.strftime("%b").lower() if company.end_date else ""
+        end_year = str(company.end_date.year) if company.end_date else ""
+
+        currently_working = company.end_date is None  
+        
+        context = {
+            'company': company,
+            'months': self.months,
+            'years': self.years,
+            'start_month': start_month,
+            'start_year': start_year,
+            'end_month': end_month,
+            'end_year': end_year,
+            'currently_working': currently_working
+        }
+        return render(request, self.edit_company_template, context)
+    
+    def post(self, request, company_id):
+        company_logo = request.FILES.get('company_logo')  
+        company_name = request.POST.get('company_name')  
+        position = request.POST.get('position')  
+        start_month = request.POST.get('start_month')  
+        start_year = request.POST.get('start_year')  
+        end_month = request.POST.get('end_month')  
+        end_year = request.POST.get('end_year')  
+        location = request.POST.get('location')  
+        currently_working = request.POST.get('currently_working')
+        
+        context = {
+            'company_name': company_name,
+            'position': position,
+            'start_month': start_month,
+            'start_year': start_year,
+            'end_month': end_month,
+            'end_year': end_year,
+            'location': location,
+            'currently_working': currently_working,
+            'months': self.months,
+            'years': self.years,
+        }
+        
+        valid, error_message = create_company(
+            company_logo, company_name, position, start_month, start_year, 
+            end_month, end_year, location, currently_working, self.months
+        )
+        
+        if not valid:
+            messages.error(request, error_message)
+            return render(request, self.edit_company_template, context)
+        
+        if start_month and start_year:
+            start_month_name = self.months.get(start_month)
+            start_date_str = f"{start_month_name}-{start_year}"
+            start_date = datetime.strptime(start_date_str, "%B-%Y").date()
+        else:
+            start_date = None
+        
+        if not currently_working and end_month and end_year:
+            end_month_name = self.months.get(end_month)
+            end_date_str = f"{end_month_name}-{end_year}"
+            end_date = datetime.strptime(end_date_str, "%B-%Y").date()
+        else:
+            end_date = None
+            
+        try:
+            company = Company.objects.get(id=company_id)
+            company.name = company_name
+            company.position = position
+            company.start_date = start_date
+            company.end_date = end_date if not currently_working else None
+            company.location = location
+            
+            if company_logo:
+                fs = FileSystemStorage(location='media/company_images')
+                filename = fs.save(company_logo.name, company_logo)
+                company.logo = filename.split('/')[-1]
+            
+            company.save()
+                
+            messages.success(request, 'Company updated successfully.')
+            return redirect(reverse(self.edit_company_url, args=[company.id])) 
+        except Exception as e:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(reverse(self.edit_company_url, args=[company.id])) 
     
 #Testing Complete
 class PasswordChangeView(CustomLoginRequiredMixin, View):

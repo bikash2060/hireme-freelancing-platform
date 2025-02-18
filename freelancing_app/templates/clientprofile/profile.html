@@ -123,11 +123,11 @@
                             <p class="company-name">{{ company_info.company.name }}</p>
                             <p class="duration">
                                 {% if company_info.company.end_date %}
-                                    {{ company_info.company.start_date|date:"M Y" }} - {{ company_info.company.end_date|date:"M Y" }} ·
-                                    {{ company_info.duration }} yrs
+                                    {{ company_info.company.start_date|date:"M Y" }} - {{ company_info.company.end_date|date:"M Y" }} · 
+                                    {{ company_info.duration }}
                                 {% else %}
-                                    {{ company_info.company.start_date|date:"M Y" }} - Present ·
-                                    {{ company_info.duration }} yrs
+                                    {{ company_info.company.start_date|date:"M Y" }} - Present · 
+                                    {{ company_info.duration }}
                                 {% endif %}
                             </p>
                             <p class="location">{{ company_info.company.location }}</p>
