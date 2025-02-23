@@ -10,6 +10,7 @@ urlpatterns = [
     path('account/', include('accounts.urls', namespace='account')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('client/', include('clientprofile.urls', namespace='client')),
+    path('freelancer/', include('freelancerprofile.urls', namespace='freelancer')),
     path('project/', include('projects.urls', namespace='project')),
 ]
 

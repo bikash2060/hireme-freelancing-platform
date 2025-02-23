@@ -31,7 +31,7 @@
                         {% endif %}
                         <p class="position">{{user.username}}</p>
                         {% if client.city and client.country %}
-                            <p class="address">{{client.city|add:","}}{{client.country}}</p>
+                            <p class="address">{{client.city|add:", "}}{{client.country}}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -92,11 +92,11 @@
                 <div class="body-content">
                     <div class="col-1">
                         <p><strong>Country</strong></p>
-                        <p>{{client.country|default:"" }}</p>
+                        <p>{{client.country|default:"Not Provided" }}</p>
                     </div>
                     <div class="col-2">
                         <p><strong>City</strong></p>
-                        <p>{{client.city|default:"" }}</p>
+                        <p>{{client.city|default:"Not Provided" }}</p>
                     </div>
                 </div>
             </div>

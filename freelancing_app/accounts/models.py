@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.utils.timezone import now, timedelta
+from projects.models import Skill   
 
 def default_expired_time():
     return now() + timedelta(minutes=2)
@@ -72,9 +73,14 @@ class Client(models.Model):
 class Freelancer(models.Model):
     freelancer_ID = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='freelancer_profile')
-    skills = models.TextField(blank=True, null=True)
+    languages = models.CharField(max_length=255, blank=True, null=True)  
+    bio = models.TextField(blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
     hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     portfolio_link = models.URLField(blank=True, null=True)
+    experience_years = models.PositiveIntegerField(blank=True, null=True, help_text="Years of experience")
+    skills = models.ManyToManyField(Skill)    
     
     def __str__(self):
         return f"Freelancer: {self.user.username}"

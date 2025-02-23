@@ -96,63 +96,7 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
   
     except Exception as e:
         return False, "Something went wrong. Please try again later."
-
-def create_company(company_logo, company_name, position, start_month, start_year, end_month, end_year, location, currently_working, months):
-    if company_logo:
-        valid_extensions = ['.png', '.jpg', '.jpeg']
-        file_extension = os.path.splitext(company_logo.name)[1].lower()
-        
-        if file_extension not in valid_extensions:
-            return False, "Only JPG, PNG, or JPEG file types are allowed."
-        
-        max_size = 10 * 1024 * 1024  # 10MB
-        if company_logo.size > max_size:
-            return False, "File size exceeds the 10MB limit."
     
-    if not company_name or len(company_name.strip()) == 0:
-        return False, "Company name is required."
-    
-    if not position or len(position.strip()) == 0:
-        return False, "Position is required."
-    
-    if not start_month or not start_year:
-        return False, "Start date is required."
-    
-    try:
-        start_year = int(start_year)
-    except ValueError:
-        return False, "Invalid start year."
-    
-    start_month_num = list(months.keys()).index(start_month) + 1  
-    start_date = (int(start_year), start_month_num)
-    
-    current_year = datetime.now().year
-    current_month = datetime.now().month
-
-    if start_year > current_year or (start_year == current_year and start_month_num > current_month):
-        return False, "Start date cannot be in the future."
-    
-    if not currently_working:
-        if not end_year or not end_month:
-            return False, "End date is required if you are not currently working."
-
-        try:
-            end_year = int(end_year)
-            end_month_num = list(months.keys()).index(end_month) + 1 
-        except ValueError:
-            return False, "Invalid end year or month."
-        
-        if end_year > current_year or (end_year == current_year and end_month_num > current_month):
-            return False, "End date cannot be in the future."
-
-        if (end_year < start_year) or (end_year == start_year and end_month_num < start_month_num):
-            return False, "End date cannot be before start date."
-    
-    if not location or len(location.strip()) == 0:
-        return False, "Location is required."
-    
-    return True, ""
-
 def validate_password(old_password, new_password, confirm_password, user):
     if not old_password or not new_password or not confirm_password:
         return False, "All fields are required."
@@ -176,3 +120,29 @@ def validate_password(old_password, new_password, confirm_password, user):
         return False, "Password must contain at least one special character."
 
     return True, ""
+
+def validate_freelancer_skills_form(experience, hourly_rate, selected_skills):
+    if not experience:
+        return False, 'Experience is required.'
+    
+    try:
+        experience = float(experience)
+        if experience < 0:
+            return False, 'Experience must be a positive number.'
+    except ValueError:
+        return False, 'Invalid experience value.'
+
+    if not hourly_rate:
+        return False, 'Hourly rate is required.'
+    
+    try:
+        hourly_rate = float(hourly_rate)
+        if hourly_rate < 1:
+            return False, 'Hourly rate must be at least 1 NPR.'
+    except ValueError:
+        return False, 'Invalid hourly rate value.'
+
+    if not selected_skills:
+        return False, 'At least one skill must be selected.'
+
+    return True, None  

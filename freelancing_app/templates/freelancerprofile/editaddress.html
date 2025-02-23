@@ -5,21 +5,20 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/message.css' %}">
-<link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
-<link rel="stylesheet" href="{% static 'css/clientprofile/editaddress.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/editaddress.css' %}">
 <link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
-{% include 'clientprofile/sidebar.html' %}
-<!-- Loader -->
+{% include 'freelancerprofile/sidebar.html' %}
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
 <div class="edit-address-container">
     <div class="back-button">
-        <a href="{% url 'client:profile' %}">
+        <a href="{% url 'freelancer:profile' %}">
             <i class="fa fa-arrow-left"></i> Back
         </a>
     </div>
@@ -34,14 +33,14 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <form action="{% url 'client:edit-address' %}" method="POST">
+        <form action="{% url 'freelancer:edit-address' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
                 <label for="country">Country</label>
                 <select id="country" name="country">
                     <option value="">Select a country</option>
                     {% for country, cities in countries_and_cities.items %}
-                        <option value="{{ country }}" {% if client.country == country %}selected{% endif %}>
+                        <option value="{{ country }}" {% if freelancer.country == country %}selected{% endif %}>
                             {{ country }}
                         </option>
                     {% endfor %}
@@ -51,14 +50,14 @@
                 <label for="city">City</label>
                 <select id="city" name="city" >
                     <option value="">Select a city</option>
-                    {% if client.city %}
-                        <option value="{{ client.city }}" selected>{{ client.city }}</option>
+                    {% if freelancer.city %}
+                        <option value="{{ freelancer.city }}" selected>{{ freelancer.city }}</option>
                     {% endif %}
                 </select>
             </div>
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>
-                <a href="{% url 'client:profile' %}" id="cancel-edit" class="cancel-btn">Cancel</a>
+                <a href="{% url 'freelancer:profile' %}" id="cancel-edit" class="cancel-btn">Cancel</a>
             </div>
         </form>
     </div>

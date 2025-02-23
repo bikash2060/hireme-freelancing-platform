@@ -1,0 +1,101 @@
+.edit-image-container{
+    width: calc(100% - 260px);
+    max-width: 550px;
+    position: relative;
+    top: 120px;
+    left: 300px;
+}
+
+.edit-image-container .back-button a{
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    color: #1E88E5;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.edit-image-container .back-button i{
+    margin-right: 8px;
+}
+
+.edit-profile-form {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 550px;
+}
+
+.edit-profile-form .form-group {
+    margin-bottom: 20px;
+}
+
+.edit-profile-form .form-group label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.edit-profile-form .form-group input[type="text"],
+.edit-profile-form .form-group input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    background-color: #fafafa;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.edit-profile-form .form-group input[type="text"]:focus {
+    border-color: #626cd6;
+}
+
+.edit-profile-form .form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.edit-profile-form .form-actions button,
+.edit-profile-form .form-actions a {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.edit-profile-form .form-actions button {
+    background-color: #1E88E5;
+    color: #fff;
+    border: none;
+}
+
+.edit-profile-form .form-actions button:hover {
+    background-color: #1565C0;
+}
+
+.edit-profile-form .form-actions a {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.edit-profile-form .form-actions a:hover {
+    background-color: #d32f2f; 
+}
+
+.edit-profile-form .form-group img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}

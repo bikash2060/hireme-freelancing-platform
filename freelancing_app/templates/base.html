@@ -241,7 +241,7 @@
                             {% if user.role == "client"%}
                                 <a href="{% url 'client:profile' %}">Account Settings</a>
                             {% else %}
-                                <a href="#">Account Settings</a>
+                                <a href="{% url 'freelancer:profile' %}">Account Settings</a>
                             {% endif %}
                         </div>
                         <div class="logout">

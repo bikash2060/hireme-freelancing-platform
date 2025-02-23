@@ -1,0 +1,228 @@
+.edit-skills-container {
+    width: calc(100% - 260px);
+    max-width: 550px;
+    position: relative;
+    top: 120px;
+    left: 300px;
+}
+
+.edit-skills-container .back-button a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    color: #1E88E5;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.edit-skills-container .back-button i {
+    margin-right: 8px;
+}
+
+/* Styling Skills Form */
+.skills-info-form {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 550px;
+}
+
+.skills-info-form .form-group {
+    margin-bottom: 20px;
+}
+
+.skills-info-form .form-group label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.skills-info-form .form-group input:not([type="checkbox"]),
+.skills-info-form .form-group select {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.skills-info-form .form-group input[type="text"]:focus {
+    border-color: #626cd6;
+}
+
+.skills-info-form .form-group select {
+    height: 200px;
+    overflow-y: auto;
+}
+
+.skills-info-form .form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.skills-info-form .form-actions button,
+.skills-info-form .form-actions a {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.skills-info-form .form-actions button {
+    background-color: #1E88E5;
+    color: #fff;
+    border: none;
+}
+
+.skills-info-form .form-actions button:hover {
+    background-color: #1565C0;
+}
+
+.skills-info-form .form-actions a {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.skills-info-form .form-actions a:hover {
+    background-color: #d32f2f;
+}
+
+.skills-info-form .form-group .hourly-rate-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+}
+
+.skills-info-form .form-group .currency-symbol {
+    position: absolute;
+    left: 0; 
+    height: 100%;
+    font-size: 18px;
+    color: #333;
+    background-color: #e6e5e5;
+    padding: 5px 10px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+}
+
+.skills-info-form .form-group input#hourly-rate {
+    width: 100%;
+    font-size: 16px;
+    padding: 10px 15px;
+    padding-left: 60px;
+    transition: 0.2s ease;
+}
+
+/* Skills Search Section */
+#skills-search {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+#skills-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+#skills-list label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+#skills-list input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+#skills-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#skills-list::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+#skills-list::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+}
+
+#skills-list::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Selected Skills Section */
+#selected-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.skill-chip {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #1e88e5; /* Primary color */
+    border: 1px solid #1e88e5;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 4px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.skill-chip:hover {
+    background-color: #1e88e5;
+    color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.skill-chip .remove-skill {
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: #e57373;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.skill-chip .remove-skill:hover {
+    background-color: #d32f2f;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.no-skills-message {
+    text-align: center;
+}

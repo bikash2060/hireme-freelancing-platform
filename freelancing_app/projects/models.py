@@ -1,6 +1,4 @@
 from django.db import models
-from accounts.models import Client
-from accounts.models import User
 
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -19,7 +17,7 @@ class Skill(models.Model):
 
     class Meta:
         db_table = "skill"
-        
+
 class Project(models.Model):
     image = models.ImageField(upload_to='project_images/', null=True, blank=True)
     title = models.CharField(max_length=255)
@@ -30,12 +28,10 @@ class Project(models.Model):
     category = models.ForeignKey(ProjectCategory, on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='projects')
+    client = models.ForeignKey("accounts.Client", on_delete=models.CASCADE, related_name='projects') 
 
     def __str__(self):
         return self.title
     
     class Meta:
         db_table = "project"
-
-
