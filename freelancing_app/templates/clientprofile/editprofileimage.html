@@ -37,7 +37,8 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="profile-image">Profile Image</label>
-                <input type="file" id="profile-image" name="profile_image">
+                <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %} {% endif %}" alt="">
+                <input type="file" id="profile-image" name="profile_image" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="username">Username</label>

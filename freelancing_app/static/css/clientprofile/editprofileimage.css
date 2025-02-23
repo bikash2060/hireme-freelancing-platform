@@ -92,3 +92,10 @@
 .edit-profile-form .form-actions a:hover {
     background-color: #d32f2f; 
 }
+
+.edit-profile-form .form-group img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}

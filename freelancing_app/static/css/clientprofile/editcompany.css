@@ -117,4 +117,11 @@
     margin-left: 2px;
 }
 
+.edit-company-form .form-group img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 

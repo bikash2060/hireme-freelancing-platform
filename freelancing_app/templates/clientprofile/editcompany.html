@@ -37,19 +37,20 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="company_logo">Company Logo</label>
+                <img src="{% if company.logo %}{% get_media_prefix %}company_images/{{ company.logo }}{% else %}{% static 'images/default_logo.jpg' %} {% endif %}" alt="">
                 <input type="file" id="company_logo" name="company_logo" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="company_name">Company Name</label>
-                <input type="text" id="company_name" name="company_name" placeholder="Enter company name" value="{{ context.company_name|default:company.name|default:'' }}">
+                <input type="text" id="company_name" name="company_name" placeholder="Enter company name" value="{{ company_name|default:company.name|default:'' }}">
             </div>
             <div class="form-group">
                 <label for="position">Position</label>
-                <input type="text" id="position" name="position" placeholder="Enter your position" value="{{ context.position|default:company.position|default:'' }}">
+                <input type="text" id="position" name="position" placeholder="Enter your position" value="{{ position|default:company.position|default:'' }}">
             </div>
             <div class="form-group currently_working">
                 <label>
-                    <input type="checkbox" id="currently_working" name="currently_working" onclick="toggleEndDate()" {% if context.currently_working or currently_working %}checked{% endif %}>
+                    <input type="checkbox" id="currently_working" name="currently_working" onclick="toggleEndDate()" {% if currently_working %}checked{% endif %}>
                 </label>
                 <span>I am currently working in this role</span>
             </div>            
@@ -59,13 +60,13 @@
                     <select id="start_month" name="start_month">
                         <option value="">Month</option>
                         {% for key, value in months.items %}
-                            <option value="{{ key }}" {% if key == context.start_month|default:start_month %}selected{% endif %}>{{ value }}</option>
+                            <option value="{{ key }}" {% if key == start_month %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
                     <select id="start_year" name="start_year">
                         <option value="">Year</option>
                         {% for key, value in years.items %}
-                            <option value="{{ key }}" {% if key == context.start_year|default:start_year %}selected{% endif %}>{{ value }}</option>
+                            <option value="{{ key }}" {% if key == start_year %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -73,23 +74,23 @@
             <div class="form-group">
                 <label for="end_date">End Date</label>
                 <div class="date-select">
-                    <select id="end_month" name="end_month" {% if context.currently_working or currently_working %}disabled{% endif %}>
+                    <select id="end_month" name="end_month" {% if currently_working %}disabled{% endif %}>
                         <option value="">Month</option>
                         {% for key, value in months.items %}
-                            <option value="{{ key }}" {% if key == context.end_month|default:end_month %}selected{% endif %}>{{ value }}</option>
+                            <option value="{{ key }}" {% if key == end_month %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
-                    <select id="end_year" name="end_year" {% if context.currently_working or currently_working %}disabled{% endif %}>
+                    <select id="end_year" name="end_year" {% if currently_working %}disabled{% endif %}>
                         <option value="">Year</option>
                         {% for key, value in years.items %}
-                            <option value="{{ key }}" {% if key == context.end_year|default:end_year %}selected{% endif %}>{{ value }}</option>
+                            <option value="{{ key }}" {% if key == end_year %}selected{% endif %}>{{ value }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label for="location">Company Location</label>
-                <input type="text" id="location" name="location" placeholder="Enter location" value="{{ context.location|default:company.location|default:'' }}">
+                <input type="text" id="location" name="location" placeholder="Enter location" value="{{ location|default:company.location|default:'' }}">
             </div>
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>

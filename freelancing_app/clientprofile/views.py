@@ -15,40 +15,48 @@ from dateutil.relativedelta import relativedelta
 # Testing Complete
 class UserBasicInfoView(CustomLoginRequiredMixin, View):
     profile_template = 'clientprofile/profile.html'
-    home_url = 'homes:home' 
-    
+    home_url = 'homes:home'
+
     def get(self, request):
-        try: 
+        try:
             client = Client.objects.get(user=request.user)
-            company = Company.objects.filter(client_id=client)
+            companies = list(Company.objects.filter(client_id=client))
+
+            current_date = datetime.now()
+            companies_with_duration = []
+
+            for comp in companies:
+                end_date = comp.end_date if comp.end_date else current_date
+                duration = relativedelta(end_date, comp.start_date)
+
+                if duration.years > 0:
+                    duration_str = f"{duration.years} year{'s' if duration.years > 1 else ''}"
+                    if duration.months > 0:
+                        duration_str += f" {duration.months} month{'s' if duration.months > 1 else ''}"
+                else:
+                    duration_str = f"{duration.months} month{'s' if duration.months > 1 else ''}"
+
+                companies_with_duration.append({
+                    'company': comp,
+                    'duration': duration_str,
+                    'is_current': comp.end_date is None,
+                    'start_date': datetime.combine(comp.start_date, datetime.min.time()),
+                    'end_date': datetime.combine(comp.end_date, datetime.min.time()) if comp.end_date else current_date
+                })
+
+            companies_with_duration.sort(key=lambda x: (
+                not x['is_current'],  
+                -x['start_date'].timestamp() if x['is_current'] else -x['end_date'].timestamp()
+            ))
+
+            return render(request, self.profile_template, {
+                'client': client,
+                'companies_with_duration': companies_with_duration,
+                'current_year': current_date.year
+            })
         except Exception:
             messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
-        
-        current_date = datetime.now()
-        companies_with_duration = []
-
-        for comp in company:
-            end_date = comp.end_date if comp.end_date else current_date
-            duration = relativedelta(end_date, comp.start_date)  
-
-            if duration.years > 0:
-                duration_str = f"{duration.years} year{'s' if duration.years > 1 else ''}"
-                if duration.months > 0:
-                    duration_str += f" {duration.months} month{'s' if duration.months > 1 else ''}"
-            else:
-                duration_str = f"{duration.months} month{'s' if duration.months > 1 else ''}"
-            
-            companies_with_duration.append({
-                'company': comp,
-                'duration': duration_str
-            })
-        
-        return render(request, self.profile_template, {
-            'client': client,
-            'companies_with_duration': companies_with_duration,
-            'current_year': current_date.year
-        })
+            return redirect(self.home_url)  
 
 # Testing Complete
 class EditProfileImageView(CustomLoginRequiredMixin, View):
@@ -526,7 +534,7 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.company_url) 
         
-# Testing In Progress
+# Testing Complete
 class EditCompanyView(CustomLoginRequiredMixin, View):
     edit_company_template = 'clientprofile/editcompany.html'
     edit_company_url = 'client:editcompany'
@@ -577,6 +585,12 @@ class EditCompanyView(CustomLoginRequiredMixin, View):
         return render(request, self.edit_company_template, context)
     
     def post(self, request, company_id):
+        try:
+            company = Company.objects.get(id=company_id)
+        except Exception:
+            messages.error(request, 'Unable to fetch your profile details.')
+            return redirect(reverse(self.edit_company_url, args=[company.id])) 
+        
         company_logo = request.FILES.get('company_logo')  
         company_name = request.POST.get('company_name')  
         position = request.POST.get('position')  
@@ -586,8 +600,9 @@ class EditCompanyView(CustomLoginRequiredMixin, View):
         end_year = request.POST.get('end_year')  
         location = request.POST.get('location')  
         currently_working = request.POST.get('currently_working')
-        
+                
         context = {
+            'company': company,
             'company_name': company_name,
             'position': position,
             'start_month': start_month,

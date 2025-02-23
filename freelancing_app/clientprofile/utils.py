@@ -118,18 +118,35 @@ def create_company(company_logo, company_name, position, start_month, start_year
     if not start_month or not start_year:
         return False, "Start date is required."
     
+    try:
+        start_year = int(start_year)
+    except ValueError:
+        return False, "Invalid start year."
+    
     start_month_num = list(months.keys()).index(start_month) + 1  
     start_date = (int(start_year), start_month_num)
     
-    if not currently_working and (not end_month or not end_year):
-        return False, "End date is required if not currently working."
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+
+    if start_year > current_year or (start_year == current_year and start_month_num > current_month):
+        return False, "Start date cannot be in the future."
     
-    if end_month and end_year:
-        end_month_num = list(months.keys()).index(end_month) + 1  
-        end_date = (int(end_year), end_month_num)
+    if not currently_working:
+        if not end_year or not end_month:
+            return False, "End date is required if you are not currently working."
+
+        try:
+            end_year = int(end_year)
+            end_month_num = list(months.keys()).index(end_month) + 1 
+        except ValueError:
+            return False, "Invalid end year or month."
         
-        if end_date < start_date:
-            return False, "End date cannot be earlier than start date."
+        if end_year > current_year or (end_year == current_year and end_month_num > current_month):
+            return False, "End date cannot be in the future."
+
+        if (end_year < start_year) or (end_year == start_year and end_month_num < start_month_num):
+            return False, "End date cannot be before start date."
     
     if not location or len(location.strip()) == 0:
         return False, "Location is required."
