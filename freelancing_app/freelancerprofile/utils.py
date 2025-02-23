@@ -127,8 +127,6 @@ def validate_freelancer_skills_form(experience, hourly_rate, selected_skills):
     
     try:
         experience = float(experience)
-        if experience < 0:
-            return False, 'Experience must be a positive number.'
     except ValueError:
         return False, 'Invalid experience value.'
 
@@ -146,3 +144,59 @@ def validate_freelancer_skills_form(experience, hourly_rate, selected_skills):
         return False, 'At least one skill must be selected.'
 
     return True, None  
+
+def validate_education(institution_logo, institution_name, level, start_month, start_year, end_month, end_year, location, currently_studying, months):
+    if institution_logo:
+        valid_extensions = ['.png', '.jpg', '.jpeg']
+        file_extension = os.path.splitext(institution_logo.name)[1].lower()
+        
+        if file_extension not in valid_extensions:
+            return False, "Only JPG, PNG, or JPEG file types are allowed."
+        
+        max_size = 10 * 1024 * 1024  # 10MB
+        if institution_logo.size > max_size:
+            return False, "File size exceeds the 10MB limit."
+
+    if not institution_name or len(institution_name.strip()) == 0:
+        return False, "Institution name is required."
+
+    if not level or len(level.strip()) == 0:
+        return False, "Education level is required."
+
+    if not start_month or not start_year:
+        return False, "Start date is required."
+
+    try:
+        start_year = int(start_year)
+    except ValueError:
+        return False, "Invalid start year."
+
+    start_month_num = list(months.keys()).index(start_month) + 1  
+    start_date = (int(start_year), start_month_num)
+
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+
+    if start_year > current_year or (start_year == current_year and start_month_num > current_month):
+        return False, "Start date cannot be in the future."
+
+    if not currently_studying:
+        if not end_year or not end_month:
+            return False, "End date is required if you are not currently studying."
+
+        try:
+            end_year = int(end_year)
+            end_month_num = list(months.keys()).index(end_month) + 1  
+        except ValueError:
+            return False, "Invalid end year or month."
+
+        if end_year > current_year or (end_year == current_year and end_month_num > current_month):
+            return False, "End date cannot be in the future."
+
+        if (end_year < start_year) or (end_year == start_year and end_month_num < start_month_num):
+            return False, "End date cannot be before start date."
+
+    if not location or len(location.strip()) == 0:
+        return False, "Location is required."
+
+    return True, ""

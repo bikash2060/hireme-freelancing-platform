@@ -336,8 +336,8 @@
     font-weight: 400;
 }
 
-/* Company Information Box */
-.company-info .box {
+/* Education Information Box */
+.education-info .box {
     margin-top: 25px;
     padding: 25px 20px;
     border-radius: 8px;
@@ -345,14 +345,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.company-info .header {
+.education-info .header {
     display: flex;
     width: 100%;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.company-info .header .caption i {
+.education-info .header .caption i {
     margin-right: 10px;
     font-size: 18px;
     padding: 10px;
@@ -361,12 +361,12 @@
     border-radius: 50%;
 }
 
-.company-info .caption {
+.education-info .caption {
     font-size: 20px;
     font-weight: 500;
 }
 
-.company-info .header .add-link {
+.education-info .header .add-link {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -379,27 +379,23 @@
     transition: all 0.3s ease; 
 }
 
-.company-info .header .add-link i {
+.education-info .header .add-link i {
     margin-left: 8px; 
     font-size: 18px;
     transition: transform 0.3s ease, color 0.3s ease; 
 }
 
-.company-info .header .add-link:hover {
+.education-info .header .add-link:hover {
     color: #0056b3; 
     border-color: #0056b3;
 }
 
-.company-info .header .add-link:hover i {
+.education-info .header .add-link:hover i {
     transform: translateX(5px); 
     color: #0056b3; 
 }
 
-.company-info .body-content {
-    margin-top: 15px;
-}
-
-.company-item {
+.education-item {
     display: flex;
     align-items: flex-start;
     padding: 15px 0;
@@ -407,11 +403,11 @@
     position: relative;
 }
 
-.company-item:last-child {
+.education-item:last-child {
     border-bottom: none;
 }
 
-.company-item .company-logo {
+.education-item .education-logo {
     width: 60px;
     height: 60px;
     margin-right: 15px;
@@ -421,35 +417,36 @@
     flex-shrink: 0;
 }
 
-.company-item .company-logo img {
+.education-item .education-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.company-item .company-details {
+.education-item .education-details {
     flex: 1;
 }
 
-.company-details  .position {
-    font-size: 16px;
+.education-details .institution {
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 5px;
 }
 
-.company-details  .company-name {
-    font-size: 14px;
-    color: #666;
+.education-details .degree {
+    font-size: 16px;
+    font-weight: 600;
+    color: #353535;
     margin-bottom: 5px;
 }
 
-.company-details  .duration, .location {
+.education-details .duration, .education-details .location {
     font-size: 14px;
     color: #333;
     margin-bottom: 5px;
 }
 
-.company-item .edit-icon {
+.education-item .edit-icon {
     position: absolute;
     right: 10px;
     top: 20px;
@@ -466,7 +463,8 @@
     transition: background 0.3s ease;
 }
 
-.company-item .edit-icon:hover {
+.education-item .edit-icon:hover {
     color: #0056b3; 
 }
+
 

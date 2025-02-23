@@ -5,8 +5,11 @@ from projects.models import Skill
 from django.contrib import messages
 from .utils import *
 import json
+from .models import Education
 from accounts.mixins import CustomLoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 # Testing In-Progress
 class UserBasicInfoView(CustomLoginRequiredMixin, View):
@@ -16,12 +19,50 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
     def get(self, request):
         try:
             freelancer = Freelancer.objects.get(user=request.user)
+            educations = list(Education.objects.filter(freelancer_id=freelancer))
+            
+            experience_years = freelancer.experience_years
+            if experience_years != None:
+                if experience_years == 0.0:
+                    experience_display = "No experience"
+                elif experience_years < 1:
+                    experience_months = round(experience_years * 12)
+                    if experience_months == 1:
+                        experience_display = "1 month"
+                    else:
+                        experience_display = f"{experience_months} months"
+                else:
+                    experience_display = f"{int(experience_years)}+ years"
+            else:
+                experience_display = "Not Provided"
+
+            current_date = datetime.now()
+            educations_with_duration = []
+            
+            for edu in educations:
+                educations_with_duration.append({
+                    'education': edu,
+                    'is_current': edu.end_date is None,
+                    'start_date': edu.start_date,
+                    'end_date': edu.end_date or current_date,
+                })
+
+            educations_with_duration.sort(key=lambda x: (
+                not x['is_current'],  
+                -datetime.combine(x['start_date'], datetime.min.time()).timestamp() if x['is_current'] else -datetime.combine(x['end_date'], datetime.min.time()).timestamp()  
+            ))
+
             return render(request, self.profile_template, {
                 'freelancer': freelancer,
+                'experience_display': experience_display,
+                'educations_with_duration': educations_with_duration,
+                'current_year': current_date.year
             })
+            
         except Exception as e:
+            print("Exception: ", e)
             messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)  
+            return redirect(self.home_url)
 
 # Testing Complete
 class EditProfileImageView(CustomLoginRequiredMixin, View):
@@ -111,8 +152,8 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
         middle_name = request.POST.get('middle_name')
         last_name = request.POST.get('last_name')
         phone_number = request.POST.get('phone_number')
-        bio = request.POST.get('bio')
         languages_selected = request.POST.getlist('languages-select')
+        bio = request.POST.get('bio')
 
         form_data = {
             'first_name': first_name,
@@ -398,7 +439,7 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.address_url)
         
-# Testing In-Progress
+# Testing Complete
 class EditUserSkillsView(CustomLoginRequiredMixin, View):
     skills_template = 'freelancerprofile/editskills.html'
     skills_url = 'freelancer:edit-skill'
@@ -430,6 +471,7 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
             experience = request.POST.get('experience')
             hourly_rate = request.POST.get('hourly-rate')
             selected_skills = request.POST.getlist('skills-select')
+            selected_skills = [int(skill_id) for skill_id in selected_skills]
             print(selected_skills)
             
             context = {
@@ -446,6 +488,7 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
                 return render(request, self.skills_template, context)
             
             freelancer = Freelancer.objects.get(user=request.user)
+            experience = float(experience)
             freelancer.experience_years = experience
             freelancer.hourly_rate = hourly_rate
             
@@ -459,5 +502,107 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
             return redirect(self.skills_url)
 
         except Exception as e:
+            print("Exception occured: ", e)
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.skills_url) 
+        
+# Testing In-Progress
+class AddEducationView(CustomLoginRequiredMixin, View):
+    education_form_template = 'freelancerprofile/addeducation.html'
+    education_form_url = 'freelancer:add-new-education'
+    
+    months = {
+        "jan": "January",
+        "feb": "February",
+        "mar": "March",
+        "apr": "April",
+        "may": "May",
+        "jun": "June",
+        "jul": "July",
+        "aug": "August",
+        "sep": "September",
+        "oct": "October",
+        "nov": "November",
+        "dec": "December",
+    }
+    current_year = datetime.now().year
+    years = {str(year): year for year in range(current_year, 1979, -1)}
+    
+    def get(self, request):
+        context = {
+            'months': self.months,
+            'years': self.years,
+        }
+        return render(request, self.education_form_template, context)
+    
+    def post(self, request):
+        institution_logo = request.FILES.get('institution_logo')  
+        institution_name = request.POST.get('institution_name')  
+        level = request.POST.get('level')  
+        start_month = request.POST.get('start_month')  
+        start_year = request.POST.get('start_year')  
+        end_month = request.POST.get('end_month')  
+        end_year = request.POST.get('end_year')  
+        location = request.POST.get('location')  
+        currently_studying = request.POST.get('currently_studying')
+        
+        context = {
+            'institution_logo': institution_logo,
+            'institution_name': institution_name,
+            'level': level,
+            'start_month': start_month,
+            'start_year': start_year,
+            'end_month': end_month,
+            'end_year': end_year,
+            'location': location,
+            'currently_studying': currently_studying,
+            'months': self.months,
+            'years': self.years,
+        }
+        
+        valid, error_message = validate_education(
+            institution_logo, institution_name, level, start_month, start_year, 
+            end_month, end_year, location, currently_studying, self.months
+        )
+        
+        if not valid:
+            messages.error(request, error_message)
+            return render(request, self.education_form_template, context)
+        
+        if start_month and start_year:
+            start_month_name = self.months.get(start_month)
+            start_date_str = f"{start_month_name}-{start_year}"
+            start_date = datetime.strptime(start_date_str, "%B-%Y").date()
+        else:
+            start_date = None
+        
+        if not currently_studying and end_month and end_year:
+            end_month_name = self.months.get(end_month)
+            end_date_str = f"{end_month_name}-{end_year}"
+            end_date = datetime.strptime(end_date_str, "%B-%Y").date()
+        else:
+            end_date = None
+            
+        try:
+            freelancer = Freelancer.objects.get(user=request.user)
+            education = Education.objects.create(
+                institution=institution_name,
+                education_level=level,
+                start_date=start_date,
+                end_date=end_date,
+                location=location,
+                freelancer=freelancer 
+            )
+            
+            if institution_logo:
+                fs = FileSystemStorage(location='media/education_images')
+                filename = fs.save(institution_logo.name, institution_logo)
+                education.logo = filename.split('/')[-1]
+            education.save()
+                
+            messages.success(request, 'Education added successfully.')
+            return redirect(self.education_form_url)  
+        except Exception as e:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.education_form_url) 
+        

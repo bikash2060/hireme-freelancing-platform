@@ -105,17 +105,17 @@
         <div class="experience-info">
             <div class="box">
                 <div class="header">
-                    <p class="caption"><i class="fa-solid fa-briefcase"></i> Experience & Skills</p>
+                    <p class="caption"><i class="fa-solid fa-briefcase"></i>Skills & Hourly Rate</p>
                     <a href="{% url 'freelancer:edit-skill' %}" class="edit-link">Edit <i class="bx bx-pencil"></i></a>
                 </div>
                 <div class="body-content">
                     <div class="col-1">
                         <p><strong>Experience</strong></p>
-                        <p>{{freelancer.experience_years|default:"Not Provided"}}</p> 
-                    </div>
+                        <p>{{ experience_display }}</p>
+                    </div>                
                     <div class="col-2">
                         <p><strong>Hourly Rate</strong></p>
-                        <p>{{freelancer.hourly_rate|default:"Not Provided"}}</p> 
+                        <p>Rs. {{freelancer.hourly_rate|default:"Not Provided"}}</p> 
                     </div>
                     <div class="col-3">
                         <p><strong>Skills</strong></p>
@@ -133,46 +133,44 @@
             </div>
         </div>             
 
-        <div class="company-info">
+        <div class="education-info">
             <div class="box">
                 <div class="header">
-                    <p class="caption"><i class="fas fa-landmark"></i>Company</p>
-                    <a href="" class="add-link">Add<i class="fas fa-plus"></i></a>
+                    <p class="caption"><i class="fas fa-graduation-cap"></i> Education</p>
+                    <a href="{% url 'freelancer:add-new-education' %}" class="add-link">Add <i class="fas fa-plus"></i></a>
                 </div>
                 <div class="body-content">
-                    <!--
-                        {% for company_info in companies_with_duration %}
-                        <div class="company-item">
-                            <div class="company-logo">
-                                {% if company_info.company.logo %}
-                                <img src="{% get_media_prefix %}company_images/{{ company_info.company.logo }}" alt="{{ company_info.company.name }} Logo">
-                                {% else %}
-                                    <img src="{% static 'images/default_logo.jpg' %}" alt="Default Logo">
-                                {% endif %}
-                            </div>
-                            <div class="company-details">
-                                <p class="position">{{ company_info.company.position }}</p>
-                                <p class="company-name">{{ company_info.company.name }}</p>
-                                <p class="duration">
-                                    {% if company_info.company.end_date %}
-                                        {{ company_info.company.start_date|date:"M Y" }} - {{ company_info.company.end_date|date:"M Y" }} · 
-                                        {{ company_info.duration }}
-                                    {% else %}
-                                        {{ company_info.company.start_date|date:"M Y" }} - Present · 
-                                        {{ company_info.duration }}
-                                    {% endif %}
-                                </p>
-                                <p class="location">{{ company_info.company.location }}</p>
-                            </div>
-                            <a href="{% url 'client:editcompany' company_info.company.id %}" class="edit-icon"><i class="bx bx-pencil"></i></a>
+                    {% for education_info in educations_with_duration %}
+                    <div class="education-item">
+                        <div class="education-logo">
+                            {% if education_info.education.logo %}
+                                <img src="{% get_media_prefix %}education_images/{{ education_info.education.logo }}" alt="{{ education_info.education.institution }} Logo">
+                            {% else %}
+                                <img src="{% static 'images/default_logo.jpg' %}" alt="Default Logo">
+                            {% endif %}
                         </div>
-                        {% empty %}
-                        <p>No companies added yet.</p>
-                        {% endfor %}
-                    -->
+                        <div class="education-details">
+                            <p class="institution">{{ education_info.education.institution }}</p>
+                            <p class="degree">{{ education_info.education.education_level }}</p>
+                            <p class="duration">
+                                {% if education_info.education.end_date %}
+                                    {{ education_info.education.start_date|date:"M Y" }} - {{ education_info.education.end_date|date:"M Y" }}
+                                {% else %}
+                                    {{ education_info.education.start_date|date:"M Y" }} - Present
+                                {% endif %}
+                            </p>
+                            <p class="location">{{ education_info.education.location }}</p>
+                        </div>
+                        <a href="" class="edit-icon"><i class="bx bx-pencil"></i></a>
+                    </div>
+                    {% empty %}
+                    <p>No education records found.</p>
+                    {% endfor %}
                 </div>
+                
             </div>
-        </div>       
+        </div>
+               
         
     </div>
 </div>

@@ -85,7 +85,7 @@
                     const option = document.createElement("option");
                     option.value = city;
                     option.textContent = city;
-                    if (city === "{{ freelancer.city }}") {
+                    if (city === "{{ client.city }}") {
                         option.selected = true;
                     }
                     citySelect.appendChild(option);

@@ -9,5 +9,5 @@ urlpatterns = [
     path('edit-info/', EditPersonalInfoView.as_view(), name='edit-personal-info'),
     path('edit-address/', EditUserAddressView.as_view(), name='edit-address'),
     path('edit-skill/', EditUserSkillsView.as_view(), name='edit-skill'),
-
+    path('add-education/', AddEducationView.as_view(), name='add-new-education'),
 ]

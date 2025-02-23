@@ -105,7 +105,7 @@ def create_company(company_logo, company_name, position, start_month, start_year
         if file_extension not in valid_extensions:
             return False, "Only JPG, PNG, or JPEG file types are allowed."
         
-        max_size = 10 * 1024 * 1024  # 10MB
+        max_size = 10 * 1024 * 1024  
         if company_logo.size > max_size:
             return False, "File size exceeds the 10MB limit."
     
