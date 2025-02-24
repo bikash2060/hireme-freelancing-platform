@@ -16,30 +16,30 @@ def validate_username(username, request=None):
         "free", "premium", "vip", "official", "mod", "admin1", "admin2"
     }
     
-    if " " in username:
-        return False, "Username should not contain spaces."
-    
-    if username.isdigit():
-        return False, "Username cannot be only numbers."
-    
-    if username[0].isdigit():
-        return False, "Username cannot start with a number."
-    
-    if len(username) < 5:
-        return False, "Username must be at least 5 characters long."
-    
-    if len(username) > 15:
-        return False, "Username must not exceed 15 characters."
-    
-    if username.lower() in reserved_words:
-        return False, "This username is reserved. Please choose another."
-    
     try:
+        if " " in username:
+            return False, "Username should not contain spaces."
+    
+        if username.isdigit():
+            return False, "Username cannot be only numbers."
+        
+        if username[0].isdigit():
+            return False, "Username cannot start with a number."
+        
+        if len(username) < 5:
+            return False, "Username must be at least 5 characters long."
+        
+        if len(username) > 15:
+            return False, "Username must not exceed 15 characters."
+        
+        if username.lower() in reserved_words:
+            return False, "This username is reserved. Please choose another."
+        
         if User.objects.filter(username=username).exclude(id=request.user.id).exists():
                 return False, "Username already taken."
-    except Exception as e:
+    except Exception:
         return False, "Something went wrong. Please try again later."
-    return True, ""
+    return True, None
 
 def validate_profile_image(profile_image):
     valid_extensions = ['.png', '.jpg', '.jpeg']
@@ -52,37 +52,44 @@ def validate_profile_image(profile_image):
     if profile_image.size > max_size:
         return False, "File size exceeds the 10MB limit."
 
-    return True, "File is valid."
+    return True, None
 
 def validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages, request=None):
     
     try:
         if not first_name or first_name.lower() == "none":
             return False, "First name is required."
+        
         if len(first_name.split()) > 1:
             return False, "First name cannot contain spaces."
+        
         if len(first_name) < 5 or len(first_name) > 50:
             return False, "First name must be between 5 and 50 characters."
 
         if middle_name:
             if len(middle_name.split()) > 1:
                 return False, "Middle name cannot contain spaces."
+            
             if len(middle_name) < 5 or len(middle_name) > 50:
                 return False, "Middle name must be between 5 and 50 characters."
 
         if not last_name or last_name.lower() == "none":
             return False, "Last name is required."
+        
         if len(last_name.split()) > 1:
             return False, "Last name cannot contain spaces."
+        
         if len(last_name) < 2 or len(last_name) > 50:
             return False, "Last name must be between 2 and 50 characters."
 
         if not phone_number or phone_number.lower() == "none":
             return False, "Phone number is required."
+        
         if not phone_number.isdigit() or len(phone_number) != 10:
             return False, "Phone number must be exactly 10 digits."
+        
         if not phone_number.startswith(('98', '97', '99')):
-            return False, "Phone number must start with a valid prefix (e.g., 98, 97, 99)."
+            return False, "Phone number must start with a valid prefix (e.g., 98, 97)."
 
         if phone_number:
             if User.objects.filter(phone_number=phone_number).exclude(id=request.user.id).exists():
@@ -94,9 +101,9 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
         if bio and len(bio) > 1000:
             return False, "Bio should not exceed 500 characters."
 
-        return True, ""
+        return True, None
   
-    except Exception as e:
+    except Exception:
         return False, "Something went wrong. Please try again later."
     
 def validate_password(old_password, new_password, confirm_password, user):
@@ -121,31 +128,29 @@ def validate_password(old_password, new_password, confirm_password, user):
     if not re.search(r'[@$!%*?&]', new_password):
         return False, "Password must contain at least one special character."
 
-    return True, ""
+    return True, None
 
 def validate_freelancer_skills_form(experience, hourly_rate, selected_skills):
-    if not experience:
-        return False, 'Experience is required.'
-    
-    try:
-        experience = float(experience)
-    except ValueError:
-        return False, 'Invalid experience value.'
 
-    if not hourly_rate:
-        return False, 'Hourly rate is required.'
-    
     try:
+        if not experience:
+            return False, 'Experience is required.'
+        
+        if not hourly_rate:
+            return False, 'Hourly rate is required.'
+        
         hourly_rate = float(hourly_rate)
+        
         if hourly_rate < 1:
             return False, 'Hourly rate must be at least 1 NPR.'
+        
+        if not selected_skills:
+            return False, 'At least one skill must be selected.'
+        
     except ValueError:
-        return False, 'Invalid hourly rate value.'
+        return False, 'Invalid value for experience or hourly rate.'
 
-    if not selected_skills:
-        return False, 'At least one skill must be selected.'
-
-    return True, None  
+    return True, None
 
 def validate_education(institution_logo, institution_name, level, start_month, start_year, end_month, end_year, location, currently_studying, months):
     if institution_logo:

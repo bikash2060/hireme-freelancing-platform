@@ -1,15 +1,17 @@
-from django.shortcuts import render, redirect
-from django.views import View
-from accounts.models import Freelancer
-from projects.models import Skill
-from django.contrib import messages
-from .utils import *
-import json
-from .models import Education, Certificate
-from accounts.mixins import CustomLoginRequiredMixin
-from django.core.files.storage import FileSystemStorage
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
+from math import floor
+import json
+from django.shortcuts import render, redirect, reverse
+from django.views import View
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.core.files.storage import FileSystemStorage
+from accounts.models import Freelancer
+from accounts.mixins import CustomLoginRequiredMixin
+from projects.models import Skill
+from .models import Education, Certificate
+from .utils import *
 
 # Testing Complete
 class UserBasicInfoView(CustomLoginRequiredMixin, View):
@@ -24,32 +26,34 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
 
             experience_years = freelancer.experience_years
             if experience_years is not None:
-                if experience_years == 0.0:
-                    experience_display = "No experience"
-                elif experience_years < 1:
-                    experience_months = round(experience_years * 12)
-                    experience_display = f"{experience_months} month" if experience_months == 1 else f"{experience_months} months"
+                if experience_years == 0:
+                    experience_display = "Less than a year"
+                elif experience_years == 1:
+                    experience_display = "1+ year"
                 else:
-                    experience_display = f"{int(experience_years)}+ years"
+                    experience_display = f"{experience_years}+ years"
             else:
                 experience_display = "Not Provided"
 
             current_date = datetime.now()
+
             educations_with_duration = []
-            for edu in educations:
-                educations_with_duration.append({
-                    'education': edu,
-                    'is_current': edu.end_date is None,
-                    'start_date': edu.start_date,
-                    'end_date': edu.end_date or current_date,
-                })
+            if educations:
+                for edu in educations:
+                    educations_with_duration.append({
+                        'education': edu,
+                        'is_current': edu.end_date is None,
+                        'start_date': edu.start_date,
+                        'end_date': edu.end_date or current_date,
+                    })
+                educations_with_duration.sort(key=lambda x: (
+                    not x['is_current'],  
+                    -datetime.combine(x['start_date'], datetime.min.time()).timestamp() if x['is_current'] else -datetime.combine(x['end_date'], datetime.min.time()).timestamp()
+                ))
 
-            educations_with_duration.sort(key=lambda x: (
-                not x['is_current'],  
-                -datetime.combine(x['start_date'], datetime.min.time()).timestamp() if x['is_current'] else -datetime.combine(x['end_date'], datetime.min.time()).timestamp()
-            ))
-
-            certificates_sorted = sorted(certificates, key=lambda x: x.issued_date, reverse=True)
+            certificates_sorted = []
+            if certificates:
+                certificates_sorted = sorted(certificates, key=lambda x: x.issued_date, reverse=True)
 
             return render(request, self.profile_template, {
                 'freelancer': freelancer,
@@ -58,46 +62,44 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
                 'certificates': certificates_sorted,  
                 'current_year': current_date.year
             })
-            
-        except Exception as e:
-            print("Exception: ", e)
-            messages.error(request, 'Unable to fetch your profile details.')
+    
+        except Exception:
+            messages.error(request, 'Failed to load your profile. Please try again later.')
             return redirect(self.home_url)
 
 # Testing Complete
 class EditProfileImageView(CustomLoginRequiredMixin, View):
     edit_profile_template = 'freelancerprofile/editprofileimage.html'
     edit_profile_url = 'freelancer:edit-profile-image'
-    home_url = 'homes:home'
+    freelancer_profile_url = 'freelancer:profile'
 
     def get(self, request):
         try:
             freelancer = Freelancer.objects.get(user=request.user)
             return render(request, self.edit_profile_template, {'freelancer': freelancer})
         except Exception:
-            messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.freelancer_profile_url)
 
     def post(self, request):
-        profile_image = request.FILES.get('profile_image')
-        username = request.POST.get('username')
+        try:
+            profile_image = request.FILES.get('profile_image')
+            username = request.POST.get('username')
 
-        if profile_image:
-            valid, error_message = validate_profile_image(profile_image)
+            if profile_image:
+                valid, error_message = validate_profile_image(profile_image)
+                if not valid:
+                    messages.error(request, error_message)
+                    return render(request, self.edit_profile_template, {'last_username': username})
+            
+            if not username:
+                messages.error(request, 'Username cannot be empty.')
+                return render(request, self.edit_profile_template, {'last_username': username})
+
+            valid, error_message = validate_username(username, request)
             if not valid:
                 messages.error(request, error_message)
                 return render(request, self.edit_profile_template, {'last_username': username})
-        
-        if not username:
-            messages.error(request, 'Username cannot be empty.')
-            return render(request, self.edit_profile_template, {'last_username': username})
-
-        valid, error_message = validate_username(username, request)
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.edit_profile_template, {'last_username': username})
-
-        try:
             user = request.user
             user.username = username
             if profile_image:
@@ -107,8 +109,8 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
              
             user.save()
             messages.success(request, 'Profile updated successfully.')
-            return redirect(self.edit_profile_url)
-        except Exception as e:
+            return redirect(self.freelancer_profile_url)
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.edit_profile_url)
     
@@ -116,8 +118,8 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
 class EditPersonalInfoView(CustomLoginRequiredMixin, View):
     personal_details_template = 'freelancerprofile/editpersonalinfo.html'
     personal_details_url = 'freelancer:edit-personal-info'
-    home_url = 'homes:home'
-    
+    freelancer_profile_url = 'freelancer:profile'
+
     available_languages = [
         'English', 'Nepali', 'Hindi', 'Chinese', 'Urdu', 'Spanish', 'French', 
         'Arabic', 'German', 'Russian', 'Portuguese', 'Japanese', 'Korean', 
@@ -137,44 +139,40 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
                 'selected_languages': selected_languages
             })
         except Exception:
-            messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.freelancer_profile_url)
 
     def post(self, request):
         try:
             user = request.user
             freelancer = Freelancer.objects.get(user=user)
-        except Exception:
-            messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.personal_details_url)
+            
+            first_name = request.POST.get('first_name')
+            middle_name = request.POST.get('middle_name')
+            last_name = request.POST.get('last_name')
+            phone_number = request.POST.get('phone_number')
+            languages_selected = request.POST.getlist('languages-select')
+            bio = request.POST.get('bio')
 
-        first_name = request.POST.get('first_name')
-        middle_name = request.POST.get('middle_name')
-        last_name = request.POST.get('last_name')
-        phone_number = request.POST.get('phone_number')
-        languages_selected = request.POST.getlist('languages-select')
-        bio = request.POST.get('bio')
+            form_data = {
+                'first_name': first_name,
+                'middle_name': middle_name,
+                'last_name': last_name,
+                'phone_number': phone_number,
+                'bio': bio,
+                'languages_selected': languages_selected
+            }
 
-        form_data = {
-            'first_name': first_name,
-            'middle_name': middle_name,
-            'last_name': last_name,
-            'phone_number': phone_number,
-            'bio': bio,
-            'languages_selected': languages_selected
-        }
-
-        valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages_selected, request)
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.personal_details_template, {
-                'form_data': form_data,
-                'freelancer': freelancer,
-                'selected_languages': languages_selected,
-                'available_languages': self.available_languages
-            })
-
-        try:
+            valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages_selected, request)
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.personal_details_template, {
+                    'form_data': form_data,
+                    'freelancer': freelancer,
+                    'selected_languages': languages_selected,
+                    'available_languages': self.available_languages
+                })
+                
             user.first_name = first_name
             user.middle_name = middle_name
             user.last_name = last_name
@@ -186,8 +184,8 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
             freelancer.save()
 
             messages.success(request, 'Profile Updated Successfully.')
-            return redirect(self.personal_details_url)
-        except Exception as e:
+            return redirect(self.freelancer_profile_url)
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.personal_details_url)
             
@@ -195,7 +193,7 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
 class EditUserAddressView(CustomLoginRequiredMixin, View):
     address_template = 'freelancerprofile/editaddress.html'
     address_url = 'freelancer:edit-address'
-    home_url = 'homes:home'
+    freelancer_profile_url = 'freelancer:profile'
     
     countries_and_cities = {
         "Afghanistan": ["Kabul", "Kandahar", "Herat", "Mazar-i-Sharif", "Jalalabad", "Other"],
@@ -406,35 +404,30 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
                 'countries_and_cities': self.countries_and_cities,
                 'countries_and_cities_json': countries_and_cities_json,
             })
-        except Exception as e:
-            messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
+        except Exception:
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.freelancer_profile_url)
 
     def post(self, request):
         try:
             freelancer = Freelancer.objects.get(user=request.user)
-        except Exception:
-            messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.address_url)
-
-        country = request.POST.get('country')
-        city = request.POST.get('city')
-        
-        if not country or not city:
-            messages.error(request, "Both country and city are required.")
-            return render(request, self.address_template, {
-                'freelancer': freelancer,
-                'countries_and_cities': self.countries_and_cities,
-                'countries_and_cities_json': json.dumps(self.countries_and_cities)
-            })
- 
-        try:
+            
+            country = request.POST.get('country')
+            city = request.POST.get('city')
+            if not country or not city:
+                messages.error(request, "Both country and city are required.")
+                return render(request, self.address_template, {
+                    'freelancer': freelancer,
+                    'countries_and_cities': self.countries_and_cities,
+                    'countries_and_cities_json': json.dumps(self.countries_and_cities)
+                })
+            
             freelancer.country = country
             freelancer.city = city
             freelancer.save()
             
             messages.success(request, 'Profile Updated Successfully.')
-            return redirect(self.address_url)
+            return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.address_url)
@@ -443,7 +436,7 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
 class EditUserSkillsView(CustomLoginRequiredMixin, View):
     skills_template = 'freelancerprofile/editskills.html'
     skills_url = 'freelancer:edit-skill'
-    home_url = 'homes:home'
+    freelancer_profile_url = 'freelancer:profile'
 
     def get(self, request):
         try:
@@ -458,10 +451,9 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
             }
 
             return render(request, self.skills_template, context)
-
-        except Exception as e:
-            messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.home_url)
+        except Exception:
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.freelancer_profile_url)
         
     def post(self, request):
         try:
@@ -472,7 +464,6 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
             hourly_rate = request.POST.get('hourly-rate')
             selected_skills = request.POST.getlist('skills-select')
             selected_skills = [int(skill_id) for skill_id in selected_skills]
-            print(selected_skills)
             
             context = {
                 'freelancer': freelancer,
@@ -488,7 +479,7 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
                 return render(request, self.skills_template, context)
             
             freelancer = Freelancer.objects.get(user=request.user)
-            experience = float(experience)
+            experience = int(experience)
             freelancer.experience_years = experience
             freelancer.hourly_rate = hourly_rate
             
@@ -499,10 +490,9 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
             freelancer.save()
 
             messages.success(request, 'Profile Updated Successfully.')
-            return redirect(self.skills_url)
+            return redirect(self.freelancer_profile_url)
 
-        except Exception as e:
-            print("Exception occured: ", e)
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.skills_url) 
         
@@ -510,7 +500,8 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
 class AddEducationView(CustomLoginRequiredMixin, View):
     education_form_template = 'freelancerprofile/addeducation.html'
     education_form_url = 'freelancer:add-new-education'
-    
+    freelancer_profile_url = 'freelancer:profile'
+
     months = {
         "jan": "January",
         "feb": "February",
@@ -535,54 +526,54 @@ class AddEducationView(CustomLoginRequiredMixin, View):
         }
         return render(request, self.education_form_template, context)
     
-    def post(self, request):
-        institution_logo = request.FILES.get('institution_logo')  
-        institution_name = request.POST.get('institution_name')  
-        level = request.POST.get('level')  
-        start_month = request.POST.get('start_month')  
-        start_year = request.POST.get('start_year')  
-        end_month = request.POST.get('end_month')  
-        end_year = request.POST.get('end_year')  
-        location = request.POST.get('location')  
-        currently_studying = request.POST.get('currently_studying')
-        
-        context = {
-            'institution_name': institution_name,
-            'level': level,
-            'start_month': start_month,
-            'start_year': start_year,
-            'end_month': end_month,
-            'end_year': end_year,
-            'location': location,
-            'currently_studying': currently_studying,
-            'months': self.months,
-            'years': self.years,
-        }
-        
-        valid, error_message = validate_education(
-            institution_logo, institution_name, level, start_month, start_year, 
-            end_month, end_year, location, currently_studying, self.months
-        )
-        
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.education_form_template, context)
-        
-        if start_month and start_year:
-            start_month_name = self.months.get(start_month)
-            start_date_str = f"{start_month_name}-{start_year}"
-            start_date = datetime.strptime(start_date_str, "%B-%Y").date()
-        else:
-            start_date = None
-        
-        if not currently_studying and end_month and end_year:
-            end_month_name = self.months.get(end_month)
-            end_date_str = f"{end_month_name}-{end_year}"
-            end_date = datetime.strptime(end_date_str, "%B-%Y").date()
-        else:
-            end_date = None
-            
+    def post(self, request):            
         try:
+            institution_logo = request.FILES.get('institution_logo')  
+            institution_name = request.POST.get('institution_name')  
+            level = request.POST.get('level')  
+            start_month = request.POST.get('start_month')  
+            start_year = request.POST.get('start_year')  
+            end_month = request.POST.get('end_month')  
+            end_year = request.POST.get('end_year')  
+            location = request.POST.get('location')  
+            currently_studying = request.POST.get('currently_studying')
+        
+            context = {
+                'institution_name': institution_name,
+                'level': level,
+                'start_month': start_month,
+                'start_year': start_year,
+                'end_month': end_month,
+                'end_year': end_year,
+                'location': location,
+                'currently_studying': currently_studying,
+                'months': self.months,
+                'years': self.years,
+            }
+        
+            valid, error_message = validate_education(
+                institution_logo, institution_name, level, start_month, start_year, 
+                end_month, end_year, location, currently_studying, self.months
+            )
+        
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.education_form_template, context)
+            
+            if start_month and start_year:
+                start_month_name = self.months.get(start_month)
+                start_date_str = f"{start_month_name}-{start_year}"
+                start_date = datetime.strptime(start_date_str, "%B-%Y").date()
+            else:
+                start_date = None
+            
+            if not currently_studying and end_month and end_year:
+                end_month_name = self.months.get(end_month)
+                end_date_str = f"{end_month_name}-{end_year}"
+                end_date = datetime.strptime(end_date_str, "%B-%Y").date()
+            else:
+                end_date = None
+                
             freelancer = Freelancer.objects.get(user=request.user)
             education = Education.objects.create(
                 institution=institution_name,
@@ -599,17 +590,151 @@ class AddEducationView(CustomLoginRequiredMixin, View):
                 education.logo = filename.split('/')[-1]
             education.save()
                 
-            messages.success(request, 'Education added successfully.')
-            return redirect(self.education_form_url)  
-        except Exception as e:
+            messages.success(request, 'Your education details have been successfully added.')
+            return redirect(self.freelancer_profile_url)  
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.education_form_url) 
+ 
+# Testing Complete
+class EditEducationView(CustomLoginRequiredMixin, View):
+    education_form_template = 'freelancerprofile/editeducation.html'
+    education_form_url = 'freelancer:edit-education'
+    freelancer_profile_url = 'freelancer:profile'
+    
+    months = {
+        "jan": "January",
+        "feb": "February",
+        "mar": "March",
+        "apr": "April",
+        "may": "May",
+        "jun": "June",
+        "jul": "July",
+        "aug": "August",
+        "sep": "September",
+        "oct": "October",
+        "nov": "November",
+        "dec": "December",
+    }
+    current_year = datetime.now().year
+    years = {str(year): year for year in range(current_year, 1979, -1)}
+    
+    def get(self, request, education_id):
+        try:
+            education = Education.objects.get(education_id=education_id)
+            start_month = education.start_date.strftime("%b").lower() if education.start_date else ""
+            start_year = str(education.start_date.year) if education.start_date else ""
+
+            end_month = education.end_date.strftime("%b").lower() if education.end_date else ""
+            end_year = str(education.end_date.year) if education.end_date else ""
+
+            currently_studying = education.end_date is None  
+            
+            context = {
+                'education': education,
+                'months': self.months,
+                'years': self.years,
+                'start_month': start_month,
+                'start_year': start_year,
+                'end_month': end_month,
+                'end_year': end_year,
+                'currently_studying': currently_studying
+            }
+            return render(request, self.education_form_template, context)
+        except Exception:
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.freelancer_profile_url)       
+    
+    def post(self, request, education_id):
+        try:
+            education = Education.objects.get(education_id=education_id)
+            
+            institution_logo = request.FILES.get('institution_logo')  
+            institution_name = request.POST.get('institution_name')  
+            level = request.POST.get('level')  
+            start_month = request.POST.get('start_month') 
+            start_year = request.POST.get('start_year')  
+            end_month = request.POST.get('end_month')  
+            end_year = request.POST.get('end_year')  
+            location = request.POST.get('location')  
+            currently_studying = request.POST.get('currently_studying')
+            
+            context = {
+                'education': education,
+                'institution_name': institution_name,
+                'level': level,
+                'start_month': start_month,
+                'start_year': start_year,
+                'end_month': end_month,
+                'end_year': end_year,
+                'location': location,
+                'currently_studying': currently_studying,
+                'months': self.months,
+                'years': self.years,
+            }
+            
+            valid, error_message = validate_education(
+                institution_logo, institution_name, level, start_month, start_year, 
+                end_month, end_year, location, currently_studying, self.months
+            )
+            
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.education_form_template, context)
+            
+            if start_month and start_year:
+                start_month_name = self.months.get(start_month)
+                start_date_str = f"{start_month_name}-{start_year}"
+                start_date = datetime.strptime(start_date_str, "%B-%Y").date()
+            else:
+                start_date = None
+        
+            if not currently_studying and end_month and end_year:
+                end_month_name = self.months.get(end_month)
+                end_date_str = f"{end_month_name}-{end_year}"
+                end_date = datetime.strptime(end_date_str, "%B-%Y").date()
+            else:
+                end_date = None
+            
+            education.institution=institution_name
+            education.education_level=level
+            education.start_date=start_date
+            education.end_date=end_date if not currently_studying else None
+            education.location=location
+                
+            if institution_logo:
+                fs = FileSystemStorage(location='media/education_images')
+                filename = fs.save(institution_logo.name, institution_logo)
+                education.logo = filename.split('/')[-1]
+            education.save()
+            
+            messages.success(request, 'Your education details have been successfully updated.')
+            return redirect(self.freelancer_profile_url) 
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(reverse(self.education_form_url, args=[education_id])) 
+
+# Testing Complete
+class DeleteEducationView(CustomLoginRequiredMixin, View):
+    freelancer_profile_url = 'freelancer:profile'
+    
+    def get(self, request, education_id):
+        try:
+            education = Education.objects.get(education_id=education_id)
+            education.delete()
+            
+            messages.success(request, 'Your education details have been successfully deleted.')
+            return redirect(self.freelancer_profile_url)
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.freelancer_profile_url)
         
 # Testing Complete
 class AddCertificateView(CustomLoginRequiredMixin, View):
     certificate_template = 'freelancerprofile/addcertificate.html'
     certificate_url = 'freelancer:add-new-certificate'
-    
+    freelancer_profile_url = 'freelancer:profile'
+
     months = {
         "jan": "January",
         "feb": "February",
@@ -635,40 +760,39 @@ class AddCertificateView(CustomLoginRequiredMixin, View):
         return render(request, self.certificate_template, context)       
     
     def post(self, request):
-        certificate_logo = request.FILES.get('certificate_logo')
-        certificate_name = request.POST.get('certificate_name', '').strip()
-        certificate_provider = request.POST.get('certificate_provider', '').strip()
-        issue_month = request.POST.get('issue_month')
-        issue_year = request.POST.get('issue_year')
-        certificate_url = request.POST.get('certificate_url', '').strip()
-        
-        context = {
-            'certificate_name': certificate_name,
-            'certificate_provider': certificate_provider,
-            'issue_month': issue_month,
-            'issue_year': issue_year,
-            'certificate_url': certificate_url,
-            'months': self.months,
-            'years': self.years,
-        }
-        
-        is_valid, error_msg = validate_certificate(
-            certificate_logo, certificate_name, certificate_provider, 
-            issue_month, issue_year, certificate_url, self.months
-        )
-
-        if not is_valid:
-            messages.error(request, error_msg)
-            return render(request, self.certificate_template, context)
-        
-        if issue_month and issue_year:
-            start_month_name = self.months.get(issue_month)
-            start_date_str = f"{start_month_name}-{issue_year}"
-            issued_date = datetime.strptime(start_date_str, "%B-%Y").date()
-        else:
-            issued_date = None
-            
         try:
+            certificate_logo = request.FILES.get('certificate_logo')
+            certificate_name = request.POST.get('certificate_name', '').strip()
+            certificate_provider = request.POST.get('certificate_provider', '').strip()
+            issue_month = request.POST.get('issue_month')
+            issue_year = request.POST.get('issue_year')
+            certificate_url = request.POST.get('certificate_url', '').strip()
+        
+            context = {
+                'certificate_name': certificate_name,
+                'certificate_provider': certificate_provider,
+                'issue_month': issue_month,
+                'issue_year': issue_year,
+                'certificate_url': certificate_url,
+                'months': self.months,
+                'years': self.years,
+            }
+        
+            is_valid, error_msg = validate_certificate(
+                certificate_logo, certificate_name, certificate_provider, 
+                issue_month, issue_year, certificate_url, self.months
+            )
+
+            if not is_valid:
+                messages.error(request, error_msg)
+                return render(request, self.certificate_template, context)
+            if issue_month and issue_year:
+                start_month_name = self.months.get(issue_month)
+                start_date_str = f"{start_month_name}-{issue_year}"
+                issued_date = datetime.strptime(start_date_str, "%B-%Y").date()
+            else:
+                issued_date = None
+                
             freelancer = Freelancer.objects.get(user=request.user)
             certificate = Certificate.objects.create(
                 certificate_name=certificate_name,
@@ -687,14 +811,152 @@ class AddCertificateView(CustomLoginRequiredMixin, View):
                 
             certificate.save()
                 
-            messages.success(request, 'Certificate added successfully.')
-            return redirect(self.certificate_url)  
-        except Exception as e:
+            messages.success(request, 'Your certificate details have been successfully added.')
+            return redirect(self.freelancer_profile_url)  
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.certificate_url) 
+        
+# Testing Complete
+class EditCertificateView(CustomLoginRequiredMixin, View):
+    certificate_form_template = 'freelancerprofile/editcertificate.html'
+    education_form_url = 'freelancer:edit-certificate'
+    freelancer_profile_url = 'freelancer:profile'
+    
+    months = {
+        "jan": "January",
+        "feb": "February",
+        "mar": "March",
+        "apr": "April",
+        "may": "May",
+        "jun": "June",
+        "jul": "July",
+        "aug": "August",
+        "sep": "September",
+        "oct": "October",
+        "nov": "November",
+        "dec": "December",
+    }
+    current_year = datetime.now().year
+    years = {str(year): year for year in range(current_year, 1979, -1)}
+    
+    def get(self, request, certificate_id):
+        try:
+            certificate = Certificate.objects.get(certificate_id=certificate_id)
+            issued_month = certificate.issued_date.strftime("%b").lower() if certificate.issued_date else ""
+            issued_year = str(certificate.issued_date.year) if certificate.issued_date else ""
             
+            context = {
+                'certificate': certificate,
+                'months': self.months,
+                'years': self.years,
+                'issued_month': issued_month,
+                'issued_year': issued_year,
+            }
+            return render(request, self.certificate_form_template, context)
+        except Exception:
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.freelancer_profile_url)
         
+    def post(self, request, certificate_id):
+        try:
+            certificate = Certificate.objects.get(certificate_id=certificate_id)
+            
+            certificate_logo = request.FILES.get('certificate_logo')
+            certificate_name = request.POST.get('certificate_name', '').strip()
+            certificate_provider = request.POST.get('certificate_provider', '').strip()
+            issue_month = request.POST.get('issue_month')
+            issue_year = request.POST.get('issue_year')
+            certificate_url = request.POST.get('certificate_url', '').strip()
+            
+            context = {
+                'certificate': certificate,
+                'certificate_name': certificate_name,
+                'certificate_provider': certificate_provider,
+                'issue_month': issue_month,
+                'issue_year': issue_year,
+                'certificate_url': certificate_url,
+                'months': self.months,
+                'years': self.years,
+            }
+            
+            is_valid, error_msg = validate_certificate(
+                certificate_logo, certificate_name, certificate_provider, 
+                issue_month, issue_year, certificate_url, self.months
+            )
         
+            if not is_valid:
+                messages.error(request, error_msg)
+                return render(request, self.certificate_form_template, context)
+            
+            if issue_month and issue_year:
+                start_month_name = self.months.get(issue_month)
+                start_date_str = f"{start_month_name}-{issue_year}"
+                issued_date = datetime.strptime(start_date_str, "%B-%Y").date()
+            else:
+                issued_date = None
+                
+            certificate.certificate_name=certificate_name
+            certificate.certificate_provider=certificate_provider
+            certificate.issued_date=issued_date
+            
+            if certificate_logo:
+                fs = FileSystemStorage(location='media/certificate_images')
+                filename = fs.save(certificate_logo.name, certificate_logo)
+                certificate.certificate_logo = filename.split('/')[-1]
+                
+            if certificate_url:
+                certificate.certificate_url = certificate_url
+                
+            certificate.save()
+                
+            messages.success(request, 'Your certificate details have been successfully updated.')
+            return redirect(self.freelancer_profile_url)   
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(reverse(self.education_form_url, args=[certificate_id]))
+                
+# Testing Complete
+class DeleteCertificateView(CustomLoginRequiredMixin, View):
+    freelancer_profile_url = 'freelancer:profile'
+    
+    def get(self, request, certificate_id):
+        try:
+            certificate = Certificate.objects.get(certificate_id=certificate_id)
+            certificate.delete()
+            
+            messages.success(request, 'Your certificate details have been successfully deleted.')
+            return redirect(self.freelancer_profile_url)
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.freelancer_profile_url)
+        
+# Testing Complete
+class PasswordChangeView(CustomLoginRequiredMixin, View):
+    password_change_template = 'freelancerprofile/passwordchange.html'
+    password_change_url = 'freelancer:change-password'
+    freelancer_profile_url = 'freelancer:profile'
+    
+    def get(self, request):
+        return render(request, self.password_change_template)
+    
+    def post(self, request):
+        try:
+            old_password = request.POST.get('oldpassword')
+            new_password = request.POST.get('newpassword')
+            confirm_password = request.POST.get('confirmpassword')
+        
+            valid, error_message = validate_password(old_password, new_password, confirm_password, request.user)
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.password_change_template)
+            user = request.user
+            user.set_password(new_password)
+            user.save()
+            update_session_auth_hash(request, user)
 
-        
-        
+            messages.success(request, 'Your password has been changed successfully.')
+            return redirect(self.password_change_url)
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.password_change_url)
