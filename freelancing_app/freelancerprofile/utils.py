@@ -2,6 +2,8 @@ import os
 import re
 from datetime import datetime
 from accounts.models import User
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
 
 def validate_username(username, request=None):
     reserved_words = {
@@ -159,6 +161,13 @@ def validate_education(institution_logo, institution_name, level, start_month, s
 
     if not institution_name or len(institution_name.strip()) == 0:
         return False, "Institution name is required."
+    
+    institution_name = institution_name.strip()
+    if len(institution_name) < 3:
+        return False, "Institution name should be at least 3 characters long."
+    
+    if len(institution_name) > 100:
+        return False, "Institution name should not exceed 100 characters."
 
     if not level or len(level.strip()) == 0:
         return False, "Education level is required."
@@ -198,5 +207,64 @@ def validate_education(institution_logo, institution_name, level, start_month, s
 
     if not location or len(location.strip()) == 0:
         return False, "Location is required."
+
+    return True, ""
+
+def validate_certificate(certificate_logo, certificate_name, certificate_provider, issue_month, issue_year, certificate_url, months):
+
+    if certificate_logo:
+        valid_extensions = ['.png', '.jpg', '.jpeg']
+        file_extension = os.path.splitext(certificate_logo.name)[1].lower()
+
+        if file_extension not in valid_extensions:
+            return False, "Only JPG, PNG, or JPEG file types are allowed."
+
+        max_size = 10 * 1024 * 1024  # 10MB
+        if certificate_logo.size > max_size:
+            return False, "File size exceeds the 10MB limit."
+
+    if not certificate_name:
+        return False, "Certificate name is required."
+    
+    if len(certificate_name) < 4:
+        return False, "Certificate name must be at least 5 characters long."
+    
+    if certificate_name[0].isdigit():
+        return False, "Certificate name should not start with a number."
+    
+    if not certificate_provider:
+        return False, "Certificate provider is required."
+    
+    if len(certificate_provider) < 3:
+        return False, "Certificate provider must be at least 5 characters long."
+    
+    if certificate_provider[0].isdigit():
+        return False, "Certificate provider should not start with a number."
+
+    if not issue_month or not issue_year:
+        return False, "Issue date is required."
+
+    try:
+        issue_year = int(issue_year)
+    except ValueError:
+        return False, "Invalid issue year."
+
+    if issue_month.lower() not in months:
+        return False, "Invalid issue month."
+
+    issue_month_num = list(months.keys()).index(issue_month.lower()) + 1  
+
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+
+    if issue_year > current_year or (issue_year == current_year and issue_month_num > current_month):
+        return False, "Issue date cannot be in the future."
+    
+    if certificate_url:
+        validate_url = URLValidator()
+        try:
+            validate_url(certificate_url)
+        except ValidationError:
+            return False, "Invalid certificate URL format."
 
     return True, ""

@@ -428,14 +428,14 @@
 }
 
 .education-details .institution {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 530;
     margin-bottom: 5px;
 }
 
 .education-details .degree {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 520;
     color: #353535;
     margin-bottom: 5px;
 }
@@ -465,6 +465,168 @@
 
 .education-item .edit-icon:hover {
     color: #0056b3; 
+}
+
+/* Certificate Information Box */
+.certificate-info .box {
+    margin-top: 25px;
+    padding: 25px 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.certificate-info .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.certificate-info .header .caption {
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.certificate-info .header .caption i {
+    margin-right: 10px;
+    font-size: 18px;
+    padding: 10px;
+    color: #1E88E5;
+    background: #f0f0f0;
+    border-radius: 50%;
+}
+
+/* Add Button */
+.certificate-info .header .add-link {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #919191;
+    border: 1px solid #a7a5a5;
+    padding: 8px 16px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.certificate-info .header .add-link i {
+    margin-left: 8px;
+    font-size: 18px;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.certificate-info .header .add-link:hover {
+    color: #0056b3;
+    border-color: #0056b3;
+}
+
+.certificate-info .header .add-link:hover i {
+    transform: translateX(5px);
+    color: #0056b3;
+}
+
+/* Certificate Item */
+.certificate-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+}
+
+.certificate-item:last-child {
+    border-bottom: none;
+}
+
+/* Certificate Logo */
+.certificate-item .certificate-logo {
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f8f8f8;
+    flex-shrink: 0;
+}
+
+.certificate-item .certificate-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Certificate Details */
+.certificate-item .certificate-details {
+    flex: 1;
+}
+
+.certificate-details .certificate-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.certificate-details .certificate-provider {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.certificate-details .issued-date {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+/* Credential Button */
+.certificate-details .certificate-url a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+    color: #1E88E5;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #1E88E5;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.certificate-details .certificate-url a i {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.certificate-details .certificate-url a:hover {
+    background-color: #1E88E5;
+    color: #fff;
+}
+
+/* Edit Icon */
+.certificate-item .edit-icon {
+    position: absolute;
+    right: 10px;
+    top: 20px;
+    font-size: 18px;
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    transition: background 0.3s ease;
+}
+
+.certificate-item .edit-icon:hover {
+    color: #0056b3;
 }
 
 

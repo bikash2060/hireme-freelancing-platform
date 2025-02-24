@@ -146,7 +146,7 @@
                             {% if education_info.education.logo %}
                                 <img src="{% get_media_prefix %}education_images/{{ education_info.education.logo }}" alt="{{ education_info.education.institution }} Logo">
                             {% else %}
-                                <img src="{% static 'images/default_logo.jpg' %}" alt="Default Logo">
+                                <img src="{% static 'images/default_institution_logo.png' %}" alt="Default Logo">
                             {% endif %}
                         </div>
                         <div class="education-details">
@@ -171,6 +171,49 @@
             </div>
         </div>
                
+        <div class="certificate-info">
+            <div class="box">
+                <div class="header">
+                    <div class="caption">
+                        <i class="fas fa-certificate"></i> Certificates
+                    </div>
+                    <a href="{% url 'freelancer:add-new-certificate' %}" class="add-link">
+                        Add<i class="fas fa-plus"></i>
+                    </a>
+                </div>
+        
+                {% for certificate in certificates %}
+                <div class="certificate-item">
+                    <div class="certificate-logo">
+                        {% if certificate.certificate_logo %}
+                                <img src="{% get_media_prefix %}certificate_images/{{ certificate.certificate_logo }}" alt="{{ certificate.certificate_logo }} Logo">
+                        {% else %}
+                            <img src="{% static 'images/default_certificate.jpg' %}" alt="Default Logo">
+                        {% endif %}
+                    </div>
+        
+                    <div class="certificate-details">
+                        <div class="certificate-name">{{ certificate.certificate_name }}</div>
+                        <div class="certificate-provider">{{ certificate.certificate_provider }}</div>
+                        <div class="issued-date">Issued {{ certificate.issued_date|date:"M Y" }}</div>
+                        {% if certificate.certificate_url%}
+                            <div class="certificate-url">
+                                <a href="{{ certificate.certificate_url }}" target="_blank">
+                                    Show Credential <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+        
+                    <a href="#" class="edit-icon">
+                        <i class="bx bx-pencil"></i>
+                    </a>
+                </div>
+                {% empty %}
+                <p>No certificates available.</p>
+                {% endfor %}
+            </div>
+        </div>
         
     </div>
 </div>

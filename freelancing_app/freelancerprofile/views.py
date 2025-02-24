@@ -5,13 +5,13 @@ from projects.models import Skill
 from django.contrib import messages
 from .utils import *
 import json
-from .models import Education
+from .models import Education, Certificate
 from accounts.mixins import CustomLoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
-# Testing In-Progress
+# Testing Complete
 class UserBasicInfoView(CustomLoginRequiredMixin, View):
     profile_template = 'freelancerprofile/profile.html'
     home_url = 'homes:home'
@@ -20,17 +20,15 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
         try:
             freelancer = Freelancer.objects.get(user=request.user)
             educations = list(Education.objects.filter(freelancer_id=freelancer))
-            
+            certificates = list(Certificate.objects.filter(freelancer_id=freelancer)) 
+
             experience_years = freelancer.experience_years
-            if experience_years != None:
+            if experience_years is not None:
                 if experience_years == 0.0:
                     experience_display = "No experience"
                 elif experience_years < 1:
                     experience_months = round(experience_years * 12)
-                    if experience_months == 1:
-                        experience_display = "1 month"
-                    else:
-                        experience_display = f"{experience_months} months"
+                    experience_display = f"{experience_months} month" if experience_months == 1 else f"{experience_months} months"
                 else:
                     experience_display = f"{int(experience_years)}+ years"
             else:
@@ -38,7 +36,6 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
 
             current_date = datetime.now()
             educations_with_duration = []
-            
             for edu in educations:
                 educations_with_duration.append({
                     'education': edu,
@@ -49,13 +46,16 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
 
             educations_with_duration.sort(key=lambda x: (
                 not x['is_current'],  
-                -datetime.combine(x['start_date'], datetime.min.time()).timestamp() if x['is_current'] else -datetime.combine(x['end_date'], datetime.min.time()).timestamp()  
+                -datetime.combine(x['start_date'], datetime.min.time()).timestamp() if x['is_current'] else -datetime.combine(x['end_date'], datetime.min.time()).timestamp()
             ))
+
+            certificates_sorted = sorted(certificates, key=lambda x: x.issued_date, reverse=True)
 
             return render(request, self.profile_template, {
                 'freelancer': freelancer,
                 'experience_display': experience_display,
                 'educations_with_duration': educations_with_duration,
+                'certificates': certificates_sorted,  
                 'current_year': current_date.year
             })
             
@@ -506,7 +506,7 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.skills_url) 
         
-# Testing In-Progress
+# Testing Complete
 class AddEducationView(CustomLoginRequiredMixin, View):
     education_form_template = 'freelancerprofile/addeducation.html'
     education_form_url = 'freelancer:add-new-education'
@@ -547,7 +547,6 @@ class AddEducationView(CustomLoginRequiredMixin, View):
         currently_studying = request.POST.get('currently_studying')
         
         context = {
-            'institution_logo': institution_logo,
             'institution_name': institution_name,
             'level': level,
             'start_month': start_month,
@@ -605,4 +604,97 @@ class AddEducationView(CustomLoginRequiredMixin, View):
         except Exception as e:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.education_form_url) 
+        
+# Testing Complete
+class AddCertificateView(CustomLoginRequiredMixin, View):
+    certificate_template = 'freelancerprofile/addcertificate.html'
+    certificate_url = 'freelancer:add-new-certificate'
+    
+    months = {
+        "jan": "January",
+        "feb": "February",
+        "mar": "March",
+        "apr": "April",
+        "may": "May",
+        "jun": "June",
+        "jul": "July",
+        "aug": "August",
+        "sep": "September",
+        "oct": "October",
+        "nov": "November",
+        "dec": "December",
+    }
+    current_year = datetime.now().year
+    years = {str(year): year for year in range(current_year, 1979, -1)}
+    
+    def get(self, request):
+        context = {
+            'months': self.months,
+            'years': self.years,
+        }
+        return render(request, self.certificate_template, context)       
+    
+    def post(self, request):
+        certificate_logo = request.FILES.get('certificate_logo')
+        certificate_name = request.POST.get('certificate_name', '').strip()
+        certificate_provider = request.POST.get('certificate_provider', '').strip()
+        issue_month = request.POST.get('issue_month')
+        issue_year = request.POST.get('issue_year')
+        certificate_url = request.POST.get('certificate_url', '').strip()
+        
+        context = {
+            'certificate_name': certificate_name,
+            'certificate_provider': certificate_provider,
+            'issue_month': issue_month,
+            'issue_year': issue_year,
+            'certificate_url': certificate_url,
+            'months': self.months,
+            'years': self.years,
+        }
+        
+        is_valid, error_msg = validate_certificate(
+            certificate_logo, certificate_name, certificate_provider, 
+            issue_month, issue_year, certificate_url, self.months
+        )
+
+        if not is_valid:
+            messages.error(request, error_msg)
+            return render(request, self.certificate_template, context)
+        
+        if issue_month and issue_year:
+            start_month_name = self.months.get(issue_month)
+            start_date_str = f"{start_month_name}-{issue_year}"
+            issued_date = datetime.strptime(start_date_str, "%B-%Y").date()
+        else:
+            issued_date = None
+            
+        try:
+            freelancer = Freelancer.objects.get(user=request.user)
+            certificate = Certificate.objects.create(
+                certificate_name=certificate_name,
+                certificate_provider=certificate_provider,
+                issued_date=issued_date,
+                freelancer=freelancer 
+            )
+            
+            if certificate_logo:
+                fs = FileSystemStorage(location='media/certificate_images')
+                filename = fs.save(certificate_logo.name, certificate_logo)
+                certificate.certificate_logo = filename.split('/')[-1]
+                
+            if certificate_url:
+                certificate.certificate_url = certificate_url
+                
+            certificate.save()
+                
+            messages.success(request, 'Certificate added successfully.')
+            return redirect(self.certificate_url)  
+        except Exception as e:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.certificate_url) 
+            
+        
+        
+
+        
         

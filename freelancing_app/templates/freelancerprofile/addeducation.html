@@ -37,19 +37,25 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="company_logo">Institution Logo</label>
-                <input type="file" id="company_logo" name="institution_logo" accept="image/*">
+                <input type="file" id="company_logo" name="institution_logo" accept="image/*" >
             </div>
             <div class="form-group">
                 <label for="company_name">Institution Name</label>
-                <input type="text" id="company_name" name="institution_name" placeholder="Enter company name" >
+                <input type="text" id="company_name" name="institution_name" placeholder="Enter company name" value="{{institution_name}}">
             </div>
             <div class="form-group">
                 <label for="position">Education Level</label>
-                <input type="text" id="position" name="level" placeholder="Enter your position" >
-            </div>
+                <select id="position" name="level">
+                    <option value="" disabled {% if not level %}selected{% endif %}>Select</option>
+                    <option value="highschool" {% if level == "highschool" %}selected{% endif %}>High School</option>
+                    <option value="bachelor" {% if level == "bachelor" %}selected{% endif %}>Bachelor's Degree</option>
+                    <option value="master" {% if level == "master" %}selected{% endif %}>Master's Degree</option>
+                    <option value="phd" {% if level == "phd" %}selected{% endif %}>PhD</option>
+                </select>                
+            </div>            
             <div class="form-group currently_working">
                 <label>
-                    <input type="checkbox" id="currently_studying" name="currently_studying" onclick="toggleEndDate()" >
+                    <input type="checkbox" id="currently_studying" name="currently_studying" onclick="toggleEndDate()" {% if currently_studying %}checked{% endif %}>
                 </label>
                 <span>I am currently studying in this institution</span>
             </div>            
@@ -89,7 +95,7 @@
             </div>
             <div class="form-group">
                 <label for="location">Institution Location</label>
-                <input type="text" id="location" name="location" placeholder="Enter location" >
+                <input type="text" id="location" name="location" placeholder="Enter location" value="{{location}}">
             </div>
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>

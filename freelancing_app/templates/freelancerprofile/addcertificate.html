@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/message.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/addcertificate.css' %}">
+<link rel="stylesheet" href="{% static 'css/loader.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'freelancerprofile/sidebar.html' %}
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<div class="add-certificate-container">
+    <div class="back-button">
+        <a href="{% url 'freelancer:profile' %}">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="add-certificate-form">
+        {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">
+                        <span>{{ message }}</span>
+                        <i class="fa fa-times close-message"></i>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form action="{% url 'freelancer:add-new-certificate' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="certificate_logo">Certificate Logo</label>
+                <input type="file" id="certificate_logo" name="certificate_logo" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="certificate_name">Certificate Name</label>
+                <input type="text" id="certificate_name" name="certificate_name" placeholder="Enter certificate name" value="{{ certificate_name}}">
+            </div>
+            <div class="form-group">
+                <label for="certificate_provider">Issuing Organization</label>
+                <input type="text" id="certificate_provider" name="certificate_provider" placeholder="Enter organization name" value="{{certificate_provider}}">
+            </div>
+            <div class="form-group">
+                <label for="issue_date">Issue Date</label>
+                <div class="date-select">
+                    <select id="issue_month" name="issue_month">
+                        <option value="">Month</option>
+                        {% for key, value in months.items %}
+                            <option value="{{ key }}" {% if key == issue_month %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="issue_year" name="issue_year">
+                        <option value="">Year</option>
+                        {% for key, value in years.items %}
+                            <option value="{{ key }}" {% if key == issue_year %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="certificate_url">Certificate URL</label>
+                <input type="url" id="certificate_url" name="certificate_url" placeholder="Enter certificate URL" value="{{certificate_url}}">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Save Certificate</button>
+                <a href="{% url 'freelancer:profile' %}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/message.js' %}"></script>
+<script src="{% static 'js/loader.js' %}"></script>
+{% endblock %}
+
