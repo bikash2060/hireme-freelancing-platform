@@ -1,3 +1,4 @@
+/* Experience, Skills and Hourly Rate Information Styles */
 .edit-skills-container {
     width: calc(100% - 260px);
     max-width: 550px;
@@ -19,7 +20,6 @@
     margin-right: 8px;
 }
 
-/* Styling Skills Form */
 .skills-info-form {
     background: #fff;
     padding: 30px;
@@ -127,7 +127,6 @@
     transition: 0.2s ease;
 }
 
-/* Skills Search Section */
 #skills-search {
     width: 100%;
     padding: 10px;
@@ -173,7 +172,6 @@
     background-color: #f1f1f1;
 }
 
-/* Selected Skills Section */
 #selected-skills {
     display: flex;
     flex-wrap: wrap;
@@ -226,5 +224,3 @@
 .no-skills-message {
     text-align: center;
 }
-
-

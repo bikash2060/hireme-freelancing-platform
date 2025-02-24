@@ -1,5 +1,4 @@
-/* Address and City Information Styles */
-.edit-address-container {
+.edit-certificate-container {
     width: calc(100% - 260px);
     max-width: 550px;
     position: relative;
@@ -7,7 +6,7 @@
     left: 300px;
 }
 
-.edit-address-container .back-button a {
+.edit-certificate-container .back-button a {
     display: inline-flex;
     align-items: center;
     font-size: 16px;
@@ -16,14 +15,14 @@
     margin-bottom: 20px;
 }
 
-.edit-address-container .back-button i {
+.edit-certificate-container .back-button i {
     margin-right: 8px;
 }
 
-.edit-address-form {
+.edit-certificate-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; 
+    gap: 20px;
     background: #fff;
     padding: 30px;
     border: 1px solid #e0e0e0;
@@ -31,19 +30,19 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.edit-address-form .form-group {
+.edit-certificate-form .form-group {
     margin-bottom: 20px;
 }
 
-.edit-address-form .form-group label {
+.edit-certificate-form .form-group label {
     font-weight: 500;
     display: block;
     margin-bottom: 8px;
     color: #333;
 }
 
-.edit-address-form .form-group input,
-.edit-address-form .form-group select {
+.edit-certificate-form .form-group input,
+.edit-certificate-form .form-group select {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
@@ -54,18 +53,18 @@
     background-color: #fff;
 }
 
-.edit-address-form .form-group input:focus,
-.edit-address-form .form-group select:focus {
+.edit-certificate-form .form-group input:focus,
+.edit-certificate-form .form-group select:focus {
     border-color: #1E88E5;
 }
 
-.edit-address-form .form-actions {
+.edit-certificate-form .form-actions {
     display: flex;
     gap: 15px;
 }
 
-.edit-address-form .form-actions button,
-.edit-address-form .form-actions a {
+.edit-certificate-form .form-actions button,
+.edit-certificate-form .form-actions a {
     padding: 12px 20px;
     border-radius: 6px;
     font-weight: 600;
@@ -75,23 +74,39 @@
     cursor: pointer;
 }
 
-.edit-address-form .form-actions button {
+.edit-certificate-form .form-actions button {
     background-color: #1E88E5;
     color: #fff;
     border: none;
 }
 
-.edit-address-form .form-actions button:hover {
+.edit-certificate-form .form-actions button:hover {
     background-color: #1565C0;
 }
 
-.edit-address-form .form-actions a {
+.edit-certificate-form .form-actions a {
     background-color: #f44336;
     color: #fff;
     border: none;
     transition: background-color 0.3s ease;
 }
 
-.edit-address-form .form-actions a:hover {
+.edit-certificate-form .form-actions a:hover {
     background-color: #d32f2f;
+}
+
+.date-select #issue_month, #issue_year {
+    margin-bottom: 10px;
+}
+
+.date-select select:disabled {
+    background-color: #f2f2f2;
+    cursor: not-allowed;
+}
+
+.edit-certificate-form .form-group img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
 }

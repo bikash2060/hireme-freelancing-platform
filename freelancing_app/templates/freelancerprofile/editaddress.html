@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}Address - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/message.css' %}">
 <link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'css/freelancerprofile/editaddress.css' %}">
 <link rel="stylesheet" href="{% static 'css/loader.css' %}">
@@ -12,10 +11,13 @@
 
 {% block content %}
 {% include 'freelancerprofile/sidebar.html' %}
+
+<!-- Loading Screen -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
+<!-- Address and City Information -->
 <div class="edit-address-container">
     <div class="back-button">
         <a href="{% url 'freelancer:profile' %}">
@@ -23,16 +25,6 @@
         </a>
     </div>
     <div class="edit-address-form" id="edit-profile-form">
-        {% if messages %}
-            <div class="alert-container">
-                {% for message in messages %}
-                    <div class="alert {{ message.tags }}">
-                        <span>{{ message }}</span>
-                        <i class="fa fa-times close-message"></i>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
         <form action="{% url 'freelancer:edit-address' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
@@ -68,7 +60,6 @@
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/loader.js' %}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

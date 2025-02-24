@@ -1,4 +1,4 @@
-/* User Basic Info Section */
+/* User Profile Style */
 .user-basic-info {
     background-color: #F5F5F5;
     width: calc(100% - 260px);
@@ -18,39 +18,11 @@
     font-size: 25px;
 }
 
-.edit-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-/* Profile Info Box */
+/* Profile Image and Username Information Styles */
 .profile-info{
     position: relative;
 }
+
 .profile-info .box {
     display: flex;
     margin-top: 25px;
@@ -68,8 +40,8 @@
 }
 
 .profile-info .left-side img{
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
     border-radius: 50%;
 }
@@ -95,7 +67,36 @@
     color: #a7a5a5;
 }
 
-/* Personal Information Box */
+.profile-info .right-side .edit-link {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #919191; 
+    border: 1px solid #a7a5a5;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease; 
+}
+
+.profile-info .right-side .edit-link i {
+    margin-left: 8px; 
+    font-size: 18px;
+    transition: transform 0.3s ease, color 0.3s ease; 
+}
+
+.profile-info .right-side .edit-link:hover {
+    color: #0056b3; 
+    border-color: #0056b3;
+}
+
+.profile-info .right-side .edit-link:hover i {
+    transform: translateX(5px); 
+    color: #0056b3; 
+}
+
+/* Personal Information Styles */
 .personal-info .box {
     padding: 25px 20px;
     margin-top: 25px;
@@ -176,7 +177,7 @@
     text-overflow: ellipsis;
 }
 
-.body-content .col-7 .read-more {
+.personal-info .body-content .col-7 .read-more {
     color: #007bff;
     cursor: pointer;
     text-decoration: none;
@@ -184,11 +185,40 @@
     margin-top: 10px;
 }
 
-.body-content .col-7 .read-more:hover {
+.personal-info .body-content .col-7 .read-more:hover {
     text-decoration: underline;
 }
 
-/* Address Information Box */
+.personal-info .header .edit-link {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #919191; 
+    border: 1px solid #a7a5a5;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease; 
+}
+
+.personal-info .header .edit-link i {
+    margin-left: 8px; 
+    font-size: 18px;
+    transition: transform 0.3s ease, color 0.3s ease; 
+}
+
+.personal-info .header .edit-link:hover {
+    color: #0056b3; 
+    border-color: #0056b3;
+}
+
+.personal-info .header .edit-link:hover i {
+    transform: translateX(5px); 
+    color: #0056b3; 
+}
+
+/* Address Information Style */
 .addreess-info .box {
     margin-top: 25px;
     padding: 25px 20px;
@@ -248,7 +278,36 @@
     color: #555;
 }
 
-/* Experience Box */
+.addreess-info .header .edit-link {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #919191; 
+    border: 1px solid #a7a5a5;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease; 
+}
+
+.addreess-info .header .edit-link i {
+    margin-left: 8px; 
+    font-size: 18px;
+    transition: transform 0.3s ease, color 0.3s ease; 
+}
+
+.addreess-info .header .edit-link:hover {
+    color: #0056b3; 
+    border-color: #0056b3;
+}
+
+.addreess-info .header .edit-link:hover i {
+    transform: translateX(5px); 
+    color: #0056b3; 
+}
+
+/* Skills and Hourly Rate Information Styles */
 .experience-info .box {
     margin-top: 25px;
     padding: 25px 20px;
@@ -336,7 +395,36 @@
     font-weight: 400;
 }
 
-/* Education Information Box */
+.experience-info .header .edit-link {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #919191; 
+    border: 1px solid #a7a5a5;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease; 
+}
+
+.experience-info .header .edit-link i {
+    margin-left: 8px; 
+    font-size: 18px;
+    transition: transform 0.3s ease, color 0.3s ease; 
+}
+
+.experience-info .header .edit-link:hover {
+    color: #0056b3; 
+    border-color: #0056b3;
+}
+
+.experience-info .header .edit-link:hover i {
+    transform: translateX(5px); 
+    color: #0056b3; 
+}
+
+/* Education Information Styles */
 .education-info .box {
     margin-top: 25px;
     padding: 25px 20px;
@@ -460,14 +548,35 @@
     height: 30px;
     border-radius: 50%;
     background: #f0f0f0;
-    transition: background 0.3s ease;
+    transition: 0.3s ease;
 }
 
 .education-item .edit-icon:hover {
     color: #0056b3; 
 }
 
-/* Certificate Information Box */
+.education-item .delete-icon {
+    position: absolute;
+    right: 10px; 
+    top: 60px;
+    font-size: 18px;
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    transition: 0.3s ease;
+}
+
+.education-item .delete-icon:hover {
+    color: #e74c3c; 
+}
+
+/* Certificate Information Styles */
 .certificate-info .box {
     margin-top: 25px;
     padding: 25px 20px;
@@ -476,7 +585,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Header */
 .certificate-info .header {
     display: flex;
     justify-content: space-between;
@@ -500,7 +608,6 @@
     border-radius: 50%;
 }
 
-/* Add Button */
 .certificate-info .header .add-link {
     display: flex;
     align-items: center;
@@ -530,7 +637,6 @@
     color: #0056b3;
 }
 
-/* Certificate Item */
 .certificate-item {
     display: flex;
     align-items: flex-start;
@@ -543,7 +649,6 @@
     border-bottom: none;
 }
 
-/* Certificate Logo */
 .certificate-item .certificate-logo {
     width: 60px;
     height: 60px;
@@ -560,7 +665,6 @@
     object-fit: contain;
 }
 
-/* Certificate Details */
 .certificate-item .certificate-details {
     flex: 1;
 }
@@ -583,7 +687,6 @@
     margin-bottom: 8px;
 }
 
-/* Credential Button */
 .certificate-details .certificate-url a {
     display: inline-flex;
     align-items: center;
@@ -607,7 +710,6 @@
     color: #fff;
 }
 
-/* Edit Icon */
 .certificate-item .edit-icon {
     position: absolute;
     right: 10px;
@@ -629,4 +731,23 @@
     color: #0056b3;
 }
 
+.certificate-item .delete-icon {
+    position: absolute;
+    right: 10px; 
+    top: 60px;
+    font-size: 18px;
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    transition: 0.3s ease;
+}
 
+.certificate-item .delete-icon:hover {
+    color: #e74c3c; 
+}

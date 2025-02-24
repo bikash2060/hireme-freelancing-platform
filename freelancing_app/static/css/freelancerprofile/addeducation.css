@@ -1,3 +1,4 @@
+/* New Education Form Style */
 .add-education-container {
     width: calc(100% - 260px);
     max-width: 550px;
@@ -116,5 +117,3 @@
     cursor: pointer;
     margin-left: 2px;
 }
-
-

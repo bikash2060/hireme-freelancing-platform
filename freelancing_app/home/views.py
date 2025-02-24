@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from projects.models import Skill
-from accounts.mixins import LoginRequiredMixin
+from accounts.mixins import CustomLoginRequiredMixin
 from .models import Notification    
 
 
-class MarkAllAsReadView(LoginRequiredMixin, View):
+class MarkAllAsReadView(CustomLoginRequiredMixin, View):
     
     def get(self, request):
         try:
@@ -18,19 +18,29 @@ class MarkAllAsReadView(LoginRequiredMixin, View):
 
 class HomeView(View):
     
-     # Handle GET requests to render the home page.
     def get(self, request):
         if request.user.is_authenticated:
             user_role = request.user.role 
             
-            # Redirect based on the user's role
             if user_role == 'client':
                 return redirect('dashboard:client')
             elif user_role == 'freelancer':
                 return redirect('dashboard:freelancer')
         
-        # Render the default home page if the user is not authenticated
         return render(request, 'home/index.html')
+
+class GetUserProfileView(CustomLoginRequiredMixin, View):
+    freelancer_profile_url = 'freelancer:profile'
+    client_profile_url = 'client:profile'
+    home_url = 'homes:home'
+    
+    def get(self, request):
+        user_role = request.user.role 
+        
+        if user_role.lower() == 'client':
+            return redirect(self.client_profile_url)
+        else:
+            return redirect(self.freelancer_profile_url)
 
 def handling_404(request, exception):
     return render(request, '404.html', {})

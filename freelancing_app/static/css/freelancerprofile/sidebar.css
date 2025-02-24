@@ -1,3 +1,4 @@
+/* Vertical Sidebar Style */
 .sidebar {
     background-color: #fff;
     width: 260px;
@@ -72,4 +73,57 @@
     .sidebar.close .bottom_content {
         left: -100%;
     }
+}
+
+/* Success and Error Message Styles */
+.alert {
+    padding: 12px 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;  
+    bottom: 10px; 
+    left: 10px; 
+    min-width: 500px;
+    width: 35%;
+    z-index: 1000;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.alert.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.close-message {
+    cursor: pointer;
+    color: inherit;
+    font-size: 20px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.close-message:hover {
+    color: #000;
+}
+
+.alert.fade {
+    animation: fadeOut 0.5s forwards;
 }

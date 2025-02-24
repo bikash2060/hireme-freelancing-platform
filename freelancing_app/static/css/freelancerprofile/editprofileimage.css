@@ -1,3 +1,4 @@
+/* User Proile Image and Username Style */
 .edit-image-container{
     width: calc(100% - 260px);
     max-width: 550px;
@@ -94,8 +95,8 @@
 }
 
 .edit-profile-form .form-group img{
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
     border-radius: 50%;
 }

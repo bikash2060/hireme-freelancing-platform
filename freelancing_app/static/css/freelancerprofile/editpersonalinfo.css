@@ -1,4 +1,4 @@
-/* Main Container for Editing Personal Info */
+/* Personal Details Style */
 .edit-personal-container {
     width: calc(100% - 260px);
     max-width: 550px;
@@ -20,7 +20,6 @@
     margin-right: 8px;
 }
 
-/* Personal Info Form Styling */
 .personal-info-form {
     background: #fff;
     padding: 30px;
@@ -110,7 +109,6 @@
     background-color: #d32f2f;
 }
 
-/* Languages Search Section */
 #language-search {
     width: 100%;
     padding: 10px;

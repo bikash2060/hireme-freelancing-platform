@@ -95,4 +95,7 @@ class NewProposalsView(CustomLoginRequiredMixin, View):
 
         messages.success(request, "Your proposal has been submitted successfully!")
         return redirect('dashboard:freelancer')  
+
+
+
     

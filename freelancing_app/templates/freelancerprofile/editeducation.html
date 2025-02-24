@@ -5,7 +5,7 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
-<link rel="stylesheet" href="{% static 'css/freelancerprofile/addeducation.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/editeducation.css' %}">
 <link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
@@ -17,32 +17,33 @@
     <div class="spinner"></div>
 </div>
 
-<!-- New Education Form -->
-<div class="add-education-container">
+<!-- Edit Education Form -->
+<div class="edit-education-container">
     <div class="back-button">
         <a href="{% url 'freelancer:profile' %}">
             <i class="fa fa-arrow-left"></i> Back
         </a>
     </div>
-    <div class="add-education-form">
-        <form action="{% url 'freelancer:add-new-education' %}" method="POST" enctype="multipart/form-data">
+    <div class="edit-education-form">
+        <form action="{% url 'freelancer:edit-education' education.education_id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="company_logo">Institution Logo</label>
+                <img src="{% if education.logo %}{% get_media_prefix %}education_images/{{ education.logo }}{% else %}{% static 'images/default_institution_logo.png' %} {% endif %}" alt="">
                 <input type="file" id="company_logo" name="institution_logo" accept="image/*" >
             </div>
             <div class="form-group">
                 <label for="company_name">Institution Name</label>
-                <input type="text" id="company_name" name="institution_name" placeholder="Enter institution name" value="{{institution_name}}">
+                <input type="text" id="company_name" name="institution_name" placeholder="Enter institution name" value="{{ institution_name|default:education.institution|default:'' }}">
             </div>
             <div class="form-group">
                 <label for="position">Education Level</label>
                 <select id="position" name="level">
-                    <option value="" disabled {% if not level %}selected{% endif %}>Select</option>
-                    <option value="highschool" {% if level == "highschool" %}selected{% endif %}>High School</option>
-                    <option value="bachelor" {% if level == "bachelor" %}selected{% endif %}>Bachelor's Degree</option>
-                    <option value="master" {% if level == "master" %}selected{% endif %}>Master's Degree</option>
-                    <option value="phd" {% if level == "phd" %}selected{% endif %}>PhD</option>
+                    <option value="" disabled {% if not education.education_level and not level %}selected{% endif %}>Select</option>
+                    <option value="highschool" {% if education.education_level == "highschool" or level == "highschool" %}selected{% endif %}>High School</option>
+                    <option value="bachelor" {% if education.education_level == "bachelor" or level == "bachelor" %}selected{% endif %}>Bachelor's Degree</option>
+                    <option value="master" {% if education.education_level == "master" or level == "master" %}selected{% endif %}>Master's Degree</option>
+                    <option value="phd" {% if education.education_level == "phd" or level == "phd" %}selected{% endif %}>PhD</option>
                 </select>                
             </div>            
             <div class="form-group currently_working">
@@ -87,7 +88,7 @@
             </div>
             <div class="form-group">
                 <label for="location">Institution Location</label>
-                <input type="text" id="location" name="location" placeholder="Enter location" value="{{location}}">
+                <input type="text" id="location" name="location" placeholder="Enter location" value="{{ location|default:education.location|default:'' }}">
             </div>
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>

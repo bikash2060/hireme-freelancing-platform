@@ -1,7 +1,11 @@
 {% load static %}
+
+<!-- Vertical Sidebar -->
 <div class="sidebar">
     <div class="menu_content">
         <ul class="menu_items">
+            
+            <!-- Navigation item for personal information -->
             <li class="item">
                 <a href="{% url 'freelancer:profile' %}" class="nav_link">
                     <span class="navlink_icon">
@@ -11,8 +15,9 @@
                 </a>
             </li>
 
+            <!-- Navigation item for changing password -->
             <li class="item">
-                <a href="" class="nav_link">
+                <a href="{% url 'freelancer:change-password' %}" class="nav_link">
                     <span class="navlink_icon">
                         <i class="bx bx-key"></i>
                     </span>
@@ -23,3 +28,15 @@
         </ul>
     </div>
 </div>
+
+<!-- Succes and Error Message -->
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            <span>{{ message }}</span>
+            <i class="fa fa-times close-message"></i>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %} 
