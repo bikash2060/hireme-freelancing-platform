@@ -37,7 +37,7 @@ def validate_username(username, request=None):
                 return False, "Username already taken."
     except Exception:
         return False, "Something went wrong. Please try again later."
-    return True, ""
+    return True, None
 
 def validate_profile_image(profile_image):
     valid_extensions = ['.png', '.jpg', '.jpeg']
@@ -50,7 +50,7 @@ def validate_profile_image(profile_image):
     if profile_image.size > max_size:
         return False, "File size exceeds the 10MB limit."
 
-    return True, "File is valid."
+    return True, None
 
 def validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages, request=None):
     
@@ -92,7 +92,7 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
         if bio and len(bio) > 1000:
             return False, "Bio should not exceed 500 characters."
 
-        return True, ""
+        return True, None
   
     except Exception:
         return False, "Something went wrong. Please try again later."
@@ -151,7 +151,7 @@ def create_company(company_logo, company_name, position, start_month, start_year
     if not location or len(location.strip()) == 0:
         return False, "Location is required."
     
-    return True, ""
+    return True, None
 
 def validate_password(old_password, new_password, confirm_password, user):
     if not old_password or not new_password or not confirm_password:
@@ -175,4 +175,4 @@ def validate_password(old_password, new_password, confirm_password, user):
     if not re.search(r'[@$!%*?&]', new_password):
         return False, "Password must contain at least one special character."
 
-    return True, ""
+    return True, None

@@ -213,7 +213,7 @@ def validate_education(institution_logo, institution_name, level, start_month, s
     if not location or len(location.strip()) == 0:
         return False, "Location is required."
 
-    return True, ""
+    return True, None
 
 def validate_certificate(certificate_logo, certificate_name, certificate_provider, issue_month, issue_year, certificate_url, months):
 
@@ -272,4 +272,4 @@ def validate_certificate(certificate_logo, certificate_name, certificate_provide
         except ValidationError:
             return False, "Invalid certificate URL format."
 
-    return True, ""
+    return True, None

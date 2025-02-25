@@ -65,7 +65,7 @@ def validate_signup_form(email, username, password, confirm_password):
         if User.objects.filter(email=email).exists():
             return False, "An account with this email already exists."
         
-        return True, " "
+        return True, None
     
     except Exception as e:
         return False, "Something went wrong. Please try again later"
@@ -78,7 +78,7 @@ def validate_login_form(email, password):
     if ' ' in password:
         return False, 'Password should not contain spaces.'
     
-    return True, ''
+    return True, None
 
 def validate_reset_password_form(password, confirm_password):
     
@@ -103,4 +103,4 @@ def validate_reset_password_form(password, confirm_password):
     if not re.search(r'[@$!%*?&]', password):
         return False, "Password must contain at least one special character."
     
-    return True, ''
+    return True, None
