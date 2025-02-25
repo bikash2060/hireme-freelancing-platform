@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}Company - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/message.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/addcompany.css' %}">
 <link rel="stylesheet" href="{% static 'css/loader.css' %}">
@@ -12,11 +11,13 @@
 
 {% block content %}
 {% include 'clientprofile/sidebar.html' %}
-<!-- Loader -->
+
+<!-- Loading Screen -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
+<!-- New Company Form -->
 <div class="add-company-container">
     <div class="back-button">
         <a href="{% url 'client:profile' %}">
@@ -24,16 +25,6 @@
         </a>
     </div>
     <div class="add-company-form">
-        {% if messages %}
-            <div class="alert-container">
-                {% for message in messages %}
-                    <div class="alert {{ message.tags }}">
-                        <span>{{ message }}</span>
-                        <i class="fa fa-times close-message"></i>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
         <form action="{% url 'client:addcompany' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
@@ -105,8 +96,6 @@
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/message.js' %}"></script>
-
 <script>
     function toggleEndDate() {
         const checkbox = document.getElementById('currently_working');

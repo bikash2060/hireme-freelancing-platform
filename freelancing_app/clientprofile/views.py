@@ -55,43 +55,43 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
                 'current_year': current_date.year
             })
         except Exception:
-            messages.error(request, 'Unable to fetch your profile details.')
+            messages.error(request, 'Failed to load your profile. Please try again later.')
             return redirect(self.home_url)  
 
 # Testing Complete
 class EditProfileImageView(CustomLoginRequiredMixin, View):
     edit_profile_template = 'clientprofile/editprofileimage.html'
     edit_profile_url = 'client:edit-profile-image'
-    home_url = 'homes:home'
+    client_profile_url = 'client:profile'
 
     def get(self, request):
         try:
             client = Client.objects.get(user=request.user)
             return render(request, self.edit_profile_template, {'client': client})
         except Exception:
-            messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.client_profile_url)
 
     def post(self, request):
-        profile_image = request.FILES.get('profile_image')
-        username = request.POST.get('username')
+        try:
+            profile_image = request.FILES.get('profile_image')
+            username = request.POST.get('username')
 
-        if profile_image:
-            valid, error_message = validate_profile_image(profile_image)
+            if profile_image:
+                valid, error_message = validate_profile_image(profile_image)
+                if not valid:
+                    messages.error(request, error_message)
+                    return render(request, self.edit_profile_template, {'last_username': username})
+            
+            if not username:
+                messages.error(request, 'Username cannot be empty.')
+                return render(request, self.edit_profile_template, {'last_username': username})
+
+            valid, error_message = validate_username(username, request)
             if not valid:
                 messages.error(request, error_message)
                 return render(request, self.edit_profile_template, {'last_username': username})
-        
-        if not username:
-            messages.error(request, 'Username cannot be empty.')
-            return render(request, self.edit_profile_template, {'last_username': username})
-
-        valid, error_message = validate_username(username, request)
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.edit_profile_template, {'last_username': username})
-
-        try:
+            
             user = request.user
             user.username = username
             if profile_image:
@@ -100,9 +100,9 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
                 user.profile_image = filename.split('/')[-1]
              
             user.save()
-            messages.success(request, 'Profile updated successfully.')
-            return redirect(self.edit_profile_url)
-        except Exception as e:
+            messages.success(request, 'Your profile has been successfully updated.')
+            return redirect(self.client_profile_url)
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.edit_profile_url)
         
@@ -110,7 +110,7 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
 class EditPersonalInfoView(CustomLoginRequiredMixin, View):
     personal_details_template = 'clientprofile/editpersonalinfo.html'
     personal_details_url = 'client:edit-personal-info'
-    home_url = 'homes:home'
+    client_profile_url = 'client:profile'
     
     available_languages = [
         'English', 'Nepali', 'Hindi', 'Chinese', 'Urdu', 'Spanish', 'French', 
@@ -131,44 +131,39 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
                 'selected_languages': selected_languages
             })
         except Exception:
-            messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.client_profile_url)
 
     def post(self, request):
         try:
             user = request.user
             client = Client.objects.get(user=user)
-        except Exception:
-            messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.personal_details_url)
+            
+            first_name = request.POST.get('first_name')
+            middle_name = request.POST.get('middle_name')
+            last_name = request.POST.get('last_name')
+            phone_number = request.POST.get('phone_number')
+            bio = request.POST.get('bio')
+            languages_selected = request.POST.getlist('languages-select')
 
-        first_name = request.POST.get('first_name')
-        middle_name = request.POST.get('middle_name')
-        last_name = request.POST.get('last_name')
-        phone_number = request.POST.get('phone_number')
-        bio = request.POST.get('bio')
-        languages_selected = request.POST.getlist('languages-select')
+            form_data = {
+                'first_name': first_name,
+                'middle_name': middle_name,
+                'last_name': last_name,
+                'phone_number': phone_number,
+                'bio': bio,
+                'languages_selected': languages_selected
+            }
 
-        form_data = {
-            'first_name': first_name,
-            'middle_name': middle_name,
-            'last_name': last_name,
-            'phone_number': phone_number,
-            'bio': bio,
-            'languages_selected': languages_selected
-        }
-
-        valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages_selected, request)
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.personal_details_template, {
-                'form_data': form_data,
-                'client': client,
-                'selected_languages': languages_selected,
-                'available_languages': self.available_languages
-            })
-
-        try:
+            valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages_selected, request)
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.personal_details_template, {
+                    'form_data': form_data,
+                    'client': client,
+                    'selected_languages': languages_selected,
+                    'available_languages': self.available_languages
+                })
             user.first_name = first_name
             user.middle_name = middle_name
             user.last_name = last_name
@@ -179,17 +174,17 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
             client.languages = ','.join(languages_selected)
             client.save()
 
-            messages.success(request, 'Profile Updated Successfully.')
-            return redirect(self.personal_details_url)
-        except Exception as e:
+            messages.success(request, 'Your profile has been successfully updated.')
+            return redirect(self.client_profile_url)
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.personal_details_url)
             
-#Testing Complete
+# Testing Complete
 class EditUserAddressView(CustomLoginRequiredMixin, View):
     address_template = 'clientprofile/editaddress.html'
     address_url = 'client:edit-address'
-    home_url = 'homes:home'
+    client_profile_url = 'client:profile'
     
     countries_and_cities = {
         "Afghanistan": ["Kabul", "Kandahar", "Herat", "Mazar-i-Sharif", "Jalalabad", "Other"],
@@ -401,42 +396,37 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
                 'countries_and_cities_json': countries_and_cities_json,
             })
         except Exception:
-            messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.client_profile_url)
 
     def post(self, request):
         try:
             client = Client.objects.get(user=request.user)
-        except Exception:
-            messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.address_url)
-
-        country = request.POST.get('country')
-        city = request.POST.get('city')
-        
-        if not country or not city:
-            messages.error(request, "Both country and city are required.")
-            return render(request, self.address_template, {
-                'client': client,
-                'countries_and_cities': self.countries_and_cities,
-                'countries_and_cities_json': json.dumps(self.countries_and_cities)
-            })
- 
-        try:
+            country = request.POST.get('country')
+            city = request.POST.get('city')
+            
+            if not country or not city:
+                messages.error(request, "Both country and city are required.")
+                return render(request, self.address_template, {
+                    'client': client,
+                    'countries_and_cities': self.countries_and_cities,
+                    'countries_and_cities_json': json.dumps(self.countries_and_cities)
+                })
             client.country = country
             client.city = city
             client.save()
             
-            messages.success(request, 'Profile Updated Successfully.')
-            return redirect(self.address_url)
+            messages.success(request, 'Your profile has been successfully updated.')
+            return redirect(self.client_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.address_url)
         
-#Testing Complete
+# Testing Complete
 class AddCompanyView(CustomLoginRequiredMixin, View):
     company_template = 'clientprofile/addcompany.html'
     company_url = 'client:addcompany'
+    client_profile_url = 'client:profile'
     
     months = {
         "jan": "January",
@@ -463,54 +453,54 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
         return render(request, self.company_template, context)
     
     def post(self, request):
-        company_logo = request.FILES.get('company_logo')  
-        company_name = request.POST.get('company_name')  
-        position = request.POST.get('position')  
-        start_month = request.POST.get('start_month')  
-        start_year = request.POST.get('start_year')  
-        end_month = request.POST.get('end_month')  
-        end_year = request.POST.get('end_year')  
-        location = request.POST.get('location')  
-        currently_working = request.POST.get('currently_working')
-        
-        context = {
-            'company_logo': company_logo,
-            'company_name': company_name,
-            'position': position,
-            'start_month': start_month,
-            'start_year': start_year,
-            'end_month': end_month,
-            'end_year': end_year,
-            'location': location,
-            'currently_working': currently_working,
-            'months': self.months,
-            'years': self.years,
-        }
-        
-        valid, error_message = create_company(
-            company_logo, company_name, position, start_month, start_year, 
-            end_month, end_year, location, currently_working, self.months
-        )
-        
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.company_template, context)
-        
-        if start_month and start_year:
-            start_month_name = self.months.get(start_month)
-            start_date_str = f"{start_month_name}-{start_year}"
-            start_date = datetime.strptime(start_date_str, "%B-%Y").date()
-        else:
-            start_date = None
-        
-        if not currently_working and end_month and end_year:
-            end_month_name = self.months.get(end_month)
-            end_date_str = f"{end_month_name}-{end_year}"
-            end_date = datetime.strptime(end_date_str, "%B-%Y").date()
-        else:
-            end_date = None
-            
         try:
+            company_logo = request.FILES.get('company_logo')  
+            company_name = request.POST.get('company_name')  
+            position = request.POST.get('position')  
+            start_month = request.POST.get('start_month')  
+            start_year = request.POST.get('start_year')  
+            end_month = request.POST.get('end_month')  
+            end_year = request.POST.get('end_year')  
+            location = request.POST.get('location')  
+            currently_working = request.POST.get('currently_working')
+            
+            context = {
+                'company_logo': company_logo,
+                'company_name': company_name,
+                'position': position,
+                'start_month': start_month,
+                'start_year': start_year,
+                'end_month': end_month,
+                'end_year': end_year,
+                'location': location,
+                'currently_working': currently_working,
+                'months': self.months,
+                'years': self.years,
+            }
+            
+            valid, error_message = create_company(
+                company_logo, company_name, position, start_month, start_year, 
+                end_month, end_year, location, currently_working, self.months
+            )
+            
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.company_template, context)
+            
+            if start_month and start_year:
+                start_month_name = self.months.get(start_month)
+                start_date_str = f"{start_month_name}-{start_year}"
+                start_date = datetime.strptime(start_date_str, "%B-%Y").date()
+            else:
+                start_date = None
+            
+            if not currently_working and end_month and end_year:
+                end_month_name = self.months.get(end_month)
+                end_date_str = f"{end_month_name}-{end_year}"
+                end_date = datetime.strptime(end_date_str, "%B-%Y").date()
+            else:
+                end_date = None
+                
             client = Client.objects.get(user=request.user)
             company = Company.objects.create(
                 logo=company_logo,
@@ -528,9 +518,9 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
                 company.logo = filename.split('/')[-1]
             company.save()
                 
-            messages.success(request, 'Company added successfully.')
-            return redirect(self.company_url)  
-        except Exception as e:
+            messages.success(request, 'Your company details have been successfully added.')
+            return redirect(self.client_profile_url)  
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.company_url) 
         
@@ -538,7 +528,7 @@ class AddCompanyView(CustomLoginRequiredMixin, View):
 class EditCompanyView(CustomLoginRequiredMixin, View):
     edit_company_template = 'clientprofile/editcompany.html'
     edit_company_url = 'client:editcompany'
-    home_url = 'homes:home'
+    client_profile_url = 'client:profile'
     
     months = {
         "jan": "January", 
@@ -560,85 +550,79 @@ class EditCompanyView(CustomLoginRequiredMixin, View):
     def get(self, request, company_id):
         try:
             company = Company.objects.get(id=company_id)
+            start_month = company.start_date.strftime("%b").lower() if company.start_date else ""
+            start_year = str(company.start_date.year) if company.start_date else ""
+
+            end_month = company.end_date.strftime("%b").lower() if company.end_date else ""
+            end_year = str(company.end_date.year) if company.end_date else ""
+
+            currently_working = company.end_date is None  
+            
+            context = {
+                'company': company,
+                'months': self.months,
+                'years': self.years,
+                'start_month': start_month,
+                'start_year': start_year,
+                'end_month': end_month,
+                'end_year': end_year,
+                'currently_working': currently_working
+            }
+            return render(request, self.edit_company_template, context)
         except Exception:
-            messages.error(request, 'Unable to fetch your profile details.')
-            return redirect(self.home_url)
+            messages.error(request, 'Failed to load your profile. Please try again later.')
+            return redirect(self.client_profile_url)
         
-        start_month = company.start_date.strftime("%b").lower() if company.start_date else ""
-        start_year = str(company.start_date.year) if company.start_date else ""
-
-        end_month = company.end_date.strftime("%b").lower() if company.end_date else ""
-        end_year = str(company.end_date.year) if company.end_date else ""
-
-        currently_working = company.end_date is None  
-        
-        context = {
-            'company': company,
-            'months': self.months,
-            'years': self.years,
-            'start_month': start_month,
-            'start_year': start_year,
-            'end_month': end_month,
-            'end_year': end_year,
-            'currently_working': currently_working
-        }
-        return render(request, self.edit_company_template, context)
-    
     def post(self, request, company_id):
         try:
             company = Company.objects.get(id=company_id)
-        except Exception:
-            messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(reverse(self.edit_company_url, args=[company.id])) 
-        
-        company_logo = request.FILES.get('company_logo')  
-        company_name = request.POST.get('company_name')  
-        position = request.POST.get('position')  
-        start_month = request.POST.get('start_month')  
-        start_year = request.POST.get('start_year')  
-        end_month = request.POST.get('end_month')  
-        end_year = request.POST.get('end_year')  
-        location = request.POST.get('location')  
-        currently_working = request.POST.get('currently_working')
-                
-        context = {
-            'company': company,
-            'company_name': company_name,
-            'position': position,
-            'start_month': start_month,
-            'start_year': start_year,
-            'end_month': end_month,
-            'end_year': end_year,
-            'location': location,
-            'currently_working': currently_working,
-            'months': self.months,
-            'years': self.years,
-        }
-        
-        valid, error_message = create_company(
-            company_logo, company_name, position, start_month, start_year, 
-            end_month, end_year, location, currently_working, self.months
-        )
-        
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.edit_company_template, context)
-        
-        if start_month and start_year:
-            start_month_name = self.months.get(start_month)
-            start_date_str = f"{start_month_name}-{start_year}"
-            start_date = datetime.strptime(start_date_str, "%B-%Y").date()
-        else:
-            start_date = None
-        
-        if not currently_working and end_month and end_year:
-            end_month_name = self.months.get(end_month)
-            end_date_str = f"{end_month_name}-{end_year}"
-            end_date = datetime.strptime(end_date_str, "%B-%Y").date()
-        else:
-            end_date = None
             
-        try:
+            company_logo = request.FILES.get('company_logo')  
+            company_name = request.POST.get('company_name')  
+            position = request.POST.get('position')  
+            start_month = request.POST.get('start_month')  
+            start_year = request.POST.get('start_year')  
+            end_month = request.POST.get('end_month')  
+            end_year = request.POST.get('end_year')  
+            location = request.POST.get('location')  
+            currently_working = request.POST.get('currently_working')
+                    
+            context = {
+                'company': company,
+                'company_name': company_name,
+                'position': position,
+                'start_month': start_month,
+                'start_year': start_year,
+                'end_month': end_month,
+                'end_year': end_year,
+                'location': location,
+                'currently_working': currently_working,
+                'months': self.months,
+                'years': self.years,
+            }
+            
+            valid, error_message = create_company(
+                company_logo, company_name, position, start_month, start_year, 
+                end_month, end_year, location, currently_working, self.months
+            )
+            
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.edit_company_template, context)
+            
+            if start_month and start_year:
+                start_month_name = self.months.get(start_month)
+                start_date_str = f"{start_month_name}-{start_year}"
+                start_date = datetime.strptime(start_date_str, "%B-%Y").date()
+            else:
+                start_date = None
+            
+            if not currently_working and end_month and end_year:
+                end_month_name = self.months.get(end_month)
+                end_date_str = f"{end_month_name}-{end_year}"
+                end_date = datetime.strptime(end_date_str, "%B-%Y").date()
+            else:
+                end_date = None
             company.name = company_name
             company.position = position
             company.start_date = start_date
@@ -652,32 +636,47 @@ class EditCompanyView(CustomLoginRequiredMixin, View):
             
             company.save()
                 
-            messages.success(request, 'Company updated successfully.')
-            return redirect(reverse(self.edit_company_url, args=[company.id])) 
-        except Exception as e:
+            messages.success(request, 'Your company details have been successfully update.')
+            return redirect(self.client_profile_url)
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(reverse(self.edit_company_url, args=[company.id])) 
+            return redirect(reverse(self.edit_company_url, args=[company_id])) 
+
+# Testing Complete
+class DeleteCompanyView(CustomLoginRequiredMixin, View):
+    client_profile_url = 'client:profile'
     
-#Testing Complete
+    def get(self, request, company_id):
+        try:
+            company = Company.objects.get(id=company_id)
+            company.delete()
+            
+            messages.success(request, 'Your company details have been successfully deleted.')
+            return redirect(self.client_profile_url)
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.client_profile_url)
+
+# Testing Complete
 class PasswordChangeView(CustomLoginRequiredMixin, View):
     password_change_template = 'clientprofile/passwordchange.html'
     password_change_url = 'client:change-password'
-    home_url = 'homes:home'
+    client_profile_url = 'client:profile'
 
     def get(self, request):
         return render(request, self.password_change_template)
     
     def post(self, request):
-        old_password = request.POST.get('oldpassword')
-        new_password = request.POST.get('newpassword')
-        confirm_password = request.POST.get('confirmpassword')
-    
-        valid, error_message = validate_password(old_password, new_password, confirm_password, request.user)
-        if not valid:
-            messages.error(request, error_message)
-            return render(request, self.password_change_template)
-
         try:
+            old_password = request.POST.get('oldpassword')
+            new_password = request.POST.get('newpassword')
+            confirm_password = request.POST.get('confirmpassword')
+        
+            valid, error_message = validate_password(old_password, new_password, confirm_password, request.user)
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.password_change_template)
+            
             user = request.user
             user.set_password(new_password)
             user.save()
@@ -685,6 +684,6 @@ class PasswordChangeView(CustomLoginRequiredMixin, View):
 
             messages.success(request, 'Your password has been changed successfully.')
             return redirect(self.password_change_url)
-        except Exception as e:
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.password_change_url)

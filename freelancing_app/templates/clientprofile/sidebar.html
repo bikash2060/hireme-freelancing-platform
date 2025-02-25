@@ -1,27 +1,40 @@
 {% load static %}
-    <div class="sidebar">
-        <div class="menu_content">
-            <ul class="menu_items">
-                <!-- Profile -->
-                <li class="item">
-                    <a href="{% url 'client:profile' %}" class="nav_link">
-                        <span class="navlink_icon">
-                            <i class="bx bx-user"></i>
-                        </span>
-                        <span class="navlink">My Info</span>
-                    </a>
-                </li>
-    
-                <!-- Change Password -->
-                <li class="item">
-                    <a href="{% url 'client:change-password' %}" class="nav_link">
-                        <span class="navlink_icon">
-                            <i class="bx bx-key"></i>
-                        </span>
-                        <span class="navlink">Change Password</span>
-                    </a>
-                </li>
-                    
-            </ul>
-        </div>
+<div class="sidebar">
+    <div class="menu_content">
+        <ul class="menu_items">
+            
+            <!-- Navigation item for personal information -->
+            <li class="item">
+                <a href="{% url 'client:profile' %}" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-user"></i>
+                    </span>
+                    <span class="navlink">My Info</span>
+                </a>
+            </li>
+
+            <!-- Navigation item for changing password -->
+            <li class="item">
+                <a href="{% url 'client:change-password' %}" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-key"></i>
+                    </span>
+                    <span class="navlink">Change Password</span>
+                </a>
+            </li>
+                
+        </ul>
     </div>
+</div>
+
+<!-- Succes and Error Message -->
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            <span>{{ message }}</span>
+            <i class="fa fa-times close-message"></i>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %} 

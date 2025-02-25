@@ -35,7 +35,7 @@ def validate_username(username, request=None):
     try:
         if User.objects.filter(username=username).exclude(id=request.user.id).exists():
                 return False, "Username already taken."
-    except Exception as e:
+    except Exception:
         return False, "Something went wrong. Please try again later."
     return True, ""
 
@@ -94,7 +94,7 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
 
         return True, ""
   
-    except Exception as e:
+    except Exception:
         return False, "Something went wrong. Please try again later."
 
 def create_company(company_logo, company_name, position, start_month, start_year, end_month, end_year, location, currently_working, months):

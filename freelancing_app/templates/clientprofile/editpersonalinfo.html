@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}Personal Details - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/message.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/editpersonalinfo.css' %}">
 <link rel="stylesheet" href="{% static 'css/loader.css' %}">
@@ -12,11 +11,13 @@
 
 {% block content %}
 {% include 'clientprofile/sidebar.html' %}
-<!-- Loader -->
+
+<!-- Loading Screen -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
+<!-- Personal Details -->
 <div class="edit-personal-container">
     <div class="back-button">
         <a href="{% url 'client:profile' %}">
@@ -24,29 +25,19 @@
         </a>
     </div>
     <div class="personal-info-form">
-        {% if messages %}
-            <div class="alert-container">
-                {% for message in messages %}
-                    <div class="alert {{ message.tags }}">
-                        <span>{{ message }}</span>
-                        <i class="fa fa-times close-message"></i>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
         <form action="{% url 'client:edit-personal-info' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
                 <label for="first-name">First Name</label>
-                <input type="text" id="first-name" name="first_name" value="{{ form_data.first_name|default:user.first_name|default:'' }}">
+                <input type="text" id="first-name" name="first_name" placeholder="Enter your first name" value="{{ form_data.first_name|default:user.first_name|default:'' }}">
             </div>
             <div class="form-group">
                 <label for="last-name">Middle Name</label>
-                <input type="text" id="last-name" name="middle_name" value="{{ form_data.middle_name|default:user.middle_name|default:''}}">
+                <input type="text" id="last-name" name="middle_name" placeholder="Enter your middle name" value="{{ form_data.middle_name|default:user.middle_name|default:''}}">
             </div>
             <div class="form-group">
                 <label for="last-name">Last Name</label>
-                <input type="text" id="last-name" name="last_name" value="{{ form_data.last_name|default:user.last_name|default:'' }}">
+                <input type="text" id="last-name" name="last_name" placeholder="Enter your last name" value="{{ form_data.last_name|default:user.last_name|default:'' }}">
             </div>
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -54,7 +45,7 @@
             </div>
             <div class="form-group">
                 <label for="phone-number">Phone Number</label>
-                <input type="text" id="phone-number" name="phone_number" value="{{ form_data.phone_number|default:user.phone_number|default:'' }}">
+                <input type="text" id="phone-number" name="phone_number" placeholder="Enter your phone number" value="{{ form_data.phone_number|default:user.phone_number|default:'' }}">
             </div>
             <div class="form-group">
                 <label for="language">Languages</label>
@@ -81,7 +72,7 @@
             
             <div class="form-group">
                 <label for="bio">Bio</label>
-                <textarea id="bio" name="bio">{{ form_data.bio|default:client.bio|default:"" }}</textarea>
+                <textarea id="bio" placeholder="Tell us about yourself" name="bio">{{ form_data.bio|default:client.bio|default:"" }}</textarea>
             </div>
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>
@@ -95,11 +86,9 @@
 {% endblock %}
 
 {% block footer %}
-
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/loader.js' %}"></script>
 <script src="{% static 'js/clientprofile/search-language.js' %}"></script>
 {% endblock %}

@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}Profile Image - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/message.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/editprofileimage.css' %}">
 <link rel="stylesheet" href="{% static 'css/loader.css' %}">
@@ -12,10 +11,13 @@
 
 {% block content %}
 {% include 'clientprofile/sidebar.html' %}
+
+<!-- Loading Screen -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
+<!-- User Proile Image and Username -->
 <div class="edit-image-container">
     <div class="back-button">
         <a href="{% url 'client:profile' %}">
@@ -23,26 +25,16 @@
         </a>
     </div>
     <div class="edit-profile-form" id="edit-profile-form">
-        {% if messages %}
-            <div class="alert-container">
-                {% for message in messages %}
-                    <div class="alert {{ message.tags }}">
-                        <span>{{ message }}</span>
-                        <i class="fa fa-times close-message"></i>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
         <form action="{% url 'client:edit-profile-image' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group">
+            <div class="form-group">   
                 <label for="profile-image">Profile Image</label>
                 <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %} {% endif %}" alt="">
                 <input type="file" id="profile-image" name="profile_image" accept="image/*">
             </div>
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" value="{{ last_username|default:user.username|default:'' }}">
+                <input type="text" id="username" name="username" placeholder="Enter your username" value="{{ last_username|default:user.username|default:'' }}">
             </div>
             <div class="form-actions">
                 <button type="submit" class="save-btn">Save Changes</button>
@@ -54,10 +46,8 @@
 {% endblock %}
 
 {% block footer %}
-
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}
