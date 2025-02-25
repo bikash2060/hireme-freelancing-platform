@@ -8,6 +8,7 @@ from home.models import Notification
 from .utils import *
 from accounts.models import Client
 
+# Testing Complete
 class AddNewProjectView(CustomLoginRequiredMixin, View):
     new_project_template = 'projects/addproject.html'
     new_project_url = 'project:add-new-project'
@@ -24,7 +25,7 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
             }
             return render(request, self.new_project_template, context)
         
-        except Exception as e:
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.home_url)
         
@@ -85,9 +86,9 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
                 message=f"Your project '{project.title}' has been successfully uploaded.",
             )                            
 
-            messages.success(request, 'New project added successfully.')
+            messages.success(request, 'Your project has been added successfully.')
             return redirect(self.home_url)
 
-        except Exception as e:
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.new_project_url)

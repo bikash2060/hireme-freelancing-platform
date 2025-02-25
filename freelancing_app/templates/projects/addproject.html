@@ -5,16 +5,17 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/projects/addproject.css' %}">
-<link rel="stylesheet" href="{% static 'css/message.css' %}">
 <link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Loader -->
+
+<!-- Loading Screen -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
+<!-- New Project Form -->
 <div class="home-button">
     <div class="container">
         <div class="back-button">
@@ -24,18 +25,7 @@
         </div>
 
         <form action="{% url 'project:add-new-project' %}" method="POST" class="project-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% if messages %}
-            <div class="alert-container">
-                {% for message in messages %}
-                <div class="alert {{ message.tags }}">
-                    <span>{{ message }}</span>
-                    <i class="fa fa-times close-message"></i>
-                </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-        
+            {% csrf_token %}        
             <section class="section">
                 <h2>Project Overview</h2>
                 <div class="form-group">
@@ -113,19 +103,30 @@
             </section>
                         
             <div class="form-group">
-                <button type="submit" name="action" value = "submit" class="submit-btn submit-btn-submit">Submit Project</button>
+                <button type="submit" name="action" value = "submit" class="submit-btn submit-btn-submit">Post Project</button>
                 <button type="submit" name="action" value = "draft" class="submit-btn submit-btn-draft">Save as Draft</button>
             </div>
         </form>        
         
     </div>
 </div>
+
+{% if messages %}
+<div class="alert-container">
+    {% for message in messages %}
+    <div class="alert {{ message.tags }}">
+        <span>{{ message }}</span>
+        <i class="fa fa-times close-message"></i>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block footer %}
 {% endblock %}
 {% block js_files %}
-<script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/projects/search-skill.js' %}"></script>
 <script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}
