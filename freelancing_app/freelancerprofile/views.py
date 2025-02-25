@@ -108,7 +108,7 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
                 user.profile_image = filename.split('/')[-1]
              
             user.save()
-            messages.success(request, 'Profile updated successfully.')
+            messages.success(request, 'Your profile has been successfully updated.')
             return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
@@ -183,7 +183,7 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
             freelancer.languages = ','.join(languages_selected)
             freelancer.save()
 
-            messages.success(request, 'Profile Updated Successfully.')
+            messages.success(request, 'Your profile has been successfully updated.')
             return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
@@ -426,7 +426,7 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
             freelancer.city = city
             freelancer.save()
             
-            messages.success(request, 'Profile Updated Successfully.')
+            messages.success(request, 'Your profile has been successfully updated.')
             return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
@@ -489,7 +489,7 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
 
             freelancer.save()
 
-            messages.success(request, 'Profile Updated Successfully.')
+            messages.success(request, 'Your profile has been successfully updated.')
             return redirect(self.freelancer_profile_url)
 
         except Exception:

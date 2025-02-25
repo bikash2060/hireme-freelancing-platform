@@ -1,4 +1,4 @@
-/* Signup Form */
+/* Signup Form Style */
 .signup {
     margin-top: 150px;
     margin-bottom: 60px;
@@ -117,7 +117,7 @@
     border-radius: 5px;
     border: none;
     outline: none;
-    background: #626cd6;
+    background-color: #1E88E5;
     color: #fff;
     font-size: 18px;
     font-weight: 500;
@@ -168,4 +168,3 @@
 .password-container i:hover {
     color: #626cd6; 
 }
-

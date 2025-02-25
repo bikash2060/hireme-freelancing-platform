@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}Role - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/roleselection.css' %}">
@@ -10,11 +10,13 @@
 {% endblock %}
 
 {% block content %}
-<!-- Loader -->
+
+<!-- Loading Screen -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
+<!-- Role Selection Box -->
 <div class="role-selection">
     <div class="container">
         {% if messages %}
@@ -53,8 +55,6 @@
 </div>
 {% endblock %}
 
-
 {% block js_files %}
-<script src="{% static 'js/message.js'%}"></script>
 <script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}

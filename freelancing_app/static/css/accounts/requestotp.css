@@ -1,3 +1,4 @@
+/* OTP Reuqest Form Styles */
 .email{
     display: flex;
     justify-content: center;
@@ -65,9 +66,20 @@ button:hover {
     margin-top: 20px;
 }
 
+.footer-section p{
+    text-align: center;
+    font-weight: 500;
+    font-size: 17px;
+}
+
 .footer-section a {
     text-decoration: none;
-    color: #1E88E5;
+    color: #626cd6;
+    font-weight: 500;
+}
+
+.footer-section a:hover{
+    text-decoration: underline;
 }
 
 .alert {

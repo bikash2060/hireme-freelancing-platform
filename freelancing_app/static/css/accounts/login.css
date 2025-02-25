@@ -1,4 +1,4 @@
-/* Login Form */
+/* Login Form Styles */
 .login {
     margin-top: 150px;
     margin-bottom: 60px;    
@@ -137,7 +137,7 @@ form button {
     border-radius: 5px;
     border: none;
     outline: none;
-    background: #626CD6;
+    background-color: #1E88E5;
     color: #fff;
     font-size: 18px;
     font-weight: 500;
@@ -172,4 +172,3 @@ form button:hover {
 .password_container i:hover {
     color: #626cd6; 
 }
-
