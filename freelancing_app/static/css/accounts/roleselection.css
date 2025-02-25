@@ -157,37 +157,6 @@
     box-shadow: 0 0 5px rgba(30, 136, 229, 0.7); 
 }
 
-/* Center the alert message */
-.alert-success {
-    background-color: #d4edda; 
-    color: #155724;
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-    position: relative;
-    width: 80%; 
-    max-width: 600px; 
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.alert-success i {
-    font-size: 20px;
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-}
-
-.alert-success .close-message {
-    font-size: 18px;
-    cursor: pointer;
-    position: absolute;
-    right: 10px;
-}
-
 @media (max-width: 768px) {
     .role-boxes {
         flex-direction: column;

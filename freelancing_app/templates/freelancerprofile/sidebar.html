@@ -28,15 +28,3 @@
         </ul>
     </div>
 </div>
-
-<!-- Succes and Error Message -->
-{% if messages %}
-    <div class="alert-container">
-        {% for message in messages %}
-        <div class="alert {{ message.tags }}">
-            <span>{{ message }}</span>
-            <i class="fa fa-times close-message"></i>
-        </div>
-        {% endfor %}
-    </div>
-{% endif %} 
