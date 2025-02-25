@@ -19,8 +19,10 @@ class UserLoginView(View):
         try:
             if request.user.is_authenticated:
                 return redirect(self.home_url)
+            
             return render(request, self.login_template)
         except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.home_url)
 
     def post(self, request):
@@ -50,7 +52,7 @@ class UserLoginView(View):
                 messages.error(request, 'Invalid email or password. Please try again.')
                 return render(request, self.login_template, {'form_data': login_data})
         except Exception:
-            messages.error(request, 'Login failed. Please try again.')
+            messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.login_url)
         
 # Testing Complete
@@ -64,9 +66,11 @@ class ForgotPasswordView(View):
         try:
             if request.user.is_authenticated:
                 return redirect(self.home_url)
+            
             return render(request, self.reset_password_request_template)
         except Exception:
-            return redirect(self.home_url)
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.login_url)
 
     def post(self, request):
         try:
@@ -121,7 +125,8 @@ class PasswordResetOTPVerifyView(View):
             
             return render(request, self.otp_verification_template)
         except Exception:
-            return redirect(self.home_url)
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.login_url)
 
     def post(self, request):
         try:
@@ -213,7 +218,8 @@ class ChangePasswordView(View):
                 return redirect(self.reset_password_request_url)
             
             return render(request, self.reset_password_template)
-        except Exception as e:
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.home_url)
 
     def post(self, request):
@@ -263,6 +269,7 @@ class UserSignupView(View):
                 return redirect(self.home_url)
             return render(request, self.signup_template)
         except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.home_url)
 
     def post(self, request):
@@ -300,12 +307,12 @@ class UserSignupView(View):
             messages.success(request, 'An OTP has been sent to your email address.')
             return redirect(self.otp_verification_url)
                      
-        except SMTPException as e:
+        except SMTPException:
             messages.error(request, 'Unable to send email. Please try again later.')
-            return render(request, self.signup_template, {'form_data': signup_data})
+            return redirect(self.signup_url)
             
-        except Exception as e:
-            messages.error(request, 'Signup failed. Please try again.')
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.signup_url)
 
 # Testing Complete
@@ -366,7 +373,7 @@ class VerifyOTPView(View):
             messages.error(request, 'No OTP found for this email.')
             return render(request, self.otp_verification_template)
         
-        except Exception as e:
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.signup_url)
 
@@ -454,7 +461,7 @@ class UserRoleRedirectView(View):
             return redirect(self.login_url)
 
         except Exception as e:
-            messages.error(request, "Something went wrong. Please try again.")
+            messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.signup_url)
 
 # Testing Complete

@@ -67,16 +67,13 @@ def validate_signup_form(email, username, password, confirm_password):
         
         return True, None
     
-    except Exception as e:
+    except Exception:
         return False, "Something went wrong. Please try again later"
 
 def validate_login_form(email, password):
     
     if not email or not password:
         return False, 'All fields are required.'
-    
-    if ' ' in password:
-        return False, 'Password should not contain spaces.'
     
     return True, None
 

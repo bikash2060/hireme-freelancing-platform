@@ -6,8 +6,6 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/login.css' %}">
-<link rel="stylesheet" href="{% static 'css/message.css' %}">
-<link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -23,18 +21,6 @@
   <div class="login_form">
     <form action="{% url 'account:login' %}" method="POST">
       {% csrf_token %}
-
-      {% if messages %}
-          <div class="alert-container">
-              {% for message in messages %}
-                  <div class="alert {{ message.tags }}">
-                      <span>{{ message }}</span>
-                      <i class="fa fa-times close-message"></i>
-                  </div>
-              {% endfor %}
-          </div>
-      {% endif %}
-        
       <h3>Log in with</h3>
       <div class="login_option">
         <div class="option">
@@ -72,9 +58,9 @@
     </form>
   </div>
 </div>
+</div>
 {% endblock %}
 
 {% block js_files %}
 <script src="{% static 'js/accounts/password-visibility.js'%}"></script>
-<script src="{% static 'js/loader.js'%}"></script>
 {% endblock %}

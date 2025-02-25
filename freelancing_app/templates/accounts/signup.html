@@ -6,8 +6,6 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/signup.css' %}">
-<link rel="stylesheet" href="{% static 'css/message.css' %}">
-<link rel="stylesheet" href="{% static 'css/loader.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -23,18 +21,6 @@
     <div class="signup-form">
       <form action="{% url 'account:signup' %}" method="POST">
         {% csrf_token %}
-
-        {% if messages %}
-          <div class="alert-container">
-              {% for message in messages %}
-                  <div class="alert {{ message.tags }}">
-                      <span>{{ message }}</span>
-                      <i class="fa fa-times close-message"></i>
-                  </div>
-              {% endfor %}
-          </div>
-        {% endif %}
-        
         <h3>Sign Up with</h3>
         <div class="signup-options">
           <div class="signup-option">
@@ -87,5 +73,4 @@
 
 {% block js_files %}
 <script src="{% static 'js/accounts/password-visibility.js'%}"></script>
-<script src="{% static 'js/loader.js' %}"></script>
 {% endblock %}

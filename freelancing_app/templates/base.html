@@ -8,6 +8,7 @@
     <title>{% block title %}HireMe{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"/>
     <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
@@ -18,6 +19,8 @@
 
 </head>
 <body>
+
+<!-- Navigation Section -->
 <div class="nav-container">
     <nav class="navbar">
         <div class="logo">
@@ -243,6 +246,19 @@
 </div> 
 {% endif %}
 
+<!-- Message Section -->
+{% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                <span>{{ message }}</span>
+                <i class="fa fa-times close-message"></i>
+                <div class="progress-bar"><div class="progress"></div></div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
 {% block content %}
 
 {% endblock %}
@@ -324,5 +340,7 @@
 <script src="{% static 'js/notification-language.js' %}"></script>
 <script src="{% static 'js/chatbox-closer.js' %}"></script>
 <script src="{% static 'js/message.js' %}"></script>
+<script src="{% static 'js/loader.js'%}"></script>
+<script src="{% static 'js/form-handler.js' %}"></script>
 </body>
 </html>
