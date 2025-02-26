@@ -3,31 +3,12 @@
 virtualenv/
 .idea/
 
-# Ignore Python cache files
-__pycache__/
-*.py[cod]
-*.pyo
+# Ignore static files collected
+/staticfiles/
 
-# Ignore Django migration files
-freelancing_app/accounts/__pycache__
-freelancing_app/accounts/migrations
+# Ignore Python cache
+**/__pycache__/
 
-# Ignore environment configuration
-.env
+# Ignore migrations in all apps
+**/migrations/
 
-# Ignore Django-related files
-db.sqlite3
-*.log
-staticfiles/
-
-# Ignore compiled files
-*.pyc
-
-# Ignore macOS specific files
-.DS_Store
-
-# Ignore temporary or backup files
-*.swp
-*.bak
-*.tmp
-*~
