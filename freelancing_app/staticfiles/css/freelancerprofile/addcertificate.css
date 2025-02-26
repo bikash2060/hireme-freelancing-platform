@@ -1,0 +1,106 @@
+/* New Education Form Style */
+.add-certificate-container {
+    width: calc(100% - 260px);
+    max-width: 550px;
+    position: relative;
+    top: 120px;
+    left: 300px;
+}
+
+.add-certificate-container .back-button a {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    color: #1E88E5;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.add-certificate-container .back-button i {
+    margin-right: 8px;
+}
+
+.add-certificate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.add-certificate-form .form-group {
+    margin-bottom: 20px;
+}
+
+.add-certificate-form .form-group label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.add-certificate-form .form-group input,
+.add-certificate-form .form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background-color: #fff;
+}
+
+.add-certificate-form .form-group input:focus,
+.add-certificate-form .form-group select:focus {
+    border-color: #1E88E5;
+}
+
+.add-certificate-form .form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.add-certificate-form .form-actions button,
+.add-certificate-form .form-actions a {
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+}
+
+.add-certificate-form .form-actions button {
+    background-color: #1E88E5;
+    color: #fff;
+    border: none;
+}
+
+.add-certificate-form .form-actions button:hover {
+    background-color: #1565C0;
+}
+
+.add-certificate-form .form-actions a {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.add-certificate-form .form-actions a:hover {
+    background-color: #d32f2f;
+}
+
+.date-select #issue_month, #issue_year {
+    margin-bottom: 10px;
+}
+
+.date-select select:disabled {
+    background-color: #f2f2f2;
+    cursor: not-allowed;
+}

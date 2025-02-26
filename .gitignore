@@ -3,6 +3,9 @@
 virtualenv/
 .idea/
 
+# Ignore media files
+/media/
+
 # Ignore static files collected
 /staticfiles/
 
