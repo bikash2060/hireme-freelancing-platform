@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static%}
+{% load socialaccount %}
+
+{% block title %}SignUp - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/accounts/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Loading Screen -->
+<div id="loading-screen" style="display: none;">
+  <div class="spinner"></div>
+</div>
+
+<!-- SignUp Form -->
+<div class="signup">
+  <div class="signup-container">
+    <div class="signup-form">
+      <form action="{% url 'account:signup' %}" method="POST">
+        {% csrf_token %}
+        <h3>Sign Up with</h3>
+        <div class="signup-options">
+          <div class="signup-option">
+            <a href="#">
+              <img src="{% static 'images/Google.png'%}" alt="Google" />
+              <span>Google</span>
+            </a>
+          </div>
+          <div class="signup-option">
+            <a href="#">
+              <img src="{% static 'images/Github.png'%}" alt="Github" />
+              <span>Github</span>
+            </a>
+          </div>
+        </div>
+        <p class="signup-separator">
+          <span>or</span>
+        </p>
+        <div class="signup-input-box">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}"/>
+        </div>
+        <div class="signup-input-box">
+          <label for="signup-username">Username</label>
+          <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}"/>
+        </div>
+        <div class="signup-input-box">
+          <label for="signup-password">Password</label>
+          <div class="password-container">
+            <input type="password" id="signup-password" placeholder="Enter your password" name="password" />
+            <i class="fa fa-eye" id="toggleSignupPassword"></i>
+          </div>
+        </div>
+        <div class="signup-input-box">
+          <label for="signup-confirm-password">Confirm Password</label>
+          <div class="password-container">
+            <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword" />
+            <i class="fa fa-eye" id="toggleSignupConfirmPassword"></i>
+          </div>
+        </div>
+        <button type="submit" class="signup-button">Sign Up</button>
+        <p class="signup-login-link">
+          Already have an account? <a href="{% url 'account:login' %}">Log in</a>
+        </p>
+      </form> 
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/accounts/password-visibility.js'%}"></script>
+{% endblock %}

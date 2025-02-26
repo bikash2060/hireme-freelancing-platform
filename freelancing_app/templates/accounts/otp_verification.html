@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}OTP Verification - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/accounts/otpverification.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Loading Screen -->
+<div id="loading-screen" style="display: none;">
+  <div class="spinner"></div>
+</div>
+
+<!-- OTP Verification Form -->
+<div class="otp-verification"> 
+  <div class="container">
+    <div class="email-icon">
+      <i class="bx bxs-check-shield"></i>
+    </div>
+    <h3>Enter OTP Code</h3>
+    <p>We've sent a 6-digit code to registered email address.</p>
+    
+    <form action="{% url 'account:otp_verification' %}" method="POST">
+      {% csrf_token %}
+      
+      <div class="otp-inputs">
+        <input type="text" name="otp_1" maxlength="1" class="otp-box" />
+        <input type="text" name="otp_2" maxlength="1" class="otp-box" />
+        <input type="text" name="otp_3" maxlength="1" class="otp-box" />
+        <input type="text" name="otp_4" maxlength="1" class="otp-box" />
+        <input type="text" name="otp_5" maxlength="1" class="otp-box" />
+        <input type="text" name="otp_6" maxlength="1" class="otp-box" />
+      </div>
+      
+      <p class="resend-text">Is the code expired? 
+        <a href="{% url 'account:otp_resend' %}">Click to resend</a>
+      </p>
+    
+      <div class="button-group">
+          <a href = "{% url 'homes:home' %}" class="cancel-btn">Cancel</a>
+          <button type="submit" class="verify-btn">Verify</button> 
+      </div>
+    
+    </form>
+  </div>
+</div> 
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/accounts/otp-verification.js'%}"></script>
+{% endblock %}

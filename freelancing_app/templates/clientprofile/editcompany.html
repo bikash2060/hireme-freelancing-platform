@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}Company - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/editcompany.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'clientprofile/sidebar.html' %}
+
+<!-- Loading Screen -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<!-- Edit Company Form -->
+<div class="edit-company-container">
+    <div class="back-button">
+        <a href="{% url 'client:profile' %}">
+            <i class="fa fa-arrow-left"></i> Back
+        </a>
+    </div>
+    <div class="edit-company-form">
+        <form action="{% url 'client:editcompany' company.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="company_logo">Company Logo</label>
+                <img src="{% if company.logo %}{% get_media_prefix %}company_images/{{ company.logo }}{% else %}{% static 'images/default_logo.jpg' %} {% endif %}" alt="">
+                <input type="file" id="company_logo" name="company_logo" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="company_name">Company Name</label>
+                <input type="text" id="company_name" name="company_name" placeholder="Enter company name" value="{{ company_name|default:company.name|default:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="position">Position</label>
+                <input type="text" id="position" name="position" placeholder="Enter your position" value="{{ position|default:company.position|default:'' }}">
+            </div>
+            <div class="form-group currently_working">
+                <label>
+                    <input type="checkbox" id="currently_working" name="currently_working" onclick="toggleEndDate()" {% if currently_working %}checked{% endif %}>
+                </label>
+                <span>I am currently working in this role</span>
+            </div>            
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <div class="date-select">
+                    <select id="start_month" name="start_month">
+                        <option value="">Month</option>
+                        {% for key, value in months.items %}
+                            <option value="{{ key }}" {% if key == start_month %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="start_year" name="start_year">
+                        <option value="">Year</option>
+                        {% for key, value in years.items %}
+                            <option value="{{ key }}" {% if key == start_year %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <div class="date-select">
+                    <select id="end_month" name="end_month" {% if currently_working %}disabled{% endif %}>
+                        <option value="">Month</option>
+                        {% for key, value in months.items %}
+                            <option value="{{ key }}" {% if key == end_month %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="end_year" name="end_year" {% if currently_working %}disabled{% endif %}>
+                        <option value="">Year</option>
+                        {% for key, value in years.items %}
+                            <option value="{{ key }}" {% if key == end_year %}selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="location">Company Location</label>
+                <input type="text" id="location" name="location" placeholder="Enter location" value="{{ location|default:company.location|default:'' }}">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="save-btn">Save Changes</button>
+                <a href="{% url 'client:profile' %}">Cancel</a>
+            </div>
+        </form>        
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+{% block js_files %}
+<script>
+    function toggleEndDate() {
+        let endMonth = document.getElementById("end_month");
+        let endYear = document.getElementById("end_year");
+        let currentlyWorking = document.getElementById("currently_working").checked;
+    
+        if (currentlyWorking) {
+            endMonth.disabled = true;
+            endYear.disabled = true;
+            endMonth.value = "";
+            endYear.value = "";
+        } else {
+            endMonth.disabled = false;
+            endYear.disabled = false;
+        }
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        toggleEndDate();
+    });
+</script>
+{% endblock %}
