@@ -4,10 +4,10 @@ virtualenv/
 .idea/
 
 # Ignore media files
-/media/
+/freelancing_app/media/
 
 # Ignore static files collected
-/staticfiles/
+/freelancing_app/staticfiles/
 
 # Ignore Python cache
 **/__pycache__/
