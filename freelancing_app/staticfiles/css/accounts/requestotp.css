@@ -1,0 +1,83 @@
+/* OTP Reuqest Form Styles */
+.email{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 160px 0 80px 0;
+}
+.email-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 550px;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="email"] {
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    background: #F8F8FB;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="email"]:focus {
+    border-color: #1E88E5;
+}
+
+.email-container button {
+    padding: 12px;
+    background-color: #1E88E5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #1565C0;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.footer-section {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer-section p{
+    text-align: center;
+    font-weight: 500;
+    font-size: 17px;
+}
+
+.footer-section a {
+    text-decoration: none;
+    color: #626cd6;
+    font-weight: 500;
+}
+
+.footer-section a:hover{
+    text-decoration: underline;
+}
