@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load static%}
+{% load humanize %}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}Dashboard - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/dashboard/freelancerdashboard.css' %}">
@@ -13,13 +14,35 @@
     <div class="container">
         <div class="hero-content">
             {% if user.first_name %}
-                <h3>{{ greeting }}, {{user.first_name}}</h3>
+                <h3>{{ greeting }}, {{ user.first_name|capfirst }}</h3>
             {% else %}
-                <h3>{{ greeting }}, {{user.username}}</h3>
+                <h3>{{ greeting }}, {{ user.username }}</h3>
             {% endif %}
             <a href="{% url 'homes:projects' %}" class="browse-projects-btn">
-                <i class="fas fa-search"></i> Browse Projects
-            </a>
+                <i class="fas fa-briefcase"></i> Browse New Projects
+            </a>            
+        </div>
+        <div class="stats-overview">
+            <div class="stat-card">
+                <i class="fas fa-chart-line"></i>
+                <h4>Proposal Success Rate</h4>
+                <p class="stat-number">20%</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-spinner"></i>
+                <h4>Ongoing Projects</h4>
+                <p class="stat-number">5</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-check-circle"></i>
+                <h4>Completed Projects</h4>
+                <p class="stat-number">15</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-wallet"></i>
+                <h4>Earnings This Month</h4>
+                <p class="stat-number">Rs. 2000</p>
+            </div>
         </div>
     </div>
 </div>
@@ -30,30 +53,79 @@
         <h2>What would you like to do?</h2>
         <div class="action-grid">
             <div class="action-card">
-                <i class="fas fa-search"></i>
-                <h3>Browse Projects</h3>
-                <p>Find projects that match your skills and interests</p>
-                <a href="#" class="btn">Browse Projects</a>
+                <i class="fas fa-briefcase"></i>
+                <h3>Explore Projects</h3>
+                <p>Discover job opportunities that match your skills and interests.</p>
+                <a href="{% url 'homes:projects' %}" class="btn">Find Projects</a>
             </div>
             <div class="action-card">
-                <i class="fas fa-file-alt"></i>
-                <h3>Create Proposal</h3>
-                <p>Submit proposals for projects you're interested in</p>
-                <a href="#" class="btn">Create Proposal</a>
+                <i class="fas fa-tasks"></i>
+                <h3>Manage Projects</h3>
+                <p>Track ongoing and completed projects in one place.</p>
+                <a href="#" class="btn">View Projects</a>
             </div>
             <div class="action-card">
-                <i class="fas fa-clipboard-list"></i>
-                <h3>My Proposals</h3>
-                <p>Track and manage your submitted proposals</p>
+                <i class="fas fa-tasks"></i>
+                <h3>Manage Proposals</h3>
+                <p>Keep track of your submitted proposals and application status.</p>
                 <a href="#" class="btn">View Proposals</a>
             </div>
             <div class="action-card">
-                <i class="fas fa-dollar-sign"></i>
-                <h3>My Earnings</h3>
-                <p>View and track your earnings and payment history</p>
+                <i class="fas fa-wallet"></i>
+                <h3>Track My Earnings</h3>
+                <p>Check your income, payments, and transaction history in one place.</p>
                 <a href="#" class="btn">View Earnings</a>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Ongoing Projects Section -->
+<div class="freelancer-ongoing-projects">
+    <div class="container">
+        <h3>Ongoing Projects</h3>
+        <div class="no-projects">
+            <i class="fas fa-tasks"></i> 
+            <p>You have no ongoing projects at the moment.</p>
+            <a href="#" class="browse-projects-btn">
+                <i class="fas fa-search"></i> Browse Available Projects
+            </a>
+        </div> 
+        
+        <!--
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-progress">
+                    <div class="progress-bar" style="height: 70%;">70%</div>
+                </div>
+        
+                <div class="project-content">
+                    <div class="project-header">
+                        <h3 class="project-title">E-commerce Website Redesign</h3>
+                        <p class="project-client">Client: Fashion Boutique Inc.</p>
+                    </div>
+                    <div class="project-body">
+                        <p class="project-description">Modernizing the online shopping experience with a responsive design, improved product filtering, and streamlined checkout process. </p>
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <span class="meta-label" title="Deadline"><i class="fas fa-calendar-alt"></i></span>
+                                <span class="meta-value">Apr 15, 2025</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label" title="Budget"><i class="fa-solid fa-rupee-sign"></i></span>
+                                <span class="meta-value">200.00</span>
+                            </div>
+                        </div>
+                        <a href="#" class="manage-project-btn">Manage Project</a>
+                    </div>
+                </div>
+            </div>           
+        </div>
+
+        <div class="view-all-button">
+            <a href="" class="view-all-projects-btn">View All Projects</a>
+        </div>
+        -->
     </div>
 </div>
 
@@ -61,7 +133,7 @@
 <div class="recommended-section">
     <div class="container">
         <div class="text">
-            <h3>Just For You</h3>
+            <h3>Projects You May Like</h3>
         </div>
         <div class="card-grid">
             {% for project in projects %}
@@ -71,17 +143,25 @@
                     </div>
                     <div class="poster-info">
                         <img class="poster-profile" src="{% if project.client.user.profile_image %}{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="Project Poster Profile Picture">
-                        <p class="poster-name">{{ project.client.user.first_name }} {{ project.client.user.last_name }}</p>
+                        <p class="poster-name">
+                            {% if project.client.user.first_name and project.client.user.last_name %}
+                                {{ project.client.user.first_name }} {{ project.client.user.last_name }}
+                            {% else %}
+                                {{ project.client.user.username }}
+                            {% endif %}
+                        </p>                        
                     </div>
                     <div class="project-info">
                         <h4>{{ project.title }}</h4>
-                        <p class="category">{{ project.category }}</p>
-                        <p class="deadline">Deadline: {{ project.deadline }}</p>
-                        <p class="budget">Budget: {{ project.budget }}</p>
-                        <div class="status status-ongoing">{{ project.status }}</div>
+                        <span class="proposals-count" title="Proposals Count">{{ project.proposals.count }}</span>
+                        <p class="category" title="Category"><i class="fas fa-tags"></i> {{ project.category }}</p>
+                        <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> {{ project.budget|floatformat:2|intcomma }}</p>
+                        <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i> {{ project.deadline|date:"b d, Y"|capfirst }}</p>
+                        <div class="status status-ongoing">{{ project.status|capfirst }}</div>
                     </div>
                     <div class="card-buttons">
-                        <a href="{% url 'dashboard:send_proposal' proposal_id=project.id %}" class="edit-project-btn">Apply Proposal</a>
+                        <a href="{% url 'dashboard:send_proposal' proposal_id=project.id %}" class="apply-proposal-btn">Apply Proposal</a>
+                        <a href="" class="view-details-btn">View Details</a>
                     </div>
                 </div>
             {% empty %}

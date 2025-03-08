@@ -53,7 +53,8 @@
 }
 
 .nav_link.active {
-    color: #4070f4;
+    color: #fff;
+    background: #4070f4;
 }
 
 .nav_link:hover {

@@ -52,6 +52,7 @@ class FreelancerDashboardView(CustomLoginRequiredMixin, View):
         context = {
             'greeting': greeting,
             'projects': projects,
+            'freelancer': freelancer
         }
         
         return render(request, self.rendered_template, context)

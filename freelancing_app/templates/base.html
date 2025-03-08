@@ -107,35 +107,37 @@
                 
                 {% if user.is_authenticated %}
                 <!-- Message Box -->
-                <div class="message-main">
-                    <div class="language-selector">
-                        <div class="icon" id="messenger-icon">
-                            <i class="fa-brands fa-facebook-messenger"><span>1</span></i>
-                        </div>
-                        <div class="message-box" id="message-box">
-                            <div class="header">
-                                <h3>Chats</h3>
-                                <div class="search-bar">
-                                    <input type="text" placeholder="Search Person" />
-                                    <button><i class="fas fa-search"></i></button>
+                 <!--
+                    <div class="message-main">
+                        <div class="language-selector">
+                            <div class="icon" id="messenger-icon">
+                                <i class="fa-brands fa-facebook-messenger"><span>1</span></i>
+                            </div>
+                            <div class="message-box" id="message-box">
+                                <div class="header">
+                                    <h3>Chats</h3>
+                                    <div class="search-bar">
+                                        <input type="text" placeholder="Search Person" />
+                                        <button><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="chat-list">
+                                    <div class="chat-row">
+                                        <i class="fa-regular fa-user user-icon"></i>
+                                        <div class="chat-details">
+                                            <p class="chat-name">Bikash Bhattarai</p>
+                                            <div class="chat-meta">
+                                                <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
+                                                <span class="time">24h</span>
+                                            </div>
+                                        </div>
+                                    </div>  
                                 </div>
                             </div>
-                            <hr>
-                            <div class="chat-list">
-                                <div class="chat-row">
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                            <span class="time">24h</span>
-                                        </div>
-                                    </div>
-                                </div>  
-                            </div>
                         </div>
-                    </div>
-                </div>
+                    </div>                
+                 -->
                 {% endif %}
             
             </div>
@@ -164,6 +166,10 @@
                         <div class="my-profile">
                             <i class="fa-solid fa-gear"></i>
                             <a href="{% url 'homes:user-profile' %}">Account Settings</a>
+                        </div>
+                        <div class="my-profile">
+                            <i class="fa-solid fa-bell"></i>
+                            <a href="">Notifications</a>
                         </div>
                         <div class="logout">
                             <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
@@ -342,5 +348,6 @@
 <script src="{% static 'js/message.js' %}"></script>
 <script src="{% static 'js/loader.js'%}"></script>
 <script src="{% static 'js/form-handler.js' %}"></script>
+<script src="{% static 'js/sidebar.js' %}"></script>
 </body>
 </html>

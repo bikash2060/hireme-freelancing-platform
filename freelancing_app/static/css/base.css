@@ -50,6 +50,10 @@ body {
     transition: color 0.3s ease;
 }
 
+.navbar .links a.active{
+    color: #1E88E5;
+}
+
 .navbar .links a:hover {
     color: #1E88E5;
 }
