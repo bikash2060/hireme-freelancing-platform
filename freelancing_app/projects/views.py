@@ -92,3 +92,20 @@ class AddNewProjectView(CustomLoginRequiredMixin, View):
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.new_project_url)
+        
+# Testing Incomplete
+class ProjectDetailView(View):
+    project_detail_template = 'projects/projectdetail.html'
+    home_url = 'homes:home'
+    
+    def get(self, request, project_id):
+        try:
+            project = Project.objects.get(id=project_id)
+            context = {
+                'project': project
+            }
+            return render(request, self.project_detail_template, context)
+        
+        except Exception as e:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)

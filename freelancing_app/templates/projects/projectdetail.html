@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/projects/projectdetails.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Loading Screen -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<!-- Home Button -->
+<div class="home-button">
+    <div class="container">
+        <div class="back-button">
+            <a href="{% url 'homes:home' %}">
+                <i class="fa fa-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Project Details -->
+<div class="body-content">
+    <div class="container">
+        <div class="project-details">
+            <div class="project-header">
+                <h1 class="project-title">{{ project.title }}</h1>
+                <div class="project-status status-active">{{ project.status }}</div>
+                <div class="project-meta">
+                    <div class="meta-item" title="Created">
+                        <i class="fas fa-calendar-alt"></i>{{ project.created_at|date:"F d, Y" }}
+                    </div>
+                    <div class="meta-item" title="Proposals">
+                        <i class="fas fa-file-alt"></i> 20 Proposals
+                    </div>                
+                </div>
+            </div>
+            
+            <div class="project-content">
+                <div class="project-image">
+                    <img src="{% if project.image %}{% get_media_prefix %}project_images/{{ project.image }}{% else %}{% static 'images/programming.png' %}{% endif %}" alt="{{ project.title }} Project">
+                </div>                
+                
+                <div class="project-info">
+                    <h3>Project Overview</h3>
+                    <div class="project-description">
+                        <p>{{ project.description }}</p>
+                    </div>
+                    
+                    <h3>Project Details</h3>
+                    <div class="project-details-list">
+                        <div class="detail-item">
+                            <span class="detail-label">Budget</span>
+                            <div class="budget-container">
+                                <div class="currency-code">NPR</div>
+                                <div class="amount">{{ project.budget|floatformat:2|intcomma }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Deadline</span>
+                            <div class="detail-value deadline">{{ project.deadline|date:"F d, Y" }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Project Category</span>
+                            <div class="detail-value">{{ project.category }}</div>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Client</span>
+                            <div class="detail-value">
+                                {% if project.client.user.first_name and project.client.user.last_name %}
+                                    {{ project.client.user.first_name }} {{ project.client.user.last_name }}
+                                {% else %}
+                                    {{ project.client.user.username }}
+                                {% endif %}
+                            </div>
+                        </div>                        
+                    </div>
+                    
+                    <h3>Required Skills</h3>
+                    <div class="skills-list">
+                        {% for skill in project.skills.all %}
+                            <span class="skill-tag">{{ skill.name }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="apply-proposal-btn-container">
+                        <a href="" class="btn apply-btn">Apply Proposal</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="show-freelancers-button">
+                <button id="toggle-freelancers" class="toggle-btn">Show Other Freelancers</button>
+            </div>
+
+            <div class="other-freelancers" id="freelancers-section" style="display: none;">
+                <h3>Other Freelancers Who Applied</h3>
+                <div class="card-grid">
+
+                    <div class="freelancer-card">
+                        <div class="slider-container">
+                            <div class="slider">
+                                <div class="slider-item">
+                                    <img src="{% static 'images/demowork/work1/work1.jpg' %}" alt="Work Screenshot 1">
+                                </div>
+                                <div class="slider-item">
+                                    <img src="{% static 'images/demowork/work1/work2.jpg' %}" alt="Work Screenshot 2">
+                                </div>
+                            </div>
+                            <button class="prev-btn">&#10094;</button>
+                            <button class="next-btn">&#10095;</button>
+                        </div>
+                        <div class="freelancer-info">
+                            <div class="profile">
+                                <img src="{% static 'images/ronaldo.jpg' %}" alt="Profile Picture">
+                                <div>
+                                    <h4>Cristiano Ronaldo</h4>
+                                    <p>Kathmandu, Nepal</p>
+                                </div>
+                            </div>
+                            <p class="skills">Skills: JavaScript, React, Python, MERN Stack</p>
+                            <p class="hourly-rate">Hourly Rate: $50/hr</p>
+                            <p class="experience">Experience: 5+ Years</p>
+                            <div class="rating">
+                                <span>&#9733; 4.9</span>
+                                <span>(503)</span>
+                            </div>
+                        </div>
+                        <div class="card-buttons">
+                            <a href="" class="view-profile-btn">View Profile</a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
+{% block js_files %}
+<script src="{% static 'js/dashboard/freelancer-profile-slider.js'%}"></script>
+<script src="{% static 'js/projects/show-freelancers.js'%}"></script>
+{% endblock %}

@@ -140,7 +140,6 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
             client = Client.objects.get(user=user)
             
             first_name = request.POST.get('first_name')
-            middle_name = request.POST.get('middle_name')
             last_name = request.POST.get('last_name')
             phone_number = request.POST.get('phone_number')
             bio = request.POST.get('bio')
@@ -148,14 +147,13 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
 
             form_data = {
                 'first_name': first_name,
-                'middle_name': middle_name,
                 'last_name': last_name,
                 'phone_number': phone_number,
                 'bio': bio,
                 'languages_selected': languages_selected
             }
 
-            valid, error_message = validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages_selected, request)
+            valid, error_message = validate_personal_info(first_name, last_name, phone_number, bio, languages_selected, request)
             if not valid:
                 messages.error(request, error_message)
                 return render(request, self.personal_details_template, {
@@ -165,7 +163,6 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
                     'available_languages': self.available_languages
                 })
             user.first_name = first_name
-            user.middle_name = middle_name
             user.last_name = last_name
             user.phone_number = phone_number
             user.save()

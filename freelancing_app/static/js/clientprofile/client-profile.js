@@ -1,18 +1,3 @@
-function formatEmail() {
-    const emailElement = document.getElementById('email');
-    const email = emailElement.textContent.trim(); 
-
-    const [username, domain] = email.split('@');
-
-    const formattedUsername = username.slice(0, 4) + '***';
-
-    const formattedEmail = formattedUsername + '@' + domain;
-
-    emailElement.textContent = formattedEmail;
-}
-
-window.onload = formatEmail;
-
 document.addEventListener('DOMContentLoaded', function () {
     const bioText = document.getElementById('bio');
     console.log(bioText)
@@ -34,4 +19,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+function toggleVisibility(fieldId, button) {
+    const field = document.getElementById(fieldId);
+    
+    if (field.dataset.hidden === "true") {
+        field.textContent = field.dataset.original;
+        field.dataset.hidden = "false";
+        button.textContent = "Hide";
+    } else {
+        field.dataset.original = field.textContent;
+        if (fieldId === "email") {
+            const [username, domain] = field.textContent.split("@");
+            field.textContent = username.slice(0, 4) + "***@" + domain;
+        } else {
+            field.textContent = "**********";
+        }
+        field.dataset.hidden = "true";
+        button.textContent = "Unhide";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    toggleVisibility("email", document.querySelector("[onclick=\"toggleVisibility('email', this)\"]"));
+    toggleVisibility("phone", document.querySelector("[onclick=\"toggleVisibility('phone', this)\"]"));
+});
 

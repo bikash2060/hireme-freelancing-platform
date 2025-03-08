@@ -54,7 +54,7 @@ def validate_profile_image(profile_image):
 
     return True, None
 
-def validate_personal_info(first_name, middle_name, last_name, phone_number, bio, languages, request=None):
+def validate_personal_info(first_name, last_name, phone_number, bio, languages, request=None):
     
     try:
         if not first_name or first_name.lower() == "none":
@@ -65,13 +65,6 @@ def validate_personal_info(first_name, middle_name, last_name, phone_number, bio
         
         if len(first_name) < 5 or len(first_name) > 50:
             return False, "First name must be between 5 and 50 characters."
-
-        if middle_name:
-            if len(middle_name.split()) > 1:
-                return False, "Middle name cannot contain spaces."
-            
-            if len(middle_name) < 5 or len(middle_name) > 50:
-                return False, "Middle name must be between 5 and 50 characters."
 
         if not last_name or last_name.lower() == "none":
             return False, "Last name is required."

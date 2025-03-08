@@ -23,7 +23,7 @@ def validate_form(project_name, project_description, project_image, project_budg
     if not project_category:
         return False, 'Project category is required.'
 
-    if len(project_name) < 5 or len(project_name) > 50:
+    if len(project_name) < 5 or len(project_name) > 20:
         return False, 'Project name must be between 5 and 50 characters.'
 
     if len(project_description) < 50 or len(project_description) > 500:

@@ -54,22 +54,22 @@
                         <p><strong>First Name</strong></p>
                         <p>{{ user.first_name|default:"Not Provided" }}</p>
                     </div>
-                    <div class="col-2">
-                        <p><strong>Middle Name</strong></p>
-                        <p>{{ user.middle_name|default:"(No Middle Name)" }}</p>
-                    </div>
                     <div class="col-3">
                         <p><strong>Last Name</strong></p>
                         <p>{{ user.last_name|default:"Not Provided" }}</p>
                     </div>
                     <div class="col-3">
-                        <p><strong>Email Address</strong></p>
+                        <p><strong>Email Address</strong> 
+                            <button class="toggle-btn" onclick="toggleVisibility('email', this)">Unhide</button>
+                        </p>
                         <p id="email">{{ user.email }}</p>
                     </div>
                     <div class="col-4">
-                        <p><strong>Phone</strong></p>
-                        <p>{{ user.phone_number|default:"No Phone Number Added" }}</p>
-                    </div>
+                        <p><strong>Phone</strong> 
+                            <button class="toggle-btn" onclick="toggleVisibility('phone', this)">Unhide</button>
+                        </p>
+                        <p id="phone">{{ user.phone_number|default:"No Phone Number Added" }}</p>
+                    </div>                    
                     <div class="col-6">
                         <p><strong>Languages</strong></p>
                         <p>{{ freelancer.languages|default:"Not Specified"}}</p>

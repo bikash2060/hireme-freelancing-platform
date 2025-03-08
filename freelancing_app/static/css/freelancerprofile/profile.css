@@ -218,6 +218,22 @@
     color: #0056b3; 
 }
 
+.toggle-btn {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background: #e0e0e0;
+    border-color: #aaa;
+}
+
 /* Address Information Style */
 .addreess-info .box {
     margin-top: 25px;
