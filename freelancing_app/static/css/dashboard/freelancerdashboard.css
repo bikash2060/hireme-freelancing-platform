@@ -250,7 +250,7 @@
 
 .no-projects i.fa-tasks {
     font-size: 3rem;
-    color: #bebdba; 
+    color: #bebdba;  
 }
 
 .no-projects p {
@@ -259,11 +259,12 @@
 }
 
 .no-projects a {
-    background-color: #1E88E5;
-    color: white;
+    background-color: #fff; 
+    color: black;
     padding: 12px 20px;
     font-size: 1rem;
     border-radius: 5px;
+    border: 1px solid #155724;
     text-decoration: none;
     display: flex;
     align-items: center; 
@@ -275,8 +276,8 @@
 }
 
 .no-projects a:hover {
-    background-color: #1565C0;
-    transform: scale(1.05);
+    background-color: #dbeee0; 
+    opacity: 0.85;
 }
 
 .freelancer-ongoing-projects .projects-grid {
