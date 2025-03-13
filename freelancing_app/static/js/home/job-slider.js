@@ -1,43 +1,51 @@
 let currentIndex = 0;
-const jobSlider = document.querySelector('.job-slider');
+const cardGrid = document.querySelector('.card-grid');
 const prevButton = document.querySelector('.prev-btn');
 const nextButton = document.querySelector('.next-btn');
-const jobBoxes = document.querySelectorAll('.job-box');
-const totalJobs = jobBoxes.length;
-const jobsPerPage = 4;
+const projectCards = document.querySelectorAll('.project-card');
+const totalProjects = projectCards.length;
+const cardsPerPage = 4;
 
 function updateSlider() {
-    jobBoxes.forEach((box, index) => {
-        if (index >= currentIndex && index < currentIndex + jobsPerPage) {
-            box.style.display = 'block';
+    projectCards.forEach((card, index) => {
+        if (index >= currentIndex && index < currentIndex + cardsPerPage) {
+            card.style.display = 'block';
         } else {
-            box.style.display = 'none';
+            card.style.display = 'none';
         }
     });
 
-    if (currentIndex === 0) {
-        prevButton.disabled = true;
-        prevButton.style.backgroundColor = 'white';
-        prevButton.querySelector('i').style.color = '#1E88E5';
-    } else {
-        prevButton.disabled = false;
-        prevButton.style.backgroundColor = '#1E88E5';
-        prevButton.querySelector('i').style.color = 'white';
+    prevButton.disabled = currentIndex === 0;
+    nextButton.disabled = currentIndex >= totalProjects - cardsPerPage || totalProjects <= cardsPerPage;
+
+    function updateButtonStyle(button) {
+        if (button.disabled) {
+            button.style.backgroundColor = 'white';
+            button.querySelector('i').style.color = '#1E88E5';
+        } else {
+            button.style.backgroundColor = '#1E88E5';
+            button.querySelector('i').style.color = 'white';
+        }
     }
+
+    updateButtonStyle(prevButton);
+    updateButtonStyle(nextButton);
 }
 
 prevButton.addEventListener('click', () => {
     if (currentIndex > 0) {
-        currentIndex -= jobsPerPage;
+        currentIndex -= cardsPerPage;
+        updateSlider();
     }
-    updateSlider();
 });
 
 nextButton.addEventListener('click', () => {
-    if (currentIndex < totalJobs - jobsPerPage) {
-        currentIndex += jobsPerPage;
+    if (currentIndex < totalProjects - cardsPerPage) {
+        currentIndex += cardsPerPage;
+        updateSlider();
     }
-    updateSlider();
 });
 
-updateSlider();
+document.addEventListener('DOMContentLoaded', () => {
+    updateSlider();
+});

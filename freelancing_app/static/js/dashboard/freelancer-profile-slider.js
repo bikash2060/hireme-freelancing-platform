@@ -1,22 +1,39 @@
-document.querySelectorAll('.slider-container').forEach((container) => {
-    const slider = container.querySelector('.slider');
-    const items = container.querySelectorAll('.slider-item');
-    const prevButton = container.querySelector('.prev-btn');
-    const nextButton = container.querySelector('.next-btn');
-    let currentIndex = 0;
-    const totalItems = items.length;
-
-    function showSlide(index) {
-        currentIndex = Math.min(Math.max(index, 0), totalItems - 1);
-        const offset = -currentIndex * 100;
-        slider.style.transform = `translateX(${offset}%)`;
-
-        prevButton.style.display = currentIndex === 0 ? 'none' : 'block';
-        nextButton.style.display = currentIndex === totalItems - 1 ? 'none' : 'block';
-    }
-
-    prevButton.addEventListener('click', () => showSlide(currentIndex - 1));
-    nextButton.addEventListener('click', () => showSlide(currentIndex + 1));
-
-    showSlide(currentIndex);
+document.addEventListener('DOMContentLoaded', function() {
+    const sliderContainers = document.querySelectorAll('.slider-container');
+    
+    sliderContainers.forEach(container => {
+        const slider = container.querySelector('.slider');
+        const items = container.querySelectorAll('.slider-item');
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+        const dots = container.querySelectorAll('.dot');
+        
+        let currentIndex = 0;
+        const itemCount = items.length;
+        
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % itemCount;
+            updateSlider();
+        });
+        
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + itemCount) % itemCount;
+            updateSlider();
+        });
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateSlider();
+            });
+        });
+        
+        function updateSlider() {
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+    });
 });

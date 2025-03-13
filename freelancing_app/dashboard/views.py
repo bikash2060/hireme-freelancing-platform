@@ -47,8 +47,7 @@ class FreelancerDashboardView(CustomLoginRequiredMixin, View):
             greeting = "Good Evening"
 
         freelancer = Freelancer.objects.get(user=request.user)
-        projects = Project.objects.exclude(status='draft')
-
+        projects = Project.objects.exclude(status='draft').order_by('-created_at')
         context = {
             'greeting': greeting,
             'projects': projects,

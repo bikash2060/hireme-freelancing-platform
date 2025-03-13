@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load static%}
+{% load humanize %}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}Home - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/home/home.css' %}">
@@ -19,14 +20,14 @@
     <div class="container">
         <div class="hero-content">
             <div class="text-context">
-                <h3>Unlock a World of <span><br>Limitless Possibilities</span></h3>
+                <h3>Unlock a World of <span><br>Limitless</span> Possibilities</h3>
                 <p>Discover expert freelancers ready to elevate your projects. Whether you're starting a new venture or scaling your business, connect with top talent to achieve your goals with confidence and ease.</p>                
                 <div class="buttons">
-                    <a href="{% url 'account:login' %}"><span>Get Started</span></a>
+                    <a href="{% url 'account:login' %}">Get Started</a>
                 </div>
             </div>         
             <div class="banner-img">
-                <img src="{% static 'images/banner.png' %}" alt="banner">
+                <img src="{% static 'images/banner.png' %}" alt="Banner Image">
             </div>
         </div>
     </div>
@@ -39,7 +40,7 @@
             <div class="card">
                 <i class="fas fa-id-card"></i>
                 <h3>Create Account</h3>
-                <span>First you have to create an<br> account here</span>
+                <span>First you have to <br>create an account here</span>
             </div>
             <div class="card">
                 <i class="fas fa-search-minus"></i>
@@ -48,8 +49,8 @@
             </div>
             <div class="card">
                 <i class="fas fa-check-circle"></i>
-                <h3>Save and Apply</h3>
-                <span>Apply or save and<br> start your work</span>
+                <h3>Apply and Start</h3>
+                <span>Apply and start<br> your work</span>
             </div>
         </div>
     </div>
@@ -61,24 +62,24 @@
         <div class="content">
             <div class="stats">
                 <div class="stat-box">
-                    <h2>500+</h2>
+                    <h2>{{ freelancer_count }}+</h2>
                     <p>Freelancers</p>
                 </div>
                 <div class="stat-box">
-                    <h2>300+</h2>
+                    <h2>{{ project_count }}+</h2>
                     <p>Freelance Work Posted</p>
                 </div>
                 <div class="stat-box">
-                    <h2>500+</h2>
+                    <h2>{{ completed_projects }}+</h2>
                     <p>Projects Completed</p>
                 </div>
                 <div class="stat-box">
-                    <h2>500+</h2>
+                    <h2>{{ positive_reviews }}+</h2>
                     <p>Positive Reviews</p>
                 </div>
             </div>
             <div class="text-content">
-                <h1>Find The Best <span>Freelancers</span> Here</h1>
+                <h1>Find The <span>Best </span>Freelancers Here</h1>
                 <p>
                     Empowering Nepali talents to connect with businesses and individuals nationwide. Whether you need a designer from Kathmandu, a developer from Pokhara, or a writer from Biratnagar, our platform brings the best local freelancers to help you achieve your goals. With a focus on quality, reliability, and affordability, we aim to bridge the gap between talent and opportunity. From small startups to established companies, we provide a space where ideas come to life through collaboration. Join us in creating a thriving ecosystem that supports local skills, fosters innovation, and drives Nepal’s digital economy forward!
                 </p>
@@ -93,9 +94,9 @@
 <!-- Job Posts Section -->
 <div class="job-post">
     <div class="container">
-        <p>The latest freelance work!</p>
+        <p class="sub-title">The latest freelance work!</p>
         <div class="text">
-            <h3>Recently Posted <span>Works</span></h3>
+            <h1>Recently <span>Posted</span> Works</h1>
             <div class="buttons">
                 <button class="slider-btn prev-btn" disabled>
                     <i class="fa-solid fa-arrow-right fa-rotate-180"></i>
@@ -105,81 +106,169 @@
                 </button>
             </div>
         </div>
-        <div class="job-slider">
 
-            <div class="job-box">
-                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
-                <h4 class="job-title">Web Development</h4>
-                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
-                <p class="project-budget">Budget: <span>$200</span></p>
-                <p class="project-status completed"><span>Completed</span></p>
+        <div class="card-grid">
+
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/programming.png' %}" alt="Project Image">
+                </div>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/neymar.jpeg' %}" alt="User Profile Image">
+                    <p class="poster-name">Mohammed Abdul Khan</p>                        
+                </div>
+                <div class="project-info">
+                    <div class="project-title-container">
+                        <h4>Web Development Project - Full Stack with Django and React</h4>
+                    </div>                    
+                    <span class="proposals-count" title="Proposals Count">5</span>
+                    <p class="category" title="Category"><i class="fas fa-tags"></i> Web Development</p>
+                    <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> 50000.00</p>
+                    <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i> Mar 20, 2025</p>
+                    <div class="status status-completed">Completed</div>
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="view-details-btn">View Details</a>
+                </div>
+            </div>  
             
-                <div class="job-actions">
-                    <a href="#" class="see-details">See Details</a>
-                    <a href="#" class="apply-proposal">Apply Proposal</a>
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/programming.png' %}" alt="Project Image">
                 </div>
-            </div>
-            
-            <div class="job-box">
-                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
-                <h4 class="job-title">Web Development</h4>
-                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
-                <p class="project-budget">Budget: <span>$200</span></p>
-                <p class="project-status processing"><span>Processing</span></p>
-                
-                <div class="job-actions">
-                    <a href="#" class="see-details">See Details</a>
-                    <a href="#" class="apply-proposal">Apply Proposal</a>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/neymar.jpeg' %}" alt="User Profile Image">
+                    <p class="poster-name">Mohammed Abdul Khan</p>                        
                 </div>
-            </div>
+                <div class="project-info">
+                    <div class="project-title-container">
+                        <h4>Web Development Project - Full Stack with Django and React</h4>
+                    </div>                    
+                    <span class="proposals-count" title="Proposals Count">5</span>
+                    <p class="category" title="Category"><i class="fas fa-tags"></i> Web Development</p>
+                    <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> 50000.00</p>
+                    <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i> Mar 20, 2025</p>
+                    <div class="status status-ongoing">Ongoing</div>
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="view-details-btn">View Details</a>
+                </div>
+            </div> 
 
-            <div class="job-box">
-                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
-                <h4 class="job-title">Web Development</h4>
-                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
-                <p class="project-budget">Budget: <span>$200</span></p>
-                <p class="project-status cancelled"><span>Cancelled</span></p>
-                
-                <div class="job-actions">
-                    <a href="#" class="see-details">See Details</a>
-                    <a href="#" class="apply-proposal">Apply Proposal</a>
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/programming.png' %}" alt="Project Image">
                 </div>
-            </div>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/neymar.jpeg' %}" alt="User Profile Image">
+                    <p class="poster-name">Mohammed Abdul Khan</p>                        
+                </div>
+                <div class="project-info">
+                    <div class="project-title-container">
+                        <h4>Web Development Project - Full Stack with Django and React</h4>
+                    </div>                    
+                    <span class="proposals-count" title="Proposals Count">5</span>
+                    <p class="category" title="Category"><i class="fas fa-tags"></i> Web Development</p>
+                    <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> 50000.00</p>
+                    <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i> Mar 20, 2025</p>
+                    <div class="status status-processing">Processing</div>
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="view-details-btn">View Details</a>
+                </div>
+            </div> 
 
-            <div class="job-box">
-                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
-                <h4 class="job-title">Web Development</h4>
-                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
-                <p class="project-budget">Budget: <span>$200</span></p>
-                <p class="project-status completed"><span>Completed</span></p>
-                
-                <div class="job-actions">
-                    <a href="#" class="see-details">See Details</a>
-                    <a href="#" class="apply-proposal">Apply Proposal</a>
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/programming.png' %}" alt="Project Image">
                 </div>
-            </div>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/neymar.jpeg' %}" alt="User Profile Image">
+                    <p class="poster-name">Mohammed Abdul Khan</p>                        
+                </div>
+                <div class="project-info">
+                    <div class="project-title-container">
+                        <h4>Web Development Project - Full Stack with Django and React</h4>
+                    </div>                    
+                    <span class="proposals-count" title="Proposals Count">5</span>
+                    <p class="category" title="Category"><i class="fas fa-tags"></i> Web Development</p>
+                    <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> 50000.00</p>
+                    <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i> Mar 20, 2025</p>
+                    <div class="status status-completed">Completed</div>
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="view-details-btn">View Details</a>
+                </div>
+            </div> 
 
-            <div class="job-box">
-                <img src="{% static 'images/programming.png' %}" alt="Programming" class="job-image">
-                <h4 class="job-title">Web Development</h4>
-                <p class="job-description">Build dynamic and responsive websites using modern technologies like HTML, CSS, JavaScript, and frameworks like React and Django.</p>
-                <p class="project-budget">Budget: <span>$200</span></p>
-                <p class="project-status completed"><span>Completed</span></p>
-                
-                <div class="job-actions">
-                    <a href="#" class="see-details">See Details</a>
-                    <a href="#" class="apply-proposal">Apply Proposal</a>
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/programming.png' %}" alt="Project Image">
                 </div>
-            </div>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/neymar.jpeg' %}" alt="User Profile Image">
+                    <p class="poster-name">Mohammed Abdul Khan</p>                        
+                </div>
+                <div class="project-info">
+                    <div class="project-title-container">
+                        <h4>Web Development Project - Full Stack with Django and React</h4>
+                    </div>                    
+                    <span class="proposals-count" title="Proposals Count">5</span>
+                    <p class="category" title="Category"><i class="fas fa-tags"></i> Web Development</p>
+                    <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> 50000.00</p>
+                    <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i> Mar 20, 2025</p>
+                    <div class="status status-completed">Completed</div>
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="view-details-btn">View Details</a>
+                </div>
+            </div> 
 
         </div>
+
+        <!--
+            <div class="card-grid">
+                {% for project in projects %}
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="{% if project.image %}{% get_media_prefix %}project_images/{{ project.image }}{% else %}{% static 'images/programming.png' %}{% endif %}" alt="Project Image">
+                    </div>
+                    <div class="poster-info">
+                        <img class="poster-profile" src="{% if project.client.user.profile_image %}{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="Project Poster Profile Picture">
+                        <p class="poster-name">
+                            {% if project.client.user.first_name and project.client.user.last_name %}
+                                {{ project.client.user.first_name }} {{ project.client.user.last_name }}
+                            {% else %}
+                                {{ project.client.user.username }}
+                            {% endif %}
+                        </p>                        
+                    </div>
+                    <div class="project-info">
+                        <h4>{{project.title}}</h4>
+                        <span class="proposals-count" title="Proposals Count">{{ project.proposals.count }}</span>
+                        <p class="category" title="Category"><i class="fas fa-tags"></i> {{ project.category }}</p>
+                        <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> {{ project.budget|floatformat:2|intcomma }}</p>
+                        <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i>{{ project.deadline|date:"b d, Y"|capfirst }}</p>
+                        <div class="status status-ongoing">{{ project.status|capfirst }}</div>
+                    </div>
+                    <div class="card-buttons">
+                        <a href="" class="apply-proposal-btn">Apply Proposal</a>
+                        <a href="#" class="view-details-btn">View Details</a>
+                    </div>
+                </div>   
+                {% empty %}
+                    <p>No projects available.</p>
+                {% endfor %}    
+            </div>
+        
+        -->
     </div>
 </div>
 
-<!-- Skills Category Section -->
-<div class="skills-category">
+<!-- Project Category Section -->
+<div class="projects-category">
     <div class="container">
-        <h3>Choose Different <strong>Category</strong></h3>
+        <h3>Browse <span>Project</span> Categories</h3>
         <div class="category-box">
 
             <a href="#" class="category-item">
@@ -234,7 +323,7 @@
 <!-- FAQ Section -->
 <div class="faq">
     <div class="container">
-        <h3>Frequently Asked Questions</h3>
+        <h3>Frequently <span>Asked</span> Questions</h3>
         <div id="faq-list">
             <div class="faq-item">
                 <h4>How do I get started as a freelancer?</h4>
@@ -288,135 +377,64 @@
 <!-- Freelancer Profiles Section -->
 <div class="freelancer-portfolio">
     <div class="container">
-        <span>Web Development, UI/UX Designing, SEO &amp; more !</span>
-        <h3>Checkout The Best <strong>Portfolios</strong> Here</h3>
-        <div class="profile-container">
-            <div class="profile-card">
-                <div class="image">
-                    <img src="{% static 'images/ronaldo.jpg'%}" alt="ronaldo" class="profile-img" />
+        <p class="sub-title">Web Development, UI/UX Designing, SEO &amp; more !</p>
+        <h3>Checkout The <span>Best </span>Portfolios Here</h3>
+        
+        <div class="card-grid">
+
+            <div class="freelancer-card">
+                <div class="slider-container">
+                    <div class="slider">
+                        <div class="slider-item">
+                            <img src="{% static 'images/demowork/work1/work1.jpg'%}" alt="Work Screenshot 1">
+                        </div>
+                        <div class="slider-item">
+                            <img src="{% static 'images/demowork/work1/work2.jpg'%}" alt="Work Screenshot 2">
+                        </div>
+                    </div>
+                    <div class="slider-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <button class="prev-btn">&#10094;</button>
+                    <button class="next-btn">&#10095;</button>
                 </div>
-                <div class="text-data">
-                  <span class="name">Cristiano Ronaldo</span>
-                  <span class="job">Full Stack Developer</span>
+                <div class="freelancer-info">
+                    <div class="profile">
+                        <img src="{% static 'images/neymar.jpeg' %}" alt="Profile Picture">
+                        <div>
+                            <h4>Cristiano Ronaldo</h4>
+                            <div class="rating">
+                                <span class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </span>
+                                <span class="reviews">(503 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-details">
+                        <p><i class="fas fa-briefcase" title="Experience"></i> 4+ years of experience</p>
+                        <p><i class="fas fa-map-marker-alt" title="Location"></i> Kathmandu, Nepal</p>
+                        <p><i class="fas fa-check-circle" title="Projects Completed"></i> 78 projects completed</p>
+                    </div>
                 </div>
-                <div class="media-buttons">
-                    <a href="#" style="background: #4267b2" class="link">
-                        <i class="bx bxl-facebook"></i>
-                    </a>
-                    <a href="#" style="background: #1da1f2" class="link">
-                        <i class="bx bxl-twitter"></i>
-                    </a>
-                    <a href="#" style="background: #e1306c" class="link">
-                        <i class="bx bxl-instagram"></i>
-                    </a>
-                    <a href="#" style="background: #0077B5" class="link">
-                        <i class="bx bxl-linkedin"></i>
-                    </a>
-                </div>
-                <div class="buttons">
-                    <a href="#" class="button">View Profile</a>
-                </div>
+                <div class="card-buttons">
+                    <a href="#" class="view-profile-btn">View Profile</a>
+                </div>                
             </div>
-    
-            <div class="profile-card">
-                <div class="image">
-                    <img src="{% static 'images/ramos.jpg' %}" alt="ramos" class="profile-img" />
-                </div>
-                <div class="text-data">
-                  <span class="name">Sergio Ramoes</span>
-                  <span class="job">SEO Specialist</span>
-                </div>
-                <div class="media-buttons">
-                    <a href="#" style="background: #4267b2" class="link">
-                        <i class="bx bxl-facebook"></i>
-                    </a>
-                    <a href="#" style="background: #1da1f2" class="link">
-                        <i class="bx bxl-twitter"></i>
-                    </a>
-                    <a href="#" style="background: #e1306c" class="link">
-                        <i class="bx bxl-instagram"></i>
-                    </a>
-                    <a href="#" style="background: #0077B5" class="link">
-                        <i class="bx bxl-linkedin"></i>
-                    </a>
-                </div>
-                <div class="buttons">
-                    <a href="#" class="button">View Profile</a>
-                </div>
-            </div>
-    
-            <div class="profile-card">
-                <div class="image">
-                    <img src="{% static 'images/neymar.jpeg' %}" alt="neymar" class="profile-img" />
-                </div>
-                <div class="text-data">
-                  <span class="name">Neymar</span>
-                  <span class="job">Frontend Developer</span>
-                </div>
-                <div class="media-buttons">
-                    <a href="#" style="background: #4267b2" class="link">
-                        <i class="bx bxl-facebook"></i>
-                    </a>
-                    <a href="#" style="background: #1da1f2" class="link">
-                        <i class="bx bxl-twitter"></i>
-                    </a>
-                    <a href="#" style="background: #e1306c" class="link">
-                        <i class="bx bxl-instagram"></i>
-                    </a>
-                    <a href="#" style="background: #0077B5" class="link">
-                        <i class="bx bxl-linkedin"></i>
-                    </a>
-                </div>
-                <div class="buttons">
-                    <a href="#" class="button">View Profile</a>
-                </div>
-            </div>
-    
-            <div class="profile-card">
-                <div class="image">
-                    <img src="{% static 'images/messi.jpg'%}" alt="messi" class="profile-img" />
-                </div>
-                <div class="text-data">
-                  <span class="name">Lionel Messi</span>
-                  <span class="job">DevOps Engineer</span>
-                </div>
-                <div class="media-buttons">
-                    <a href="#" style="background: #4267b2" class="link">
-                        <i class="bx bxl-facebook"></i>
-                    </a>
-                    <a href="#" style="background: #1da1f2" class="link">
-                        <i class="bx bxl-twitter"></i>
-                    </a>
-                    <a href="#" style="background: #e1306c" class="link">
-                        <i class="bx bxl-instagram"></i>
-                    </a>
-                    <a href="#" style="background: #0077B5" class="link">
-                        <i class="bx bxl-linkedin"></i>
-                    </a>
-                </div>
-                <div class="buttons">
-                    <a href="#" class="button">View Profile</a>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
 
-<!-- Newsletter Subscription Section -->
-<div class="newsletter">
-    <div class="container">
-        <h2>Join Our Newsletter</h2>
-        <p>Get the latest updates and exclusive offers directly in your inbox.</p>
-        <form class="newsletter-form">
-            <input type="email" placeholder="Enter your email" class="email-input" required />
-            <button type="submit" class="subscribe-btn">Subscribe</button>
-        </form>
-    </div>
-</div>
 {% endblock %}
 
 {% block js_files %}
 <script src="{% static 'js/home/job-slider.js'%}"></script>
 <script src="{% static 'js/home/faq-loader.js'%}"></script>
-<script src="{% static 'js/loader.js' %}"></script>
+<script src="{% static 'js/dashboard/freelancer-profile-slider.js' %}"></script>
 {% endblock %}
