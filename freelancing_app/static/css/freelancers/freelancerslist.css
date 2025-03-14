@@ -1,8 +1,7 @@
 /* Hero Section */
 .hero {
     margin-top: 95px; 
-    padding: 30px 0;
-    /* background: #E3F2FD; */
+    padding: 15px 0;
     background: linear-gradient(to right, #1E88E5, #FFC107); 
     color: #fff; 
     text-align: center; 
@@ -10,13 +9,17 @@
 
 .hero h1 {
     font-size: 48px; 
-    margin-bottom: 15px; 
+    margin-bottom: 10px; 
     font-weight: bold;
 }
 
 .hero p {
     font-size: 18px; 
     margin-bottom: 20px; 
+}
+
+.hero span{
+    color: #FFC107;
 }
 
 .freelancer-filter .filter-box {
@@ -257,171 +260,260 @@
     background-color: #0056b3;
 }
 
-/* Styling Freelancer Card */
-.freelancer-card {
+.freelancer-filter {
+    margin-bottom: 50px;
+}
+
+.freelancer-filter  .sub-title{
+    display: inline-block;
+    font-size: 18px;
+    color: #616161;
+    margin-bottom: 5px;
+}
+
+.freelancer-filter  h3{
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.freelancer-filter  span{
+    color: #1565C0;
+}
+
+.freelancer-filter  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    padding: 0 10px;
+}
+
+.freelancer-filter  .freelancer-card {
     width: 100%;
-    max-width: 280px; 
-    height: fit-content;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     background-color: white;
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.slider-container {
+.freelancer-filter  .freelancer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.freelancer-filter  .slider-container {
     position: relative;
     width: 100%;
     height: 200px;
     overflow: hidden;
 }
 
-.slider {
+.freelancer-filter  .slider {
     display: flex;
-    transition: transform 0.3s ease;
+    transition: transform 0.4s ease;
+    height: 100%;
 }
 
-.slider-item {
+.freelancer-filter .slider-item {
     min-width: 100%;
+    height: 100%;
 }
 
-.slider-item img {
-    width: 280px;
-    height: 200px;
+.freelancer-filter .slider-item img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
-.prev-btn, .next-btn {
+.freelancer-filter .prev-btn, 
+.freelancer-filter .next-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: black;
+    width: 36px; 
+    height: 36px; 
+    background-color: rgba(255, 255, 255, 0.85); 
+    color: #333; 
     border: none;
-    padding: 0;
-    font-size: 18px;
+    padding: 0; 
+    font-size: 16px;
     cursor: pointer;
-    border-radius: 50%;
+    border-radius: 50%; 
     z-index: 1;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease, background-color 0.3s ease;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.prev-btn {
+.freelancer-filter .prev-btn {
     left: 10px;
 }
 
-.next-btn {
+.freelancer-filter .next-btn {
     right: 10px;
 }
 
-.slider-container:hover .prev-btn,
-.slider-container:hover .next-btn {
+.freelancer-filter .slider-container:hover .prev-btn,
+.freelancer-filter .slider-container:hover .next-btn {
     opacity: 1;
     pointer-events: all;
 }
 
-/* Styling Freelancer Info */
-.freelancer-info, .project-info {
-    padding: 15px;
+.freelancer-filter .prev-btn:hover,
+.freelancer-filter .next-btn:hover {
+    background-color: rgba(255, 255, 255, 0.95);
+    transform: translateY(-50%) scale(1.05);
 }
 
-.profile {
+.freelancer-filter .slider-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    justify-content: center;
+    gap: 6px;
 }
 
-.profile img {
-    width: 50px;
-    height: 50px;
+.freelancer-filter .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.freelancer-filter .dot.active {
+    background-color: white;
+    width: 10px;
+    height: 10px;
+}
+
+.freelancer-filter .profile {
+    display: flex;
+    gap: 12px;
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #f5f5f5;
+}
+
+.freelancer-filter .profile img {
+    width: 40px;
+    height: 40px;
     object-fit: cover;
     border-radius: 50%;
 }
 
-.profile h4 {
+.freelancer-filter .profile h4 {
     font-size: 1rem;
-    margin: 0;
     font-weight: 600;
+    color: #333;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    max-width: 215px;
+    display: block;
 }
 
-.profile p {
+.freelancer-filter .rating {
+    display: flex;
+    align-items: center;
     font-size: 0.9rem;
-    color: gray;
+    color: #666;
+    margin-top: 4px;
+}
+
+.freelancer-filter .stars {
+    font-weight: 600;
+    color: #FFC107;
+    margin-right: 5px;
+}
+
+.freelancer-filter .reviews {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.freelancer-filter .info-details {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    align-items: flex-start;
+    gap: 10px; 
+}
+
+.freelancer-filter .info-details p {
+    font-size: 15px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    margin: 0; 
+}
+
+.freelancer-filter .info-details i {
+    color: #1E88E5;
+    margin-right: 10px; 
+    width: 16px; 
+    text-align: center; 
+    font-size: 16px;
+}
+
+.freelancer-filter .location {
+    color: #555;
+    font-weight: 500;
+    font-size: 0.95rem;
     margin: 0;
-}
-
-.skills, .hourly-rate, .experience {
-    font-size: 0.9rem;
-    color: #212121;
-    margin: 5px 0;
-    font-weight: 500;
-}
-
-.skills {
-    font-size: 0.9rem;
-    margin: 5px 0;
-    font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #FF8A65;
 }
 
-.hourly-rate {
-    color: #388E3C;
+.freelancer-filter .response-time {
+    color: #555;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 0;
 }
 
-.experience {
-    color: #757575;
-}
-
-.rating {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    font-size: 0.9rem;
-    color: #FFC107;
-}
-
-.rating span {
-    color: #212121;
-}
-
-/* Styling Card Buttons */
-.card-buttons {
+.freelancer-filter .card-buttons {
     padding: 15px;
     border-top: 1px solid #f0f0f0;
 }
 
-.card-buttons button {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    font-weight: 600;
+.freelancer-filter .card-buttons a {
+    padding: 10px 0;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 6px;
     text-align: center;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.view-profile-btn {
+.freelancer-filter .view-profile-btn {
     background-color: #1E88E5;
     color: white;
 }
 
-.view-profile-btn:hover {
+.freelancer-filter .view-profile-btn:hover {
     background-color: #1565C0;
+    transform: translateY(-2px);
 }
+
+
 
 /* Pagination Section */
 .pagination-container {

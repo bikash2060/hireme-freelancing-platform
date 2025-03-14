@@ -74,18 +74,6 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
 def handling_404(request, exception):
     return render(request, '404.html', {})
 
-# Testing In-Progress
-class FreelancersView(View):
-    
-    rendered_template = 'home/freelancers.html'
-    
-    def get(self, request):
-        skills = Skill.objects.all().order_by('name')
-        
-        context = {
-            'skills': skills
-        }
-        return render(request, self.rendered_template, context)
 
 # Testing In-Progress
 class ProjectsView(View):

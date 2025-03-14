@@ -884,13 +884,3 @@ body {
     transform: translateY(-2px);
 }
 
-.freelancer-portfolio .send-message-btn {
-    background-color: #f8f8f8;
-    color: #333;
-    border: 1px solid #e0e0e0;
-}
-
-.freelancer-portfolio .send-message-btn:hover {
-    background-color: #f0f0f0;
-    transform: translateY(-2px);
-}

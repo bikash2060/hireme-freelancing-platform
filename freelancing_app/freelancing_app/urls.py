@@ -12,6 +12,8 @@ urlpatterns = [
     path('client/', include('clientprofile.urls', namespace='client')),
     path('freelancer/', include('freelancerprofile.urls', namespace='freelancer')),
     path('project/', include('projects.urls', namespace='project')),
+    path('freelancers/', include('freelancers.urls', namespace='freelancers')),
+
 ]
 
 handler404 = 'home.views.handling_404'

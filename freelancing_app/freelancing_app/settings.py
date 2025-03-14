@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "clientprofile",
     "freelancerprofile",
     "projects",
+    "freelancers",
 ]
 
 # Middleware stack for request/response processing
