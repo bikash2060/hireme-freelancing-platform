@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 class ProjectCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -20,8 +21,8 @@ class Skill(models.Model):
 
 class Project(models.Model):
     image = models.ImageField(upload_to='project_images/', null=True, blank=True)
-    title = models.CharField(max_length=255)
-    description = models.TextField()
+    title = models.CharField(_('Title'), max_length=255)
+    description = models.TextField(_('Description'))
     budget = models.DecimalField(max_digits=10, decimal_places=2)
     deadline = models.DateField(null=True)  
     skills = models.ManyToManyField(Skill)

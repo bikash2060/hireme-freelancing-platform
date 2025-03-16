@@ -1,0 +1,277 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-16 09:12+0545\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\projects\models.py:24
+msgid "Title"
+msgstr "शीर्षक"
+
+#: .\projects\models.py:25
+msgid "Description"
+msgstr "विवरण"
+
+#: .\templates\home\index.html:24
+msgid "Unlock a World of"
+msgstr "एक संसार खोल्नुहोस्"
+
+#: .\templates\home\index.html:24
+msgid "Limitless"
+msgstr "असीमित"
+
+#: .\templates\home\index.html:24
+msgid "Possibilities"
+msgstr "संभावनाहरू"
+
+#: .\templates\home\index.html:25
+msgid ""
+"Discover expert freelancers ready to elevate your projects. Whether you're "
+"starting a new venture or scaling your business, connect with top talent to "
+"achieve your goals with confidence and ease."
+msgstr ""
+"तपाईंका परियोजनाहरूलाई उच्च स्तरमा पुर्याउन सक्षम विशेषज्ञ फ्रीलांसरहरूलाई अन्वेषण गर्नुहोस्। "
+"चाहे तपाईं नयाँ योजना सुरु गर्दै हुनुहुन्छ वा तपाईंको व्यवसाय विस्तार गर्दै हुनुहुन्छ, उच्च "
+"प्रतिभा संग जडान गर्नुहोस् र आत्मविश्वास र सजिलैसँग तपाईंका लक्ष्यहरू प्राप्त गर्नुहोस्।"
+
+#: .\templates\home\index.html:27
+msgid "Get Started"
+msgstr "सुरु गर्नुहोस्"
+
+#: .\templates\home\index.html:43
+msgid "Create Account"
+msgstr "खाता सिर्जना गर्नुहोस्"
+
+#: .\templates\home\index.html:44
+msgid "First you have to <br>create an account here"
+msgstr "पहिले तपाईंले यहाँ <br>खाता सिर्जना गर्नुपर्छ"
+
+#: .\templates\home\index.html:48
+msgid "Search Work"
+msgstr "काम खोज्नुहोस्"
+
+#: .\templates\home\index.html:49
+msgid "Search the best<br> freelance work here"
+msgstr "यहाँ उत्कृष्ट <br>फ्रिलान्स काम खोज्नुहोस्"
+
+#: .\templates\home\index.html:53
+msgid "Apply and Start"
+msgstr "आवेदन दिनुहोस् र सुरु गर्नुहोस्"
+
+#: .\templates\home\index.html:54
+msgid "Apply and start<br> your work"
+msgstr "आवेदन दिनुहोस् र <br>आफ्नो काम सुरु गर्नुहोस्"
+
+#: .\templates\home\index.html:67
+msgid "Freelancers"
+msgstr "फ्रिल्यान्सरहरू"
+
+#: .\templates\home\index.html:71
+msgid "Freelance Work Posted"
+msgstr "फ्रिल्यान्स कामहरू पोस्ट गरियो"
+
+#: .\templates\home\index.html:75
+msgid "Projects Completed"
+msgstr "सम्पन्न भएका परियोजनाहरू"
+
+#: .\templates\home\index.html:79
+msgid "Positive Reviews"
+msgstr "सकारात्मक समीक्षाहरू"
+
+#: .\templates\home\index.html:83
+msgid "Find The"
+msgstr "खोज्नुहोस्"
+
+#: .\templates\home\index.html:83
+msgid "Best"
+msgstr "उत्तम"
+
+#: .\templates\home\index.html:83
+msgid "Freelancers Here"
+msgstr "यहाँ फ्रिल्यान्सरहरू"
+
+#: .\templates\home\index.html:85
+msgid ""
+"Empowering Nepali talents to connect with businesses and individuals "
+"nationwide. Whether you need a designer from Kathmandu, a developer from "
+"Pokhara, or a writer from Biratnagar, our platform brings the best local "
+"freelancers to help you achieve your goals. With a focus on quality, "
+"reliability, and affordability, we aim to bridge the gap between talent and "
+"opportunity. From small startups to established companies, we provide a "
+"space where ideas come to life through collaboration. Join us in creating a "
+"thriving ecosystem that supports local skills, fosters innovation, and "
+"drives Nepal’s digital economy forward!"
+msgstr ""
+"नेपालभर व्यवसायहरू र व्यक्तिहरूसँग जोडिन नेपाली प्रतिभाहरूलाई सशक्त बनाउँदै। "
+"तपाईंलाई काठमाडौँका डिजाइनर, पोखराका विकासकर्ता, वा विराटनगरका लेखक आवश्यक परे, "
+"हाम्रो प्लेटफर्मले तपाईंको लक्ष्य प्राप्त गर्न मद्दत गर्ने उत्कृष्ट स्थानीय फ्रिल्यान्सरहरू ल्याउँछ। "
+"गुणस्तर, विश्वसनीयता, र किफायती सेवामा ध्यान दिँदै, हामी प्रतिभा र अवसरबीचको खाली ठाउँ हटाउन चाहन्छौं। "
+"सानो स्टार्टअपदेखि स्थापित कम्पनीहरूसम्म, हामी एक यस्तो स्थान प्रदान गर्छौं जहाँ विचारहरू सहकार्यको माध्यमबाट जीवनमा आउँछन्। "
+"स्थानीय सीपहरूलाई समर्थन गर्ने, नवीनतालाई प्रवर्द्धन गर्ने, र नेपालको डिजिटल अर्थतन्त्रलाई अघि बढाउने वातावरण सिर्जना गर्न हामीसँग सामेल हुनुहोस्!"
+
+#: .\templates\home\index.html:90
+msgid "Smiling Woman"
+msgstr ""
+
+#: .\templates\home\index.html:98
+#, fuzzy
+#| msgid "Search the best<br> freelance work here"
+msgid "The latest freelance work!"
+msgstr "यहाँ उत्कृष्ट <br>फ्रिलान्स काम खोज्नुहोस्"
+
+#: .\templates\home\index.html:100
+msgid "Recently"
+msgstr "भर्खरै"
+
+#: .\templates\home\index.html:100
+msgid "Posted"
+msgstr "पोस्ट गरिएका"
+
+#: .\templates\home\index.html:100
+msgid "Works"
+msgstr "कामहरू"
+
+#: .\templates\home\index.html:272
+msgid "Browse"
+msgstr "ब्राउज गर्नुहोस्"
+
+#: .\templates\home\index.html:272
+msgid "Project"
+msgstr "परियोजना"
+
+#: .\templates\home\index.html:272
+msgid "Categories"
+msgstr "श्रेणिहरू"
+
+#: .\templates\home\index.html:327
+msgid "Frequently"
+msgstr "बारम्बार"
+
+#: .\templates\home\index.html:327
+msgid "Asked"
+msgstr "सोधिने"
+
+#: .\templates\home\index.html:327
+#, fuzzy
+#| msgid "Description"
+msgid "Questions"
+msgstr "प्रश्नहरू"
+
+#: .\templates\home\index.html:330
+msgid "How do I get started as a freelancer?"
+msgstr "म कसरी फ्रिल्यान्सरको रूपमा सुरू गर्न सक्छु?"
+
+#: .\templates\home\index.html:331
+msgid ""
+"Sign up, create a profile, and start bidding on projects that match your "
+"skills."
+msgstr "साइन अप गर्नुहोस्, प्रोफाइल बनाउनुहोस्, र तपाईंको सीपसँग मेल खाने परियोजनाहरूमा बोली लगाउनुहोस्।"
+
+#: .\templates\home\index.html:334
+msgid "How can I find freelance work?"
+msgstr "म कसरी फ्रिल्यान्स काम पाउन सक्छु?"
+
+#: .\templates\home\index.html:335
+msgid "Browse available projects and submit proposals to clients."
+msgstr "उपलब्ध परियोजनाहरू ब्राउज गर्नुहोस् र ग्राहकहरूलाई प्रस्ताव पठाउनुहोस्।"
+
+#: .\templates\home\index.html:338
+msgid "How do I get paid for my freelance work?"
+msgstr "म कसरी मेरो फ्रिल्यान्स कामको भुक्तानी प्राप्त गर्न सक्छु?"
+
+#: .\templates\home\index.html:339
+msgid ""
+"Payments are processed securely through the platform once the work is "
+"completed and approved by the client."
+msgstr "काम पूरा भएपछि र ग्राहकले स्वीकृति दिएपछि भुक्तानी सुरक्षित रूपमा प्लेटफर्म मार्फत प्रशोधन गरिन्छ।"
+
+#: .\templates\home\index.html:342
+msgid "Can I work with clients from other countries?"
+msgstr "के म अन्य देशका ग्राहकहरूसँग काम गर्न सक्छु?"
+
+#: .\templates\home\index.html:343
+msgid ""
+"Yes, you can work with clients from anywhere in the world. The platform "
+"connects freelancers with clients globally."
+msgstr "हो, तपाईं संसारभरिका ग्राहकहरूसँग काम गर्न सक्नुहुन्छ। यो प्लेटफर्मले फ्रिल्यान्सरहरूलाई विश्वव्यापी रूपमा ग्राहकहरूसँग जोड्दछ।"
+
+#: .\templates\home\index.html:346
+msgid "Is there any fee for using the platform?"
+msgstr "के यो प्लेटफर्म प्रयोग गर्न कुनै शुल्क लाग्छ?"
+
+#: .\templates\home\index.html:347
+msgid ""
+"Our platform charges a small service fee when a job is completed and paid. "
+"Please refer to our pricing page for detailed information."
+msgstr "हाम्रो प्लेटफर्मले काम पूरा भएपछि र भुक्तानी प्राप्त भएपछि सानो सेवा शुल्क लिन्छ। विस्तृत जानकारीको लागि हाम्रो मूल्य निर्धारण पृष्ठ हेर्नुहोस्।"
+
+#: .\templates\home\index.html:350
+msgid "How do I update my profile?"
+msgstr "म कसरी मेरो प्रोफाइल अद्यावधिक गर्न सक्छु?"
+
+#: .\templates\home\index.html:351
+msgid ""
+"You can update your profile details anytime through the profile settings "
+"page."
+msgstr "तपाईं आफ्नो प्रोफाइल सेटिङ पृष्ठबाट जुनसुकै बेला प्रोफाइल विवरण अद्यावधिक गर्न सक्नुहुन्छ।"
+
+#: .\templates\home\index.html:354
+msgid "Can I work part-time on the platform?"
+msgstr "के म यस प्लेटफर्ममा अंशकालिक (part-time) काम गर्न सक्छु?"
+
+#: .\templates\home\index.html:355
+msgid ""
+"Yes, you can choose part-time or full-time opportunities based on your "
+"preference."
+msgstr "हो, तपाईं आफ्नो प्राथमिकताको आधारमा अंशकालिक वा पूर्णकालिक अवसरहरू रोज्न सक्नुहुन्छ।"
+
+#: .\templates\home\index.html:358
+msgid "What happens if I can't complete a project on time?"
+msgstr "यदि म समयमा परियोजना पूरा गर्न सकिनँ भने के हुन्छ?"
+
+#: .\templates\home\index.html:359
+msgid ""
+"Communicate with your client as soon as possible. You may request an "
+"extension if needed."
+msgstr "तपाईंको ग्राहकसँग सकेसम्म छिटो सम्पर्क गर्नुहोस्। आवश्यक परे विस्तारको अनुरोध गर्न सक्नुहुन्छ।"
+
+#: .\templates\home\index.html:362
+msgid "How can I rate a freelancer's work?"
+msgstr "म कसरी फ्रिल्यान्सरको काम मूल्याङ्कन गर्न सक्छु?"
+
+#: .\templates\home\index.html:363
+msgid ""
+"You can rate the freelancer once the project is completed and approved by "
+"both parties."
+msgstr "परियोजना पूरा भई दुबै पक्षबाट स्वीकृत भएपछि तपाईं फ्रिल्यान्सरलाई मूल्याङ्कन गर्न सक्नुहुन्छ।"
+
+#: .\templates\home\index.html:366
+msgid "How do I contact customer support?"
+msgstr "म कसरी ग्राहक सहायता (customer support) सम्पर्क गर्न सक्छु?"
+
+#: .\templates\home\index.html:367
+msgid ""
+"You can reach our support team through the 'Help' section on the website."
+msgstr "वेबसाइटको 'मद्दत' (Help) सेक्सनबाट हाम्रो समर्थन टोलीसम्म पुग्न सक्नुहुन्छ।"
+
+#: .\templates\home\index.html:371
+msgid "Show More"
+msgstr "थप देखाउनुहोस्"
+
+#: .\templates\home\index.html:372
+msgid "Show Less"
+msgstr "कम देखाउनुहोस्"

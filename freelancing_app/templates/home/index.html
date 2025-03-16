@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static%}
 {% load humanize %}
+{% load i18n %}
 
 {% block title %}Home - HireMe{% endblock %}
 
@@ -20,10 +21,10 @@
     <div class="container">
         <div class="hero-content">
             <div class="text-context">
-                <h3>Unlock a World of <span><br>Limitless</span> Possibilities</h3>
-                <p>Discover expert freelancers ready to elevate your projects. Whether you're starting a new venture or scaling your business, connect with top talent to achieve your goals with confidence and ease.</p>                
+                <h3>{% trans "Unlock a World of" %} <span><br>{% trans "Limitless" %}</span> {% trans "Possibilities" %}</h3>
+                <p>{% trans "Discover expert freelancers ready to elevate your projects. Whether you're starting a new venture or scaling your business, connect with top talent to achieve your goals with confidence and ease." %}</p>                
                 <div class="buttons">
-                    <a href="{% url 'account:login' %}">Get Started</a>
+                    <a href="{% url 'account:login' %}">{% trans "Get Started" %}</a>
                 </div>
             </div>         
             <div class="banner-img">
@@ -39,18 +40,18 @@
         <div class="main-box">
             <div class="card">
                 <i class="fas fa-id-card"></i>
-                <h3>Create Account</h3>
-                <span>First you have to <br>create an account here</span>
+                <h3>{% trans "Create Account" %}</h3>
+                <span>{% trans "First you have to <br>create an account here" %}</span>
             </div>
             <div class="card">
                 <i class="fas fa-search-minus"></i>
-                <h3>Search Work</h3>
-                <span>Search the best<br> freelance work here</span>
+                <h3>{% trans "Search Work" %}</h3>
+                <span>{% trans "Search the best<br> freelance work here" %}</span>
             </div>
             <div class="card">
                 <i class="fas fa-check-circle"></i>
-                <h3>Apply and Start</h3>
-                <span>Apply and start<br> your work</span>
+                <h3>{% trans "Apply and Start" %}</h3>
+                <span>{% trans "Apply and start<br> your work" %}</span>
             </div>
         </div>
     </div>
@@ -63,30 +64,30 @@
             <div class="stats">
                 <div class="stat-box">
                     <h2>{{ freelancer_count }}+</h2>
-                    <p>Freelancers</p>
+                    <p>{% trans "Freelancers" %}</p>
                 </div>
                 <div class="stat-box">
                     <h2>{{ project_count }}+</h2>
-                    <p>Freelance Work Posted</p>
+                    <p>{% trans "Freelance Work Posted" %}</p>
                 </div>
                 <div class="stat-box">
                     <h2>{{ completed_projects }}+</h2>
-                    <p>Projects Completed</p>
+                    <p>{% trans "Projects Completed" %}</p>
                 </div>
                 <div class="stat-box">
                     <h2>{{ positive_reviews }}+</h2>
-                    <p>Positive Reviews</p>
+                    <p>{% trans "Positive Reviews" %}</p>
                 </div>
             </div>
             <div class="text-content">
-                <h1>Find The <span>Best </span>Freelancers Here</h1>
+                <h1>{% trans "Find The" %} <span>{% trans "Best" %} </span> {% trans "Freelancers Here" %}</h1>
                 <p>
-                    Empowering Nepali talents to connect with businesses and individuals nationwide. Whether you need a designer from Kathmandu, a developer from Pokhara, or a writer from Biratnagar, our platform brings the best local freelancers to help you achieve your goals. With a focus on quality, reliability, and affordability, we aim to bridge the gap between talent and opportunity. From small startups to established companies, we provide a space where ideas come to life through collaboration. Join us in creating a thriving ecosystem that supports local skills, fosters innovation, and drives Nepal’s digital economy forward!
+                    {% trans "Empowering Nepali talents to connect with businesses and individuals nationwide. Whether you need a designer from Kathmandu, a developer from Pokhara, or a writer from Biratnagar, our platform brings the best local freelancers to help you achieve your goals. With a focus on quality, reliability, and affordability, we aim to bridge the gap between talent and opportunity. From small startups to established companies, we provide a space where ideas come to life through collaboration. Join us in creating a thriving ecosystem that supports local skills, fosters innovation, and drives Nepal’s digital economy forward!" %}
                 </p>
             </div>
         </div>
         <div class="image-container">
-            <img src="{% static 'images/girl.png' %}" alt="Smiling Woman">
+            <img src="{% static 'images/girl.png' %}" alt="{% trans 'Smiling Woman' %}">
         </div>
     </div>
 </div>
@@ -94,9 +95,9 @@
 <!-- Job Posts Section -->
 <div class="job-post">
     <div class="container">
-        <p class="sub-title">The latest freelance work!</p>
+        <p class="sub-title">{% trans "The latest freelance work!" %}</p>
         <div class="text">
-            <h1>Recently <span>Posted</span> Works</h1>
+            <h1>{% trans "Recently" %} <span>{% trans "Posted" %}</span> {% trans "Works" %}</h1>
             <div class="buttons">
                 <button class="slider-btn prev-btn" disabled>
                     <i class="fa-solid fa-arrow-right fa-rotate-180"></i>
@@ -268,7 +269,7 @@
 <!-- Project Category Section -->
 <div class="projects-category">
     <div class="container">
-        <h3>Browse <span>Project</span> Categories</h3>
+        <h3>{% trans "Browse" %} <span>{% trans "Project" %}</span> {% trans "Categories" %}</h3>
         <div class="category-box">
 
             <a href="#" class="category-item">
@@ -323,54 +324,53 @@
 <!-- FAQ Section -->
 <div class="faq">
     <div class="container">
-        <h3>Frequently <span>Asked</span> Questions</h3>
+        <h3>{% trans "Frequently" %} <span>{% trans "Asked" %}</span> {% trans "Questions" %}</h3>
         <div id="faq-list">
             <div class="faq-item">
-                <h4>How do I get started as a freelancer?</h4>
-                <p>Sign up, create a profile, and start bidding on projects that match your skills.</p>
+                <h4>{% trans "How do I get started as a freelancer?" %}</h4>
+                <p>{% trans "Sign up, create a profile, and start bidding on projects that match your skills." %}</p>
             </div>
             <div class="faq-item">
-                <h4>How can I find freelance work?</h4>
-                <p>Browse available projects and submit proposals to clients.</p>
+                <h4>{% trans "How can I find freelance work?" %}</h4>
+                <p>{% trans "Browse available projects and submit proposals to clients." %}</p>
             </div>
             <div class="faq-item">
-                <h4>How do I get paid for my freelance work?</h4>
-                <p>Payments are processed securely through the platform once the work is completed and approved by the client.</p>
+                <h4>{% trans "How do I get paid for my freelance work?" %}</h4>
+                <p>{% trans "Payments are processed securely through the platform once the work is completed and approved by the client." %}</p>
             </div>
             <div class="faq-item">
-                <h4>Can I work with clients from other countries?</h4>
-                <p>Yes, you can work with clients from anywhere in the world. The platform connects freelancers with clients globally.</p>
+                <h4>{% trans "Can I work with clients from other countries?" %}</h4>
+                <p>{% trans "Yes, you can work with clients from anywhere in the world. The platform connects freelancers with clients globally." %}</p>
             </div>
             <div class="faq-item">
-                <h4>Is there any fee for using the platform?</h4>
-                <p>Our platform charges a small service fee when a job is completed and paid. Please refer to our pricing page for detailed information.</p>
+                <h4>{% trans "Is there any fee for using the platform?" %}</h4>
+                <p>{% trans "Our platform charges a small service fee when a job is completed and paid. Please refer to our pricing page for detailed information." %}</p>
             </div>
             <div class="faq-item">
-                <h4>How do I update my profile?</h4>
-                <p>You can update your profile details anytime through the profile settings page.</p>
+                <h4>{% trans "How do I update my profile?" %}</h4>
+                <p>{% trans "You can update your profile details anytime through the profile settings page." %}</p>
             </div>
             <div class="faq-item">
-                <h4>Can I work part-time on the platform?</h4>
-                <p>Yes, you can choose part-time or full-time opportunities based on your preference.</p>
+                <h4>{% trans "Can I work part-time on the platform?" %}</h4>
+                <p>{% trans "Yes, you can choose part-time or full-time opportunities based on your preference." %}</p>
             </div>
             <div class="faq-item">
-                <h4>What happens if I can't complete a project on time?</h4>
-                <p>Communicate with your client as soon as possible. You may request an extension if needed.</p>
+                <h4>{% trans "What happens if I can't complete a project on time?" %}</h4>
+                <p>{% trans "Communicate with your client as soon as possible. You may request an extension if needed." %}</p>
             </div>
             <div class="faq-item">
-                <h4>How can I rate a freelancer's work?</h4>
-                <p>You can rate the freelancer once the project is completed and approved by both parties.</p>
+                <h4>{% trans "How can I rate a freelancer's work?" %}</h4>
+                <p>{% trans "You can rate the freelancer once the project is completed and approved by both parties." %}</p>
             </div>
             <div class="faq-item">
-                <h4>How do I contact customer support?</h4>
-                <p>You can reach our support team through the "Help" section on the website.</p>
+                <h4>{% trans "How do I contact customer support?" %}</h4>
+                <p>{% trans "You can reach our support team through the 'Help' section on the website." %}</p>
             </div>
-        </div>
-        
+        </div>   
         <div class="faq-buttons">
-            <button id="show-more" onclick="showMoreFAQ()">Show More</button>
-            <button id="show-less" onclick="showLessFAQ()">Show Less</button>
-        </div>
+            <button id="show-more" onclick="showMoreFAQ()">{% trans "Show More" %}</button>
+            <button id="show-less" onclick="showLessFAQ()">{% trans "Show Less" %}</button>
+        </div>        
     </div>
 </div>
 

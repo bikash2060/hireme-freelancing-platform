@@ -285,7 +285,7 @@ body {
     margin: 10px 0;
 }
 
-/* Lanugage Selector Box */
+/* Language Selector Box */
 .language-main {
     position: relative;
 }
@@ -304,30 +304,30 @@ body {
     z-index: 1000;
 }
 
-.language-main .language-option {
-    display: flex;
-    align-items: center;
-    padding: 8px 10px;
+.language-main .language-box select {
+    width: 100%;
+    padding: 8px;
     font-size: 14px;
     color: #212121;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: border-color 0.3s ease;
 }
 
-.language-main .language-option img { 
-    width: 20px;
-    height: 20px;
-    margin-right: 8px; 
+.language-main .language-box select:focus {
+    border-color: #1E88E5;
 }
 
-.language-main .language-option:hover {
+.language-main .language-box select option {
+    padding: 10px;
+    background-color: #fff;
+    color: #212121;
+}
+
+.language-main .language-box select option:hover {
     background-color: #f1f1f1;
-}
-
-.language-main .language-selector {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
 }
 
 .language-main .language-selector i {

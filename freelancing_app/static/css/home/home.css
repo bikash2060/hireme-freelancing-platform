@@ -1,3 +1,7 @@
+html[lang="ne"] body {
+    font-family: 'Mukti', 'Poppins', sans-serif; 
+}
+
 /* General Reset */
 * {
     margin: 0;

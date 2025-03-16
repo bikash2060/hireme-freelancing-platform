@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Define base directory path for the project.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,6 +55,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware", 
+
 ]
 
 # Message storage backend for the project
@@ -77,6 +80,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "home.context_processors.notifications_context",
+                "django.template.context_processors.i18n",
             ],
         },
     },
@@ -143,10 +147,21 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Language and timezone settings
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('ne', _('Nepali')),
+]
+
 TIME_ZONE = 'Asia/Kathmandu'
 USE_I18N = True
-USE_TZ = False
+USE_L10N = True
+USE_TZ = True
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 # Static files settings
 STATIC_URL = "static/"
