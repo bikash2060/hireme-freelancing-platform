@@ -15,3 +15,4 @@ virtualenv/
 # Ignore migrations in all apps
 **/migrations/
 
+/freelancing_app/locale/
