@@ -10,12 +10,12 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
-    path("", include("home.urls", namespace="homes")),
+    path("", include("home.urls", namespace="home")),
     path('accounts/', include('allauth.urls')),
     path('account/', include('accounts.urls', namespace='account')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
-    path('client/', include('clientprofile.urls', namespace='client')),
-    path('freelancer/', include('freelancerprofile.urls', namespace='freelancer')),
+    path('client/', include('clientprofile.urls', namespace='client-profile')),
+    path('freelancer/', include('freelancerprofile.urls', namespace='freelancer-profile')),
     path('project/', include('projects.urls', namespace='project')),
     path('freelancers/', include('freelancers.urls', namespace='freelancers')),
     prefix_default_language=True,

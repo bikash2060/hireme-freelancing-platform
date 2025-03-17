@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from projects.models import Skill
 from accounts.mixins import CustomLoginRequiredMixin
 from .models import Notification    
 from django.contrib import messages
@@ -9,18 +8,6 @@ from projects.models import Project
 from accounts.models import Freelancer
 from django.utils.timezone import now
 
-# Testing In-Progress
-class MarkAllAsReadView(CustomLoginRequiredMixin, View):
-    
-    def get(self, request):
-        try:
-            unread_notifications = Notification.objects.filter(user=request.user, is_read=False)
-            unread_notifications.update(is_read=True)
-            return redirect('homes:home')  
-        except Exception as e:
-            return redirect('homes:home')  
-        
-# Testing In-Progress
 class HomeView(View):
     freelancer_dashboard_url = 'dashboard:freelancer'
     client_dashboard_url = 'dashboard:client'
@@ -56,11 +43,21 @@ class HomeView(View):
         }
         return render(request, self.home_template, context)
 
-# Testing In-Progress
+class MarkAllAsReadView(CustomLoginRequiredMixin, View):
+    home_url = 'home:home'
+    
+    def get(self, request):
+        try:
+            unread_notifications = Notification.objects.filter(user=request.user, is_read=False)
+            unread_notifications.update(is_read=True)
+            return redirect(self.home_url)  
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)  
+
 class GetUserProfileView(CustomLoginRequiredMixin, View):
     freelancer_profile_url = 'freelancer:profile'
     client_profile_url = 'client:profile'
-    home_url = 'homes:home'
     
     def get(self, request):
         user_role = request.user.role 
@@ -70,6 +67,6 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
         else:
             return redirect(self.freelancer_profile_url)
 
-# Testing In-Progress
 def handling_404(request, exception):
-    return render(request, '404.html', {})
+    error_page_template = '404.html'
+    return render(request, error_page_template, {})
