@@ -8,6 +8,27 @@ from home.models import Notification
 from .utils import *
 from accounts.models import Client
 
+# Testing Incomplete
+class ProjectListView(View):
+    project_template = 'projects/projectslist.html'
+    home_url = 'homes:home'
+
+    def get(self, request):
+        try:
+            skills = Skill.objects.all().order_by('name')
+            projects = Project.objects.all().order_by('-created_at')
+            project_categories = ProjectCategory.objects.all().order_by('name')
+            context = {
+                'projects': projects,
+                'skills': skills,
+                'project_categories': project_categories,
+            }
+            return render(request, self.project_template, context)
+        
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)
+
 # Testing Complete
 class AddNewProjectView(CustomLoginRequiredMixin, View):
     new_project_template = 'projects/addproject.html'

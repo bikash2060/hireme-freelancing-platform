@@ -73,12 +73,3 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
 # Testing In-Progress
 def handling_404(request, exception):
     return render(request, '404.html', {})
-
-
-# Testing In-Progress
-class ProjectsView(View):
-    
-    rendered_template = 'home/projects.html'
-    
-    def get(self, request):
-        return render(request, self.rendered_template)
