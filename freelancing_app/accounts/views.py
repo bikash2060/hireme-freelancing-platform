@@ -455,7 +455,7 @@ class UserRoleRedirectView(View):
                 "freelancer": Freelancer
             }
             role_models[role].objects.create(user=user)
-            messages.success(request, f"You have successfully created an account.")
+            messages.success(request, "You have successfully created an account.")
             
             del request.session['signup_data']
             return redirect(self.login_url)

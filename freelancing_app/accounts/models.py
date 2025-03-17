@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.timezone import now, timedelta
 from projects.models import Skill   
@@ -32,8 +32,19 @@ class CustomUserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-    
-class User(AbstractBaseUser):
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(username, email, password, **extra_fields)
+
+class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
@@ -43,6 +54,8 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True)
     profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     last_login = None
+    is_staff = models.BooleanField(default=False)  
+    is_superuser = models.BooleanField(default=False)  
 
     objects = CustomUserManager()
 

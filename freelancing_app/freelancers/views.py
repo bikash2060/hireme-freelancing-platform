@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect
 from django.views import View
 from projects.models import Skill
 import json
+from django.contrib import messages
 
 # Testing In-Progress
 class FreelancerListView(View):
     
     freelancer_list_template = 'freelancers/freelancerslist.html'
+    home_url = 'homes:home'
     
     countries_and_cities = {
         "Afghanistan": ["Kabul", "Kandahar", "Herat", "Mazar-i-Sharif", "Jalalabad", "Other"],
@@ -208,11 +210,15 @@ class FreelancerListView(View):
     }
     
     def get(self, request):
-        skills = Skill.objects.all().order_by('name')
-        countries_and_cities_json = json.dumps(self.countries_and_cities)
-        context = {
-            'skills': skills,
-            'countries_and_cities': self.countries_and_cities,
-            'countries_and_cities_json': countries_and_cities_json,
-        }
-        return render(request, self.freelancer_list_template, context)
+        try:
+            skills = Skill.objects.all().order_by('name')
+            countries_and_cities_json = json.dumps(self.countries_and_cities)
+            context = {
+                'skills': skills,
+                'countries_and_cities': self.countries_and_cities,
+                'countries_and_cities_json': countries_and_cities_json,
+            }
+            return render(request, self.freelancer_list_template, context)
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)

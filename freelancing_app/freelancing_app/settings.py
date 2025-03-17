@@ -146,6 +146,13 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
+SOCIALACCOUNT_PIPELINE = (
+    'socialaccount.pipeline.social_auth.social_login',
+    'socialaccount.pipeline.user.get_username',
+    'socialaccount.pipeline.user.create_user',
+    'accounts.pipeline.redirect_to_role_selection', 
+)
+
 # Language and timezone settings
 LANGUAGE_CODE = 'en'
 
