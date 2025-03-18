@@ -4,11 +4,10 @@ from projects.models import Skill
 import json
 from django.contrib import messages
 
-# Testing In-Progress
 class FreelancerListView(View):
     
     freelancer_list_template = 'freelancers/freelancerslist.html'
-    home_url = 'homes:home'
+    home_url = 'home:home'
     
     countries_and_cities = {
         "Afghanistan": ["Kabul", "Kandahar", "Herat", "Mazar-i-Sharif", "Jalalabad", "Other"],

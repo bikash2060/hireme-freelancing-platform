@@ -8,19 +8,19 @@ from .utils import *
 from .formvalidation import *
 from .models import *
 from django.utils import timezone
+from datetime import timedelta
 
-# Testing Complete
 class UserLoginView(View):
     login_template = 'accounts/login.html'
     login_url = 'account:login'
-    home_url = 'homes:home'
+    home_url = 'home:home'
     
     def get(self, request):
         try:
             if request.user.is_authenticated:
                 return redirect(self.home_url)
-            
             return render(request, self.login_template)
+        
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.home_url)
@@ -55,12 +55,11 @@ class UserLoginView(View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.login_url)
         
-# Testing Complete
 class ForgotPasswordView(View):    
     reset_password_request_template = 'accounts/reset_password_request.html'
     otp_verification_url = 'account:verify-otp'
     login_url = 'account:login'
-    home_url = 'homes:home'
+    home_url = 'home:home'
 
     def get(self, request):
         try:
@@ -105,13 +104,12 @@ class ForgotPasswordView(View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.login_url)
 
-# Testing Complete
 class PasswordResetOTPVerifyView(View):
     otp_verification_template = 'accounts/reset_password_otp_verification.html'
     reset_password_request_url = 'account:forgotpassword'
     password_reset_url = 'account:change-password'
     login_url = 'account:login'
-    home_url = 'homes:home'
+    home_url = 'home:home'
     
     def get(self, request):
         try:
@@ -167,7 +165,6 @@ class PasswordResetOTPVerifyView(View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.login_url)
 
-# Testing Complete
 class ForgotPasswordResendOTPView(View):
     otp_verification_template = 'accounts/reset_password_otp_verification.html'
     password_reset_url = 'account:change-password'
@@ -200,12 +197,11 @@ class ForgotPasswordResendOTPView(View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.login_url)
 
-# Testing Complete
 class ChangePasswordView(View):
     reset_password_template = 'accounts/resetpassword.html'
     reset_password_request_url = 'account:forgotpassword'
     login_url = 'account:login'
-    home_url = 'homes:home'
+    home_url = 'home:home'
     
     def get(self, request):
         try:
@@ -256,11 +252,10 @@ class ChangePasswordView(View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.login_url)
 
-# Testing Complete
 class UserSignupView(View):
     signup_template = 'accounts/signup.html'
     otp_verification_url = 'account:otp_verification'
-    home_url = 'homes:home'
+    home_url = 'home:home'
     signup_url = 'account:signup'   
 
     def get(self, request):
@@ -268,6 +263,7 @@ class UserSignupView(View):
             if request.user.is_authenticated:
                 return redirect(self.home_url)
             return render(request, self.signup_template)
+        
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.home_url)
@@ -297,11 +293,10 @@ class UserSignupView(View):
                 return render(request, self.signup_template, {'form_data': signup_data})
 
             request.session['signup_data'] = signup_data
-            request.session.set_expiry(300)
+            request.session.set_expiry(timedelta(minutes=5))
             
             OTPCode.objects.filter(email=email_address).delete()
             otp_code = generate_and_save_otp(email_address)
-            print("Provided Email Address:", email_address)
             send_verification_email(username, email_address, otp_code)   
             
             messages.success(request, 'An OTP has been sent to your email address.')
@@ -315,12 +310,11 @@ class UserSignupView(View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.signup_url)
 
-# Testing Complete
 class VerifyOTPView(View):
     otp_verification_template = 'accounts/otp_verification.html'
     user_role_url = 'account:roles'
     signup_url = 'account:signup'
-    home_url = 'homes:home'
+    home_url = 'home:home'
     
     def get(self, request):
         try:
@@ -333,13 +327,20 @@ class VerifyOTPView(View):
                 return redirect(self.signup_url)  
         
             return render(request, self.otp_verification_template)
+        
         except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.home_url)
 
     def post(self, request):
         try:
             if request.user.is_authenticated:
                 return redirect(self.home_url)
+            
+            signup_data = request.session.get('signup_data')
+            if not signup_data:
+                messages.error(request, 'Session expired. Please sign up again.')
+                return redirect(self.signup_url)
             
             otp_entered = ''.join([request.POST.get(f'otp_{i}', '') for i in range(1, 7)])
             if not otp_entered:
@@ -350,11 +351,6 @@ class VerifyOTPView(View):
                 messages.error(request, 'OTP must be 6 digits.')
                 return render(request, self.otp_verification_template)
 
-            signup_data = request.session.get('signup_data')
-            if not signup_data:
-                messages.error(request, 'Session expired. Please sign up again.')
-                return redirect(self.signup_url)
-            
             email_address = signup_data.get('email')
             otp_record = OTPCode.objects.get(email=email_address)
             
@@ -377,7 +373,6 @@ class VerifyOTPView(View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.signup_url)
 
-# Testing Complete
 class GenerateNewOTPView(View):
     otp_verification_template = 'accounts/otp_verification.html'  
     signup_url = 'account:signup'  
@@ -407,12 +402,11 @@ class GenerateNewOTPView(View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.signup_url)  
 
-# Testing Complete
 class UserRoleRedirectView(View):
     user_role_template = 'accounts/roleselection.html'  
     login_url = 'account:login'  
     signup_url = 'account:signup'  
-    home_url = 'homes:home'
+    home_url = 'home:home'
 
     def get(self, request):
         try:
@@ -450,10 +444,12 @@ class UserRoleRedirectView(View):
                 password=password,
                 role=role.lower(),  
             )
+            
             role_models = {
                 "client": Client,
                 "freelancer": Freelancer
             }
+            
             role_models[role].objects.create(user=user)
             messages.success(request, "You have successfully created an account.")
             
@@ -464,7 +460,6 @@ class UserRoleRedirectView(View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.signup_url)
 
-# Testing Complete
 class UserLogoutView(View):
     login_url = 'account:login'
     def get(self, request):

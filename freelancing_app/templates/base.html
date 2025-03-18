@@ -193,7 +193,7 @@
 </div>
     
 {% if user.is_authenticated %}
-<!-- Detailed Chat Box -->
+<!-- Detailed Chat Box Section -->
 <div class="detailed-chat">
     <div class="main-box">
         <div class="header-content">
@@ -347,11 +347,11 @@
 {% block js_files %}
 
 {% endblock %}
-<script src="{% static 'js/notification-language.js' %}"></script>
-<script src="{% static 'js/chatbox-closer.js' %}"></script>
-<script src="{% static 'js/message.js' %}"></script>
-<script src="{% static 'js/loader.js'%}"></script>
-<script src="{% static 'js/form-handler.js' %}"></script>
-<script src="{% static 'js/sidebar.js' %}"></script>
+<script src="{% static 'js/common/notification-language.js' %}"></script>
+<script src="{% static 'js/common/chatbox-closer.js' %}"></script>
+<script src="{% static 'js/common/message.js' %}"></script>
+<script src="{% static 'js/common/loader.js'%}"></script>
+<script src="{% static 'js/common/form-handler.js' %}"></script>
+<script src="{% static 'js/common/sidebar.js' %}"></script>
 </body>
 </html>

@@ -1,15 +1,15 @@
-/* Signup Form Style */
+/* SignUp Form Section */
 .signup {
     margin-top: 150px;
     margin-bottom: 60px;
 }
 
-.signup-container {
+.signup .signup-container {
     display: flex;
     justify-content: center;
 }
 
-.signup-form {
+.signup .signup-form {
     width: 100%;
     max-width: 550px;
     background: #fff;
@@ -18,23 +18,23 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-.signup-form h3 {
+.signup .signup-form h3 {
     font-size: 20px;
     text-align: center;
 }
 
-.signup-options {
+.signup .signup-options {
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
 }
 
-.signup-option {
+.signup .signup-option {
     width: calc(100% / 2 - 12px);
 }
 
-.signup-option a {
+.signup .signup-option a {
     height: 56px;
     display: flex;
     justify-content: center;
@@ -50,34 +50,34 @@
     transition: 0.2s ease;
 }
 
-.signup-option a:hover {
+.signup .signup-option a:hover {
     background: #ededf5;
     border-color: #626cd6;
 }
 
-.signup-option a img {
+.signup .signup-option a img {
     max-width: 25px;
 }
 
-.signup-form p {
+.signup .signup-form p {
     font-size: 17px;
     text-align: center;
     font-weight: 500;
 }
 
-.signup-separator {
+.signup .signup-separator {
     position: relative;
     margin-bottom: 24px;
 }
 
-.signup-separator span {
+.signup .signup-separator span {
     background: #fff;
     z-index: 1;
     padding: 0 10px;
     position: relative;
 }
 
-.signup-separator::after {
+.signup .signup-separator::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -88,13 +88,13 @@
     display: block;
 }
 
-.signup-input-box label {
+.signup .signup-input-box label {
     display: block;
     font-weight: 500;
     margin-bottom: 8px;
 }
 
-.signup-input-box input {
+.signup .signup-input-box input {
     width: 100%;
     height: 57px;
     border: 1px solid #dadaf2;
@@ -107,11 +107,11 @@
     transition: 0.2s ease;
 }
 
-.signup-input-box input:focus {
+.signup .signup-input-box input:focus {
     border-color: #626cd6;
 }
 
-.signup-button {
+.signup .signup-button {
     width: 100%;
     height: 56px;
     border-radius: 5px;
@@ -127,35 +127,35 @@
     transition: 0.3s ease;
 }
 
-.signup-button:hover {
+.signup .signup-button:hover {
     background: #4954d0;
 }
 
-.signup-login-link {
+.signup .signup-login-link {
     text-align: center;
     font-size: 14px;
 }
 
-.signup-login-link a {
+.signup .signup-login-link a {
     text-decoration: none;
     color: #626cd6;
     font-weight: 500;
 }
 
-.signup-login-link a:hover {
+.signup .signup-login-link a:hover {
     text-decoration: underline;
 }
 
-.password-container {
+.signup .password-container {
     position: relative;
 }
   
-.password-container input {
+.signup .password-container input {
     width: 100%;
     padding-right: 40px; 
 }
   
-.password-container i {
+.signup .password-container i {
     position: absolute;
     right: 10px;
     top: 36%;
@@ -165,6 +165,6 @@
     font-size: 18px; 
 }
   
-.password-container i:hover {
+.signup .password-container i:hover {
     color: #626cd6; 
 }

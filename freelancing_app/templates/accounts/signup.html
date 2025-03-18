@@ -10,12 +10,12 @@
 
 {% block content %}
 
-<!-- Loading Screen -->
+<!-- Loading Screen Section -->
 <div id="loading-screen" style="display: none;">
   <div class="spinner"></div>
 </div>
 
-<!-- SignUp Form -->
+<!-- SignUp Form Section -->
 <div class="signup">
   <div class="signup-container">
     <div class="signup-form">
@@ -41,23 +41,23 @@
         </p>
         <div class="signup-input-box">
           <label for="signup-email">Email</label>
-          <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}"/>
+          <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}" required/>
         </div>
         <div class="signup-input-box">
           <label for="signup-username">Username</label>
-          <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}"/>
+          <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}" required/>
         </div>
         <div class="signup-input-box">
           <label for="signup-password">Password</label>
           <div class="password-container">
-            <input type="password" id="signup-password" placeholder="Enter your password" name="password" />
+            <input type="password" id="signup-password" placeholder="Enter your password" name="password" required/>
             <i class="fa fa-eye" id="toggleSignupPassword"></i>
           </div>
         </div>
         <div class="signup-input-box">
           <label for="signup-confirm-password">Confirm Password</label>
           <div class="password-container">
-            <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword" />
+            <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword" required/>
             <i class="fa fa-eye" id="toggleSignupConfirmPassword"></i>
           </div>
         </div>

@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<!-- Loader -->
+<!-- Loader Section -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<!-- Freelancer Filter Section -->
+<!-- Freelancer Filter and Profile Card Section -->
 <div class="freelancer-filter">
     <div class="container">
         <div class="filter-box">
@@ -324,40 +324,7 @@
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/dashboard/freelancer-profile-slider.js'%}"></script>
-<script src="{% static 'js/projects/search-skill.js' %}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const countrySelect = document.getElementById("country");
-        const citySelect = document.getElementById("city");
-
-        const citiesByCountry = {{ countries_and_cities_json|safe }};
-        
-        function populateCities(country) {
-            citySelect.innerHTML = "<option value=''>Select a city</option>";
-            if (citiesByCountry[country]) {
-                citiesByCountry[country].forEach(city => {
-                    const option = document.createElement("option");
-                    option.value = city;
-                    option.textContent = city;
-                    if (city === "{{ client.city }}") {
-                        option.selected = true;
-                    }
-                    citySelect.appendChild(option);
-                });
-            }
-        }
-
-        const preSelectedCountry = countrySelect.value;
-        if (preSelectedCountry) {
-            populateCities(preSelectedCountry);
-        }
-
-        countrySelect.addEventListener("change", function () {
-            const selectedCountry = this.value;
-            populateCities(selectedCountry);
-        });
-    });
-</script>
-<script src="{% static 'js/freelancers/freelancer-utils.js' %}"></script>    
+<script src="{% static 'js/common/country-city.js' %}"></script>
+<script src="{% static 'js/common/filters.js' %}"></script>
+<script src="{% static 'js/common/skills-search.js' %}"></script>
 {% endblock %}

@@ -4,7 +4,7 @@ from django.utils.timezone import now, timedelta
 from projects.models import Skill   
 
 def default_expired_time():
-    return now() + timedelta(minutes=5)
+    return now() + timedelta(minutes=3)
 
 class OTPCode(models.Model):
     otp_id = models.AutoField(primary_key=True)
