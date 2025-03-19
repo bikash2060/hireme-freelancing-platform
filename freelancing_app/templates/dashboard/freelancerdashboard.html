@@ -2,7 +2,7 @@
 {% load static%}
 {% load humanize %}
 
-{% block title %}Dashboard - HireMe{% endblock %}
+{% block title %}My Dashboard - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/dashboard/freelancerdashboard.css' %}">
@@ -83,7 +83,7 @@
 <!-- Ongoing Projects Section -->
 <div class="freelancer-ongoing-projects">
     <div class="container">
-        <h3>Ongoing Projects</h3>
+        <h3>Overview</h3>
         <div class="no-projects">
             <i class="fas fa-tasks"></i>
             <p>You have no ongoing projects at the moment.</p>
@@ -91,52 +91,51 @@
                 <i class="fas fa-search"></i> Browse Available Projects
             </a>
         </div>
-        
         <!--
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-progress">
-                    <div class="progress-bar" style="height: 70%;">70%</div>
-                </div>
-        
-                <div class="project-content">
-                    <div class="project-header">
-                        <h3 class="project-title">E-commerce Website Redesign</h3>
-                        <p class="project-client">Client: Fashion Boutique Inc.</p>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-progress">
+                        <div class="progress-bar" style="height: 70%;">70%</div>
                     </div>
-                    <div class="project-body">
-                        <p class="project-description">Modernizing the online shopping experience with a responsive design, improved product filtering, and streamlined checkout process. </p>
-                        <div class="project-meta">
-                            <div class="meta-item">
-                                <span class="meta-label" title="Deadline"><i class="fas fa-calendar-alt"></i></span>
-                                <span class="meta-value">Apr 15, 2025</span>
-                            </div>
-                            <div class="meta-item">
-                                <span class="meta-label" title="Budget"><i class="fa-solid fa-rupee-sign"></i></span>
-                                <span class="meta-value">200.00</span>
-                            </div>
+            
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h3 class="project-title">E-commerce Website Redesign</h3>
+                            <p class="project-client">Client: Fashion Boutique Inc.</p>
                         </div>
-                        <a href="#" class="manage-project-btn">Manage Project</a>
+                        <div class="project-body">
+                            <p class="project-description">Modernizing the online shopping experience with a responsive design, improved product filtering, and streamlined checkout process. </p>
+                            <div class="project-meta">
+                                <div class="meta-item">
+                                    <span class="meta-label" title="Deadline"><i class="fas fa-calendar-alt"></i></span>
+                                    <span class="meta-value">Apr 15, 2025</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-label" title="Budget"><i class="fa-solid fa-rupee-sign"></i></span>
+                                    <span class="meta-value">200.00</span>
+                                </div>
+                            </div>
+                            <a href="#" class="manage-project-btn">Manage Project</a>
+                        </div>
                     </div>
-                </div>
-            </div>           
-        </div>
-
-        <div class="view-all-button">
-            <a href="" class="view-all-projects-btn">View All Projects</a>
-        </div>
+                </div>           
+            </div>
+    
+            <div class="view-all-button">
+                <a href="" class="view-all-projects-btn">View All Projects</a>
+            </div>        
         -->
     </div>
 </div>
 
-<!-- Projects Recommendation Section -->
+<!-- Recommendation Projects Section -->
 <div class="recommended-section">
     <div class="container">
         <div class="text">
             <h3>New Projects</h3>
         </div>
-        <div class="card-grid">
-            {% for project in projects %}
+        {% for project in projects %}
+            <div class="card-grid">
                 <div class="project-card">
                     <div class="project-image">
                         <img src="{% if project.image %}{% get_media_prefix %}project_images/{{ project.image }}{% else %}{% static 'images/programming.png' %}{% endif %}" alt="Project Image">
@@ -164,14 +163,19 @@
                         <a href="{% url 'project:project-detail' project.id %}" class="view-details-btn">View Details</a>
                     </div>
                 </div>
-            {% empty %}
-                <p>No projects available.</p>
-            {% endfor %}
-        </div>        
+            </div>  
+        {% empty %}
+            <div class="no-projects">
+                <div class="no-projects-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="no-projects-message">
+                    <h4>Oops! No New Projects Available</h4>
+                    <p>Currently, there are no new or recommended projects. Stay tuned for updates!</p>
+                </div>
+            </div>      
+        {% endfor %}
     </div>
 </div>
 
-{% endblock %}
-{% block js_files %}
-<script src="{% static 'js/dashboard/freelancer-profile-slider.js' %}"></script>
 {% endblock %}

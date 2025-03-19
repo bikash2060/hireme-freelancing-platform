@@ -34,7 +34,7 @@ class ClientDashboardView(CustomLoginRequiredMixin, View):
     
 class FreelancerDashboardView(CustomLoginRequiredMixin, View):
     
-    rendered_template = 'dashboard/freelancerdashboard.html'
+    freelancer_dashboard_template = 'dashboard/freelancerdashboard.html'
         
     def get(self, request):
         current_hour = datetime.now().hour
@@ -53,8 +53,7 @@ class FreelancerDashboardView(CustomLoginRequiredMixin, View):
             'projects': projects,
             'freelancer': freelancer
         }
-        
-        return render(request, self.rendered_template, context)
+        return render(request, self.freelancer_dashboard_template, context)
     
 class NewProposalsView(CustomLoginRequiredMixin, View):
     rendered_template = 'proposals/proposals_form.html'

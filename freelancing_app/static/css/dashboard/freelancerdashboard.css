@@ -1,4 +1,4 @@
-/* Hero Section Style */
+/* Hero Section */
 .hero-section {
     margin-top: 95px;
     padding: 40px 0;
@@ -6,19 +6,19 @@
     border-bottom: 1px solid #e9ecef;
 }
 
-.hero-content {
+.hero-section .hero-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.hero-content h3 {
+.hero-section .hero-content h3 {
     font-size: 1.5rem;
     font-weight: 500;
     margin: 0;
 }
 
-.stats-overview {
+.hero-section .stats-overview {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
@@ -26,7 +26,7 @@
     margin-top: 30px;
 }
 
-.stats-overview .stat-card {
+.hero-section .stats-overview .stat-card {
     background-color: #ffffff;
     border-radius: 8px;
     padding: 20px;
@@ -39,32 +39,32 @@
     border-top: 4px solid #1E88E5;
 }
 
-.stats-overview .stat-card:hover {
+.hero-section .stats-overview .stat-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
-.stats-overview .stat-card i {
+.hero-section .stats-overview .stat-card i {
     font-size: 2rem;
     color: #1E88E5;
     margin-bottom: 12px;
 }
 
-.stats-overview .stat-card h4 {
+.hero-section .stats-overview .stat-card h4 {
     font-size: 1rem;
     font-weight: 500;
     color: #6c757d;
     margin: 0 0 8px 0;
 }
 
-.stats-overview .stat-card .stat-number {
+.hero-section .stats-overview .stat-card .stat-number {
     font-size: 1.6rem;
     font-weight: 700;
     color: #2c3e50;
     margin: 0;
 }
 
-.hero-content .browse-projects-btn {
+.hero-section .hero-content .browse-projects-btn {
     background-color: #1E88E5;
     color: #fff;
     padding: 12px 24px;
@@ -79,17 +79,17 @@
     align-self: flex-start;
 }
 
-.hero-content .browse-projects-btn i {
+.hero-section .hero-content .browse-projects-btn i {
     margin-right: 10px;
 }
 
-.hero-content .browse-projects-btn:hover {
+.hero-section .hero-content .browse-projects-btn:hover {
     background-color: #1976D2;
     transform: translateY(-3px);
     box-shadow: 0 6px 10px rgba(30, 136, 229, 0.3);
 }
 
-.hero-content .browse-projects-btn:focus {
+.hero-section .hero-content .browse-projects-btn:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.3);
 }
@@ -133,14 +133,14 @@
     transition: color 0.3s ease;
 }
 
-.action-grid {
+.quick-actions .action-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 30px;
     justify-items: center;
 }
 
-.action-card {
+.quick-actions .action-card {
     background-color: #E3F2FD;
     border-radius: 10px;
     padding: 30px;
@@ -149,24 +149,24 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-.action-card:hover {
+.quick-actions .action-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
     background-color: #BBDEFB;
 }
 
-.action-card i {
+.quick-actions .action-card i {
     font-size: 3rem;
     color: #FFC107;
     margin-bottom: 20px;
     transition: color 0.3s ease;
 }
 
-.action-card:hover i {
+.quick-actions .action-card:hover i {
     color: #FF9800;
 }
 
-.action-card h3 {
+.quick-actions .action-card h3 {
     font-size: 1.5rem;
     color: #212121;
     margin-bottom: 15px;
@@ -174,17 +174,17 @@
     transition: color 0.3s ease;
 }
 
-.action-card:hover h3 {
+.quick-actions .action-card:hover h3 {
     color: #1565C0;
 }
 
-.action-card p {
+.quick-actions .action-card p {
     font-size: 1rem;
     color: #757575;
     margin-bottom: 20px;
 }
 
-.action-card .btn {
+.quick-actions .action-card .btn {
     background-color: #1E88E5;
     color: #fff;
     padding: 12px 20px;
@@ -196,7 +196,7 @@
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.action-card .btn:hover {
+.quick-actions .action-card .btn:hover {
     background-color: #1565C0;
     transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -222,19 +222,7 @@
     }
 }
 
-/* Ongoing Projects Section Styles */
-.freelancer-ongoing-projects {
-    margin-bottom: 50px;
-}
-
-.freelancer-ongoing-projects h3 {
-    text-align: left;
-    font-size: 2rem;
-    color: #1E88E5;
-    margin-bottom: 25px;
-    font-weight: 520;
-}
-
+/* No-Projects Section */
 .freelancer-ongoing-projects .no-projects {
     width: 100%;
     height: 300px;
@@ -278,6 +266,19 @@
 .no-projects a:hover {
     background-color: #dbeee0; 
     opacity: 0.85;
+}
+
+/* Ongoing Projects Section */
+.freelancer-ongoing-projects {
+    margin-bottom: 50px;
+}
+
+.freelancer-ongoing-projects h3 {
+    text-align: left;
+    font-size: 2rem;
+    color: #1E88E5;
+    margin-bottom: 25px;
+    font-weight: 520;
 }
 
 .freelancer-ongoing-projects .projects-grid {
@@ -626,4 +627,34 @@
     font-size: 1.1rem;
     font-weight: 500;
     color: #212121;
+}
+
+.recommended-section .no-projects {
+    text-align: center;
+    padding: 40px 0;
+    border: 1px solid #b8b8b8;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.recommended-section .no-projects-icon {
+    font-size: 50px;
+    color: #FFC107;
+    margin-bottom: 20px;
+}
+
+.recommended-section .no-projects-message h4 {
+    font-size: 1.5rem;
+    color: #212121;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.recommended-section .no-projects-message p {
+    font-size: 1rem;
+    color: #757575;
+}
+
+.recommended-section .no-projects-actions {
+    margin-top: 20px;
 }
