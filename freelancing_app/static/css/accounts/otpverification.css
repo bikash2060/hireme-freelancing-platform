@@ -1,4 +1,4 @@
-/* OTP Verification Box Style */
+/* OTP Verification Form Section */
 .otp-verification {
     text-align: center;
     padding: 20px;
@@ -8,7 +8,7 @@
     margin: 150px auto 60px auto;
 }
 
-.email-icon {
+.otp-verification .email-icon {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,27 +22,27 @@
     border-radius: 50%;
 }
 
-.otp-verification h3 {
+.otp-verification .otp-verification h3 {
     font-size: 22px;
     font-weight: 600;
     color: #212121;
     margin-bottom: 10px;
 }
 
-.otp-verification p {
+.otp-verification .otp-verification p {
     font-size: 14px;
     color: #757575;
     margin-bottom: 20px;
 }
 
-.otp-inputs {
+.otp-verification .otp-inputs {
     display: flex;
     justify-content: center;
     gap: 10px;
     margin-bottom: 20px;
 }
 
-.otp-box {
+.otp-verification .otp-box {
     width: 50px;
     height: 50px;
     text-align: center;
@@ -55,37 +55,37 @@
     transition: background 0.3s ease;
 }
 
-.otp-box:focus {
+.otp-verification .otp-box:focus {
     border-color: #1e88e5;
     box-shadow: 0 0 5px rgba(30, 136, 229, 0.5);
 }
 
-.otp-box.filled {
+.otp-verification .otp-box.filled {
     background-color: #edffee; 
 }
 
-.resend-text {
+.otp-verification .resend-text {
     font-size: 14px;
     color: #757575;
     margin-bottom: 20px;
 }
 
-.resend-text a {
+.otp-verification .resend-text a {
     color: #1e88e5;
     text-decoration: none;
 }
 
-.resend-text a:hover {
+.otp-verification .resend-text a:hover {
     text-decoration: underline;
 }
 
-.button-group {
+.otp-verification .button-group {
     display: flex;
     justify-content: center;
     gap: 20px;
 }
 
-.cancel-btn {
+.otp-verification .cancel-btn {
     display: inline-block;
     padding: 10px 20px;
     font-size: 16px;
@@ -97,11 +97,11 @@
     transition: background 0.3s ease;
 }
 
-.cancel-btn:hover {
+.otp-verification .cancel-btn:hover {
     background: #c7c7c7;
 }
 
-.verify-btn {
+.otp-verification .verify-btn {
     padding: 10px 20px;
     font-size: 16px;
     border: none;
@@ -111,6 +111,6 @@
     color: #fff;
 }
 
-.verify-btn:hover {
+.otp-verification .verify-btn:hover {
     background: #43a047;
 }

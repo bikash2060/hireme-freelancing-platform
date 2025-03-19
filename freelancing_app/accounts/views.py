@@ -51,6 +51,7 @@ class UserLoginView(View):
             else:
                 messages.error(request, 'Invalid email or password. Please try again.')
                 return render(request, self.login_template, {'form_data': login_data})
+            
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.login_url)
@@ -76,7 +77,7 @@ class ForgotPasswordView(View):
             if request.user.is_authenticated:
                 return redirect(self.home_url)
 
-            email_address = request.POST.get('email')
+            email_address = request.POST.get('email').strip().lower()
             if not email_address:
                 messages.error(request, 'Please enter your email address.')
                 return render(request, self.reset_password_request_template)
@@ -87,7 +88,7 @@ class ForgotPasswordView(View):
             send_reset_password_email(email_address, otp_code)
             
             request.session['email_address'] = email_address
-            request.session.set_expiry(300)
+            request.session.set_expiry(timedelta(minutes=10))
 
             messages.success(request, 'An OTP has been sent to your email address.')
             return redirect(self.otp_verification_url)
@@ -100,7 +101,8 @@ class ForgotPasswordView(View):
             messages.error(request, 'Unable to send email. Please try again later.')
             return render(request, self.reset_password_request_template)
 
-        except Exception:
+        except Exception as e:
+            print("Exception inside ForgotPasswordView: ", e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.login_url)
 
@@ -120,9 +122,10 @@ class PasswordResetOTPVerifyView(View):
             if not email_address:
                 messages.error(request, 'Session expired. Please request a new OTP.')
                 return redirect(self.reset_password_request_url)
-            
             return render(request, self.otp_verification_template)
-        except Exception:
+        
+        except Exception as e:
+            print("Exception inside PasswordResetOTPVerifyView: ", e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.login_url)
 
@@ -151,6 +154,8 @@ class PasswordResetOTPVerifyView(View):
                 return render(request, self.otp_verification_template)
 
             if otp_entered == str(otp_record.otp_code):
+                otp_record.is_verified = True
+                otp_record.save()
                 messages.success(request, 'OTP verified successfully.')
                 return redirect(self.password_reset_url)
 
@@ -199,6 +204,7 @@ class ForgotPasswordResendOTPView(View):
 
 class ChangePasswordView(View):
     reset_password_template = 'accounts/resetpassword.html'
+    otp_verification_url = 'account:verify-otp'
     reset_password_request_url = 'account:forgotpassword'
     login_url = 'account:login'
     home_url = 'home:home'
@@ -213,7 +219,12 @@ class ChangePasswordView(View):
                 messages.error(request, 'Session expired. Please request a new OTP.')
                 return redirect(self.reset_password_request_url)
             
+            otp_record = OTPCode.objects.get(email=email_address)
+            if not otp_record.is_verified:
+                messages.error(request, 'Please verify your OTP first.')
+                return redirect(self.otp_verification_url)
             return render(request, self.reset_password_template)
+        
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.home_url)
@@ -227,6 +238,11 @@ class ChangePasswordView(View):
             if not email_address:
                 messages.error(request, 'Session expired. Please request a new OTP.')
                 return redirect(self.reset_password_request_url)
+            
+            otp_record = OTPCode.objects.get(email=email_address)
+            if not otp_record.is_verified:
+                messages.error(request, 'Please verify your OTP first.')
+                return redirect(self.otp_verification_url)
             
             new_password = request.POST.get('newpassword')
             confirm_password = request.POST.get('confirmpassword')
@@ -248,7 +264,7 @@ class ChangePasswordView(View):
             messages.error(request, 'No user found with this email address.')
             return redirect(self.reset_password_request_url)
         
-        except Exception as e:
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.login_url)
 
@@ -293,7 +309,7 @@ class UserSignupView(View):
                 return render(request, self.signup_template, {'form_data': signup_data})
 
             request.session['signup_data'] = signup_data
-            request.session.set_expiry(timedelta(minutes=5))
+            request.session.set_expiry(timedelta(minutes=10))
             
             OTPCode.objects.filter(email=email_address).delete()
             otp_code = generate_and_save_otp(email_address)
@@ -325,7 +341,6 @@ class VerifyOTPView(View):
             if not signup_data:
                 messages.error(request, 'Session expired. Please sign up again.')
                 return redirect(self.signup_url)  
-        
             return render(request, self.otp_verification_template)
         
         except Exception:
@@ -353,12 +368,13 @@ class VerifyOTPView(View):
 
             email_address = signup_data.get('email')
             otp_record = OTPCode.objects.get(email=email_address)
-            
             if otp_record.otp_expired_time < timezone.now():
                 messages.error(request, 'OTP has expired. Please regenerate your OTP.')
                 return render(request, self.otp_verification_template)
 
             if otp_entered == str(otp_record.otp_code):
+                otp_record.is_verified = True
+                otp_record.save()
                 messages.success(request, 'OTP verified successfully.')
                 return redirect(self.user_role_url)
             
@@ -394,7 +410,7 @@ class GenerateNewOTPView(View):
             messages.success(request, 'A new OTP has been sent to your email.')
             return render(request, self.otp_verification_template)  
 
-        except SMTPException as e:
+        except SMTPException:
             messages.error(request, 'Unable to send email. Please try again later.')
             return render(request, self.otp_verification_template)
             
@@ -404,6 +420,7 @@ class GenerateNewOTPView(View):
 
 class UserRoleRedirectView(View):
     user_role_template = 'accounts/roleselection.html'  
+    otp_verification_url = 'account:otp_verification'
     login_url = 'account:login'  
     signup_url = 'account:signup'  
     home_url = 'home:home'
@@ -418,8 +435,16 @@ class UserRoleRedirectView(View):
                 messages.error(request, 'Session expired. Please sign up again.')
                 return redirect(self.signup_url)
             
+            email_address = signup_data.get('email')
+            otp_record = OTPCode.objects.get(email=email_address)
+            if not otp_record.is_verified:
+                messages.error(request, 'Please verify your OTP first.')
+                return redirect(self.otp_verification_url)
+            
             return render(request, self.user_role_template)
+        
         except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.home_url)
 
     def post(self, request):
@@ -431,6 +456,12 @@ class UserRoleRedirectView(View):
             if not signup_data:
                 messages.error(request, 'Session expired. Please sign up again.')
                 return redirect(self.signup_url)
+            
+            email_address = signup_data.get('email')
+            otp_record = OTPCode.objects.get(email=email_address)
+            if not otp_record.is_verified:
+                messages.error(request, 'Please verify your OTP first.')
+                return redirect(self.otp_verification_url)
 
             email_address = signup_data.get('email')
             username = signup_data.get('username')
@@ -456,7 +487,7 @@ class UserRoleRedirectView(View):
             del request.session['signup_data']
             return redirect(self.login_url)
 
-        except Exception as e:
+        except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.signup_url)
 

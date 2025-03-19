@@ -24,7 +24,7 @@
         <h3>Sign Up with</h3>
         <div class="signup-options">
           <div class="signup-option">
-            <a href="{% provider_login_url 'google' %}">
+            <a href="">
               <img src="{% static 'images/Google.png'%}" alt="Google" />
               <span>Google</span>
             </a>
@@ -32,7 +32,7 @@
           <div class="signup-option">
             <a href="#">
               <img src="{% static 'images/Github.png'%}" alt="Github" />
-              <span>Github</span>
+              <span>GitHub</span>
             </a>
           </div>
         </div>
@@ -63,7 +63,7 @@
         </div>
         <button type="submit" class="signup-button">Sign Up</button>
         <p class="signup-login-link">
-          Already have an account? <a href="{% url 'account:login' %}">Log in</a>
+          Already have an account ? <a href="{% url 'account:login' %}">Log in</a>
         </p>
       </form> 
     </div>

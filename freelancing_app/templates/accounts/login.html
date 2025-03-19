@@ -9,55 +9,54 @@
 {% endblock %}
 
 {% block content %}
-<div class="login">
-
-<!-- Loading Screen -->
+<!-- Loading Screen Section -->
 <div id="loading-screen" style="display: none;">
   <div class="spinner"></div>
 </div>
-  
-<!-- Login Form -->
-<div class="container">
-  <div class="login_form">
-    <form action="{% url 'account:login' %}" method="POST">
-      {% csrf_token %}
-      <h3>Log in with</h3>
-      <div class="login_option">
-        <div class="option">
-          <a href="{% provider_login_url 'google' %}">
-            <img src="{% static 'images/Google.png'%}" alt="Google" />
-            <span>Google</span>
-          </a>
+
+<!-- Login Form Section -->
+<div class="login">
+  <div class="container">
+    <div class="login_form">
+      <form action="{% url 'account:login' %}" method="POST">
+        {% csrf_token %}
+        <h3>Log in with</h3>
+        <div class="login_option">
+          <div class="option">
+            <a href="">
+              <img src="{% static 'images/Google.png'%}" alt="Google" />
+              <span>Google</span>
+            </a>
+          </div>
+          <div class="option">
+            <a href="#">
+              <img src="{% static 'images/Github.png' %}" alt="Github" />
+              <span>GitHub</span>
+            </a>
+          </div>
         </div>
-        <div class="option">
-          <a href="#">
-            <img src="{% static 'images/Github.png' %}" alt="Github" />
-            <span>Github</span>
-          </a>
+        <p class="separator">
+          <span>or</span>
+        </p>
+        <div class="input_box">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="emailaddress" placeholder="Enter email address"/ value="{{ form_data.email|default:'' }}">
         </div>
-      </div>
-      <p class="separator">
-        <span>or</span>
-      </p>
-      <div class="input_box">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="emailaddress" placeholder="Enter email address"/ value="{{ form_data.email|default:'' }}">
-      </div>
-      <div class="input_box">
-        <div class="password_title">
-          <label for="password">Password</label>
-          <a href="{% url 'account:forgotpassword' %}">Forgot Password?</a>
+        <div class="input_box">
+          <div class="password_title">
+            <label for="password">Password</label>
+            <a href="{% url 'account:forgotpassword' %}">Forgot Password?</a>
+          </div>
+          <div class="password_container">
+            <input type="password" id="password" name="password" placeholder="Enter your password" />
+            <i class="fa fa-eye" id="togglePassword"></i>
+          </div>
         </div>
-        <div class="password_container">
-          <input type="password" id="password" name="password" placeholder="Enter your password" />
-          <i class="fa fa-eye" id="togglePassword"></i>
-        </div>
-      </div>
-      <button type="submit">Log In</button>
-      <p class="sign_up">Don't have an account? <a href="{% url 'account:signup' %}">Sign up</a></p>
-    </form>
+        <button type="submit">Log In</button>
+        <p class="sign_up">Don't have an account? <a href="{% url 'account:signup' %}">Sign up</a></p>
+      </form>
+    </div>
   </div>
-</div>
 </div>
 {% endblock %}
 

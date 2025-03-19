@@ -7,21 +7,15 @@ def default_expired_time():
     return now() + timedelta(minutes=3)
 
 class OTPCode(models.Model):
-    otp_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     otp_code = models.CharField(max_length=6)
     email = models.EmailField()
     otp_generated_time = models.DateTimeField(default=now)
     otp_expired_time = models.DateTimeField(default=default_expired_time)
-    
+    is_verified = models.BooleanField(default=False)  
+
     class Meta:
-        db_table = "otp_code"
-
-    def is_valid(self):
-        """Check if the OTP is still valid."""
-        return now() <= self.otp_expired_time
-
-    def __str__(self):
-        return f"OTP for {self.email}"
+        db_table = "OTPCode"
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -45,14 +39,15 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
+    id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=150, unique=True)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)
+    phone_number = models.CharField(max_length=15, unique=True)
     date_joined = models.DateTimeField(auto_now_add=True)
-    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  
     last_login = None
     is_staff = models.BooleanField(default=False)  
     is_superuser = models.BooleanField(default=False)  
@@ -69,34 +64,34 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = "user"
 
 class Client(models.Model):
-    client_ID = models.BigAutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
-    languages = models.CharField(max_length=255, blank=True, null=True)  
-    bio = models.TextField(blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    
+    languages = models.TextField(blank=True, null=True)  
+    bio = models.TextField(blank=True, null=True)  
+    country = models.CharField(max_length=100, blank=True, null=True)  
+    city = models.CharField(max_length=100, blank=True, null=True)  
+
     def __str__(self):
         return f"Client: {self.user.username}"
-    
+
     class Meta:
         db_table = "client"
 
 class Freelancer(models.Model):
-    freelancer_ID = models.BigAutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='freelancer_profile')
-    languages = models.CharField(max_length=255, blank=True, null=True)  
+    languages = models.TextField(blank=True, null=True)  
     bio = models.TextField(blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)  
+    city = models.CharField(max_length=100, blank=True, null=True)  
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     portfolio_link = models.URLField(blank=True, null=True)
-    experience_years = models.IntegerField(blank=True, null=True)
-    skills = models.ManyToManyField(Skill)    
-    
+    experience_years = models.PositiveIntegerField(default=0) 
+    skills = models.ManyToManyField(Skill, blank=True) 
+
     def __str__(self):
         return f"Freelancer: {self.user.username}"
-    
+
     class Meta:
         db_table = "freelancer"
         
