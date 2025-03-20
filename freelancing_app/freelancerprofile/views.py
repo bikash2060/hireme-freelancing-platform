@@ -13,10 +13,9 @@ from projects.models import Skill
 from .models import Education, Certificate
 from .utils import *
 
-# Testing Complete
 class UserBasicInfoView(CustomLoginRequiredMixin, View):
     profile_template = 'freelancerprofile/profile.html'
-    home_url = 'homes:home'
+    home_url = 'home:home'
 
     def get(self, request):
         try:
@@ -67,7 +66,6 @@ class UserBasicInfoView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Failed to load your profile. Please try again later.')
             return redirect(self.home_url)
 
-# Testing Complete
 class EditProfileImageView(CustomLoginRequiredMixin, View):
     edit_profile_template = 'freelancerprofile/editprofileimage.html'
     edit_profile_url = 'freelancer:edit-profile-image'
@@ -84,7 +82,7 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
     def post(self, request):
         try:
             profile_image = request.FILES.get('profile_image')
-            username = request.POST.get('username')
+            username = request.POST.get('username').strip()
 
             if profile_image:
                 valid, error_message = validate_profile_image(profile_image)
@@ -100,6 +98,7 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
             if not valid:
                 messages.error(request, error_message)
                 return render(request, self.edit_profile_template, {'last_username': username})
+            
             user = request.user
             user.username = username
             if profile_image:
@@ -110,21 +109,34 @@ class EditProfileImageView(CustomLoginRequiredMixin, View):
             user.save()
             messages.success(request, 'Your profile has been successfully updated.')
             return redirect(self.freelancer_profile_url)
+        
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.edit_profile_url)
     
-# Testing Complete
 class EditPersonalInfoView(CustomLoginRequiredMixin, View):
     personal_details_template = 'freelancerprofile/editpersonalinfo.html'
     personal_details_url = 'freelancer:edit-personal-info'
     freelancer_profile_url = 'freelancer:profile'
 
     available_languages = [
-        'English', 'Nepali', 'Hindi', 'Chinese', 'Urdu', 'Spanish', 'French', 
-        'Arabic', 'German', 'Russian', 'Portuguese', 'Japanese', 'Korean', 
-        'Italian', 'Dutch', 'Turkish', 'Persian', 'Bengali', 'Swahili', 'Polish',
-        'Thai', 'Vietnamese', 'Tagalog', 'Greek', 'Swedish', 'Czech'
+        'Nepali', 'Maithili', 'Bhojpuri', 'Tharu', 'Tamang', 'Newar', 
+        'Magar', 'Awadhi', 'Limbu', 'Gurung', 'Sherpa', 'Rajbanshi', 
+        'Parbate', 'Bantawa', 'Chhetri', 'English', 'Hindi', 'Urdu',
+        'Arabic', 'Spanish', 'Portuguese', 'Bengali', 'Russian', 'Japanese',
+        'German', 'French', 'Italian', 'Chinese', 'Korean', 'Turkish',
+        'Dutch', 'Polish', 'Vietnamese', 'Thai', 'Swedish', 'Greek',
+        'Danish', 'Finnish', 'Norwegian', 'Icelandic', 'Hungarian', 'Czech',
+        'Slovak', 'Romanian', 'Bulgarian', 'Croatian', 'Serbian', 'Slovenian',
+        'Macedonian', 'Albanian', 'Greek', 'Armenian', 'Georgian', 'Azerbaijani',
+        'Kazakh', 'Uzbek', 'Turkmen', 'Kyrgyz', 'Tajik', 'Mongolian', 'Tibetan',
+        'Uighur', 'Kurdish', 'Pashto', 'Balochi', 'Sindhi', 'Punjabi', 'Saraiki',
+        'Kashmiri', 'Sindhi', 'Bengali', 'Assamese', 'Oriya', 'Marathi', 'Gujarati',
+        'Kannada', 'Malayalam', 'Tamil', 'Telugu', 'Sinhala', 'Burmese', 'Khmer',
+        'Lao', 'Malay', 'Filipino', 'Indonesian', 'Javanese', 'Sundanese', 'Batak',
+        'Minangkabau', 'Malagasy', 'Swahili', 'Yoruba', 'Igbo', 'Hausa', 'Fulfulde',
+        'Amharic', 'Oromo', 'Somali', 'Tigrinya', 'Kinyarwanda', 'Kirundi', 'Luganda',
+        'Kikuyu', 'Kinyarwanda', 'Kirundi', 'Luganda', 'Kikuyu', 'Kinyarwanda', 'Kirundi'
     ]
 
     def get(self, request):
@@ -147,9 +159,9 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
             user = request.user
             freelancer = Freelancer.objects.get(user=user)
             
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
-            phone_number = request.POST.get('phone_number')
+            first_name = request.POST.get('first_name').strip()
+            last_name = request.POST.get('last_name').strip()
+            phone_number = request.POST.get('phone_number').strip()
             languages_selected = request.POST.getlist('languages-select')
             bio = request.POST.get('bio')
 
@@ -182,11 +194,11 @@ class EditPersonalInfoView(CustomLoginRequiredMixin, View):
 
             messages.success(request, 'Your profile has been successfully updated.')
             return redirect(self.freelancer_profile_url)
+        
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.personal_details_url)
             
-# Testing Complete
 class EditUserAddressView(CustomLoginRequiredMixin, View):
     address_template = 'freelancerprofile/editaddress.html'
     address_url = 'freelancer:edit-address'
@@ -401,6 +413,7 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
                 'countries_and_cities': self.countries_and_cities,
                 'countries_and_cities_json': countries_and_cities_json,
             })
+            
         except Exception:
             messages.error(request, 'Failed to load your profile. Please try again later.')
             return redirect(self.freelancer_profile_url)
@@ -425,11 +438,11 @@ class EditUserAddressView(CustomLoginRequiredMixin, View):
             
             messages.success(request, 'Your profile has been successfully updated.')
             return redirect(self.freelancer_profile_url)
+        
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.address_url)
         
-# Testing Complete
 class EditUserSkillsView(CustomLoginRequiredMixin, View):
     skills_template = 'freelancerprofile/editskills.html'
     skills_url = 'freelancer:edit-skill'
@@ -493,7 +506,6 @@ class EditUserSkillsView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.skills_url) 
         
-# Testing Complete
 class AddEducationView(CustomLoginRequiredMixin, View):
     education_form_template = 'freelancerprofile/addeducation.html'
     education_form_url = 'freelancer:add-new-education'
@@ -593,7 +605,6 @@ class AddEducationView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.education_form_url) 
  
-# Testing Complete
 class EditEducationView(CustomLoginRequiredMixin, View):
     education_form_template = 'freelancerprofile/editeducation.html'
     education_form_url = 'freelancer:edit-education'
@@ -711,7 +722,6 @@ class EditEducationView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(reverse(self.education_form_url, args=[education_id])) 
 
-# Testing Complete
 class DeleteEducationView(CustomLoginRequiredMixin, View):
     freelancer_profile_url = 'freelancer:profile'
     
@@ -726,7 +736,6 @@ class DeleteEducationView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
         
-# Testing Complete
 class AddCertificateView(CustomLoginRequiredMixin, View):
     certificate_template = 'freelancerprofile/addcertificate.html'
     certificate_url = 'freelancer:add-new-certificate'
@@ -814,7 +823,6 @@ class AddCertificateView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.certificate_url) 
         
-# Testing Complete
 class EditCertificateView(CustomLoginRequiredMixin, View):
     certificate_form_template = 'freelancerprofile/editcertificate.html'
     education_form_url = 'freelancer:edit-certificate'
@@ -913,7 +921,6 @@ class EditCertificateView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(reverse(self.education_form_url, args=[certificate_id]))
                 
-# Testing Complete
 class DeleteCertificateView(CustomLoginRequiredMixin, View):
     freelancer_profile_url = 'freelancer:profile'
     
@@ -928,7 +935,6 @@ class DeleteCertificateView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
         
-# Testing Complete
 class PasswordChangeView(CustomLoginRequiredMixin, View):
     password_change_template = 'freelancerprofile/passwordchange.html'
     password_change_url = 'freelancer:change-password'

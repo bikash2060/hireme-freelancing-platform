@@ -5,7 +5,6 @@ from datetime import datetime
 from accounts.mixins import CustomLoginRequiredMixin
 from projects.models import Project
 from accounts.models import Client, Freelancer
-from .models import Proposal
 from home.models import Notification
 from django.db.models import Count
 
@@ -54,47 +53,4 @@ class FreelancerDashboardView(CustomLoginRequiredMixin, View):
             'freelancer': freelancer
         }
         return render(request, self.freelancer_dashboard_template, context)
-    
-class NewProposalsView(CustomLoginRequiredMixin, View):
-    rendered_template = 'proposals/proposals_form.html'
-    
-    def get(self, request, proposal_id):
-        project = Project.objects.get(id=proposal_id)  
-        return render(request, self.rendered_template, {'project': project})
-    
-    def post(self, request, proposal_id):
-        project = Project.objects.get(id=proposal_id)
-
-        proposal_description = request.POST.get('proposal-description')
-        bid_amount = request.POST.get('bid-amount')
-        estimated_delivery_time = request.POST.get('estimated-delivery-time')
-
-        if not proposal_description or not bid_amount or not estimated_delivery_time:
-            messages.error(request, "All fields are required!")
-            return render(request, self.rendered_template, {
-                'project': project,
-                'proposal_description': proposal_description,
-                'bid_amount': bid_amount,
-                'estimated_delivery_time': estimated_delivery_time,
-            })
-
-        freelancer = Freelancer.objects.get(user=request.user)  
-        proposal = Proposal(
-            project=project,
-            freelancer=freelancer,
-            proposal_description=proposal_description,
-            bid_amount=bid_amount,
-            estimated_delivery_time=estimated_delivery_time,
-        )
-        Notification.objects.create(
-            user=project.client.user,
-            message=f"You have received a new proposal for your project {project.title} from {freelancer.user.username}"
-        )
-        proposal.save()
-
-        messages.success(request, "Your proposal has been submitted successfully!")
-        return redirect('dashboard:freelancer')  
-
-
-
     

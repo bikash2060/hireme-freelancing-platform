@@ -36,11 +36,12 @@ def validate_username(username, request=None):
             return False, "This username is reserved. Please choose another."
         
         if User.objects.filter(username=username).exclude(id=request.user.id).exists():
-                return False, "Username already taken."
+            return False, "Username already taken."
+        return True, None
+    
     except Exception:
         return False, "Something went wrong. Please try again later."
-    return True, None
-
+    
 def validate_profile_image(profile_image):
     valid_extensions = ['.png', '.jpg', '.jpeg']
     file_extension = os.path.splitext(profile_image.name)[1].lower()
@@ -92,7 +93,7 @@ def validate_personal_info(first_name, last_name, phone_number, bio, languages, 
             return False, "At least one language is required."
 
         if bio and len(bio) > 1000:
-            return False, "Bio should not exceed 500 characters."
+            return False, "Bio should not exceed 1000 characters."
 
         return True, None
   

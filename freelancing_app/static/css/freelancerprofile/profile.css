@@ -1,4 +1,4 @@
-/* User Profile Style */
+/* User Profile Section */
 .user-basic-info {
     background-color: #F5F5F5;
     width: calc(100% - 260px);
@@ -14,16 +14,16 @@
     padding: 20px 40px;
 }
 
-.settings-container .title{
+.user-basic-info .settings-container .title{
     font-size: 25px;
 }
 
-/* Profile Image and Username Information Styles */
-.profile-info{
+/* Profile Image and Username Information Section */
+.user-basic-info .profile-info{
     position: relative;
 }
 
-.profile-info .box {
+.user-basic-info .profile-info .box {
     display: flex;
     margin-top: 25px;
     justify-content: space-between;
@@ -34,40 +34,43 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
-.profile-info .left-side{
+.user-basic-info .profile-info .left-side{
     display: flex;
     align-items: center;
 }
 
-.profile-info .left-side img{
+.user-basic-info .profile-info .left-side img {
     width: 150px;
     height: 150px;
     object-fit: cover;
     border-radius: 50%;
-}
+    border: 2px solid #d0d0d0;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  }
 
-.profile-info .left-side .details {
+
+.user-basic-info .profile-info .left-side .details {
     margin-left: 20px;
 }
 
-.profile-info .left-side .details .name{
+.user-basic-info .profile-info .left-side .details .name{
     font-size: 20px;
     font-weight: 500;
 }
 
-.profile-info .left-side .details .position{
+.user-basic-info .profile-info .left-side .details .position{
     margin-top: 5px;
     font-size: 15px;
     color: #919191;
     font-weight: 450;
 }
 
-.profile-info .left-side .details .address{
+.user-basic-info .profile-info .left-side .details .address{
     font-size: 15px;
     color: #a7a5a5;
 }
 
-.profile-info .right-side .edit-link {
+.user-basic-info .profile-info .right-side .edit-link {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -80,24 +83,24 @@
     transition: all 0.3s ease; 
 }
 
-.profile-info .right-side .edit-link i {
+.user-basic-info .profile-info .right-side .edit-link i {
     margin-left: 8px; 
     font-size: 18px;
     transition: transform 0.3s ease, color 0.3s ease; 
 }
 
-.profile-info .right-side .edit-link:hover {
+.user-basic-info .profile-info .right-side .edit-link:hover {
     color: #0056b3; 
     border-color: #0056b3;
 }
 
-.profile-info .right-side .edit-link:hover i {
+.user-basic-info .profile-info .right-side .edit-link:hover i {
     transform: translateX(5px); 
     color: #0056b3; 
 }
 
-/* Personal Information Styles */
-.personal-info .box {
+/* Personal Information Section */
+.user-basic-info .personal-info .box {
     padding: 25px 20px;
     margin-top: 25px;
     border-radius: 8px;
@@ -105,14 +108,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
-.personal-info .header{
+.user-basic-info .personal-info .header{
     display: flex;
     width: 100%;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.personal-info .header .caption i{
+.user-basic-info .personal-info .header .caption i{
     margin-right: 10px;
     font-size: 18px;
     padding: 10px;
@@ -121,54 +124,54 @@
     border-radius: 50%;
 }
 
-.personal-info .caption{
+.user-basic-info .personal-info .caption{
     font-size: 20px;
     font-weight: 500;
 }
 
-.personal-info .body-content {
+.user-basic-info .personal-info .body-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
 }
 
-.personal-info .body-content p {
+.user-basic-info .personal-info .body-content p {
     margin: 0;
     font-size: 17px;
     font-weight: 430;
     color: #080808;
 }
 
-.personal-info .body-content .col-1, 
-.personal-info .body-content .col-2,
-.personal-info .body-content .col-3, 
-.personal-info .body-content .col-4, 
-.personal-info .body-content .col-5,
-.personal-info .body-content .col-6,
-.personal-info .body-content .col-7 {
+.user-basic-info .personal-info .body-content .col-1, 
+.user-basic-info .personal-info .body-content .col-2,
+.user-basic-info .personal-info .body-content .col-3, 
+.user-basic-info .personal-info .body-content .col-4, 
+.user-basic-info .personal-info .body-content .col-5,
+.user-basic-info .personal-info .body-content .col-6,
+.user-basic-info .personal-info .body-content .col-7 {
     display: flex;
     flex-direction: column;
 }
 
-.personal-info .body-content .col-7 {
+.user-basic-info .personal-info .body-content .col-7 {
     grid-column: span 2; 
     display: flex;
     flex-direction: column;
 }
 
-.personal-info .body-content .col-1 strong,
-.personal-info .body-content .col-2 strong,
-.personal-info .body-content .col-3 strong,
-.personal-info .body-content .col-4 strong,
-.personal-info .body-content .col-5 strong,
-.personal-info .body-content .col-6 strong,
-.personal-info .body-content .col-7 strong {
+.user-basic-info .personal-info .body-content .col-1 strong,
+.user-basic-info .personal-info .body-content .col-2 strong,
+.user-basic-info .personal-info .body-content .col-3 strong,
+.user-basic-info .personal-info .body-content .col-4 strong,
+.user-basic-info .personal-info .body-content .col-5 strong,
+.user-basic-info .personal-info .body-content .col-6 strong,
+.user-basic-info .personal-info .body-content .col-7 strong {
     font-size: 16px;
     font-weight: 400;
     color: #555;
 }
 
-.personal-info .body-content .col-7 .bio-text{
+.user-basic-info .personal-info .body-content .col-7 .bio-text{
     height: auto;
     line-height: 1.6; 
     max-height: 6.4em; 
@@ -177,7 +180,7 @@
     text-overflow: ellipsis;
 }
 
-.personal-info .body-content .col-7 .read-more {
+.user-basic-info .personal-info .body-content .col-7 .read-more {
     color: #007bff;
     cursor: pointer;
     text-decoration: none;
@@ -185,11 +188,11 @@
     margin-top: 10px;
 }
 
-.personal-info .body-content .col-7 .read-more:hover {
+.user-basic-info .personal-info .body-content .col-7 .read-more:hover {
     text-decoration: underline;
 }
 
-.personal-info .header .edit-link {
+.user-basic-info .personal-info .header .edit-link {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -202,23 +205,23 @@
     transition: all 0.3s ease; 
 }
 
-.personal-info .header .edit-link i {
+.user-basic-info .personal-info .header .edit-link i {
     margin-left: 8px; 
     font-size: 18px;
     transition: transform 0.3s ease, color 0.3s ease; 
 }
 
-.personal-info .header .edit-link:hover {
+.user-basic-info .personal-info .header .edit-link:hover {
     color: #0056b3; 
     border-color: #0056b3;
 }
 
-.personal-info .header .edit-link:hover i {
+.user-basic-info .personal-info .header .edit-link:hover i {
     transform: translateX(5px); 
     color: #0056b3; 
 }
 
-.toggle-btn {
+.user-basic-info .toggle-btn {
     background: #f0f0f0;
     border: 1px solid #ccc;
     padding: 5px 10px;
@@ -229,13 +232,13 @@
     transition: all 0.3s ease;
 }
 
-.toggle-btn:hover {
+.user-basic-info .toggle-btn:hover {
     background: #e0e0e0;
     border-color: #aaa;
 }
 
-/* Address Information Style */
-.addreess-info .box {
+/* Address Information Section */
+.user-basic-info .addreess-info .box {
     margin-top: 25px;
     padding: 25px 20px;
     border-radius: 8px;
@@ -243,14 +246,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
-.addreess-info .header{
+.user-basic-info .addreess-info .header{
     display: flex;
     width: 100%;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.addreess-info .header .caption i{
+.user-basic-info .addreess-info .header .caption i{
     margin-right: 10px;
     font-size: 18px;
     padding: 10px;
@@ -259,42 +262,42 @@
     border-radius: 50%;
 }
 
-.addreess-info .caption{
+.user-basic-info .addreess-info .caption{
     font-size: 20px;
     font-weight: 500;
 }
 
-.addreess-info .body-content {
+.user-basic-info .addreess-info .body-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;
 }
 
-.addreess-info .body-content p {
+.user-basic-info .addreess-info .body-content p {
     margin: 0;
     font-size: 17px;
     font-weight: 430;
     color: #080808;
 }
 
-.addreess-info .body-content .col-1,
-.addreess-info .body-content .col-2,
-.addreess-info .body-content .col-3, 
-.addreess-info .body-content .col-4{
+.user-basic-info .addreess-info .body-content .col-1,
+.user-basic-info .addreess-info .body-content .col-2,
+.user-basic-info .addreess-info .body-content .col-3, 
+.user-basic-info .addreess-info .body-content .col-4{
     display: flex;
     flex-direction: column;
 }
 
-.addreess-info .body-content .col-1 strong,
-.addreess-info .body-content .col-2 strong,
-.addreess-info .body-content .col-3 strong, 
-.addreess-info .body-content .col-4 strong{
+.user-basic-info .addreess-info .body-content .col-1 strong,
+.user-basic-info .addreess-info .body-content .col-2 strong,
+.user-basic-info .addreess-info .body-content .col-3 strong, 
+.user-basic-info .addreess-info .body-content .col-4 strong{
     font-size: 16px;
     font-weight: 400;
     color: #555;
 }
 
-.addreess-info .header .edit-link {
+.user-basic-info .addreess-info .header .edit-link {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -307,24 +310,24 @@
     transition: all 0.3s ease; 
 }
 
-.addreess-info .header .edit-link i {
+.user-basic-info .addreess-info .header .edit-link i {
     margin-left: 8px; 
     font-size: 18px;
     transition: transform 0.3s ease, color 0.3s ease; 
 }
 
-.addreess-info .header .edit-link:hover {
+.user-basic-info .addreess-info .header .edit-link:hover {
     color: #0056b3; 
     border-color: #0056b3;
 }
 
-.addreess-info .header .edit-link:hover i {
+.user-basic-info .addreess-info .header .edit-link:hover i {
     transform: translateX(5px); 
     color: #0056b3; 
 }
 
-/* Skills and Hourly Rate Information Styles */
-.experience-info .box {
+/* Skills and Hourly Rate Information Section */
+.user-basic-info .experience-info .box {
     margin-top: 25px;
     padding: 25px 20px;
     border-radius: 8px;
@@ -332,14 +335,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
 }
 
-.experience-info .header {
+.user-basic-info .experience-info .header {
     display: flex;
     width: 100%;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.experience-info .header .caption i {
+.user-basic-info .experience-info .header .caption i {
     margin-right: 10px;
     font-size: 18px;
     padding: 10px;
@@ -348,50 +351,50 @@
     border-radius: 50%;
 }
 
-.experience-info .caption {
+.user-basic-info .experience-info .caption {
     font-size: 20px;
     font-weight: 500;
 }
 
-.experience-info .body-content {
+.user-basic-info .experience-info .body-content {
     display: grid;
     grid-template-columns: 1fr 1fr; 
     grid-gap: 20px;
 }
 
-.experience-info .body-content p {
+.user-basic-info .experience-info .body-content p {
     margin: 0;
     font-size: 17px;
     font-weight: 430;
     color: #080808;
 }
 
-.experience-info .body-content .col-1,
-.experience-info .body-content .col-2,
-.experience-info .body-content .col-3 {
+.user-basic-info .experience-info .body-content .col-1,
+.user-basic-info .experience-info .body-content .col-2,
+.user-basic-info .experience-info .body-content .col-3 {
     display: flex;
     flex-direction: column;
 }
 
-.experience-info .body-content .col-1 strong,
-.experience-info .body-content .col-2 strong,
-.experience-info .body-content .col-3 strong {
+.user-basic-info .experience-info .body-content .col-1 strong,
+.user-basic-info .experience-info .body-content .col-2 strong,
+.user-basic-info .experience-info .body-content .col-3 strong {
     font-size: 16px;
     font-weight: 400;
     color: #555;
 }
 
-.experience-info .body-content .col-3 {
+.user-basic-info .experience-info .body-content .col-3 {
     grid-column: span 2; 
 }
 
-.experience-info .skills-list {
+.user-basic-info .experience-info .skills-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-.experience-info .skills-list .skill-tag {
+.user-basic-info .experience-info .skills-list .skill-tag {
     background-color: #1E88E5;
     color: white;
     padding: 8px 15px;
@@ -401,17 +404,17 @@
     display: inline-block;
 }
 
-.experience-info .skills-list .skill-tag:hover {
+.user-basic-info .experience-info .skills-list .skill-tag:hover {
     background-color: #155a8a;
 }
 
-.experience-info .skills-list p {
+.user-basic-info .experience-info .skills-list p {
     color: #555;
     font-size: 14px;
     font-weight: 400;
 }
 
-.experience-info .header .edit-link {
+.user-basic-info .experience-info .header .edit-link {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -424,24 +427,24 @@
     transition: all 0.3s ease; 
 }
 
-.experience-info .header .edit-link i {
+.user-basic-info .experience-info .header .edit-link i {
     margin-left: 8px; 
     font-size: 18px;
     transition: transform 0.3s ease, color 0.3s ease; 
 }
 
-.experience-info .header .edit-link:hover {
+.user-basic-info .experience-info .header .edit-link:hover {
     color: #0056b3; 
     border-color: #0056b3;
 }
 
-.experience-info .header .edit-link:hover i {
+.user-basic-info .experience-info .header .edit-link:hover i {
     transform: translateX(5px); 
     color: #0056b3; 
 }
 
-/* Education Information Styles */
-.education-info .box {
+/* Education Information Section */
+.user-basic-info .education-info .box {
     margin-top: 25px;
     padding: 25px 20px;
     border-radius: 8px;
@@ -449,14 +452,14 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.education-info .header {
+.user-basic-info .education-info .header {
     display: flex;
     width: 100%;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.education-info .header .caption i {
+.user-basic-info .education-info .header .caption i {
     margin-right: 10px;
     font-size: 18px;
     padding: 10px;
@@ -465,12 +468,12 @@
     border-radius: 50%;
 }
 
-.education-info .caption {
+.user-basic-info .education-info .caption {
     font-size: 20px;
     font-weight: 500;
 }
 
-.education-info .header .add-link {
+.user-basic-info .education-info .header .add-link {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -483,23 +486,23 @@
     transition: all 0.3s ease; 
 }
 
-.education-info .header .add-link i {
+.user-basic-info .education-info .header .add-link i {
     margin-left: 8px; 
     font-size: 18px;
     transition: transform 0.3s ease, color 0.3s ease; 
 }
 
-.education-info .header .add-link:hover {
+.user-basic-info .education-info .header .add-link:hover {
     color: #0056b3; 
     border-color: #0056b3;
 }
 
-.education-info .header .add-link:hover i {
+.user-basic-info .education-info .header .add-link:hover i {
     transform: translateX(5px); 
     color: #0056b3; 
 }
 
-.education-item {
+.user-basic-info .education-item {
     display: flex;
     align-items: flex-start;
     padding: 15px 0;
@@ -507,11 +510,11 @@
     position: relative;
 }
 
-.education-item:last-child {
+.user-basic-info .education-item:last-child {
     border-bottom: none;
 }
 
-.education-item .education-logo {
+.user-basic-info .education-item .education-logo {
     width: 60px;
     height: 60px;
     margin-right: 15px;
@@ -521,36 +524,36 @@
     flex-shrink: 0;
 }
 
-.education-item .education-logo img {
+.user-basic-info .education-item .education-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.education-item .education-details {
+.user-basic-info .education-item .education-details {
     flex: 1;
 }
 
-.education-details .institution {
+.user-basic-info .education-details .institution {
     font-size: 16px;
     font-weight: 530;
     margin-bottom: 5px;
 }
 
-.education-details .degree {
+.user-basic-info .education-details .degree {
     font-size: 15px;
     font-weight: 520;
     color: #353535;
     margin-bottom: 5px;
 }
 
-.education-details .duration, .education-details .location {
+.user-basic-info .education-details .duration, .education-details .location {
     font-size: 14px;
     color: #333;
     margin-bottom: 5px;
 }
 
-.education-item .edit-icon {
+.user-basic-info .education-item .edit-icon {
     position: absolute;
     right: 10px;
     top: 20px;
@@ -567,11 +570,11 @@
     transition: 0.3s ease;
 }
 
-.education-item .edit-icon:hover {
+.user-basic-info .education-item .edit-icon:hover {
     color: #0056b3; 
 }
 
-.education-item .delete-icon {
+.user-basic-info .education-item .delete-icon {
     position: absolute;
     right: 10px; 
     top: 60px;
@@ -588,12 +591,12 @@
     transition: 0.3s ease;
 }
 
-.education-item .delete-icon:hover {
+.user-basic-info .education-item .delete-icon:hover {
     color: #e74c3c; 
 }
 
 /* Certificate Information Styles */
-.certificate-info .box {
+.user-basic-info .certificate-info .box {
     margin-top: 25px;
     padding: 25px 20px;
     border-radius: 8px;
@@ -601,21 +604,21 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.certificate-info .header {
+.user-basic-info .certificate-info .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
 }
 
-.certificate-info .header .caption {
+.user-basic-info .certificate-info .header .caption {
     font-size: 20px;
     font-weight: 500;
     display: flex;
     align-items: center;
 }
 
-.certificate-info .header .caption i {
+.user-basic-info .certificate-info .header .caption i {
     margin-right: 10px;
     font-size: 18px;
     padding: 10px;
@@ -624,7 +627,7 @@
     border-radius: 50%;
 }
 
-.certificate-info .header .add-link {
+.user-basic-info .certificate-info .header .add-link {
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -637,23 +640,23 @@
     transition: all 0.3s ease;
 }
 
-.certificate-info .header .add-link i {
+.user-basic-info .certificate-info .header .add-link i {
     margin-left: 8px;
     font-size: 18px;
     transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.certificate-info .header .add-link:hover {
+.user-basic-info .certificate-info .header .add-link:hover {
     color: #0056b3;
     border-color: #0056b3;
 }
 
-.certificate-info .header .add-link:hover i {
+.user-basic-info .certificate-info .header .add-link:hover i {
     transform: translateX(5px);
     color: #0056b3;
 }
 
-.certificate-item {
+.user-basic-info .certificate-item {
     display: flex;
     align-items: flex-start;
     padding: 15px 0;
@@ -661,11 +664,11 @@
     position: relative;
 }
 
-.certificate-item:last-child {
+.user-basic-info .certificate-item:last-child {
     border-bottom: none;
 }
 
-.certificate-item .certificate-logo {
+.user-basic-info .certificate-item .certificate-logo {
     width: 60px;
     height: 60px;
     margin-right: 15px;
@@ -675,35 +678,35 @@
     flex-shrink: 0;
 }
 
-.certificate-item .certificate-logo img {
+.user-basic-info .certificate-item .certificate-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.certificate-item .certificate-details {
+.user-basic-info .certificate-item .certificate-details {
     flex: 1;
 }
 
-.certificate-details .certificate-name {
+.user-basic-info .certificate-details .certificate-name {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 5px;
 }
 
-.certificate-details .certificate-provider {
+.user-basic-info .certificate-details .certificate-provider {
     font-size: 14px;
     color: #666;
     margin-bottom: 3px;
 }
 
-.certificate-details .issued-date {
+.user-basic-info .certificate-details .issued-date {
     font-size: 14px;
     color: #333;
     margin-bottom: 8px;
 }
 
-.certificate-details .certificate-url a {
+.user-basic-info .certificate-details .certificate-url a {
     display: inline-flex;
     align-items: center;
     font-size: 14px;
@@ -716,17 +719,17 @@
     transition: all 0.3s ease;
 }
 
-.certificate-details .certificate-url a i {
+.user-basic-info .certificate-details .certificate-url a i {
     margin-left: 5px;
     font-size: 12px;
 }
 
-.certificate-details .certificate-url a:hover {
+.user-basic-info .certificate-details .certificate-url a:hover {
     background-color: #1E88E5;
     color: #fff;
 }
 
-.certificate-item .edit-icon {
+.user-basic-info .certificate-item .edit-icon {
     position: absolute;
     right: 10px;
     top: 20px;
@@ -743,11 +746,11 @@
     transition: background 0.3s ease;
 }
 
-.certificate-item .edit-icon:hover {
+.user-basic-info .certificate-item .edit-icon:hover {
     color: #0056b3;
 }
 
-.certificate-item .delete-icon {
+.user-basic-info .certificate-item .delete-icon {
     position: absolute;
     right: 10px; 
     top: 60px;
@@ -764,6 +767,6 @@
     transition: 0.3s ease;
 }
 
-.certificate-item .delete-icon:hover {
+.user-basic-info .certificate-item .delete-icon:hover {
     color: #e74c3c; 
 }

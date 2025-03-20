@@ -1,4 +1,4 @@
-/* Address and City Information Styles */
+/* Address and City Information Section */
 .edit-address-container {
     width: calc(100% - 260px);
     max-width: 550px;
@@ -7,20 +7,28 @@
     left: 300px;
 }
 
-.edit-address-container .back-button a {
-    display: inline-flex;
+.edit-address-container  .back-button a {
+    display: flex;
     align-items: center;
-    font-size: 16px;
-    color: #1E88E5;
+    justify-content: center;
+    font-size: 14px;
+    color: #505050;
     text-decoration: none;
     margin-bottom: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    border: 1px solid #e0e0e0;
+    background-color: #fafafa;
 }
 
-.edit-address-container .back-button i {
-    margin-right: 8px;
+.edit-address-container  .back-button a:hover {
+    background-color: #f0f0f0;
+    color: #303030;
 }
 
-.edit-address-form {
+.edit-address-container .edit-address-form {
     display: flex;
     flex-direction: column;
     gap: 20px; 
@@ -31,19 +39,19 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.edit-address-form .form-group {
+.edit-address-container .edit-address-form .form-group {
     margin-bottom: 20px;
 }
 
-.edit-address-form .form-group label {
+.edit-address-container .edit-address-form .form-group label {
     font-weight: 500;
     display: block;
     margin-bottom: 8px;
     color: #333;
 }
 
-.edit-address-form .form-group input,
-.edit-address-form .form-group select {
+.edit-address-container .edit-address-form .form-group input,
+.edit-address-container .edit-address-form .form-group select {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
@@ -54,18 +62,18 @@
     background-color: #fff;
 }
 
-.edit-address-form .form-group input:focus,
-.edit-address-form .form-group select:focus {
+.edit-address-container .edit-address-form .form-group input:focus,
+.edit-address-container .edit-address-form .form-group select:focus {
     border-color: #1E88E5;
 }
 
-.edit-address-form .form-actions {
+.edit-address-container .edit-address-form .form-actions {
     display: flex;
     gap: 15px;
 }
 
-.edit-address-form .form-actions button,
-.edit-address-form .form-actions a {
+.edit-address-container .edit-address-form .form-actions button,
+.edit-address-container .edit-address-form .form-actions a {
     padding: 12px 20px;
     border-radius: 6px;
     font-weight: 600;
@@ -75,23 +83,23 @@
     cursor: pointer;
 }
 
-.edit-address-form .form-actions button {
+.edit-address-container .edit-address-form .form-actions button {
     background-color: #1E88E5;
     color: #fff;
     border: none;
 }
 
-.edit-address-form .form-actions button:hover {
+.edit-address-container .edit-address-form .form-actions button:hover {
     background-color: #1565C0;
 }
 
-.edit-address-form .form-actions a {
+.edit-address-container .edit-address-form .form-actions a {
     background-color: #f44336;
     color: #fff;
     border: none;
     transition: background-color 0.3s ease;
 }
 
-.edit-address-form .form-actions a:hover {
+.edit-address-container .edit-address-form .form-actions a:hover {
     background-color: #d32f2f;
 }

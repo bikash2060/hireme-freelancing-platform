@@ -1,19 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
     const bioText = document.getElementById('bio');
-    console.log(bioText)
     const readMoreLink = document.getElementById('read-more');
 
     if (!bioText || bioText.textContent.trim() === "" || bioText.textContent.trim() === "None") {
         readMoreLink.style.display = 'none';
-    } else {
-        readMoreLink.style.display = 'inline'; 
+        return;
+    }
+
+    const lineHeight = parseFloat(getComputedStyle(bioText).lineHeight);
+    const maxLines = 4;
+    const maxHeight = lineHeight * maxLines;
+
+    if (bioText.scrollHeight > maxHeight) {
+        readMoreLink.style.display = 'inline';
+        bioText.style.maxHeight = maxHeight + "px";
+        bioText.style.overflow = "hidden";
+
         readMoreLink.addEventListener('click', function () {
-            if (bioText.style.maxHeight === 'none') {
-                bioText.style.maxHeight = '6.4em';  
-                readMoreLink.textContent = 'Read More';  
+            if (bioText.style.maxHeight === "none") {
+                bioText.style.maxHeight = maxHeight + "px";
+                readMoreLink.textContent = 'Read More';
             } else {
-                bioText.style.maxHeight = 'none';  
-                readMoreLink.textContent = 'Read Less';  
+                bioText.style.maxHeight = "none";
+                readMoreLink.textContent = 'Read Less';
             }
         });
     }
@@ -35,7 +44,7 @@ function toggleVisibility(fieldId, button) {
             field.textContent = "**********";
         }
         field.dataset.hidden = "true";
-        button.textContent = "Unhide";
+        button.textContent = "Reveal";
     }
 }
 
@@ -43,4 +52,3 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleVisibility("email", document.querySelector("[onclick=\"toggleVisibility('email', this)\"]"));
     toggleVisibility("phone", document.querySelector("[onclick=\"toggleVisibility('phone', this)\"]"));
 });
-

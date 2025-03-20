@@ -84,7 +84,7 @@ class Freelancer(models.Model):
     bio = models.TextField(blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)  
     city = models.CharField(max_length=100, blank=True, null=True)  
-    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
+    hourly_rate = models.IntegerField(default=0)
     portfolio_link = models.URLField(blank=True, null=True)
     experience_years = models.PositiveIntegerField(default=0) 
     skills = models.ManyToManyField(Skill, blank=True) 

@@ -58,14 +58,20 @@ class MarkAllAsReadView(CustomLoginRequiredMixin, View):
 class GetUserProfileView(CustomLoginRequiredMixin, View):
     freelancer_profile_url = 'freelancer:profile'
     client_profile_url = 'client:profile'
+    home_url = 'home:home'
     
     def get(self, request):
-        user_role = request.user.role 
+        try:
+            user_role = request.user.role 
+            
+            if user_role.lower() == 'client':
+                return redirect(self.client_profile_url)
+            else:
+                return redirect(self.freelancer_profile_url)
         
-        if user_role.lower() == 'client':
-            return redirect(self.client_profile_url)
-        else:
-            return redirect(self.freelancer_profile_url)
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)
 
 def handling_404(request, exception):
     error_page_template = '404.html'

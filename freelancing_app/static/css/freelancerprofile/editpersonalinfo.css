@@ -1,4 +1,4 @@
-/* Personal Details Style */
+/* Personal Details Section */
 .edit-personal-container {
     width: calc(100% - 260px);
     max-width: 550px;
@@ -8,19 +8,27 @@
 }
 
 .edit-personal-container .back-button a {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    font-size: 16px;
-    color: #1E88E5;
+    justify-content: center;
+    font-size: 14px;
+    color: #505050;
     text-decoration: none;
     margin-bottom: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    border: 1px solid #e0e0e0;
+    background-color: #fafafa;
 }
 
-.edit-personal-container .back-button i {
-    margin-right: 8px;
+.edit-personal-container .back-button a:hover {
+    background-color: #f0f0f0;
+    color: #303030;
 }
 
-.personal-info-form {
+.edit-personal-container .personal-info-form {
     background: #fff;
     padding: 30px;
     border: 1px solid #e0e0e0;
@@ -29,20 +37,18 @@
     max-width: 550px;
 }
 
-.personal-info-form .form-group {
+.edit-personal-container .personal-info-form .form-group {
     margin-bottom: 20px;
 }
 
-.personal-info-form .form-group label {
+.edit-personal-container .personal-info-form .form-group label {
     font-weight: 500;
-    display: block;
-    margin-bottom: 8px;
     color: #333;
 }
 
-.personal-info-form .form-group input:not([type="checkbox"]),
-.personal-info-form .form-group textarea,
-.personal-info-form .form-group select {
+.edit-personal-container .personal-info-form .form-group input:not([type="checkbox"]),
+.edit-personal-container .personal-info-form .form-group textarea,
+.edit-personal-container .personal-info-form .form-group select {
     width: 100%;
     font-size: 16px;
     padding: 10px;
@@ -53,32 +59,32 @@
     transition: 0.2s ease;
 }
 
-.personal-info-form .form-group input[type="text"]:focus {
+.edit-personal-container .personal-info-form .form-group input[type="text"]:focus {
     border-color: #626cd6;
 }
 
-.personal-info-form .form-group textarea {
+.edit-personal-container .personal-info-form .form-group textarea {
     resize: vertical;
     min-height: 100px;
 }
 
-.personal-info-form .form-group select {
+.edit-personal-container .personal-info-form .form-group select {
     height: 200px;
     overflow-y: auto;
 }
 
-.personal-info-form .form-group input[readonly] {
+.edit-personal-container .personal-info-form .form-group input[readonly] {
     background-color: #f5f5f5;
     cursor: not-allowed;
 }
 
-.personal-info-form .form-actions {
+.edit-personal-container .personal-info-form .form-actions {
     display: flex;
     gap: 15px;
 }
 
-.personal-info-form .form-actions button,
-.personal-info-form .form-actions a {
+.edit-personal-container .personal-info-form .form-actions button,
+.edit-personal-container .personal-info-form .form-actions a {
     padding: 12px 20px;
     border-radius: 6px;
     font-weight: 600;
@@ -88,125 +94,144 @@
     cursor: pointer;
 }
 
-.personal-info-form .form-actions button {
+.edit-personal-container .personal-info-form .form-actions button {
     background-color: #1E88E5;
     color: #fff;
     border: none;
 }
 
-.personal-info-form .form-actions button:hover {
+.edit-personal-container .personal-info-form .form-actions button:hover {
     background-color: #1565C0;
 }
 
-.personal-info-form .form-actions a {
+.edit-personal-container .personal-info-form .form-actions a {
     background-color: #f44336;
     color: #fff;
     border: none;
     transition: background-color 0.3s ease;
 }
 
-.personal-info-form .form-actions a:hover {
+.edit-personal-container .personal-info-form .form-actions a:hover {
     background-color: #d32f2f;
 }
 
-#language-search {
+.edit-personal-container #language-search {
     width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    margin-top: 10px;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background-color: #fff;
 }
 
-#languages-list {
-    max-height: 200px;
+.edit-personal-container #language-search:focus {
+    border-color: #626cd6;
+}
+
+.edit-personal-container #languages-list {
+    max-height: 195px;
     overflow-y: auto;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background-color: #fafafa;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #fff;
 }
 
-#languages-list label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 18px;
+.edit-personal-container .language-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 4px;
+    font-size: 0.95rem;
     cursor: pointer;
-}
-
-#languages-list input[type="checkbox"] {
-    margin-right: 8px;
-}
-
-#languages-list::-webkit-scrollbar {
-    width: 8px;
-}
-
-#languages-list::-webkit-scrollbar-thumb {
-    background-color: #ccc;
+    transition: background-color 0.2s ease;
     border-radius: 4px;
 }
 
-#languages-list::-webkit-scrollbar-thumb:hover {
-    background-color: #bbb;
+.edit-personal-container .language-item:hover {
+    background-color: #f7fafc;
 }
 
-#languages-list::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
+.edit-personal-container #languages-list input[type="checkbox"] {
+    margin-right: 10px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #4361ee;
 }
 
-#selected-languages {
+.edit-personal-container #selected-languages {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin: 10px 0;
 }
 
-.language-chip {
+.edit-personal-container .language-chip {
     display: inline-flex;
     align-items: center;
-    background-color: #ffffff;
+    background-color: #ebf4ff;
     padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    color: #1e88e5; 
-    border: 1px solid #1e88e5;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 4px;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    color: #4361ee;
+    border: 1px solid #c3dafe;
+    transition: all 0.2s ease;
 }
 
-.language-chip:hover {
-    background-color: #1e88e5;
-    color: #ffffff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+.edit-personal-container .language-chip:hover {
+    background-color: #4361ee;
+    color: #fff;
+    border-color: #4361ee;
 }
 
-.language-chip .remove-language {
-    margin-left: 10px;
+.edit-personal-container .language-chip .remove-language {
+    margin-left: 8px;
     cursor: pointer;
-    background-color: #e57373;
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: bold;
-    width: 20px;
-    height: 20px;
+    background-color: rgba(229, 62, 62, 0.1);
+    color: #e53e3e;
+    font-size: 0.7rem;
+    width: 18px;
+    height: 18px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     border: none;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-.language-chip .remove-language:hover {
-    background-color: #d32f2f;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+.edit-personal-container  .language-chip:hover .remove-language {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
 }
 
-.no-languages-message {
+.edit-personal-container .remove-language:hover {
+    background-color: #e53e3e;
+    color: #fff;
+}
+
+.edit-personal-container .no-languages-message {
     text-align: center;
-    color: #777;
-    font-size: 14px;
-    margin-top: 10px;
+    color: #a0aec0;
+    padding: 10px;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.edit-personal-container #languages-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.edit-personal-container #languages-list::-webkit-scrollbar-thumb {
+    background-color: #cbd5e0;
+    border-radius: 3px;
+}
+
+.edit-personal-container #languages-list::-webkit-scrollbar-thumb:hover {
+    background-color: #a0aec0;
+}
+
+.edit-personal-container #languages-list::-webkit-scrollbar-track {
+    background-color: #f1f5f9;
 }

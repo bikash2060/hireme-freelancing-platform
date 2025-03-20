@@ -11,26 +11,28 @@
 {% block content %}
 {% include 'freelancerprofile/sidebar.html' %}
 
-<!-- Loading Screen -->
+<!-- Loading Screen Section -->
 <div id="loading-screen" style="display: none;">
     <div class="spinner"></div>
 </div>
 
-<!-- User Proile Image and Username -->
+<!-- User Proile Image and Username Section -->
 <div class="edit-image-container">
     <div class="back-button">
         <a href="{% url 'freelancer:profile' %}">
-            <i class="fa fa-arrow-left"></i> Back
+            <i class="fa fa-arrow-left"></i>
         </a>
-    </div>
+    </div>    
     <div class="edit-profile-form" id="edit-profile-form">
         <form action="{% url 'freelancer:edit-profile-image' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label for="profile-image">Profile Image</label>
-                <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %} {% endif %}" alt="{{ user.profile_image }}">
+                <div class="image-container">
+                    <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %} {% endif %}" alt="Profile Image" class="profile-img">
+                </div>
                 <input type="file" id="profile-image" name="profile_image" accept="image/*">
-            </div>
+            </div>            
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" placeholder="Enter your username" value="{{ last_username|default:user.username|default:'' }}">
