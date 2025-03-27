@@ -4,33 +4,33 @@
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}HireMe{% endblock %}</title>
-
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"/>
     <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
-    
     {% block css_files %}
-
     {% endblock %}
-
 </head>
 <body>
 
 <!-- Navigation Section -->
 <div class="nav-container">
     <nav class="navbar">
-
+        
+        <!-- Company Logo Section -->
         <div class="logo">
             <a href="{% url 'home:home' %}">
-                <img src="{% static 'images/Logo.png' %}" alt="company-logo">
+                <div class="logo-container">
+                    <img src="{% static 'images/logo/Logo.png' %}" alt="Company Logo">
+                </div>
             </a>
         </div>
 
+        <!-- Navigation Links Section -->
         <div class="links">
             <a href="{% url 'home:home' %}">Home</a>
             <a href="{% url 'freelancers:freelancer-list' %}">Find Freelancers</a>
@@ -39,6 +39,7 @@
             <a href="#">About Us</a>
         </div>
 
+        <!-- Search Bar Section -->
         <div class="search-bar">
             <select class="search-type">
                 <option value="freelancers">Freelancers</option>
@@ -47,107 +48,144 @@
             <input type="text" placeholder="Search..." />
             <button><i class="fas fa-search"></i></button>
         </div>
+
+        <!-- Mobile View Links and Search -->
+        <div class="mobile-nav">
+            <div class="search-bar">
+                <select class="search-type">
+                    <option value="freelancers">Freelancers</option>
+                    <option value="projects">Projects</option>
+                </select>
+                <input type="text" placeholder="Search..." />
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="links">
+                <a href="{% url 'home:home' %}">Home</a>
+                <a href="{% url 'freelancers:freelancer-list' %}">Find Freelancers</a>
+                <a href="{% url 'project:project-list' %}">Find Projects</a>
+                <a href="#">Help</a>
+                <a href="#">About Us</a>
+            </div>
+
+            {% if not user.is_authenticated %}
+            <div class="auth-buttons">
+                <a href="{% url 'account:login' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{% url 'account:signup' %}" class="signup-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
+            </div>
+            {% endif %}
+            
+        </div>
         
+        <!-- Side Icons Section -->
         <div class="side-icons">
             <div class="icon-container">
 
-            {% if user.is_authenticated %}
-            <div class="notification-main">
-                <div class="icon notification-icon">
-                    <i class="fa-regular fa-bell">
-                        {% if unread_count > 9 %}
-                            <span style="height: 22px; width: 22px ;">9+</span>
-                        {% elif unread_count > 0 %}
-                            <span>{{ unread_count }}</span>
-                        {% endif %}
-                    </i>
-                </div>
-                
-                <div class="notification-box">
-                    <div class="notification-header">
-                        <span>Notifications</span>
-                        <a href="{% url 'home:mark_all_as_read' %}" class="mark-read" 
-                            {% if unread_count == 0 %}
-                                style="cursor: not-allowed; opacity: 0.8;"
-                                onclick="return false;"
-                            {% endif %}>
-                            Mark All as Read
-                        </a>
+                <!-- Notification Box Section -->
+                {% if user.is_authenticated %}
+                <div class="notification-main">
+                    <div class="icon notification-icon">
+                        <i class="fa-regular fa-bell">
+                            {% if unread_count > 9 %}
+                                <span style="height: 22px; width: 22px ;">9+</span>
+                            {% elif unread_count > 0 %}
+                                <span>{{ unread_count }}</span>
+                            {% endif %}
+                        </i>
                     </div>
-                    <hr>
-                    <div class="notification-content" {% if unread_count == 0 %} style="opacity: 0.85;" {% endif %}>
-                        {% if all_notifications.count > 0 %}
-                            {% for notification in all_notifications %}
-                                <div class="notification-item {% if notification.is_read == False %}unread{% endif %}">
-                                    <p><strong>{{ notification.message }}</strong></p>
-                                    <span>{{ notification.timestamp|date:"F j, Y, g:i a" }}</span>
-                                </div>
-                                <hr />
-                            {% endfor %}
-                        {% else %}
-                            <p style="text-align: center;">No notifications</p>
-                        {% endif %}
+                    
+                    <div class="notification-box">
+                        <div class="notification-header">
+                            <span>Notifications</span>
+                            <a href="{% url 'home:mark_all_as_read' %}" class="mark-read" 
+                                {% if unread_count == 0 %}
+                                    style="cursor: not-allowed; opacity: 0.8;"
+                                    onclick="return false;"
+                                {% endif %}>
+                                Mark All as Read
+                            </a>
+                        </div>
+                        <hr>
+                        <div class="notification-content" {% if unread_count == 0 %} style="opacity: 0.85;" {% endif %}>
+                            {% if all_notifications.count > 0 %}
+                                {% for notification in all_notifications %}
+                                    <div class="notification-item {% if notification.is_read == False %}unread{% endif %}">
+                                        <p><strong>{{ notification.message }}</strong></p>
+                                        <span>{{ notification.timestamp|date:"F j, Y, g:i a" }}</span>
+                                    </div>
+                                    <hr />
+                                {% endfor %}
+                            {% else %}
+                                <p style="text-align: center;">No notifications</p>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% endif %}
+                {% endif %}
 
-            <div class="language-main">
-                <div class="language-selector" onclick="toggleLanguageDropdown()">
-                    <div class="icon">
-                        <i class="fas fa-globe"></i>
+                <!-- Language Box Section -->
+                <div class="language-main">
+                    <div class="language-selector" onclick="toggleLanguageDropdown()">
+                        <div class="icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="language-box" id="language-box">
-                    <form action="{% url 'set_language' %}" method="post">
-                        {% csrf_token %}
-                        <input name="next" type="hidden" value="{{ request.path }}">
-                        <select name="language" onchange="this.form.submit()">
-                            {% get_available_languages as LANGUAGES %}
-                            {% get_language_info_list for LANGUAGES as languages %}
-                            {% for language in languages %}
+                    <div class="language-box" id="language-box">
+                        <form action="{% url 'set_language' %}" method="post">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.path }}">
+                            <select name="language" onchange="this.form.submit()">
+                                {% get_available_languages as LANGUAGES %}
+                                {% get_language_info_list for LANGUAGES as languages %}
+                                {% for language in languages %}
                                 <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
                                     {{ language.name_local }} ({{ language.code }})
                                 </option>
-                            {% endfor %}
-                        </select>
-                    </form>
-                </div>
-            </div>            
-                
-            {% if user.is_authenticated %}
-            <div class="message-main">
-                <div class="language-selector">
-                    <div class="icon" id="messenger-icon">
-                        <i class="fa-brands fa-facebook-messenger"><span>1</span></i>
+                                {% endfor %}
+                            </select>
+                        </form>
                     </div>
-                    <div class="message-box" id="message-box">
-                        <div class="header">
-                            <h3>Chats</h3>
-                            <div class="search-bar">
-                                <input type="text" placeholder="Search Person" />
-                                <button><i class="fas fa-search"></i></button>
+                </div>  
+
+                <div class="hamburger-menu" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                
+                <!-- Messenger Box Section -->
+                {% if user.is_authenticated %}
+                <div class="message-main">
+                    <div class="language-selector">
+                        <div class="icon" id="messenger-icon">
+                            <i class="fa-brands fa-facebook-messenger"><span>1</span></i>
+                        </div>
+                        <div class="message-box" id="message-box">
+                            <div class="header">
+                                <h3>Chats</h3>
+                                <div class="search-bar">
+                                    <input type="text" placeholder="Search Person" />
+                                    <button><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="chat-list">
+                                <div class="chat-row">
+                                    <i class="fa-regular fa-user user-icon"></i>
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
+                                            <span class="time">24h</span>
+                                        </div>
+                                    </div>
+                                </div>  
                             </div>
                         </div>
-                        <hr>
-                        <div class="chat-list">
-                            <div class="chat-row">
-                                <i class="fa-regular fa-user user-icon"></i>
-                                <div class="chat-details">
-                                    <p class="chat-name">Bikash Bhattarai</p>
-                                    <div class="chat-meta">
-                                        <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                        <span class="time">24h</span>
-                                    </div>
-                                </div>
-                            </div>  
-                        </div>
                     </div>
-                </div>
-            </div>                 
-            {% endif %}
+                </div>                 
+                {% endif %}
+
             </div>
             
+            <!-- Profile Box Section -->
             {% if user.is_authenticated %}
             <div class="profile-main">
                 <div class="icon">
@@ -184,16 +222,21 @@
             </div>
             {% endif %}
             
+            <!-- Login/Signup Button Section -->
             {% if not user.is_authenticated %}
+            <div class="auth-buttons">
                 <a href="{% url 'account:login' %}" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a>
                 <a href="{% url 'account:signup' %}" class="signup-btn"><i class="fas fa-user-plus"></i> Sign Up</a>
+            </div>
             {% endif %}
+
         </div>
+        
     </nav>
 </div>
-    
+
+<!-- Detailed Chat Section -->
 {% if user.is_authenticated %}
-<!-- Detailed Chat Box Section -->
 <div class="detailed-chat">
     <div class="main-box">
         <div class="header-content">
@@ -255,7 +298,7 @@
 </div> 
 {% endif %}
 
-<!-- Message Section -->
+<!-- Error/Success Message Section -->
 {% if messages %}
     <div class="alert-container">
         {% for message in messages %}
@@ -269,7 +312,6 @@
 {% endif %}
 
 {% block content %}
-
 {% endblock %}
 
 <!-- Footer Section -->
@@ -278,7 +320,7 @@
     <div class="content">
         <div class="top">
             <div class="logo-details">
-                <img src="{% static 'images/Logo.png' %}" alt="company-logo">
+                <img src="{% static 'images/logo/Logo.png' %}" alt="company-logo">
             </div>
             <div class="media-icons">
                 <a href="https://www.facebook.com/bishal.bhattarai.984786" target="_blank"><i class="fab fa-facebook-f"></i></a>
@@ -349,9 +391,12 @@
 {% endblock %}
 <script src="{% static 'js/common/notification-language.js' %}"></script>
 <script src="{% static 'js/common/message.js' %}"></script>
+<!--
 <script src="{% static 'js/common/loader.js'%}"></script>
+-->
 <script src="{% static 'js/common/form-handler.js' %}"></script>
 <script src="{% static 'js/common/sidebar.js' %}"></script>
 <script src="{% static 'js/filters.js' %}"></script>
+<script src="{% static 'js/common/mobile-menu.js' %}" defer></script>
 </body>
 </html>
