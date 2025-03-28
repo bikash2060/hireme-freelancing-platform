@@ -144,10 +144,6 @@
                         </form>
                     </div>
                 </div>  
-
-                <div class="hamburger-menu" onclick="toggleMobileMenu()">
-                    <i class="fas fa-bars"></i>
-                </div>
                 
                 <!-- Messenger Box Section -->
                 {% if user.is_authenticated %}
@@ -176,6 +172,56 @@
                                         </div>
                                     </div>
                                 </div>  
+                                <div class="chat-row">
+                                    <i class="fa-regular fa-user user-icon"></i>
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
+                                            <span class="time">24h</span>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="chat-row">
+                                    <i class="fa-regular fa-user user-icon"></i>
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
+                                            <span class="time">24h</span>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="chat-row">
+                                    <i class="fa-regular fa-user user-icon"></i>
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
+                                            <span class="time">24h</span>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="chat-row">
+                                    <i class="fa-regular fa-user user-icon"></i>
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
+                                            <span class="time">24h</span>
+                                        </div>
+                                    </div>
+                                </div>  
+                                <div class="chat-row">
+                                    <i class="fa-regular fa-user user-icon"></i>
+                                    <div class="chat-details">
+                                        <p class="chat-name">Bikash Bhattarai</p>
+                                        <div class="chat-meta">
+                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
+                                            <span class="time">24h</span>
+                                        </div>
+                                    </div>
+                                </div>  
                             </div>
                         </div>
                     </div>
@@ -188,11 +234,11 @@
             {% if user.is_authenticated %}
             <div class="profile-main">
                 <div class="icon">
-                    <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="Profile Picture">
+                    <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/defaultimages/defaultuserpic.png' %}{% endif %}" alt="Profile Picture">
                 </div>
                 <div class="user-box">
                     <div class="username">
-                        <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="Profile Picture">
+                        <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/defaultimages/defaultuserpic.png' %}{% endif %}" alt="Profile Picture">
                         <div class="user-info">
                             {% if user.first_name and user.last_name %}
                                 <p>{{ user.first_name }} {{ user.last_name }}</p>
@@ -220,6 +266,10 @@
                 </div>
             </div>
             {% endif %}
+
+            <div class="hamburger-menu" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
             
             <!-- Login/Signup Button Section -->
             {% if not user.is_authenticated %}

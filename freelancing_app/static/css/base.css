@@ -576,54 +576,36 @@ html[lang="ne"] body {
 }
 
 /* Profile Box Section */
-.profile-main{
+.navbar .profile-main {
     position: relative;
 }
 
-.profile-main .icon i{
+.navbar .profile-main .icon {
     margin-left: 20px;
-    font-size: 22px;
-    color: #615d5d;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    display: flex;
-    justify-content: center;
-    height: 40px; 
-    width: 40px; 
-    align-items: center;
-    padding: 10px;
+    height: 42px;
+    width: 42px;
     border-radius: 50%;
-    background-color: #f0f0f0;
+    object-fit: cover;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    transition: all 0.3s ease;
 }
 
-.profile-main .icon i:hover{
-    cursor: pointer;
-    background-color: #1E88E5;
-    color: white;
+.navbar .profile-main .icon img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.navbar .profile-main .icon:hover {
     transform: scale(1.1);
 }
 
-.profile-main .icon img{
-    margin-left: 20px; 
-    height: 40px; 
-    width: 40px; 
-    border-radius: 50%; 
-    object-fit: cover; 
-    cursor: pointer;
-    display: flex; 
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f0; 
-    transition: all 0.3s ease; 
-}
-
-.profile-main .icon img:hover{
-    background-color: #1E88E5; 
-    transform: scale(1.1); 
-    color: white; 
-}
-
-.profile-main .user-box{
+.navbar .profile-main .user-box{
     display: none;
     position: absolute;
     top: 75px;
@@ -636,14 +618,14 @@ html[lang="ne"] body {
     border-radius: 10px;
 }
 
-.profile-main .user-box .username {
+.navbar .profile-main .user-box .username {
     padding: 15px 20px;
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.profile-main .user-box .username i {
+.navbar .profile-main .user-box .username i {
     font-size: 20px;
     color: #615d5d;
     padding: 12px;
@@ -655,7 +637,7 @@ html[lang="ne"] body {
     flex-shrink: 0;
 }
 
-.profile-main .user-box .username img{
+.navbar .profile-main .user-box .username img{
     height: 50px; 
     width: 50px; 
     border-radius: 50%; 
@@ -663,17 +645,16 @@ html[lang="ne"] body {
     display: flex; 
     align-items: center;
     justify-content: center;
-    background-color: #f0f0f0; 
 }
 
-.profile-main .user-box .username .user-info p {
+.navbar .profile-main .user-box .username .user-info p {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
     color: #212121;
 }
 
-.profile-main .user-box .username .user-info span {
+.navbar .profile-main .user-box .username .user-info span {
     font-size: 14px;
     font-weight: 500;
     color: #757575; 
@@ -681,16 +662,16 @@ html[lang="ne"] body {
     margin-top: 3px; 
 }
 
-.profile-main .user-box hr {
+.navbar .profile-main .user-box hr {
     border: none;
     border-top: 2px solid #dbdada;
 }
 
-.profile-main .user-box .shortcut-settings{
+.navbar .profile-main .user-box .shortcut-settings{
     margin: 10px 0;
 }
 
-.profile-main .user-box .my-profile, .user-box .logout {
+.navbar .profile-main .user-box .my-profile, .user-box .logout {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -700,22 +681,22 @@ html[lang="ne"] body {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-.profile-main .user-box .logout {
+.navbar .profile-main .user-box .logout {
     margin-bottom: 0;
 }
 
-.profile-main .user-box .my-profile:hover, .user-box .logout:hover {
+.navbar .profile-main .user-box .my-profile:hover, .user-box .logout:hover {
     background-color: #f8f9fa;
     transform: translateY(-3px);
 }
 
-.profile-main .user-box .my-profile i, .user-box .logout i {
+.navbar .profile-main .user-box .my-profile i, .user-box .logout i {
     font-size: 20px;
     color: #707070;
     margin-right: 10px;
 }
 
-.profile-main .user-box .my-profile a, .user-box .logout a {
+.navbar .profile-main .user-box .my-profile a, .user-box .logout a {
     text-decoration: none;
     font-size: 16px;
     color: #707070;
@@ -1291,6 +1272,10 @@ footer .bottom-details .bottom_text {
     .navbar .search-bar{
         display: none;
     }
+    
+    .navbar .side-icons .notification-main{
+        display: none;
+    }
 
     .navbar .hamburger-menu{
         display: block;
@@ -1453,3 +1438,89 @@ footer .bottom-details .bottom_text {
     }
 }
 
+@media (max-width: 576px) {
+    .navbar .message-main .message-box {
+        width: 300px;
+        right: -50px;
+        top: 75px;
+    }
+    
+    .navbar .message-main .message-box .header h3 {
+        font-size: 18px;
+    }
+    
+    .navbar .message-main .chat-list {
+        max-height: 250px;
+    }
+    
+    .navbar .message-main .chat-meta .message {
+        max-width: 150px;
+    }
+    
+    .navbar .message-main .chat-row .user-icon,
+    .navbar .message-main .chat-row img {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+    
+    .navbar .message-main .chat-details .chat-name {
+        font-size: 14px;
+    }
+    
+    .navbar .message-main .chat-details .chat-meta {
+        font-size: 12px;
+    }
+    
+    .navbar .message-main .message-box .search-bar input {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar .profile-main .icon {
+        margin-left: 15px;
+        height: 38px;
+        width: 38px;
+    }
+
+    .navbar .profile-main .user-box {
+        width: 280px;
+        right: -20px;
+        top: 75px;
+    }
+
+    .navbar .profile-main .user-box .username {
+        padding: 12px 15px;
+        gap: 12px;
+    }
+
+    .navbar .profile-main .user-box .username img {
+        height: 45px;
+        width: 45px;
+    }
+
+    .navbar .profile-main .user-box .username .user-info p {
+        font-size: 16px;
+    }
+
+    .navbar .profile-main .user-box .username .user-info span {
+        font-size: 13px;
+    }
+
+    .navbar .profile-main .user-box .my-profile,
+    .navbar .profile-main .user-box .logout {
+        padding: 12px 15px;
+        gap: 12px;
+    }
+
+    .navbar .profile-main .user-box .my-profile i,
+    .navbar .profile-main .user-box .logout i {
+        font-size: 18px;
+    }
+
+    .navbar .profile-main .user-box .my-profile a,
+    .navbar .profile-main .user-box .logout a {
+        font-size: 14px;
+    }
+}
