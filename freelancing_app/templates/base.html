@@ -4,8 +4,7 @@
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">    
     <title>{% block title %}HireMe{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/loader.css' %}">
@@ -392,8 +391,8 @@
 <script src="{% static 'js/common/notification-language.js' %}"></script>
 <script src="{% static 'js/common/message.js' %}"></script>
 <!--
-<script src="{% static 'js/common/loader.js'%}"></script>
 -->
+<script src="{% static 'js/common/loader.js'%}"></script>
 <script src="{% static 'js/common/form-handler.js' %}"></script>
 <script src="{% static 'js/common/sidebar.js' %}"></script>
 <script src="{% static 'js/filters.js' %}"></script>

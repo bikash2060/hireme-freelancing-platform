@@ -1,12 +1,6 @@
 /* General Reset */
 html, body {
     -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 * {
@@ -24,6 +18,10 @@ body {
     max-width: 1300px;
     margin: 0 auto;
     padding: 10px;
+}
+
+html[lang="ne"] body {
+    font-family: 'Mukti', 'Poppins', sans-serif; 
 }
 
 /* Navigation Section */
@@ -1283,7 +1281,7 @@ footer .bottom-details .bottom_text {
 
 @media (max-width: 576px) {
     .navbar {
-        padding: 5px 25px;
+        padding: 5px 15px;
     }
 
     .navbar .links{
@@ -1307,7 +1305,7 @@ footer .bottom-details .bottom_text {
         left: 0;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         z-index: 1000;
-        padding: 15px 25px;
+        padding: 15px 15px;
         opacity: 0;  
         transform: translateY(-20px);
         transition: opacity 0.2s ease, transform 0.2s ease;

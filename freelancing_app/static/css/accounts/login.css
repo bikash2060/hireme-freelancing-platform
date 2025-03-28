@@ -9,7 +9,7 @@
     justify-content: center;
 }
 
-.login_form {
+.login .login_form {
     width: 100%;
     max-width: 550px;
     background: #fff;
@@ -18,23 +18,23 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-.login_form h3 {
+.login .login_form h3 {
     font-size: 20px;
     text-align: center;
 }
 
-.login_form .login_option {
+.login .login_form .login_option {
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
 }
 
-.login_form .login_option .option {
+.login .login_form .login_option .option {
     width: calc(100% / 2 - 12px);
 }
 
-.login_form .login_option .option a {
+.login .login_form .login_option .option a {
     height: 56px;
     display: flex;
     justify-content: center;
@@ -50,34 +50,34 @@
     transition: 0.2s ease;
 }
 
-.login_form .login_option .option a:hover {
+.login .login_form .login_option .option a:hover {
     background: #ededf5;
     border-color: #626cd6;
 }
 
-.login_form .login_option .option a img {
+.login .login_form .login_option .option a img {
     max-width: 25px;
 }
 
-.login_form p {
+.login .login_form p {
     text-align: center;
     font-weight: 500;
     font-size: 17px;
 }
 
-.login_form .separator {
+.login .login_form .separator {
     position: relative;
     margin-bottom: 24px;
 }
 
-.login_form .separator span {
+.login .login_form .separator span {
     background: #fff;
     z-index: 1;
     padding: 0 10px;
     position: relative;
 }
 
-.login_form .separator::after {
+.login .login_form .separator::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -88,13 +88,13 @@
     display: block;
 }
 
-.login_form .input_box label {
+.login .login_form .input_box label {
     display: block;
     font-weight: 500;
     margin-bottom: 8px;
 }
 
-form .input_box input {
+.login form .input_box input {
     width: 100%;
     height: 57px;
     border: 1px solid #DADAF2;
@@ -107,31 +107,31 @@ form .input_box input {
     transition: 0.2s ease;
 }
 
-form .input_box input:focus {
+.login form .input_box input:focus {
     border-color: #626cd6;
 }
 
-form .input_box .password_title {
+.login form .input_box .password_title {
     display: flex;
     justify-content: space-between;
     text-align: center;
 }
 
-form .input_box {
+.login form .input_box {
     position: relative;
 }
 
-.login_form a {
+.login .login_form a {
     text-decoration: none;
     color: #626cd6;
     font-weight: 500;
 }
 
-.login_form a:hover {
+.login .login_form a:hover {
     text-decoration: underline;
 }
 
-form button {
+.login form button {
     width: 100%;
     height: 56px;
     border-radius: 5px;
@@ -147,20 +147,20 @@ form button {
     transition: 0.3s ease;
 }
 
-form button:hover {
+.login form button:hover {
     background: #4954d0;
 }
 
-.password_container {
+.login .password_container {
     position: relative;
 }
   
-.password_container input {
+.login .password_container input {
     width: 100%;
     padding-right: 40px; 
 }
   
-.password_container i {
+.login .password_container i {
     position: absolute;
     right: 10px;
     top: 36%;
@@ -169,6 +169,21 @@ form button:hover {
     color: #888; 
 }
 
-.password_container i:hover {
+.login .password_container i:hover {
     color: #626cd6; 
+}
+
+@media (max-width: 576px) {
+    .login  {
+        margin-top: 150px;
+        margin-bottom: 60px;
+        padding: 5px 15px;
+    }
+
+    .login .login_form {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+        box-shadow: none;
+    }
 }

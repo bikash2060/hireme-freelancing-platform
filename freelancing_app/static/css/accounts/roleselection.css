@@ -130,7 +130,7 @@
     margin-bottom: 15px;
 }
 
-.role-selection .role-selection .role-btn {
+.role-selection .role-btn {
     display: inline-block;
     padding: 12px 30px; 
     font-size: 18px; 
@@ -145,20 +145,71 @@
     margin-top: 30px; 
 }
 
-.role-selection .role-selection .role-btn:hover {
+.role-selection .role-btn:hover {
     background-color: #1565C0; 
     transform: translateY(-3px); 
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); 
 }
 
-.role-selection .role-selection .role-btn:focus {
+.role-selection .role-btn:focus {
     outline: none; 
     box-shadow: 0 0 5px rgba(30, 136, 229, 0.7); 
 }
 
-@media (max-width: 768px) {
-    .role-selection .role-boxes {
-        flex-direction: column;
-        align-items: center;
+@media (max-width: 576px) {
+    .role-selection {
+        padding: 40px 15px;
+        margin-top: 80px;
     }
-}
+  
+    .role-selection h2 {
+        font-size: 24px;
+    }
+  
+    .role-selection p {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+  
+    .role-selection .role-boxes {
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+  
+    .role-selection .role-box {
+        width: 100%;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+  
+    .role-selection .role-box h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+  
+    .role-selection .role-box p {
+        margin-bottom: 15px;
+    }
+  
+    .role-selection .role-box i {
+        font-size: 35px;
+        margin-bottom: 10px;
+    }
+  
+    .role-selection .role-box label {
+        font-size: 14px;
+        padding-left: 30px;
+    }
+  
+    .role-selection .role-box label:before {
+        width: 18px;
+        height: 18px;
+    }
+  
+    .role-selection .role-btn {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+  }
+  

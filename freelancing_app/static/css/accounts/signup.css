@@ -168,3 +168,17 @@
 .signup .password-container i:hover {
     color: #626cd6; 
 }
+
+@media (max-width: 576px) {
+    .signup {
+        margin-top: 150px;
+        margin-bottom: 60px;
+        padding: 5px 15px;
+    }
+    
+    .signup .signup-form {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+    }
+}
