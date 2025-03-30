@@ -1194,7 +1194,7 @@ footer .bottom-details .bottom_text {
     gap: 10px;
 }
 
-.alert {
+.alert-container .alert {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1205,19 +1205,19 @@ footer .bottom-details .bottom_text {
     transition: opacity 0.5s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.alert.success { background-color: #d4edda; color: #155724; }
-.alert.error { background-color: #f8d7da; color: #721c24; }
-.alert.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
-.alert.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+.alert-container .alert.success { background-color: #d4edda; color: #155724; }
+.alert-container .alert.error { background-color: #f8d7da; color: #721c24; }
+.alert-container .alert.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+.alert-container .alert.warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
 
-.alert span {
+.alert-container .alert span {
     flex-grow: 1;
     margin-right: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.close-message {
+.alert-container .close-message {
     cursor: pointer;
     color: inherit;
     font-size: 20px;
@@ -1226,9 +1226,11 @@ footer .bottom-details .bottom_text {
     flex-shrink: 0;
 }
 
-.close-message:hover { color: #000; }
+.alert-container .close-message:hover { 
+    color: #000; 
+}
 
-.progress-bar {
+.alert-container .progress-bar {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -1238,7 +1240,7 @@ footer .bottom-details .bottom_text {
     overflow: hidden;
 }
 
-.progress {
+.alert-container .progress {
     height: 100%;
     width: 100%;
     background-color: #d9534f;
@@ -1247,11 +1249,11 @@ footer .bottom-details .bottom_text {
     transition: transform 4s linear;
 }
 
-.alert.success .progress { background-color: #28a745; }
-.alert.warning .progress { background-color: #ffc107; }
-.alert.info .progress { background-color: #17a2b8; }
+.alert-container .alert.success .progress { background-color: #28a745; }
+.alert-container .alert.warning .progress { background-color: #ffc107; }
+.alert-container .alert.info .progress { background-color: #17a2b8; }
 
-.alert.fade-out {
+.alert-container .alert.fade-out {
     opacity: 0;
     transform: translateY(20px);
     height: 0;
@@ -1403,7 +1405,7 @@ footer .bottom-details .bottom_text {
         gap: 10px;
     }
 
-    .alert {
+    .alert-container .alert {
         width: calc(100% - 20px); 
         max-width: 100%;
         padding: 10px 15px;
@@ -1412,7 +1414,7 @@ footer .bottom-details .bottom_text {
         box-sizing: border-box;
     }
 
-    .alert span {
+    .alert-container .alert span {
         font-size: 13px;
         margin-right: 10px;
         white-space: nowrap;
@@ -1420,19 +1422,19 @@ footer .bottom-details .bottom_text {
         text-overflow: ellipsis;
     }
 
-    .close-message {
+    .alert-container .close-message {
         font-size: 18px;
         padding: 0 5px;
     }
 
-    .progress-bar {
+    .alert-container .progress-bar {
         height: 3px;
     }
 
-    .alert.success,
-    .alert.error,
-    .alert.info,
-    .alert.warning {
+    .alert-container .alert.success,
+    .alert-container .alert.error,
+    .alert-container .alert.info,
+    .alert-container .alert.warning {
         border-radius: 4px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }

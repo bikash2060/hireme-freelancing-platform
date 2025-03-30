@@ -40,10 +40,12 @@ class FreelancerDashboardView(CustomLoginRequiredMixin, View):
 
         if 0 <= current_hour < 12:
             greeting = "Good Morning"
-        elif 12 <= current_hour < 17:
+        elif 12 <= current_hour < 18:
             greeting = "Good Afternoon"
-        else:
+        elif 18 <= current_hour < 21:
             greeting = "Good Evening"
+        else:
+            greeting = "Good Night"
 
         freelancer = Freelancer.objects.get(user=request.user)
         projects = Project.objects.exclude(status='draft').order_by('-created_at')

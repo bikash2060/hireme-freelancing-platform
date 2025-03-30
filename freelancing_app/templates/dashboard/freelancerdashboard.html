@@ -12,170 +12,1022 @@
 <!-- Hero Section -->
 <div class="hero-section">
     <div class="container">
+        <!-- Hero Content Section -->
         <div class="hero-content">
-            {% if user.first_name %}
-                <h3>{{ greeting }}, {{ user.first_name|capfirst }}</h3>
-            {% else %}
-                <h3>{{ greeting }}, {{ user.username }}</h3>
-            {% endif %}
-            <a href="" class="browse-projects-btn">
-                <i class="fas fa-briefcase"></i> Browse New Projects
-            </a>            
+            <div class="welcome-message">
+                {% if user.first_name %}
+                    <h2>{{ greeting }}, {{ user.first_name|capfirst }}</h2>
+                {% else %}
+                    <h2>{{ greeting }}, {{ user.username }}</h2>
+                {% endif %}
+                <p class="welcome-text">Here's an overview of your freelancing work</p>
+            </div>
+            <div class="hero-actions">
+                <a href="" class="browse-projects-btn">
+                    <i class="fas fa-briefcase"></i> Browse New Projects
+                </a>
+            </div>
         </div>
+        <!-- Hero Stats Overview Section -->
         <div class="stats-overview">
-            <div class="stat-card">
-                <i class="fas fa-chart-line"></i>
-                <h4>Proposal Success Rate</h4>
-                <p class="stat-number">20%</p>
+            <div class="stat-card success-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>Proposal Success</h4>
+                    <p class="stat-number">75%</p>
+                    <p class="stat-subtext">15/20 proposals accepted</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <i class="fas fa-spinner"></i>
-                <h4>Ongoing Projects</h4>
-                <p class="stat-number">5</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-check-circle"></i>
-                <h4>Completed Projects</h4>
-                <p class="stat-number">15</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-wallet"></i>
-                <h4>Earnings This Month</h4>
-                <p class="stat-number">Rs. 2000</p>
+            <div class="stat-card ongoing-card">
+                <div class="stat-icon">
+                    <i class="fas fa-spinner"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>Ongoing Projects</h4>
+                    <p class="stat-number">5</p>
+                    <p class="stat-subtext">2 nearing deadline</p>
+                </div>
+            </div>           
+            <div class="stat-card completed-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>Completed Projects</h4>
+                    <p class="stat-number">15</p>
+                    <p class="stat-subtext">4.8★ average rating</p>
+                </div>
+            </div>           
+            <div class="stat-card earnings-card">
+                <div class="stat-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>Earnings This Month</h4>
+                    <p class="stat-number">Rs 2,000.00</p>
+                    <p class="stat-subtext">+15% from last month</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Freelancer Quick Actions Section -->
-<div class="quick-actions">
+<!-- Quick Actions Section -->
+<div class="quick-actions-section">
     <div class="container">
-        <h2>What would you like to do?</h2>
-        <div class="action-grid">
+        <!-- Quick Action Header Section -->
+        <h2 class="section-title">Quick Actions</h2>
+        <p class="section-subtitle">Get started with these common tasks</p>       
+        <!-- Quick Actions Grid Section -->
+        <div class="quick-actions-grid">
             <div class="action-card">
-                <i class="fas fa-briefcase"></i>
-                <h3>Explore Projects</h3>
-                <p>Discover job opportunities that match your skills and interests.</p>
-                <a href="" class="btn">Find Projects</a>
+                <div class="action-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Find Projects</h3>
+                <p>Browse new projects that match your skills and expertise</p>
+                <a href="#" class="action-btn">Explore</a>
+            </div>           
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>My Proposals</h3>
+                <p>View and manage your submitted project proposals</p>
+                <a href="#" class="action-btn">View</a>
+            </div>            
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3>Active Projects</h3>
+                <p>Manage your current projects and deadlines</p>
+                <a href="#" class="action-btn">Manage</a>
+            </div>           
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Earnings</h3>
+                <p>Track your income and payment history</p>
+                <a href="#" class="action-btn">View</a>
             </div>
-            <div class="action-card">
-                <i class="fas fa-tasks"></i>
-                <h3>Manage Projects</h3>
-                <p>Track ongoing and completed projects in one place.</p>
-                <a href="#" class="btn">View Projects</a>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Deadlines Section -->
+<div class="deadlines-section">
+    <div class="container">
+        <!-- Deadlines Header Section -->
+        <div class="section-header">
+            <div class="text">
+                <h2 class="section-title">Upcoming Deadlines</h2>
+                <p class="section-subtitle">Stay on top of your important dates and projects</p>
             </div>
-            <div class="action-card">
-                <i class="fas fa-tasks"></i>
-                <h3>Manage Proposals</h3>
-                <p>Keep track of your submitted proposals and application status.</p>
-                <a href="#" class="btn">View Proposals</a>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <!-- Deadlines Card Section -->
+        <div class="deadlines-container">
+
+            <div class="deadline-card">
+                <div class="deadline-date">
+                    <span class="day">15</span>
+                    <span class="month">MAR</span>
+                    <span class="year">2023</span>
+                </div>
+                <div class="deadline-content">
+                    <div class="deadline-info">
+                        <h3>E-commerce Redesign</h3>
+                        <div class="client-info">
+                            <i class="fas fa-user-circle client-icon"></i>
+                            <span class="client">Fashion Boutique Inc.</span>
+                        </div>
+                    </div>
+                    <div class="deadline-footer">
+                        <div class="time-left">
+                            <i class="fas fa-clock"></i>
+                            <span class="time-text">2 days left</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <span class="progress-text">75% completed</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="deadline-action" aria-label="View project details">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
             </div>
-            <div class="action-card">
-                <i class="fas fa-wallet"></i>
-                <h3>Track My Earnings</h3>
-                <p>Check your income, payments, and transaction history in one place.</p>
-                <a href="#" class="btn">View Earnings</a>
+
+            <div class="deadline-card">
+                <div class="deadline-date">
+                    <span class="day">15</span>
+                    <span class="month">MAR</span>
+                    <span class="year">2023</span>
+                </div>
+                <div class="deadline-content">
+                    <div class="deadline-info">
+                        <h3>E-commerce Website Redesign</h3>
+                        <div class="client-info">
+                            <i class="fas fa-user-circle client-icon"></i>
+                            <span class="client">Fashion Boutique Inc.</span>
+                        </div>
+                    </div>
+                    <div class="deadline-footer">
+                        <div class="time-left">
+                            <i class="fas fa-clock"></i>
+                            <span class="time-text">2 days left</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <span class="progress-text">75% completed</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="deadline-action" aria-label="View project details">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+
+            <div class="deadline-card">
+                <div class="deadline-date">
+                    <span class="day">15</span>
+                    <span class="month">MAR</span>
+                    <span class="year">2023</span>
+                </div>
+                <div class="deadline-content">
+                    <div class="deadline-info">
+                        <h3>E-commerce Website Redesign</h3>
+                        <div class="client-info">
+                            <i class="fas fa-user-circle client-icon"></i>
+                            <span class="client">Fashion Boutique Inc.</span>
+                        </div>
+                    </div>
+                    <div class="deadline-footer">
+                        <div class="time-left">
+                            <i class="fas fa-clock"></i>
+                            <span class="time-text">2 days left</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <span class="progress-text">75% completed</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="deadline-action" aria-label="View project details">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>   
+
+        </div>
+        <!-- Empty State for Deadlines Section -->
+        <div class="empty-deadlines">
+            <div class="empty-illustration">
+                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                    <path d="M12 14v4"></path>
+                    <path d="M8 14v4"></path>
+                    <path d="M16 14v4"></path>
+                </svg>
+            </div>
+            <h3 class="empty-title">No Active Projects</h3>
+            <p class="empty-message">When you're assigned to projects with deadlines, they'll appear here. Check your proposals or available jobs to get started.</p>
+            <div class="empty-actions">
+                <a href="#" class="btn-primary">
+                    <i class="fas fa-search"></i> Browse Jobs
+                </a>
+                <a href="#" class="btn-secondary">
+                    <i class="fas fa-file-alt"></i> View Proposals
+                </a>
+            </div>
+            <div class="empty-tip">
+                <i class="fas fa-lightbulb"></i>
+                <span>Tip: Complete your profile to attract more clients</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Section -->
+<div class="progress-section">
+    <div class="container">
+        <!-- Progress Header Section -->
+        <div class="progress-header">
+            <div class="header-content">
+                <h2>Performance Dashboard</h2>
+                <p class="subtitle">Track your productivity and earnings</p>
+            </div>
+            <div class="time-filter">
+                <button class="filter-btn active" data-period="week">
+                    <i class="fas fa-calendar-week"></i> Week
+                </button>
+                <button class="filter-btn" data-period="month">
+                    <i class="fas fa-calendar-alt"></i> Month
+                </button>
+                <button class="filter-btn" data-period="year">
+                    <i class="fas fa-calendar"></i> Year
+                </button>
+            </div>
+        </div>
+        <!-- Progress Card Section -->
+        <div class="progress-cards">
+            <div class="progress-card earnings">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Earnings</h3>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i> 12%
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="progress-value">Rs 2,450.00</div>
+                    <div class="progress-stats">
+                        <span class="progress-percent">82%</span>
+                        <span class="progress-target">of Rs 3,000.00 target</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 82%"></div>
+                    </div>
+                    <div class="progress-comparison">
+                        <span class="previous-period">
+                            <i class="fas fa-history"></i> Last week: Rs 2,100.00
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-card jobs">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>Projects</h3>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i> 5%
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="progress-value">14</div>
+                    <div class="progress-stats">
+                        <span class="progress-percent">70%</span>
+                        <span class="progress-target">of 20 target</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 70%"></div>
+                    </div>
+                    <div class="progress-comparison">
+                        <span class="previous-period">
+                            <i class="fas fa-history"></i> Last week: 12
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-card clients">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>New Clients</h3>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i> 8%
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="progress-value">6</div>
+                    <div class="progress-stats">
+                        <span class="progress-percent">75%</span>
+                        <span class="progress-target">of 8 target</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 75%"></div>
+                    </div>
+                    <div class="progress-comparison">
+                        <span class="previous-period">
+                            <i class="fas fa-history"></i> Last week: 4
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-card ratings">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Client Ratings</h3>
+                    <div class="trend neutral">
+                        <i class="fas fa-equals"></i> 0%
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="progress-value">4.9</div>
+                    <div class="progress-stats">
+                        <span class="progress-percent">98%</span>
+                        <span class="progress-target">of 5.0 target</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 98%"></div>
+                    </div>
+                    <div class="progress-comparison">
+                        <span class="previous-period">
+                            <i class="fas fa-history"></i> Last week: 4.9
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Progress Chart Section -->
+        <div class="progress-chart-container">
+            <div class="chart-header">
+                <h3>Earnings Overview</h3>
+                <div class="chart-legend">
+                    <span class="legend-item current"><i class="fas fa-circle"></i> Current</span>
+                    <span class="legend-item previous"><i class="fas fa-circle"></i> Previous</span>
+                </div>
+            </div>
+            <div class="progress-chart">
+                <canvas id="progressChart"></canvas>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Ongoing Projects Section -->
-<div class="freelancer-ongoing-projects">
+<div class="ongoing-projects">
     <div class="container">
-        <h3>Overview</h3>
-        <div class="no-projects">
-            <i class="fas fa-tasks"></i>
-            <p>You have no ongoing projects at the moment.</p>
-            <a href="" class="post-project-btn">
-                <i class="fas fa-search"></i> Browse Available Projects
-            </a>
-        </div>
-        <!--
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-progress">
-                        <div class="progress-bar" style="height: 70%;">70%</div>
-                    </div>
-            
-                    <div class="project-content">
-                        <div class="project-header">
-                            <h3 class="project-title">E-commerce Website Redesign</h3>
-                            <p class="project-client">Client: Fashion Boutique Inc.</p>
-                        </div>
-                        <div class="project-body">
-                            <p class="project-description">Modernizing the online shopping experience with a responsive design, improved product filtering, and streamlined checkout process. </p>
-                            <div class="project-meta">
-                                <div class="meta-item">
-                                    <span class="meta-label" title="Deadline"><i class="fas fa-calendar-alt"></i></span>
-                                    <span class="meta-value">Apr 15, 2025</span>
-                                </div>
-                                <div class="meta-item">
-                                    <span class="meta-label" title="Budget"><i class="fa-solid fa-rupee-sign"></i></span>
-                                    <span class="meta-value">200.00</span>
-                                </div>
-                            </div>
-                            <a href="#" class="manage-project-btn">Manage Project</a>
-                        </div>
-                    </div>
-                </div>           
+        <!-- Ongoing Projects Header Section -->
+        <div class="section-header">
+            <div class="header-content">
+                <h2 class="section-title">My Ongoing Projects</h2>
+                <p class="section-subtitle">Active projects I'm currently working on</p>
             </div>
-    
-            <div class="view-all-button">
-                <a href="" class="view-all-projects-btn">View All Projects</a>
-            </div>        
-        -->
+            <div class="project-filters">
+                <div class="filter-group">
+                    <label for="sort-by">Sort By:</label>
+                    <select id="sort-by" class="filter-select">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="price-high">Price (High to Low)</option>
+                        <option value="price-low">Price (Low to High)</option>
+                        <option value="due-date">Due Date</option>
+                    </select>
+                </div>
+                <button class="filter-btn">
+                    <i class="fas fa-filter"></i> Apply
+                </button>
+            </div>
+        </div>
+        <!-- Ongoing Projects Grid Section -->
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-status-badge ongoing">
+                        <i class="fas fa-circle"></i> Ongoing
+                    </div>
+                    <div class="project-actions">
+                        <button class="action-btn" id="project-menu-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="#" class="menu-item"><i class="fas fa-edit"></i> Edit Project</a>
+                            <a href="#" class="menu-item danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-content">
+                    <div class="project-meta-header">
+                        <h3 class="project-title">E-commerce Website Redesign</h3>
+                        <p class="project-price">Rs 25,000.00</p>
+                    </div>
+                    <p class="project-client">
+                        <i class="fas fa-user-circle client-icon"></i> Fashion Boutique Inc.
+                    </p>
+                    
+                    <div class="project-progress">
+                        <div class="progress-info">
+                            <span>Completion</span>
+                            <span class="progress-percent">70%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
+                        <div class="progress-dates">
+                            <span>Started: Mar 1, 2025</span>
+                            <span>Due: Apr 15, 2025</span>
+                        </div>
+                    </div>
+                    <div class="project-description">
+                        <div class="empty-state">
+                            <svg class="empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="1.5">
+                                <path d="M3 12h18M12 3v18M7 7l10 10M7 17l10-10"></path>
+                            </svg>
+                            <p>No project notes added</p>
+                            <small>Add your working notes about this project</small>
+                        </div>
+                        <ul class="project-features empty">
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="project-footer">
+                    <a href="#" class="btn primary-btn">
+                        <i class="fas fa-tasks"></i> Manage
+                    </a>
+                    <a href="#" class="btn secondary-btn">
+                        <i class="fas fa-external-link-alt"></i> Details
+                    </a>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-status-badge ongoing">
+                        <i class="fas fa-circle"></i> Ongoing
+                    </div>
+                    <div class="project-actions">
+                        <button class="action-btn" id="project-menu-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="#" class="menu-item"><i class="fas fa-edit"></i> Edit Project</a>
+                            <a href="#" class="menu-item danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-content">
+                    <div class="project-meta-header">
+                        <h3 class="project-title">E-commerce Website Redesign</h3>
+                        <p class="project-price">Rs 25,000.00</p>
+                    </div>
+                    <p class="project-client">
+                        <i class="fas fa-user-circle client-icon"></i> Fashion Boutique Inc.
+                    </p>
+                    
+                    <div class="project-progress">
+                        <div class="progress-info">
+                            <span>Completion</span>
+                            <span class="progress-percent">70%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
+                        <div class="progress-dates">
+                            <span>Started: Mar 1, 2025</span>
+                            <span>Due: Apr 15, 2025</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-description">
+                        <p class="description">Modernizing the online shopping experience with:</p>
+                        <ul class="project-features">
+                            <li><i class="fas fa-check-circle"></i> Responsive design</li>
+                            <li><i class="fas fa-check-circle"></i> Improved product filtering</li>
+                            <li><i class="fas fa-check-circle"></i> Streamlined checkout</li>
+                            <li><i class="fas fa-check-circle"></i> Enhanced product pages</li>
+                            <li><i class="fas fa-check-circle"></i> Mobile-first approach</li>
+                            <li><i class="fas fa-check-circle"></i> Faster loading times</li>
+                            <li><i class="fas fa-check-circle"></i> SEO optimization</li>
+                            <li><i class="fas fa-check-circle"></i> Accessibility improvements</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="project-footer">
+                    <a href="#" class="btn primary-btn">
+                        <i class="fas fa-tasks"></i> Manage
+                    </a>
+                    <a href="#" class="btn secondary-btn">
+                        <i class="fas fa-external-link-alt"></i> Details
+                    </a>
+                </div>
+            </div>
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-status-badge ongoing">
+                        <i class="fas fa-circle"></i> Ongoing
+                    </div>
+                    <div class="project-actions">
+                        <button class="action-btn" id="project-menu-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a href="#" class="menu-item"><i class="fas fa-edit"></i> Edit Project</a>
+                            <a href="#" class="menu-item danger"><i class="fas fa-trash-alt"></i> Delete</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-content">
+                    <div class="project-meta-header">
+                        <h3 class="project-title">E-commerce Website Redesign</h3>
+                        <p class="project-price">Rs 25,000.00</p>
+                    </div>
+                    <p class="project-client">
+                        <i class="fas fa-user-circle client-icon"></i> Fashion Boutique Inc.
+                    </p>
+                    
+                    <div class="project-progress">
+                        <div class="progress-info">
+                            <span>Completion</span>
+                            <span class="progress-percent">70%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
+                        <div class="progress-dates">
+                            <span>Started: Mar 1, 2025</span>
+                            <span>Due: Apr 15, 2025</span>
+                        </div>
+                    </div>
+                    
+                    <div class="project-description">
+                        <p class="description">Modernizing the online shopping experience with:</p>
+                        <ul class="project-features">
+                            <li><i class="fas fa-check-circle"></i> Responsive design</li>
+                            <li><i class="fas fa-check-circle"></i> Improved product filtering</li>
+                            <li><i class="fas fa-check-circle"></i> Streamlined checkout</li>
+                            <li><i class="fas fa-check-circle"></i> Enhanced product pages</li>
+                            <li><i class="fas fa-check-circle"></i> Mobile-first approach</li>
+                            <li><i class="fas fa-check-circle"></i> Faster loading times</li>
+                            <li><i class="fas fa-check-circle"></i> SEO optimization</li>
+                            <li><i class="fas fa-check-circle"></i> Accessibility improvements</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="project-footer">
+                    <a href="#" class="btn primary-btn">
+                        <i class="fas fa-tasks"></i> Manage
+                    </a>
+                    <a href="#" class="btn secondary-btn">
+                        <i class="fas fa-external-link-alt"></i> Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Empty State for Ongoing Projects Section -->
+        <div class="empty-projects">
+            <div class="empty-illustration">
+                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <h3 class="empty-title">No Ongoing Projects</h3>
+            <p class="empty-message">You don't have any ongoing projects right now.</p>
+            <div class="empty-actions">
+                <a href="#" class="btn primary-btn">
+                    <i class="fas fa-search"></i> Browse Jobs
+                </a>
+                <a href="#" class="btn secondary-btn">
+                    <i class="fas fa-file-alt"></i> View Proposals
+                </a>
+            </div>
+            
+            <div class="empty-tip">
+                <i class="fas fa-lightbulb"></i>
+                <span>Tip: Complete your profile to attract more clients</span>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Recommendation Projects Section -->
 <div class="recommended-section">
     <div class="container">
+        <!-- Recommended Projects Header Section -->
         <div class="text">
-            <h3>New Projects</h3>
+            <h2 class="section-title">Recommended Projects For You</h2>
+            <p class="section-subtitle">Projects matching your skills and preferences</p>
         </div>
-        {% for project in projects %}
-            <div class="card-grid">
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="{% if project.image %}{% get_media_prefix %}project_images/{{ project.image }}{% else %}{% static 'images/programming.png' %}{% endif %}" alt="Project Image">
+        <!-- Recommended Projects Grid Section -->
+        <div class="card-grid">
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/defaultimages/defaultprojectpic.jpg' %}" alt="Project Image">
+                    <div class="project-status status-active">Active</div>
+                </div>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/defaultimages/defaultuserpic.png' %}" alt="Client Profile">
+                    <div class="poster-details">
+                        <p class="poster-name">John Doe</p>
+                        <p class="poster-posted-time">
+                            <i class="far fa-clock"></i> Posted 2 days ago
+                        </p>
                     </div>
-                    <div class="poster-info">
-                        <img class="poster-profile" src="{% if project.client.user.profile_image %}{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}{% else %}{% static 'images/default-user-pic.png' %}{% endif %}" alt="Project Poster Profile Picture">
-                        <p class="poster-name">
-                            {% if project.client.user.first_name and project.client.user.last_name %}
-                                {{ project.client.user.first_name }} {{ project.client.user.last_name }}
-                            {% else %}
-                                {{ project.client.user.username }}
-                            {% endif %}
-                        </p>                        
+                </div>
+                <div class="project-info">
+                    <div class="project-meta-header">  
+                        <div class="project-category">
+                            <i class="fas fa-folder"></i> Web Development
+                        </div>
+                        <div class="project-budget">
+                            <span class="budget-amount">Rs. 20,000.00</span>
+                        </div>
                     </div>
-                    <div class="project-info">
-                        <h4>{{ project.title }}</h4>
-                        <span class="proposals-count" title="Proposals Count">{{ project.proposals.count }}</span>
-                        <p class="category" title="Category"><i class="fas fa-tags"></i> {{ project.category }}</p>
-                        <p class="budget" title="Budget"><i class="fa-solid fa-rupee-sign"></i> {{ project.budget|floatformat:2|intcomma }}</p>
-                        <p class="deadline" title="Deadline"><i class="fas fa-calendar-alt"></i> {{ project.deadline|date:"b d, Y"|capfirst }}</p>
-                        <div class="status status-ongoing">{{ project.status|capfirst }}</div>
+                    <h4>Website Design for a Small Business</h4>
+                    <div class="project-meta">
+                        <span class="proposals-count" title="Proposals Received">
+                            <i class="fas fa-paper-plane"></i> 12 proposals
+                        </span>
+                        <span class="project-duration" title="Expected delivery timeframe">
+                            <i class="far fa-clock"></i> Delivery in 2 weeks
+                        </span>
                     </div>
-                    <div class="card-buttons">
-                        <a href="" class="apply-proposal-btn">Apply Proposal</a>
-                        <a href="{% url 'project:project-detail' project.id %}" class="view-details-btn">View Details</a>
+                    <div class="project-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Key Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                    
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="apply-proposal-btn">Apply Now</a>
+                    <a href="#" class="view-details-btn">View Details</a>
                 </div>
             </div>  
-        {% empty %}
-            <div class="no-projects">
-                <div class="no-projects-icon">
-                    <i class="fas fa-exclamation-circle"></i>
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/defaultimages/defaultprojectpic.jpg' %}" alt="Project Image">
+                    <div class="project-status status-active">Active</div>
                 </div>
-                <div class="no-projects-message">
-                    <h4>Oops! No New Projects Available</h4>
-                    <p>Currently, there are no new or recommended projects. Stay tuned for updates!</p>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/defaultimages/defaultuserpic.png' %}" alt="Client Profile">
+                    <div class="poster-details">
+                        <p class="poster-name">John Doe</p>
+                        <p class="poster-posted-time">
+                            <i class="far fa-clock"></i> Posted 2 days ago
+                        </p>
+                    </div>
                 </div>
-            </div>      
-        {% endfor %}
+                <div class="project-info">
+                    <div class="project-meta-header">  
+                        <div class="project-category">
+                            <i class="fas fa-folder"></i> Web Development
+                        </div>
+                        <div class="project-budget">
+                            <span class="budget-amount">Rs. 20,000.00</span>
+                        </div>
+                    </div>
+                    <h4>Website Design for a Small Business</h4>
+                    <div class="project-meta">
+                        <span class="proposals-count" title="Proposals Received">
+                            <i class="fas fa-paper-plane"></i> 12 proposals
+                        </span>
+                        <span class="project-duration" title="Expected delivery timeframe">
+                            <i class="far fa-clock"></i> Delivery in 2 weeks
+                        </span>
+                    </div>
+                    <div class="project-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Key Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="apply-proposal-btn">Apply Now</a>
+                    <a href="#" class="view-details-btn">View Details</a>
+                </div>
+            </div> 
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="{% static 'images/defaultimages/defaultprojectpic.jpg' %}" alt="Project Image">
+                    <div class="project-status status-active">Active</div>
+                </div>
+                <div class="poster-info">
+                    <img class="poster-profile" src="{% static 'images/defaultimages/defaultuserpic.png' %}" alt="Client Profile">
+                    <div class="poster-details">
+                        <p class="poster-name">John Doe</p>
+                        <p class="poster-posted-time">
+                            <i class="far fa-clock"></i> Posted 2 days ago
+                        </p>
+                    </div>
+                </div>
+                <div class="project-info">
+                    <div class="project-meta-header">  
+                        <div class="project-category">
+                            <i class="fas fa-folder"></i> Web Development
+                        </div>
+                        <div class="project-budget">
+                            <span class="budget-amount">Rs. 20,000.00</span>
+                        </div>
+                    </div>
+                    <h4>Website Design for a Small Business</h4>
+                    <div class="project-meta">
+                        <span class="proposals-count" title="Proposals Received">
+                            <i class="fas fa-paper-plane"></i> 12 proposals
+                        </span>
+                        <span class="project-duration" title="Expected delivery timeframe">
+                            <i class="far fa-clock"></i> Delivery in 2 weeks
+                        </span>
+                    </div>
+                    <div class="project-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Key Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="apply-proposal-btn">Apply Now</a>
+                    <a href="#" class="view-details-btn">View Details</a>
+                </div>
+            </div>     
+        </div>
+        <!-- Empty State for Recommended Projects Section -->
+        <div class="empty-projects">
+            <div class="empty-illustration">
+                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h3 class="empty-title">No Recommended Projects Found</h3>
+            <p class="empty-message">We couldn't find any projects matching your skills right now. Check back later for new opportunities.</p>
+            <div class="empty-actions">
+                <a href="#" class="btn-primary">
+                    <i class="fas fa-search"></i> Browse All Projects
+                </a>
+            </div>
+            <div class="empty-tip">
+                <i class="fas fa-lightbulb"></i>
+                <span>Tip: Update your profile skills to get better recommendations</span>
+            </div>
+        </div>
     </div>
 </div>
 
+<!-- Client Testimonials Section -->
+<div class="testimonials-section">
+    <div class="container">
+        <h2 class="section-title">Client Testimonials</h2>
+        <p class="section-subtitle">What your clients say about your work</p>
+      
+        <div class="testimonial-slider">
+            <div class="testimonial-track">
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"We were initially hesitant about outsourcing our web development, but this team proved all our concerns wrong. From the initial consultation to the final delivery, their professionalism and expertise were evident. The ongoing support has been exceptional as well."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Jennifer Lee" class="author-image">
+                        <div class="author-details">
+                            <h4 class="author-name">Jennifer Lee</h4>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Solid work. They delivered what was promised on time. Would consider working with them again for future projects.Solid work. They delivered what was promised on time. Would consider working with them again for future projects."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Robert Taylor" class="author-image">
+                        <div class="author-details">
+                            <h4 class="author-name">Robert Taylor</h4>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"We were initially hesitant about outsourcing our web development, but this team proved all our concerns wrong. From the initial consultation to the final delivery, their professionalism and expertise were evident. The ongoing support has been exceptional as well."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Jennifer Lee" class="author-image">
+                        <div class="author-details">
+                            <h4 class="author-name">Jennifer Lee</h4>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-slide">
+                    <div class="testimonial-content">
+                        <p class="testimonial-text">"Solid work. They delivered what was promised on time. Would consider working with them again for future projects."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Robert Taylor" class="author-image">
+                        <div class="author-details">
+                            <h4 class="author-name">Robert Taylor</h4>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-nav">
+                <button id="prev-btn" class="nav-button prev">
+                <i class="fas fa-arrow-left"></i>
+                </button>
+                <button id="next-btn" class="nav-button next">
+                <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="slider-dots"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/dashboard/freelancer-dashboard.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
