@@ -5,85 +5,94 @@ document.addEventListener("DOMContentLoaded", () => {
     const notificationBox = document.querySelector('.notification-box');
     const languageIcon = document.querySelector('.fa-globe');
     const languageBox = document.querySelector('.language-box');
-    const profileIcon = document.querySelector('.profile-main .icon');
-    const userBox = document.querySelector('.profile-main .user-box');
+    const profileTrigger = document.querySelector('.profile-trigger');
+    const profileMain = document.querySelector('.profile-main');
+    const profileDropdown = document.querySelector('.profile-dropdown');
 
-    const hideAllBoxes = () => {
+    let currentOpenDropdown = null;
+
+    const hideAllDropdowns = () => {
         if (messageBox) messageBox.style.display = 'none';
         if (notificationBox) notificationBox.style.display = 'none';
         if (languageBox) languageBox.style.display = 'none';
-        if (userBox) userBox.style.display = 'none';
+        if (profileDropdown) profileDropdown.style.display = 'none';
+        if (profileMain) profileMain.classList.remove('active');
+        currentOpenDropdown = null;
     };
 
-    if (messengerIcon && messageBox) {
-        messengerIcon.addEventListener("click", function (event) {
-            event.stopPropagation();
-            if (messageBox.style.display === "block") {
-                messageBox.style.display = "none";  
+    const setupIconToggle = (icon, dropdown) => {
+        if (!icon || !dropdown) return;
+
+        icon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            if (currentOpenDropdown === dropdown) {
+                hideAllDropdowns();
+                return;
+            }
+
+            hideAllDropdowns();
+            
+            if (dropdown === profileDropdown) {
+                profileMain.classList.add('active');
+                profileDropdown.style.display = 'block';
             } else {
-                hideAllBoxes();
-                messageBox.style.display = "block";  
+                dropdown.style.display = 'block';
             }
+            
+            currentOpenDropdown = dropdown;
+        });
+    };
+
+    setupIconToggle(messengerIcon, messageBox);
+    setupIconToggle(notificationIcon, notificationBox);
+    setupIconToggle(languageIcon, languageBox);
+    setupIconToggle(profileTrigger, profileDropdown);
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.notification-icon') && !e.target.closest('.notification-box')) {
+            notificationBox.style.display = 'none';
+        }
+        if (!e.target.closest('#messenger-icon') && !e.target.closest('#message-box')) {
+            messageBox.style.display = 'none';
+        }
+        if (!e.target.closest('.fa-globe') && !e.target.closest('.language-box')) {
+            languageBox.style.display = 'none';
+        }
+        if (!e.target.closest('.profile-trigger') && !e.target.closest('.profile-dropdown')) {
+            profileDropdown.style.display = 'none';
+            profileMain.classList.remove('active');
+        }
+        
+        if (messageBox.style.display === 'block') {
+            currentOpenDropdown = messageBox;
+        } else if (notificationBox.style.display === 'block') {
+            currentOpenDropdown = notificationBox;
+        } else if (languageBox.style.display === 'block') {
+            currentOpenDropdown = languageBox;
+        } else if (profileDropdown.style.display === 'block') {
+            currentOpenDropdown = profileDropdown;
+        } else {
+            currentOpenDropdown = null;
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            hideAllDropdowns();
+        }
+    });
+
+    const darkModeToggle = document.querySelector('.toggle-switch input');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('change', (e) => {
+            document.body.classList.toggle('dark-mode', e.target.checked);
+            localStorage.setItem('darkMode', e.target.checked);
         });
 
-        document.addEventListener("click", function (event) {
-            if (messageBox && !messageBox.contains(event.target) && !messengerIcon.contains(event.target)) {
-                messageBox.style.display = "none";
-            }
-        });
-    }
-
-    if (notificationIcon && notificationBox) {
-        notificationIcon.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (notificationBox.style.display === 'block') {
-                notificationBox.style.display = 'none';  
-            } else {
-                hideAllBoxes();
-                notificationBox.style.display = 'block';  
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (notificationBox && !notificationIcon.contains(e.target) && !notificationBox.contains(e.target)) {
-                notificationBox.style.display = 'none';
-            }
-        });
-    }
-
-    if (languageIcon && languageBox) {
-        languageIcon.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (languageBox.style.display === 'block') {
-                languageBox.style.display = 'none';  
-            } else {
-                hideAllBoxes();
-                languageBox.style.display = 'block';  
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (languageBox && !languageIcon.contains(e.target) && !languageBox.contains(e.target)) {
-                languageBox.style.display = 'none';
-            }
-        });
-    }
-
-    if (profileIcon && userBox) {
-        profileIcon.addEventListener('click', () => {
-            if (userBox.style.display === 'block') {
-                userBox.style.display = 'none';  
-            } else {
-                hideAllBoxes();
-                userBox.style.display = 'block';  
-            }
-        });
-
-        document.addEventListener('click', (event) => {
-            if (userBox && !event.target.closest('.profile-main')) {
-                userBox.style.display = 'none';
-            }
-        });
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        }
     }
 });
-

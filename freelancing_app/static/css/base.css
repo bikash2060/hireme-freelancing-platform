@@ -578,130 +578,262 @@ html[lang="ne"] body {
 /* Profile Box Section */
 .navbar .profile-main {
     position: relative;
+    margin-left: 20px;
 }
 
-.navbar .profile-main .icon {
-    margin-left: 20px;
-    height: 42px;
-    width: 42px;
-    border-radius: 50%;
-    object-fit: cover;
+.navbar .profile-main .profile-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 50px;
+}
+
+.navbar .profile-main .profile-trigger:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.navbar .profile-main .profile-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: transparent;
-    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    color: #666;
+    font-size: 18px;
 }
 
-.navbar .profile-main .icon img {
-    height: 100%;
-    width: 100%;
+.profile-icon.large {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+}
+
+.navbar .profile-main .profile-trigger img,
+.navbar .profile-main .profile-trigger .profile-icon {
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
     object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar .profile-main .icon:hover {
-    transform: scale(1.1);
+.navbar .profile-main .dropdown-arrow {
+    font-size: 12px;
+    color: #666;
+    transition: transform 0.3s ease;
 }
 
-.navbar .profile-main .user-box{
+.navbar .profile-main .profile-dropdown {
     display: none;
     position: absolute;
     top: 75px;
     right: 0;
-    width: 300px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-    z-index: 100;
-    border-radius: 10px;
+    width: 320px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    transform-origin: top right;
+    animation: fadeIn 0.2s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.navbar .profile-main .user-box .username {
-    padding: 15px 20px;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar .profile-main.active .profile-dropdown {
+    display: block;
+}
+
+.navbar .profile-main.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.navbar .profile-main .profile-header {
     display: flex;
-    align-items: center;
+    padding: 20px;
     gap: 15px;
+    align-items: center;
 }
 
-.navbar .profile-main .user-box .username i {
-    font-size: 20px;
-    color: #615d5d;
-    padding: 12px;
+.navbar .profile-main .profile-header img,
+.navbar .profile-main .profile-header .profile-icon {
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.navbar .profile-main .user-box .username img{
-    height: 50px; 
-    width: 50px; 
-    border-radius: 50%; 
-    object-fit: cover; 
-    display: flex; 
-    align-items: center;
-    justify-content: center;
+
+.navbar .profile-main .profile-header .profile-icon.large {
+    margin-right: 15px;
 }
 
-.navbar .profile-main .user-box .username .user-info p {
+.navbar .profile-main .profile-info {
+    flex: 1;
+}
+
+.navbar .profile-main .profile-info h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
-    color: #212121;
+    color: #333;
 }
 
-.navbar .profile-main .user-box .username .user-info span {
+.navbar .profile-main .user-role {
+    display: inline-block;
+    font-size: 13px;
+    color: #666;
+    background-color: #f0f0f0;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+}
+
+.navbar .profile-main .view-profile {
+    display: block;
+    font-size: 13px;
+    color: #4a6bdf;
+    margin-top: 6px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.navbar .profile-main .view-profile:hover {
+    text-decoration: underline;
+}
+
+.navbar .profile-main .profile-menu {
+    padding: 8px 0;
+}
+
+.navbar .profile-main .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #555;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.navbar .profile-main .menu-item:hover {
+    background-color: #f8f9fa;
+    color: #4a6bdf;
+}
+
+.navbar .profile-main .menu-item i {
+    width: 24px;
+    text-align: center;
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.navbar .profile-main .menu-item span {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.navbar .profile-main .badge {
+    background-color: #ff4757;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.navbar .profile-main .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.navbar .profile-main .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.navbar .profile-main .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.navbar .profile-main .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.navbar .profile-main input:checked + .slider {
+    background-color: #4a6bdf;
+}
+
+.navbar .profile-main input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.navbar .profile-main .dropdown-divider {
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.navbar .profile-main .logout-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #ff4757;
+    transition: all 0.2s ease;
+}
+
+.navbar .profile-main .logout-btn:hover {
+    background-color: #fff0f0;
+}
+
+.navbar .profile-main .logout-btn i {
+    width: 24px;
+    text-align: center;
+    margin-right: 15px;
+    font-size: 16px;
+}
+
+.navbar .profile-main .logout-btn span {
     font-size: 14px;
     font-weight: 500;
-    color: #757575; 
-    display: block; 
-    margin-top: 3px; 
-}
-
-.navbar .profile-main .user-box hr {
-    border: none;
-    border-top: 2px solid #dbdada;
-}
-
-.navbar .profile-main .user-box .shortcut-settings{
-    margin: 10px 0;
-}
-
-.navbar .profile-main .user-box .my-profile, .user-box .logout {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    cursor: pointer;
-    padding: 15px 20px;
-    border-radius: 8px;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.navbar .profile-main .user-box .logout {
-    margin-bottom: 0;
-}
-
-.navbar .profile-main .user-box .my-profile:hover, .user-box .logout:hover {
-    background-color: #f8f9fa;
-    transform: translateY(-3px);
-}
-
-.navbar .profile-main .user-box .my-profile i, .user-box .logout i {
-    font-size: 20px;
-    color: #707070;
-    margin-right: 10px;
-}
-
-.navbar .profile-main .user-box .my-profile a, .user-box .logout a {
-    text-decoration: none;
-    font-size: 16px;
-    color: #707070;
-    font-weight: 500;
-    transition: color 0.3s;
 }
 
 /* Detailed Chat Section */

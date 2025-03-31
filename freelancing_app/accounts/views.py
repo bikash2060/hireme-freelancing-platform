@@ -474,6 +474,7 @@ class UserRoleRedirectView(View):
                 username=username,
                 password=password,
                 role=role.lower(),  
+                is_verified=True
             )
             
             role_models = {

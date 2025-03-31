@@ -15,11 +15,7 @@
         <!-- Hero Content Section -->
         <div class="hero-content">
             <div class="welcome-message">
-                {% if user.first_name %}
-                    <h2>{{ greeting }}, {{ user.first_name|capfirst }}</h2>
-                {% else %}
-                    <h2>{{ greeting }}, {{ user.username }}</h2>
-                {% endif %}
+                <h2>{{ greeting }}, {{ user.username }}</h2>
                 <p class="welcome-text">Here's an overview of your freelancing work</p>
             </div>
             <div class="hero-actions">

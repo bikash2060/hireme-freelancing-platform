@@ -1,10 +1,8 @@
 /* User Profile Section */
 .user-basic-info {
     background-color: #F5F5F5;
-    width: calc(100% - 260px);
-    position: relative;
-    top: 97px;
-    left: 260px;
+    margin-left: 280px; 
+    margin-top: 100px;
 }
 
 .user-basic-info .settings-container {
@@ -14,759 +12,236 @@
     padding: 20px 40px;
 }
 
-.user-basic-info .settings-container .title{
-    font-size: 25px;
-}
-
-/* Profile Image and Username Information Section */
-.user-basic-info .profile-info{
+.user-basic-info .settings-container .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    padding-bottom: 15px;
     position: relative;
 }
 
-.user-basic-info .profile-info .box {
-    display: flex;
-    margin-top: 25px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-}
-
-.user-basic-info .profile-info .left-side{
-    display: flex;
-    align-items: center;
-}
-
-.user-basic-info .profile-info .left-side img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 2px solid #d0d0d0;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-  }
-
-
-.user-basic-info .profile-info .left-side .details {
-    margin-left: 20px;
-}
-
-.user-basic-info .profile-info .left-side .details .name{
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.user-basic-info .profile-info .left-side .details .position{
-    margin-top: 5px;
-    font-size: 15px;
-    color: #919191;
-    font-weight: 450;
-}
-
-.user-basic-info .profile-info .left-side .details .address{
-    font-size: 15px;
-    color: #a7a5a5;
-}
-
-.user-basic-info .profile-info .right-side .edit-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.user-basic-info .profile-info .right-side .edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.user-basic-info .profile-info .right-side .edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.user-basic-info .profile-info .right-side .edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
+.user-basic-info .settings-container .title::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 70px;
+    height: 3px;
+    background: #4070f4;
 }
 
 /* Personal Information Section */
-.user-basic-info .personal-info .box {
-    padding: 25px 20px;
-    margin-top: 25px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+.user-basic-info .personal-info {
+    margin: 25px 0;
 }
 
-.user-basic-info .personal-info .header{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.user-basic-info .personal-info .header .caption i{
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.user-basic-info .personal-info .caption{
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.user-basic-info .personal-info .body-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-}
-
-.user-basic-info .personal-info .body-content p {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 430;
-    color: #080808;
-}
-
-.user-basic-info .personal-info .body-content .col-1, 
-.user-basic-info .personal-info .body-content .col-2,
-.user-basic-info .personal-info .body-content .col-3, 
-.user-basic-info .personal-info .body-content .col-4, 
-.user-basic-info .personal-info .body-content .col-5,
-.user-basic-info .personal-info .body-content .col-6,
-.user-basic-info .personal-info .body-content .col-7 {
-    display: flex;
-    flex-direction: column;
-}
-
-.user-basic-info .personal-info .body-content .col-7 {
-    grid-column: span 2; 
-    display: flex;
-    flex-direction: column;
-}
-
-.user-basic-info .personal-info .body-content .col-1 strong,
-.user-basic-info .personal-info .body-content .col-2 strong,
-.user-basic-info .personal-info .body-content .col-3 strong,
-.user-basic-info .personal-info .body-content .col-4 strong,
-.user-basic-info .personal-info .body-content .col-5 strong,
-.user-basic-info .personal-info .body-content .col-6 strong,
-.user-basic-info .personal-info .body-content .col-7 strong {
-    font-size: 16px;
-    font-weight: 400;
-    color: #555;
-}
-
-.user-basic-info .personal-info .body-content .col-7 .bio-text{
-    height: auto;
-    line-height: 1.6; 
-    max-height: 6.4em; 
+.user-basic-info .personal-info .profile-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    text-align: justify;
-    text-overflow: ellipsis;
 }
 
-.user-basic-info .personal-info .body-content .col-7 .read-more {
-    color: #007bff;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 10px;
-}
-
-.user-basic-info .personal-info .body-content .col-7 .read-more:hover {
-    text-decoration: underline;
-}
-
-.user-basic-info .personal-info .header .edit-link {
+.user-basic-info .personal-info .card-header {
     display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.user-basic-info .personal-info .header .edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.user-basic-info .personal-info .header .edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.user-basic-info .personal-info .header .edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-.user-basic-info .toggle-btn {
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: all 0.3s ease;
-}
-
-.user-basic-info .toggle-btn:hover {
-    background: #e0e0e0;
-    border-color: #aaa;
-}
-
-/* Address Information Section */
-.user-basic-info .addreess-info .box {
-    margin-top: 25px;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-}
-
-.user-basic-info .addreess-info .header{
-    display: flex;
-    width: 100%;
     justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.user-basic-info .addreess-info .header .caption i{
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.user-basic-info .addreess-info .caption{
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.user-basic-info .addreess-info .body-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-}
-
-.user-basic-info .addreess-info .body-content p {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 430;
-    color: #080808;
-}
-
-.user-basic-info .addreess-info .body-content .col-1,
-.user-basic-info .addreess-info .body-content .col-2,
-.user-basic-info .addreess-info .body-content .col-3, 
-.user-basic-info .addreess-info .body-content .col-4{
-    display: flex;
-    flex-direction: column;
-}
-
-.user-basic-info .addreess-info .body-content .col-1 strong,
-.user-basic-info .addreess-info .body-content .col-2 strong,
-.user-basic-info .addreess-info .body-content .col-3 strong, 
-.user-basic-info .addreess-info .body-content .col-4 strong{
-    font-size: 16px;
-    font-weight: 400;
-    color: #555;
-}
-
-.user-basic-info .addreess-info .header .edit-link {
-    display: flex;
     align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.user-basic-info .addreess-info .header .edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.user-basic-info .addreess-info .header .edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.user-basic-info .addreess-info .header .edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-/* Skills and Hourly Rate Information Section */
-.user-basic-info .experience-info .box {
-    margin-top: 25px;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-}
-
-.user-basic-info .experience-info .header {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.user-basic-info .experience-info .header .caption i {
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.user-basic-info .experience-info .caption {
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.user-basic-info .experience-info .body-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    grid-gap: 20px;
-}
-
-.user-basic-info .experience-info .body-content p {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 430;
-    color: #080808;
-}
-
-.user-basic-info .experience-info .body-content .col-1,
-.user-basic-info .experience-info .body-content .col-2,
-.user-basic-info .experience-info .body-content .col-3 {
-    display: flex;
-    flex-direction: column;
-}
-
-.user-basic-info .experience-info .body-content .col-1 strong,
-.user-basic-info .experience-info .body-content .col-2 strong,
-.user-basic-info .experience-info .body-content .col-3 strong {
-    font-size: 16px;
-    font-weight: 400;
-    color: #555;
-}
-
-.user-basic-info .experience-info .body-content .col-3 {
-    grid-column: span 2; 
-}
-
-.user-basic-info .experience-info .skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.user-basic-info .experience-info .skills-list .skill-tag {
-    background-color: #1E88E5;
+    padding: 25px 30px;
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.9), rgba(92, 30, 236, 0.9));    
     color: white;
-    padding: 8px 15px;
+}
+
+.user-basic-info .personal-info .header-content {
+    display: flex;
+    align-items: center;
+}
+
+.user-basic-info .personal-info .profile-icon {
+    font-size: 28px;
+    margin-right: 15px;
+}
+
+.user-basic-info .personal-info .card-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 22px;
+}
+
+.user-basic-info .personal-info .edit-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 500;
-    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
-.user-basic-info .experience-info .skills-list .skill-tag:hover {
-    background-color: #155a8a;
+.user-basic-info .personal-info .edit-btn i {
+    margin-right: 8px;
 }
 
-.user-basic-info .experience-info .skills-list p {
+.user-basic-info .personal-info .edit-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.user-basic-info .personal-info .card-body {
+    padding: 25px;
+}
+
+.user-basic-info .personal-info .profile-image-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.user-basic-info .personal-info .image-container {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-basic-info .personal-info .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-basic-info .personal-info .avatar-placeholder {
+    font-size: 36px;
+    color: #aaa;
+}
+
+.user-basic-info .personal-info .user-name h3 {
+    margin: 0 0 5px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1;
+}
+
+.user-basic-info .personal-info .username {
+    margin: 0;
+    color: #777;
+    font-size: 15px;
+}
+
+.user-basic-info .personal-info .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.user-basic-info .personal-info .info-item {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.user-basic-info .personal-info .info-item:hover {
+    background: #f0f0f0;
+}
+
+.user-basic-info .personal-info .info-item.full-width {
+    grid-column: 1 / span 3;
+}
+
+.user-basic-info .personal-info .info-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
     color: #555;
     font-size: 14px;
-    font-weight: 400;
-}
-
-.user-basic-info .experience-info .header .edit-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.user-basic-info .experience-info .header .edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.user-basic-info .experience-info .header .edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.user-basic-info .experience-info .header .edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-/* Education Information Section */
-.user-basic-info .education-info .box {
-    margin-top: 25px;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.user-basic-info .education-info .header {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.user-basic-info .education-info .header .caption i {
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.user-basic-info .education-info .caption {
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.user-basic-info .education-info .header .add-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.user-basic-info .education-info .header .add-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.user-basic-info .education-info .header .add-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.user-basic-info .education-info .header .add-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-.user-basic-info .education-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
     position: relative;
 }
 
-.user-basic-info .education-item:last-child {
-    border-bottom: none;
-}
-
-.user-basic-info .education-item .education-logo {
-    width: 60px;
-    height: 60px;
-    margin-right: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f8f8f8;
-    flex-shrink: 0;
-}
-
-.user-basic-info .education-item .education-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.user-basic-info .education-item .education-details {
-    flex: 1;
-}
-
-.user-basic-info .education-details .institution {
+.user-basic-info .personal-info .info-label .icon {
+    margin-right: 10px;
+    color: #6e8efb;
     font-size: 16px;
-    font-weight: 530;
-    margin-bottom: 5px;
 }
 
-.user-basic-info .education-details .degree {
-    font-size: 15px;
-    font-weight: 520;
-    color: #353535;
-    margin-bottom: 5px;
-}
-
-.user-basic-info .education-details .duration, .education-details .location {
-    font-size: 14px;
+.user-basic-info .personal-info .info-value {
+    font-size: 16px;
     color: #333;
-    margin-bottom: 5px;
+    font-weight: 500;
+    word-break: break-word;
+    min-height: 24px;
 }
 
-.user-basic-info .education-item .edit-icon {
-    position: absolute;
-    right: 10px;
-    top: 20px;
-    font-size: 18px;
-    color: #666;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    transition: 0.3s ease;
-}
-
-.user-basic-info .education-item .edit-icon:hover {
-    color: #0056b3; 
-}
-
-.user-basic-info .education-item .delete-icon {
-    position: absolute;
-    right: 10px; 
-    top: 60px;
-    font-size: 18px;
-    color: #666;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    transition: 0.3s ease;
-}
-
-.user-basic-info .education-item .delete-icon:hover {
-    color: #e74c3c; 
-}
-
-/* Certificate Information Styles */
-.user-basic-info .certificate-info .box {
-    margin-top: 25px;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.user-basic-info .certificate-info .header {
+.user-basic-info .personal-info .email-value, .phone-value {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
 }
 
-.user-basic-info .certificate-info .header .caption {
-    font-size: 20px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-}
-
-.user-basic-info .certificate-info .header .caption i {
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.user-basic-info .certificate-info .header .add-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191;
-    border: 1px solid #a7a5a5;
-    padding: 8px 16px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.user-basic-info .certificate-info .header .add-link i {
-    margin-left: 8px;
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.user-basic-info .certificate-info .header .add-link:hover {
-    color: #0056b3;
-    border-color: #0056b3;
-}
-
-.user-basic-info .certificate-info .header .add-link:hover i {
-    transform: translateX(5px);
-    color: #0056b3;
-}
-
-.user-basic-info .certificate-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-}
-
-.user-basic-info .certificate-item:last-child {
-    border-bottom: none;
-}
-
-.user-basic-info .certificate-item .certificate-logo {
-    width: 60px;
-    height: 60px;
-    margin-right: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f8f8f8;
-    flex-shrink: 0;
-}
-
-.user-basic-info .certificate-item .certificate-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.user-basic-info .certificate-item .certificate-details {
-    flex: 1;
-}
-
-.user-basic-info .certificate-details .certificate-name {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.user-basic-info .certificate-details .certificate-provider {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 3px;
-}
-
-.user-basic-info .certificate-details .issued-date {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.user-basic-info .certificate-details .certificate-url a {
-    display: inline-flex;
-    align-items: center;
-    font-size: 14px;
-    color: #1E88E5;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 20px;
-    border: 1px solid #1E88E5;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.user-basic-info .certificate-details .certificate-url a i {
-    margin-left: 5px;
+.user-basic-info .personal-info .visibility-toggle {
+    margin-left: auto; 
     font-size: 12px;
+    color: #6e8efb;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(110, 142, 251, 0.1);
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-.user-basic-info .certificate-details .certificate-url a:hover {
-    background-color: #1E88E5;
-    color: #fff;
+.user-basic-info .personal-info .visibility-toggle:hover {
+    background: rgba(110, 142, 251, 0.2);
 }
 
-.user-basic-info .certificate-item .edit-icon {
-    position: absolute;
-    right: 10px;
-    top: 20px;
-    font-size: 18px;
-    color: #666;
-    text-decoration: none;
+.user-basic-info .personal-info .email-value:hover .visibility-toggle,
+.user-basic-info .personal-info .phone-value:hover .visibility-toggle {
+    background: rgba(110, 142, 251, 0.2);
+}
+
+.user-basic-info .personal-info .bio-value {
+    line-height: 1.6;
+}
+
+.user-basic-info .personal-info .member-since {
+    font-size: 14px;
+    color: #777;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    transition: background 0.3s ease;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
 }
 
-.user-basic-info .certificate-item .edit-icon:hover {
-    color: #0056b3;
+.user-basic-info .personal-info .member-since i {
+    margin-right: 8px;
+    color: #aaa;
 }
 
-.user-basic-info .certificate-item .delete-icon {
-    position: absolute;
-    right: 10px; 
-    top: 60px;
-    font-size: 18px;
-    color: #666;
-    text-decoration: none;
+.user-basic-info .personal-info .verified-badge {
+    margin-left: 15px;
+    color: #10b981;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    transition: 0.3s ease;
 }
 
-.user-basic-info .certificate-item .delete-icon:hover {
-    color: #e74c3c; 
+.user-basic-info .personal-info .verified-badge i {
+    margin-right: 5px;
+    font-size: 16px;
 }
+

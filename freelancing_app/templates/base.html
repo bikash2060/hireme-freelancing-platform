@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
     {% block css_files %}
     {% endblock %}
@@ -233,36 +233,62 @@
             <!-- Profile Box Section -->
             {% if user.is_authenticated %}
             <div class="profile-main">
-                <div class="icon">
-                    <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/defaultimages/defaultuserpic.png' %}{% endif %}" alt="Profile Picture">
+                <div class="profile-trigger">
+                    {% if user.profile_image %}
+                        <img src="{% get_media_prefix %}profile_images/{{ user.profile_image }}" alt="Profile Picture">
+                    {% else %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
                 </div>
-                <div class="user-box">
-                    <div class="username">
-                        <img src="{% if user.profile_image %}{% get_media_prefix %}profile_images/{{ user.profile_image }}{% else %}{% static 'images/defaultimages/defaultuserpic.png' %}{% endif %}" alt="Profile Picture">
-                        <div class="user-info">
-                            {% if user.first_name and user.last_name %}
-                                <p>{{ user.first_name }} {{ user.last_name }}</p>
+                <div class="profile-dropdown">
+                    <div class="profile-header">
+                        {% if user.profile_image %}
+                        <img src="{% get_media_prefix %}profile_images/{{ user.profile_image }}" alt="Profile Picture">
+                        {% else %}
+                            <div class="profile-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                        <div class="profile-info">
+                            {% if user.full_name%}
+                                <h3>{{ user.full_name }}</h3>
                             {% else %}
-                                <p>{{ user.username }}</p>
+                                <h3>{{ user.username }}</h3>
                             {% endif %}
-                            <span>{{ user.role.capitalize }}</span>
+                            <span class="user-role">{{ user.role.capitalize }}</span>
                         </div>
                     </div>
-                    <hr>
-                    <div class="shortcut-settings">
-                        <div class="my-profile">
-                            <i class="fa-solid fa-gear"></i>
-                            <a href="{% url 'home:user-profile' %}">Account Settings</a>
-                        </div>
-                        <div class="my-profile">
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <nav class="profile-menu">
+                        <a href="{% url 'home:user-profile' %}" class="menu-item">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <span>Account Settings</span>
+                        </a>
+                        <a href="#" class="menu-item">
                             <i class="fa-solid fa-bell"></i>
-                            <a href="">Notifications</a>
-                        </div>
-                        <div class="logout">
-                            <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
-                            <a href="{% url 'account:logout' %}">Logout</a>
-                        </div>
-                    </div>
+                            <span>Notifications</span>
+                        </a>
+                        <a href="#" class="menu-item">
+                            <i class="fa-solid fa-moon"></i>
+                            <span>Dark Mode</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </a>
+                    </nav>
+                    
+                    <div class="dropdown-divider"></div>
+                    
+                    <a href="{% url 'account:logout' %}" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Log Out</span>
+                    </a>
                 </div>
             </div>
             {% endif %}
@@ -442,8 +468,8 @@
 <script src="{% static 'js/common/message.js' %}"></script>
 <script src="{% static 'js/common/loader.js'%}"></script>
 <script src="{% static 'js/common/form-handler.js' %}"></script>
-<script src="{% static 'js/common/sidebar.js' %}"></script>
 <script src="{% static 'js/filters.js' %}"></script>
 <script src="{% static 'js/common/mobile-menu.js' %}" defer></script>
+
 </body>
 </html>

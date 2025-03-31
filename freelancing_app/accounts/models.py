@@ -40,14 +40,22 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
+    full_name = models.CharField(max_length=200)
     username = models.CharField(max_length=150, unique=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    role = models.CharField(max_length=50)
+    role = models.CharField(max_length=50, choices=[
+        ('client', 'Client'),
+        ('freelancer', 'Freelancer'),
+        ('admin', 'Admin')
+    ])
     phone_number = models.CharField(max_length=15, unique=True)
+    is_verified = models.BooleanField(default=False) 
     date_joined = models.DateTimeField(auto_now_add=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  
+    bio = models.TextField(blank=True, null=True)  
+    country = models.CharField(max_length=100, blank=True, null=True)  
+    city = models.CharField(max_length=100, blank=True, null=True)  
+    
     last_login = None
     is_staff = models.BooleanField(default=False)  
     is_superuser = models.BooleanField(default=False)  
@@ -55,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['username', 'full_name']
 
     def __str__(self):
         return self.username
@@ -65,11 +73,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Client(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='client_profile')
-    languages = models.TextField(blank=True, null=True)  
-    bio = models.TextField(blank=True, null=True)  
-    country = models.CharField(max_length=100, blank=True, null=True)  
-    city = models.CharField(max_length=100, blank=True, null=True)  
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='client_profile'
+    )
 
     def __str__(self):
         return f"Client: {self.user.username}"
@@ -79,11 +87,11 @@ class Client(models.Model):
 
 class Freelancer(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='freelancer_profile')
-    languages = models.TextField(blank=True, null=True)  
-    bio = models.TextField(blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)  
-    city = models.CharField(max_length=100, blank=True, null=True)  
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='freelancer_profile'
+    )
     hourly_rate = models.IntegerField(default=0)
     portfolio_link = models.URLField(blank=True, null=True)
     experience_years = models.PositiveIntegerField(default=0) 

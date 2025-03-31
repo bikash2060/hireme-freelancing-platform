@@ -191,3 +191,12 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'bishalbhattarai472@gmail.com'
 EMAIL_HOST_PASSWORD = 'auqv lisg jxjh sjis'
+
+# Reserved usernames that users can't register with
+RESERVED_USERNAMES = {
+    "admin", "administrator", "root", "superuser", "sysadmin", 
+    "moderator", "support", "helpdesk", "service", "client",
+    "freelancer", "user", "guest", "owner", "manager",
+    "staff", "team", "developer", "dev", "test",
+    "system", "operator", "security", "bot", "official"
+}
