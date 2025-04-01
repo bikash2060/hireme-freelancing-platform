@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Update Professional Information - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/editprofessionalinfo.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'freelancerprofile/sidebar.html' %}
+
+<!-- Loading Screen Section -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<!-- Edit Professional Form Section -->
+<div class="content-wrapper">
+    <div class="edit-profile-container">
+        <div class="profile-card">
+            <div class="card-header">
+                <div class="header-content">
+                    <div class="icon-circle">
+                        <i class="fas fa-briefcase profile-icon"></i>
+                    </div>
+                    <div>
+                        <h2>Edit Professional Information</h2>
+                        <p class="subtitle">Update your professional details to attract more clients</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{% url 'freelancer:profile' %}" class="back-to-profile-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Profile
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <form id="professional-edit-form" action="" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-map-marker-alt"></i> Location
+                            </h3>
+                            <div class="form-group">
+                                <label for="city">
+                                    <i class="fas fa-city"></i> City
+                                </label>
+                                <select id="city" name="city" class="form-control" required>
+                                    <option value="" selected disabled>Select your city</option>
+                                    {% for city in cities %}
+                                        <option value="{{ city }}" 
+                                            {% if freelancer.city == city %}selected{% endif %}>
+                                            {{ city }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">
+                                    <i class="fas fa-globe-asia"></i> Country
+                                </label>
+                                <select id="country" name="country" class="form-control country-select" disabled>
+                                    <option value="Nepal" selected>Nepal</option>
+                                </select>
+                                <div class="input-hint">Currently serving Nepalese clients only</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-money-bill-wave"></i> Rates
+                            </h3>
+                            <div class="form-group">
+                                <label for="hourly_rate">
+                                    <i class="fas fa-rupee-sign"></i> Hourly Rate (NPR)
+                                </label>
+                                <div class="input-with-symbol">
+                                    <span class="input-symbol">Rs</span>
+                                    <input type="number" id="hourly_rate" name="hourly_rate" value="" class="form-control" min="0" step="100">
+                                </div>
+                                <div class="input-hint">Your standard hourly rate in Nepali Rupees</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-language"></i> Languages
+                            </h3>
+                            <div class="form-group">
+                                <div class="language-container">
+                                    <div class="language-item">
+                                        <div class="language-name">English</div>
+                                        <div class="proficiency-selector">
+                                            <select name="english_proficiency" class="form-control proficiency-select">
+                                                <option value="basic">Basic</option>
+                                                <option value="conversational">Conversational</option>
+                                                <option value="fluent" selected>Fluent</option>
+                                                <option value="native">Native/Bilingual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="language-item">
+                                        <div class="language-name">Nepali</div>
+                                        <div class="proficiency-selector">
+                                            <select name="nepali_proficiency" class="form-control proficiency-select">
+                                                <option value="basic">Basic</option>
+                                                <option value="conversational">Conversational</option>
+                                                <option value="fluent">Fluent</option>
+                                                <option value="native" selected>Native/Bilingual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-hint">Select your proficiency level for each language</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-code"></i> Skills
+                            </h3>
+                            <div class="form-group">
+                                <label for="skills_search">
+                                    <i class="fas fa-search"></i> Search Skills
+                                </label>
+                                <input type="text" id="skills_search" class="form-control" placeholder="Search skills...">
+                                
+                                <div class="skills-checkbox-container" id="skills-options">
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_1" name="skills" value="React">
+                                        <label for="skill_1">React</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_2" name="skills" value="JavaScript">
+                                        <label for="skill_2">JavaScript</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_3" name="skills" value="Node.js">
+                                        <label for="skill_3">Node.js</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_4" name="skills" value="Python">
+                                        <label for="skill_4">Python</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_5" name="skills" value="Django">
+                                        <label for="skill_5">Django</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_6" name="skills" value="HTML">
+                                        <label for="skill_6">HTML</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_7" name="skills" value="CSS">
+                                        <label for="skill_7">CSS</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_8" name="skills" value="TypeScript">
+                                        <label for="skill_8">TypeScript</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_9" name="skills" value="MongoDB">
+                                        <label for="skill_9">MongoDB</label>
+                                    </div>
+                                    <div class="skill-option">
+                                        <input type="checkbox" id="skill_10" name="skills" value="MySQL">
+                                        <label for="skill_10">MySQL</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="selected-skills-container" id="selected-skills">
+                                    <h4>Selected Skills:</h4>
+                                    <div class="selected-skills-list">
+                                        
+                                    </div>
+                                </div>
+                                
+                                <div class="tags-hint">Add at least 5 skills to increase your visibility</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="{% url 'freelancer:profile' %}" class="cancel-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="save-btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/freelancerprofile/profile-utils.js' %}"></script>
+{% endblock %}

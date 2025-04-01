@@ -92,20 +92,648 @@
                             </div>
                         </div>
                     </div>
-                    <div class="member-since">
-                        <i class="fas fa-calendar-alt"></i>
-                        Member since {{ user.date_joined|date:"F Y" }}
+                    <div class="footer-section">
+                        <div class="member-since">
+                            <i class="fas fa-calendar-alt"></i>
+                            Member since {{ user.date_joined|date:"F Y" }}
+                        </div>
                         {% if user.is_verified %}
-                            <span class="verified-badge">
+                            <div class="verified-badge">
                                 <i class="fas fa-check-circle"></i> Verified
-                            </span>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Professional Information Section -->
+        <div class="professional-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-briefcase profile-icon"></i>
+                        <h2>Professional Information</h2>
+                    </div>
+                    <a href="{% url 'freelancer:edit-professional-info' %}" class="edit-btn">
+                        <i class="fas fa-pencil-alt"></i> Edit Profile
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="info-grid">
+                        <div class="info-item rate-card">
+                            <div class="info-label">
+                                <i class="fas fa-money-bill-wave icon"></i>
+                                <span>Hourly Rate</span>
+                            </div>
+                            <div class="info-value">
+                                <span class="rate-amount">Rs 5,000.00 NPR</span>
+                                <span class="rate-note">Negotiable for large projects</span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item location-card">
+                            <div class="info-label">
+                                <i class="fas fa-map-marker-alt icon"></i>
+                                <span>Location</span>
+                            </div>
+                            <div class="info-value">
+                                <div class="location-detail">
+                                    <i class="fas fa-city"></i>
+                                    <span>Kathmandu</span>
+                                </div>
+                                <div class="location-detail">
+                                    <i class="fas fa-globe-asia"></i>
+                                    <span>Nepal</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item languages-card">
+                            <div class="info-label">
+                                <i class="fas fa-language icon"></i>
+                                <span>Languages</span>
+                            </div>
+                            <div class="info-value">
+                                <div class="language-proficiency">
+                                    <span class="language-name">English</span>
+                                    <div class="proficiency-level">
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot"></span>
+                                    </div>
+                                </div>
+                                <div class="language-proficiency">
+                                    <span class="language-name">Nepali</span>
+                                    <div class="proficiency-level">
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot filled"></span>
+                                        <span class="proficiency-dot filled"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item full-width skills-card">
+                            <div class="info-label">
+                                <i class="fas fa-code icon"></i>
+                                <span>Skills</span>
+                            </div>
+                            <div class="info-value">
+                                <div class="skills-container">
+                                    <span class="skill-tag">React</span>
+                                    <span class="skill-tag">JavaScript</span>
+                                    <span class="skill-tag">Node.js</span>
+                                    <span class="skill-tag">Python</span>
+                                    <span class="skill-tag">Django</span>
+                                    <span class="skill-tag">Express</span>
+                                    <span class="skill-tag">UI/UX</span>
+                                    <span class="skill-tag">Figma</span>
+                                    <span class="skill-tag">TypeScript</span>
+                                    <span class="skill-tag">Adobe XD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience Information Section -->
+        <div class="experience-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-history profile-icon"></i>
+                        <h2>Work Experience</h2>
+                    </div>
+                    <a href="" class="add-btn">
+                        <i class="fas fa-plus"></i> Add Experience
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="experience-list">
+                        <div class="experience-item">
+                            <div class="experience-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="experience-header">
+                                <div class="company-logo">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="job-details">
+                                    <h3 class="job-title">Senior Frontend Developer</h3>
+                                    <div class="company-name">
+                                        <i class="fas fa-briefcase"></i>
+                                        <span>TechInnovate Solutions</span>
+                                    </div>
+                                    <div class="job-duration">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>January 2022 - Present</span>
+                                        <span class="duration-badge current">Current</span>
+                                    </div>
+                                    <div class="job-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Kathmandu, Nepal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="job-description">
+                                <p>Leading the frontend development team in creating responsive and user-friendly web applications. Implementing modern JavaScript frameworks and ensuring cross-browser compatibility.</p>
+                            </div>
+                            <div class="experience-skills">
+                                <span class="exp-skill-tag">React</span>
+                                <span class="exp-skill-tag">JavaScript</span>
+                                <span class="exp-skill-tag">TypeScript</span>
+                                <span class="exp-skill-tag">UI/UX</span>
+                            </div>
+                        </div>
         
+                        <div class="experience-item">
+                            <div class="experience-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="experience-header">
+                                <div class="company-logo">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="job-details">
+                                    <h3 class="job-title">Web Developer</h3>
+                                    <div class="company-name">
+                                        <i class="fas fa-briefcase"></i>
+                                        <span>Digital Nepal Inc.</span>
+                                    </div>
+                                    <div class="job-duration">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>June 2020 - December 2021</span>
+                                        <span class="duration-badge years">1.5 years</span>
+                                    </div>
+                                    <div class="job-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Kathmandu, Nepal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="job-description">
+                                <p>Developed and maintained multiple client websites, implemented new features, and ensured optimal performance. Collaborated with design and backend teams to deliver complete web solutions.</p>
+                            </div>
+                            <div class="experience-skills">
+                                <span class="exp-skill-tag">JavaScript</span>
+                                <span class="exp-skill-tag">Node.js</span>
+                                <span class="exp-skill-tag">Express</span>
+                                <span class="exp-skill-tag">Django</span>
+                            </div>
+                        </div>
+        
+                        <div class="experience-item hidden-experience">
+                            <div class="experience-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="experience-header">
+                                <div class="company-logo">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="job-details">
+                                    <h3 class="job-title">UI/UX Design Intern</h3>
+                                    <div class="company-name">
+                                        <i class="fas fa-briefcase"></i>
+                                        <span>CreativeMinds Studio</span>
+                                    </div>
+                                    <div class="job-duration">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>January 2020 - May 2020</span>
+                                        <span class="duration-badge months">5 months</span>
+                                    </div>
+                                    <div class="job-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Lalitpur, Nepal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="job-description">
+                                <p>Assisted the design team in creating wireframes and prototypes. Conducted user research and translated findings into design improvements.</p>
+                            </div>
+                            <div class="experience-skills">
+                                <span class="exp-skill-tag">Figma</span>
+                                <span class="exp-skill-tag">Adobe XD</span>
+                                <span class="exp-skill-tag">UI/UX</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="show-more-container">
+                        <button class="show-more-btn">
+                            <span class="show-text">Show More</span>
+                            <span class="show-less-text" style="display: none;">Show Less</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Information Section -->
+        <div class="education-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-graduation-cap profile-icon"></i>
+                        <h2>Education</h2>
+                    </div>
+                    <a href="" class="add-btn">
+                        <i class="fas fa-plus"></i> Add Education
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="education-list">
+                        <div class="education-item">
+                            <div class="education-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="education-header">
+                                <div class="institution-logo">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="education-details">
+                                    <h3 class="degree-title">Master of Computer Science</h3>
+                                    <div class="institution-name">
+                                        <i class="fas fa-school"></i>
+                                        <span>Kathmandu University</span>
+                                    </div>
+                                    <div class="education-period">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>2018 - 2020</span>
+                                        <span class="duration-badge years">2 years</span>
+                                    </div>
+                                    <div class="education-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Dhulikhel, Nepal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="education-description">
+                                <p>Specialized in Artificial Intelligence and Machine Learning. Thesis on "Deep Learning Approaches for Nepali Language Processing".</p>
+                            </div>
+                            <div class="education-achievements">
+                                <span class="achievement-tag">GPA: 3.8/4.0</span>
+                                <span class="achievement-tag">Dean's List</span>
+                                <span class="achievement-tag">Research Assistant</span>
+                            </div>
+                        </div>
+        
+                        <div class="education-item hidden-education">
+                            <div class="education-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="education-header">
+                                <div class="institution-logo">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="education-details">
+                                    <h3 class="degree-title">Bachelor of Information Technology</h3>
+                                    <div class="institution-name">
+                                        <i class="fas fa-school"></i>
+                                        <span>Tribhuvan University</span>
+                                    </div>
+                                    <div class="education-period">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>2014 - 2018</span>
+                                        <span class="duration-badge years">4 years</span>
+                                    </div>
+                                    <div class="education-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Kathmandu, Nepal</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="education-description">
+                                <p>Major in Software Development with minor in Database Systems. Final year project on "E-Commerce Platform for Local Artisans".</p>
+                            </div>
+                            <div class="education-achievements">
+                                <span class="achievement-tag">GPA: 3.6/4.0</span>
+                                <span class="achievement-tag">Class Representative</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="show-more-container">
+                        <button class="show-more-btn">
+                            <span class="show-text">Show More</span>
+                            <span class="show-less-text" style="display: none;">Show Less</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>   
+
+        <!-- Certifications Information Section --> 
+        <div class="certifications-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-certificate profile-icon"></i>
+                        <h2>Certifications</h2>
+                    </div>
+                    <a href="" class="add-btn">
+                        <i class="fas fa-plus"></i> Add Certification
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="certifications-list">
+                        <div class="certification-item">
+                            <div class="certification-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="certification-header">
+                                <div class="certification-logo">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div class="certification-details">
+                                    <h3 class="certification-title">AWS Certified Solutions Architect</h3>
+                                    <div class="issuing-organization">
+                                        <i class="fas fa-building"></i>
+                                        <span>Amazon Web Services</span>
+                                    </div>
+                                    <div class="certification-period">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Issued: May 2021</span>
+                                        <span class="expiry-badge">Expires: May 2024</span>
+                                    </div>
+                                    <div class="certification-id">
+                                        <i class="fas fa-id-card"></i>
+                                        <span>Credential ID: AWS-123456789</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="certification-description">
+                                <p>Demonstrated ability to design and deploy scalable, highly available, and fault-tolerant systems on AWS.</p>
+                            </div>
+                            <div class="certification-links">
+                                <a href="#" class="credential-link" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i> View Credential
+                                </a>
+                            </div>
+                        </div>
+        
+                        <div class="certification-item hidden-certification">
+                            <div class="certification-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="certification-header">
+                                <div class="certification-logo">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div class="certification-details">
+                                    <h3 class="certification-title">Google Professional Data Engineer</h3>
+                                    <div class="issuing-organization">
+                                        <i class="fas fa-building"></i>
+                                        <span>Google Cloud</span>
+                                    </div>
+                                    <div class="certification-period">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Issued: November 2020</span>
+                                        <span class="no-expiry-badge">No Expiration</span>
+                                    </div>
+                                    <div class="certification-id">
+                                        <i class="fas fa-id-card"></i>
+                                        <span>Credential ID: GCP-987654321</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="certification-description">
+                                <p>Certified in designing data processing systems, building and operationalizing machine learning models on Google Cloud.</p>
+                            </div>
+                            <div class="certification-links">
+                                <a href="#" class="credential-link" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i> View Credential
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="show-more-container">
+                        <button class="show-more-btn">
+                            <span class="show-text">Show More</span>
+                            <span class="show-less-text" style="display: none;">Show Less</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Portfolio/Projects Section -->
+        <div class="portfolio-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-folder-open profile-icon"></i>
+                        <h2>Portfolio Projects</h2>
+                    </div>
+                    <a href="" class="add-btn">
+                        <i class="fas fa-plus"></i> Add Project
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="portfolio-grid">
+                        <!-- First project (always visible) -->
+                        <div class="project-item">
+                            <div class="project-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="project-image">
+                                <img src="{% get_media_prefix %}project_images/project1.jpg" alt="E-Commerce Platform">
+                                <div class="project-links">
+                                    <a href="#" class="project-link" target="_blank">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                    <a href="#" class="project-link" target="_blank">
+                                        <i class="fab fa-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="project-details">
+                                <h3 class="project-title">E-Commerce Platform</h3>
+                                <div class="project-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Completed: June 2022</span>
+                                </div>
+                                <div class="project-description">
+                                    <p>A full-featured e-commerce platform with payment integration, inventory management, and customer analytics.</p>
+                                </div>
+                                <div class="project-skills">
+                                    <span class="project-skill-tag">React</span>
+                                    <span class="project-skill-tag">Node.js</span>
+                                    <span class="project-skill-tag">MongoDB</span>
+                                    <span class="project-skill-tag">Stripe API</span>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Additional projects (hidden by default) -->
+                        <div class="project-item hidden-project">
+                            <div class="project-actions">
+                                <a href="" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="" class="action-btn delete-action">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="project-image">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="project-links">
+                                    <a href="#" class="project-link" target="_blank">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </a>
+                                    <a href="#" class="project-link" target="_blank">
+                                        <i class="fab fa-github"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="project-details">
+                                <h3 class="project-title">Task Management App</h3>
+                                <div class="project-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Completed: March 2021</span>
+                                </div>
+                                <div class="project-description">
+                                    <p>A collaborative task management application with real-time updates, team management, and progress tracking.</p>
+                                </div>
+                                <div class="project-skills">
+                                    <span class="project-skill-tag">Vue.js</span>
+                                    <span class="project-skill-tag">Firebase</span>
+                                    <span class="project-skill-tag">WebSockets</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Show More/Less Button -->
+                    <div class="show-more-container">
+                        <button class="show-more-btn">
+                            <span class="show-text">Show More</span>
+                            <span class="show-less-text" style="display: none;">Show Less</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="social-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-share-alt profile-icon"></i>
+                        <h2>Social Media & Contact</h2>
+                    </div>
+                    <a href="" class="edit-btn">
+                        <i class="fas fa-pencil-alt"></i> Edit
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="social-grid">
+                        <div class="social-item linkedin">
+                            <div class="social-icon">
+                                <i class="fab fa-linkedin-in"></i>
+                            </div>
+                            <div class="social-details">
+                                <h3 class="social-platform">LinkedIn</h3>
+                                <a href="https://linkedin.com/in/username" class="social-link" target="_blank">
+                                    linkedin.com/in/username
+                                </a>
+                            </div>
+                        </div>
+        
+                        <div class="social-item github">
+                            <div class="social-icon">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div class="social-details">
+                                <h3 class="social-platform">GitHub</h3>
+                                <a href="https://github.com/username" class="social-link" target="_blank">
+                                    github.com/username
+                                </a>
+                            </div>
+                        </div>
+        
+                        <div class="social-item twitter">
+                            <div class="social-icon">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <div class="social-details">
+                                <h3 class="social-platform">Twitter</h3>
+                                <a href="https://twitter.com/username" class="social-link" target="_blank">
+                                    @username
+                                </a>
+                            </div>
+                        </div>
+        
+                        <div class="social-item website">
+                            <div class="social-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="social-details">
+                                <h3 class="social-platform">Portfolio</h3>
+                                <a href="https://myportfolio.com" class="social-link" target="_blank">
+                                    myportfolio.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

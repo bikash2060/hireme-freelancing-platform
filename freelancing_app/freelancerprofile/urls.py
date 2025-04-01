@@ -7,5 +7,5 @@ urlpatterns = [
     path('profile/', FreelancerBasicInfoView.as_view(), name='profile'),
     path('profile/info/', EditFreelancerPersonalInfoView.as_view(), name='edit-personal-info'),
     path('profile/image/delete/', DeleteProfileImageView.as_view(), name='delete-profile-image'),
-      
+    path('profile/skills/', EditFreelancerProfessionalInfoView.as_view(), name='edit-professional-info'),
 ]

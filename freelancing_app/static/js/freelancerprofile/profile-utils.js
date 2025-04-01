@@ -159,3 +159,145 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Skill Search Functionality
+    document.getElementById('skills_search').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const skillOptions = document.querySelectorAll('.skill-option');
+        
+        skillOptions.forEach(option => {
+            const skillName = option.querySelector('label').textContent.toLowerCase();
+            option.style.display = skillName.includes(searchTerm) ? 'flex' : 'none';
+        });
+    });
+
+    // Skill Selection Handling
+    document.querySelectorAll('.skill-option input').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateSelectedSkills();
+        });
+    });
+
+    // Remove Skill
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-skill')) {
+            const skillName = e.target.parentElement.textContent.trim();
+            const checkbox = document.querySelector(`input[value="${skillName}"]`);
+            if (checkbox) {
+                checkbox.checked = false;
+                updateSelectedSkills();
+            }
+        }
+    });
+
+    function updateSelectedSkills() {
+        const selectedSkillsContainer = document.querySelector('.selected-skills-list');
+        selectedSkillsContainer.innerHTML = '';
+        
+        document.querySelectorAll('.skill-option input:checked').forEach(checkbox => {
+            const skillName = checkbox.value;
+            const skillElement = document.createElement('span');
+            skillElement.className = 'selected-skill';
+            skillElement.innerHTML = `
+                ${skillName}
+                <i class="fas fa-times remove-skill"></i>
+            `;
+            selectedSkillsContainer.appendChild(skillElement);
+        });
+    }
+    
+    // Initialize with pre-selected skills
+    document.querySelectorAll('input[value="React"], input[value="JavaScript"]').forEach(checkbox => {
+        checkbox.checked = true;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const showMoreBtn = document.querySelector('.show-more-btn');
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', function() {
+            const experienceList = document.querySelector('.experience-list');
+            experienceList.classList.toggle('show-experiences');
+            
+            const showText = this.querySelector('.show-text');
+            const showLessText = this.querySelector('.show-less-text');
+            const icon = this.querySelector('i');
+            
+            if (experienceList.classList.contains('show-experiences')) {
+                showText.style.display = 'none';
+                showLessText.style.display = 'inline';
+            } else {
+                showText.style.display = 'inline';
+                showLessText.style.display = 'none';
+            }
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const showMoreBtn = document.querySelector('.education-info .show-more-btn');
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', function() {
+            const educationList = document.querySelector('.education-info .education-list');
+            educationList.classList.toggle('show-educations');
+            
+            const showText = this.querySelector('.show-text');
+            const showLessText = this.querySelector('.show-less-text');
+            const icon = this.querySelector('i');
+            
+            if (educationList.classList.contains('show-educations')) {
+                showText.style.display = 'none';
+                showLessText.style.display = 'inline';
+            } else {
+                showText.style.display = 'inline';
+                showLessText.style.display = 'none';
+            }
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const showMoreBtn = document.querySelector('.certifications-info .show-more-btn');
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', function() {
+            const certificationsList = document.querySelector('.certifications-info .certifications-list');
+            certificationsList.classList.toggle('show-certifications');
+            
+            const showText = this.querySelector('.show-text');
+            const showLessText = this.querySelector('.show-less-text');
+            const icon = this.querySelector('i');
+            
+            if (certificationsList.classList.contains('show-certifications')) {
+                showText.style.display = 'none';
+                showLessText.style.display = 'inline';
+            } else {
+                showText.style.display = 'inline';
+                showLessText.style.display = 'none';
+            }
+        });
+    }
+});
+
+// Add this JavaScript to handle the show more/less functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const showMoreBtn = document.querySelector('.portfolio-info .show-more-btn');
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', function() {
+            const portfolioGrid = document.querySelector('.portfolio-info .portfolio-grid');
+            portfolioGrid.classList.toggle('show-projects');
+            
+            const showText = this.querySelector('.show-text');
+            const showLessText = this.querySelector('.show-less-text');
+            const icon = this.querySelector('i');
+            
+            if (portfolioGrid.classList.contains('show-projects')) {
+                showText.style.display = 'none';
+                showLessText.style.display = 'inline';
+            } else {
+                showText.style.display = 'inline';
+                showLessText.style.display = 'none';
+            }
+        });
+    }
+});

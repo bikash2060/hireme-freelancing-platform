@@ -7,8 +7,8 @@ from accounts.models import Freelancer
 from django.contrib import messages
 from datetime import datetime
 from django.views import View
+from django.conf import settings
 from .utils import *
-import json
 
 class FreelancerBasicInfoView(CustomLoginRequiredMixin, View):
     profile_template = 'freelancerprofile/profile.html'
@@ -130,4 +130,20 @@ class DeleteProfileImageView(CustomLoginRequiredMixin, View):
             return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.freelancer_profile_url)
+        
+class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
+    professional_info_template = 'freelancerprofile/editprofessionalinfo.html'
+    freelancer_profile_url = 'freelancer:profile'
+
+    def get(self, request):
+        try:
+            freelancer = Freelancer.objects.get(user=request.user)
+            sorted_cities = sorted(settings.NEPALI_CITIES) 
+            return render(request, self.professional_info_template, {
+                'freelancer': freelancer,
+                'cities': sorted_cities 
+            })
+        except Exception as e:
+            messages.error(request, 'Failed to load your profile. Please try again later.')
             return redirect(self.freelancer_profile_url)
