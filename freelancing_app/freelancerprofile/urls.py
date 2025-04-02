@@ -8,4 +8,5 @@ urlpatterns = [
     path('profile/info/', EditFreelancerPersonalInfoView.as_view(), name='edit-personal-info'),
     path('profile/image/delete/', DeleteProfileImageView.as_view(), name='delete-profile-image'),
     path('profile/skills/', EditFreelancerProfessionalInfoView.as_view(), name='edit-professional-info'),
+    path('get-cities/', GetCitiesByCountryView.as_view(), name='get-cities'),
 ]

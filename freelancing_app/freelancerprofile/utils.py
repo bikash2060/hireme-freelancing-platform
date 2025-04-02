@@ -94,30 +94,38 @@ def validate_user_data(profile_image, full_name, username, phone_number, bio, re
     except Exception as e:
         return False, "Something went wrong. Please try again."
 
-def validate_professional_info(city, hourly_rate, selected_skills, language_proficiencies):
+def validate_professional_info(city_id, country_id, hourly_rate, selected_skills, language_proficiencies):
     try:
-        if not city or str(city).strip().lower() == "none":
+        if not country_id:
+            return False, "Country is required."
+
+        if not city_id:
             return False, "City is required."
-        
-        if not hourly_rate or str(hourly_rate).strip().lower() == "none":
+
+        if not hourly_rate:
             return False, "Hourly rate is required."
             
         try:
             hourly_rate = float(hourly_rate)
-            if hourly_rate < 0:
-                return False, "Hourly rate cannot be negative."
-            if hourly_rate > 100000:
-                return False, "Hourly rate exceeds the maximum limit of 10,000 NPR."
+            if hourly_rate < 100:
+                return False, "Hourly rate should be at least 100 NPR."
+            if hourly_rate > 10000:
+                return False, "Hourly rate cannot exceed 10,000 NPR."
+            if not hourly_rate.is_integer():
+                return False, "Hourly rate should be a whole number."
         except ValueError:
             return False, "Please enter a valid number for hourly rate."
-        
+
         if not selected_skills or len(selected_skills) == 0:
             return False, "At least one skill is required."
-        
+            
+        if len(selected_skills) > 20:
+            return False, "You can select maximum 20 skills."
+
         if not language_proficiencies or len(language_proficiencies) == 0:
             return False, "At least one language proficiency is required."
-            
+
         return True, None
         
     except Exception as e:
-        return False, f"Something went wrong. Please try again. Error: {str(e)}"
+        return False, f"Something went wrong during validation. Please try again. Error: {str(e)}"

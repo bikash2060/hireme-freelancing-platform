@@ -141,11 +141,11 @@
                             <div class="info-value">
                                 <div class="location-detail">
                                     <i class="fas fa-city"></i>
-                                    <span>{{ user.city|default:"Not specified" }}</span>
+                                    <span>{{ user.city.name|default:"Not specified" }}</span>
                                 </div>
                                 <div class="location-detail">
                                     <i class="fas fa-globe-asia"></i>
-                                    <span>{{ user.country|default:"Nepal" }}</span>
+                                    <span>{{ user.country|default:"Not specified" }}</span>
                                 </div>
                             </div>
                         </div>
@@ -199,7 +199,7 @@
             </div>
         </div>
 
-        <!-- Experience Information Section 
+        <!-- Experience Information Section -->
         <div class="experience-info">
             <div class="profile-card">
                 <div class="card-header">
@@ -346,7 +346,7 @@
                 </div>
             </div>
         </div>
-        -->
+
 
         <!-- Education Information Section 
         <div class="education-info">

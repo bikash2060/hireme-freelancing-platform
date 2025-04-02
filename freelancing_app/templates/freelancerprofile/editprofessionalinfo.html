@@ -47,27 +47,27 @@
                                 <i class="fas fa-map-marker-alt"></i> Location
                             </h3>
                             <div class="form-group">
+                                <label for="country">
+                                    <i class="fas fa-globe-asia"></i> Country
+                                </label>
+                                <select id="country" name="country" class="form-control country-select">
+                                    <option value="" selected disabled>Select your country</option>
+                                    {% for country in countries %}
+                                        <option value="{{ country.id }}" 
+                                            {% if submitted_data.country == country.id or current_country == country.id %}selected{% endif %}>
+                                            {{ country.name }}
+                                        </option>
+                                
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="city">
                                     <i class="fas fa-city"></i> City
                                 </label>
                                 <select id="city" name="city" class="form-control">
                                     <option value="" selected disabled>Select your city</option>
-                                    {% for city in cities %}
-                                        <option value="{{ city }}" 
-                                            {% if submitted_data.city == city or user.city == city %}selected{% endif %}>
-                                            {{ city }}
-                                        </option>
-                                    {% endfor %}
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="country">
-                                    <i class="fas fa-globe-asia"></i> Country
-                                </label>
-                                <select id="country" name="country" class="form-control country-select" disabled>
-                                    <option value="Nepal" selected>Nepal</option>
-                                </select>
-                                <div class="input-hint">Currently serving Nepalese users only</div>
                             </div>
                         </div>
                         
@@ -188,5 +188,53 @@
             }
         }
     });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const countrySelect = document.getElementById('country');
+    const citySelect = document.getElementById('city');
+    
+    countrySelect.addEventListener('change', function() {
+        const countryId = this.value;
+        citySelect.innerHTML = '<option value="" selected disabled>Loading cities...</option>';
+        
+        if (countryId) {
+            const url = "{% url 'freelancer:get-cities' %}?country_id=" + countryId;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    citySelect.innerHTML = '<option value="" selected disabled>Select your city</option>';
+                    data.cities.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        console.log(city.id)
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+                    
+                    const previousCity = "{{ submitted_data.city|default:current_city|default:'' }}";
+                    if (previousCity) {
+                        for (let i = 0; i < citySelect.options.length; i++) {
+                            if (citySelect.options[i].value === previousCity) {
+                                citySelect.options[i].selected = true;
+                                break;
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching cities:', error);
+                    citySelect.innerHTML = '<option value="" selected disabled>Error loading cities</option>';
+                });
+        } else {
+            citySelect.innerHTML = '<option value="" selected disabled>Select country first</option>';
+        }
+    });
+    
+    if (countrySelect.value) {
+        countrySelect.dispatchEvent(new Event('change'));
+    }
+});
 </script>
 {% endblock %}

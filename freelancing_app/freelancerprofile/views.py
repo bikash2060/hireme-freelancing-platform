@@ -1,13 +1,28 @@
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
+from accounts.models import City, Country
 from django.shortcuts import render, redirect
-from .models import *
+from django.http import JsonResponse
 from django.contrib import messages
 from projects.models import Skill
-from datetime import datetime
-from django.views import View
 from django.conf import settings
+from django.views import View
+from datetime import datetime
+from .models import *
 from .utils import *
+
+class GetCitiesByCountryView(View):
+    def get(self, request, *args, **kwargs):
+        country_id = request.GET.get('country_id')
+        print('This view is being triggered!')
+        if not country_id:
+            return JsonResponse({'cities': []})
+        
+        try:
+            cities = City.objects.filter(country_id=country_id).order_by('name').values('id', 'name')
+            return JsonResponse({'cities': list(cities)})
+        except Exception as e:
+            return JsonResponse({'cities': []})
 
 class FreelancerBasicInfoView(CustomLoginRequiredMixin, View):
     profile_template = 'freelancerprofile/profile.html'
@@ -95,7 +110,7 @@ class DeleteProfileImageView(CustomLoginRequiredMixin, View):
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.personal_details_url)
-        
+
 class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
     professional_info_template = 'freelancerprofile/editprofessionalinfo.html'
     professional_info_url = 'freelancer:edit-professional-info'
@@ -103,8 +118,8 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
 
     def get(self, request):
         try:
-            freelancer = Freelancer.objects.get(user=request.user)
-            sorted_cities = sorted(settings.NEPALI_CITIES)
+            user = request.user
+            freelancer = Freelancer.objects.get(user=user)
             all_skills = Skill.objects.all().order_by('name')
             selected_skills = freelancer.skills.values_list('id', flat=True)
             all_languages = Language.objects.all()
@@ -113,15 +128,22 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             for freelancer_language in FreelancerLanguage.objects.filter(freelancer=freelancer):
                 language_proficiencies[freelancer_language.language.code] = freelancer_language.proficiency
             
+            all_countries = Country.objects.all().order_by('name')
+            current_country = user.country
+            current_city = user.city
+
             return render(request, self.professional_info_template, {
                 'freelancer': freelancer,
-                'cities': sorted_cities,
                 'skills': all_skills,
                 'skills_select': selected_skills,
                 'all_languages': all_languages,
                 'language_proficiencies': language_proficiencies,
+                'countries': all_countries,
+                'current_country': current_country.id if current_country else None,
+                'current_city': current_city.id if current_city else None,
             })
-        except Exception:
+            
+        except Exception as e:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
     
@@ -132,7 +154,8 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             all_skills = Skill.objects.all().order_by('name')
             all_languages = Language.objects.all()
             
-            city = request.POST.get('city')
+            city_id = request.POST.get('city')
+            country_id = request.POST.get('country')
             hourly_rate = request.POST.get('hourly_rate')
             selected_skills = request.POST.getlist('skills')
             selected_skills = [int(skill_id) for skill_id in selected_skills]
@@ -142,25 +165,42 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                 proficiency_value = request.POST.get(f"{language.code}_proficiency")
                 if proficiency_value:
                     language_proficiencies[language.code] = int(proficiency_value)
+                    
+            all_countries = Country.objects.all().order_by('name')
+            current_country = Country.objects.filter(id=country_id).first() if country_id else None
             
             context = {
                 'freelancer': freelancer,
-                'cities': sorted(settings.NEPALI_CITIES),
                 'skills': all_skills,
                 'skills_select': selected_skills,
                 'all_languages': all_languages,
                 'language_proficiencies': language_proficiencies,
+                'countries': all_countries,
+                'current_country': current_country.id if current_country else None,
+                'current_city': city_id,
+                'submitted_data': {
+                    'hourly_rate': hourly_rate,
+                    'city_id': city_id,
+                    'country_id': country_id,
+                }
             }
             
-            valid, error_message = validate_professional_info(city, hourly_rate, selected_skills, language_proficiencies)
+            valid, error_message = validate_professional_info(city_id, country_id, hourly_rate, selected_skills, language_proficiencies)
             if not valid:
                 messages.error(request, error_message)
                 return render(request, self.professional_info_template, context)
 
-            user.city = city
-            user.country = 'Nepal'
+            if current_country:
+                user.country = current_country
+            if city_id:
+                try:
+                    city = City.objects.get(id=city_id)
+                    user.city = city
+                except City.DoesNotExist:
+                    messages.error(request, 'Selected city is not valid')
+                    return render(request, self.professional_info_template, context)
+                
             freelancer.hourly_rate = hourly_rate
-            
             freelancer.skills.clear()
             skills = Skill.objects.filter(id__in=selected_skills)
             freelancer.skills.add(*skills)
@@ -187,4 +227,4 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.professional_info_url)
         
-
+    
