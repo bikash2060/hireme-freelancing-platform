@@ -11,6 +11,7 @@ virtualenv/
 
 # Ignore Python cache
 **/__pycache__/
+**/templatetags/
 
 # Ignore migrations in all apps
 **/migrations/
