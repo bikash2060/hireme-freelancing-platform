@@ -83,7 +83,8 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
 
 class DeleteProfileImageView(CustomLoginRequiredMixin, View):
     freelancer_profile_url = 'freelancer:profile'
-
+    personal_details_url = 'freelancer:edit-personal-info'
+    
     def get(self, request):
         try:
             user = request.user
@@ -93,13 +94,15 @@ class DeleteProfileImageView(CustomLoginRequiredMixin, View):
             return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.freelancer_profile_url)
+            return redirect(self.personal_details_url)
         
 class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
     professional_info_template = 'freelancerprofile/editprofessionalinfo.html'
+    professional_info_url = 'freelancer:edit-professional-info'
     freelancer_profile_url = 'freelancer:profile'
 
     def get(self, request):
+        try:
             freelancer = Freelancer.objects.get(user=request.user)
             sorted_cities = sorted(settings.NEPALI_CITIES)
             all_skills = Skill.objects.all().order_by('name')
@@ -118,6 +121,9 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                 'all_languages': all_languages,
                 'language_proficiencies': language_proficiencies,
             })
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.freelancer_profile_url)
     
     def post(self, request):
         try: 
@@ -179,4 +185,6 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             
         except Exception as e:
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.freelancer_profile_url)
+            return redirect(self.professional_info_url)
+        
+

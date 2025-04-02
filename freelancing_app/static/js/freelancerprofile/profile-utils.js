@@ -256,6 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSelectedSkills();
 });
 
+
 document.addEventListener('DOMContentLoaded', function() {
     const showMoreBtn = document.querySelector('.show-more-btn');
     if (showMoreBtn) {
