@@ -1,14 +1,15 @@
-from django.views import View
-from smtplib import SMTPException
-from django.shortcuts import render, redirect
-from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import make_password
-from .utils import *
+from freelancerprofile.models import Freelancer
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils import timezone
+from smtplib import SMTPException
+from datetime import timedelta
+from django.views import View
 from .formvalidation import *
 from .models import *
-from django.utils import timezone
-from datetime import timedelta
+from .utils import *
 
 class UserLoginView(View):
     login_template = 'accounts/login.html'

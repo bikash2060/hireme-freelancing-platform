@@ -1,12 +1,11 @@
-from django.shortcuts import render, redirect
-from django.views import View
 from accounts.mixins import CustomLoginRequiredMixin
-from .models import Notification    
-from django.contrib import messages
+from freelancerprofile.models import Freelancer
+from django.shortcuts import render, redirect
 from django.contrib.auth import logout
-from projects.models import Project
-from accounts.models import Freelancer
 from django.utils.timezone import now
+from django.contrib import messages
+from .models import Notification    
+from django.views import View
 
 class HomeView(View):
     freelancer_dashboard_url = 'dashboard:freelancer'
@@ -24,9 +23,6 @@ class HomeView(View):
                     return redirect(self.freelancer_dashboard_url)
                 
             freelancer_count = Freelancer.objects.count()
-            project_count = Project.objects.count()     
-            projects = Project.objects.exclude(status='draft').order_by('-created_at')
-            
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             logout(request)
@@ -35,8 +31,8 @@ class HomeView(View):
         current_year = now().year
         context = {
             'freelancer_count': freelancer_count,
-            'project_count': project_count,
-            'projects': projects,
+            'project_count': 0,
+            'projects': 0,
             'completed_projects': 0,  
             'positive_reviews': 0,  
             'current_year': current_year,

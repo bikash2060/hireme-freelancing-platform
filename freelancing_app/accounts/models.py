@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.db import models
 from django.utils.timezone import now, timedelta
-from projects.models import Skill   
+from django.db import models
 
 def default_expired_time():
     return now() + timedelta(minutes=3)
@@ -71,35 +70,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = "user"
 
-class Client(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(
-        User, 
-        on_delete=models.CASCADE, 
-        related_name='client_profile'
-    )
-
-    def __str__(self):
-        return f"Client: {self.user.username}"
-
-    class Meta:
-        db_table = "client"
-
-class Freelancer(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(
-        User, 
-        on_delete=models.CASCADE, 
-        related_name='freelancer_profile'
-    )
-    hourly_rate = models.IntegerField(default=0)
-    portfolio_link = models.URLField(blank=True, null=True)
-    experience_years = models.PositiveIntegerField(default=0) 
-    skills = models.ManyToManyField(Skill, blank=True) 
-
-    def __str__(self):
-        return f"Freelancer: {self.user.username}"
-
-    class Meta:
-        db_table = "freelancer"
-        

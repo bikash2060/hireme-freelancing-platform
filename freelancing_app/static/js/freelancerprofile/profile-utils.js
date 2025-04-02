@@ -1,23 +1,31 @@
-function toggleVisibility(fieldId, button) {
-    const field = document.getElementById(fieldId);
+// Toggles visibility of sensitive text (e.g. email) between hidden and revealed states.
+document.addEventListener("DOMContentLoaded", function() {
+    const emailField = document.getElementById("email");
+    const toggleButton = document.querySelector(".visibility-toggle");
     
-    if (field.dataset.hidden === "true") {
-        field.textContent = field.dataset.original;
-        field.dataset.hidden = "false";
-        button.textContent = "Hide";
-    } else {
-        field.dataset.original = field.textContent;
-        const [username, domain] = field.textContent.split("@");
-        field.textContent = username.slice(0, 4) + "***@" + domain;
-        field.dataset.hidden = "true";
-        button.textContent = "Reveal";
+    function toggleEmailVisibility() {
+        if (emailField.dataset.hidden === "true") {
+            emailField.textContent = emailField.dataset.original;
+            emailField.dataset.hidden = "false";
+            toggleButton.textContent = "Hide";
+        } else {
+            emailField.dataset.original = emailField.textContent;
+            const [username, domain] = emailField.textContent.split("@");
+            emailField.textContent = username.slice(0, 4) + "***@" + domain;
+            emailField.dataset.hidden = "true";
+            toggleButton.textContent = "Reveal";
+        }
     }
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-    toggleVisibility("email", document.querySelector("[onclick=\"toggleVisibility('email', this)\"]"));
+    
+    emailField.dataset.original = emailField.textContent;
+    const [username, domain] = emailField.textContent.split("@");
+    emailField.textContent = username.slice(0, 4) + "***@" + domain;
+    emailField.dataset.hidden = "true";
+    
+    toggleButton.addEventListener("click", toggleEmailVisibility);
 });
 
+// Handles profile image preview/removal, bio character limit, email/phone input behaviors, and UI interactions.
 document.addEventListener('DOMContentLoaded', function() {
     const profileImageInput = document.getElementById('profile_image');
     const imagePreview = document.getElementById('image-preview');
@@ -63,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmationModal = document.getElementById('confirmation-modal');
     const cancelRemoveBtn = document.getElementById('cancel-remove');
     const confirmRemoveBtn = document.getElementById('confirm-remove');
-    
     if (removeImageBtn && confirmationModal) {
         removeImageBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -160,57 +167,93 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Manages skill selection with live search, dynamic tag display, and skill count feedback.
 document.addEventListener('DOMContentLoaded', function() {
-    // Skill Search Functionality
-    document.getElementById('skills_search').addEventListener('input', function(e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const skillOptions = document.querySelectorAll('.skill-option');
+    const skillsSearch = document.getElementById('skills_search');
+    const skillsOptions = document.getElementById('skills-options');
+    const selectedSkillsList = document.querySelector('.selected-skills-list');
+    const skillCheckboxes = document.querySelectorAll('input[name="skills"]');
+    
+    const noResultsMsg = document.createElement('div');
+    noResultsMsg.className = 'no-results-msg';
+    noResultsMsg.textContent = 'No matching skills found';
+    noResultsMsg.style.display = 'none';
+    skillsOptions.parentNode.insertBefore(noResultsMsg, skillsOptions.nextSibling);
+    
+    skillsSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+        const skillOptions = skillsOptions.querySelectorAll('.skill-option');
+        let hasMatches = false;
         
         skillOptions.forEach(option => {
             const skillName = option.querySelector('label').textContent.toLowerCase();
-            option.style.display = skillName.includes(searchTerm) ? 'flex' : 'none';
+            if (searchTerm === '' || skillName.includes(searchTerm)) {
+                option.style.display = 'flex';
+                hasMatches = true;
+            } else {
+                option.style.display = 'none';
+            }
         });
+        
+        if (searchTerm !== '' && !hasMatches) {
+            noResultsMsg.style.display = 'block';
+            skillsOptions.style.display = 'none';
+        } else {
+            noResultsMsg.style.display = 'none';
+            skillsOptions.style.display = 'block';
+        }
     });
-
-    // Skill Selection Handling
-    document.querySelectorAll('.skill-option input').forEach(checkbox => {
+    
+    skillCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             updateSelectedSkills();
         });
     });
-
-    // Remove Skill
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-skill')) {
-            const skillName = e.target.parentElement.textContent.trim();
-            const checkbox = document.querySelector(`input[value="${skillName}"]`);
-            if (checkbox) {
-                checkbox.checked = false;
-                updateSelectedSkills();
-            }
-        }
-    });
-
+    
     function updateSelectedSkills() {
-        const selectedSkillsContainer = document.querySelector('.selected-skills-list');
-        selectedSkillsContainer.innerHTML = '';
+        selectedSkillsList.innerHTML = '';
         
-        document.querySelectorAll('.skill-option input:checked').forEach(checkbox => {
-            const skillName = checkbox.value;
-            const skillElement = document.createElement('span');
+        const checkedSkills = document.querySelectorAll('input[name="skills"]:checked');
+        
+        checkedSkills.forEach(checkbox => {
+            const skillId = checkbox.id;
+            const skillName = checkbox.nextElementSibling.nextElementSibling.textContent; 
+            
+            const skillElement = document.createElement('div');
             skillElement.className = 'selected-skill';
             skillElement.innerHTML = `
                 ${skillName}
-                <i class="fas fa-times remove-skill"></i>
+                <span class="remove-skill" data-skill-id="${skillId}">
+                    <i class="fas fa-times"></i>
+                </span>
             `;
-            selectedSkillsContainer.appendChild(skillElement);
+            
+            selectedSkillsList.appendChild(skillElement);
         });
+        
+        document.querySelectorAll('.remove-skill').forEach(removeBtn => {
+            removeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const skillId = this.getAttribute('data-skill-id');
+                const checkbox = document.getElementById(skillId);
+                if (checkbox) {
+                    checkbox.checked = false;
+                    updateSelectedSkills();
+                }
+            });
+        });
+        
+        const hintElement = document.querySelector('.tags-hint');
+        if (checkedSkills.length >= 5) {
+            hintElement.textContent = 'Great! Your profile is better now.';
+            hintElement.style.color = '#28a745';
+        } else {
+            hintElement.textContent = `Add ${5 - checkedSkills.length} more skills to increase your visibility`;
+            hintElement.style.color = '#6c757d';
+        }
     }
     
-    // Initialize with pre-selected skills
-    document.querySelectorAll('input[value="React"], input[value="JavaScript"]').forEach(checkbox => {
-        checkbox.checked = true;
-    });
+    updateSelectedSkills();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -279,7 +322,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Add this JavaScript to handle the show more/less functionality
 document.addEventListener('DOMContentLoaded', function() {
     const showMoreBtn = document.querySelector('.portfolio-info .show-more-btn');
     if (showMoreBtn) {

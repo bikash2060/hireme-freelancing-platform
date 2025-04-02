@@ -1,12 +1,10 @@
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.backends import ModelBackend
-from .models import User
 from django.template.loader import render_to_string
 from django.conf import settings
 from .models import OTPCode
+from .models import User
 import random
-from datetime import timedelta
-from django.utils.timezone import now
 
 def send_verification_email(username, email_address, otp_code):
     signup_verification_email_template = "emailtemplate/signup_verification_email.html"

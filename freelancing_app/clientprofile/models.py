@@ -1,17 +1,16 @@
 from django.db import models
-from accounts.models import Client
+from accounts.models import User
 
-class Company(models.Model):
-    logo = models.ImageField(upload_to='company_images/', null=True, blank=True) 
-    name = models.CharField(max_length=255, null=True, blank=True)  
-    position = models.CharField(max_length=255, null=True, blank=True)  
-    start_date = models.DateField(null=True, blank=True)  
-    end_date = models.DateField(null=True, blank=True)  
-    location = models.CharField(max_length=255, null=True, blank=True) 
-    client= models.ForeignKey(Client, on_delete=models.CASCADE, related_name="companies")
+class Client(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='client_profile'
+    )
 
     def __str__(self):
-        return self.name or "Unnamed Company"
-    
+        return f"Client: {self.user.username}"
+
     class Meta:
-        db_table = "company"
+        db_table = "client"

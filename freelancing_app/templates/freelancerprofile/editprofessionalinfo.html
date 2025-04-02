@@ -67,7 +67,7 @@
                                 <select id="country" name="country" class="form-control country-select" disabled>
                                     <option value="Nepal" selected>Nepal</option>
                                 </select>
-                                <div class="input-hint">Currently serving Nepalese clients only</div>
+                                <div class="input-hint">Currently serving Nepalese users only</div>
                             </div>
                         </div>
                         
@@ -93,30 +93,47 @@
                             </h3>
                             <div class="form-group">
                                 <div class="language-container">
-                                    <div class="language-item">
-                                        <div class="language-name">English</div>
-                                        <div class="proficiency-selector">
-                                            <select name="english_proficiency" class="form-control proficiency-select">
-                                                <option value="basic">Basic</option>
-                                                <option value="conversational">Conversational</option>
-                                                <option value="fluent" selected>Fluent</option>
-                                                <option value="native">Native/Bilingual</option>
-                                            </select>
+                                    <div class="language-proficiency-input">
+                                        <span class="language-name">English</span>
+                                        <div class="proficiency-level-input">
+                                            <input type="radio" id="english-1" name="english_proficiency" value="1" class="proficiency-radio">
+                                            <label for="english-1" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="english-2" name="english_proficiency" value="2" class="proficiency-radio">
+                                            <label for="english-2" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="english-3" name="english_proficiency" value="3" class="proficiency-radio" checked>
+                                            <label for="english-3" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="english-4" name="english_proficiency" value="4" class="proficiency-radio">
+                                            <label for="english-4" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="english-5" name="english_proficiency" value="5" class="proficiency-radio">
+                                            <label for="english-5" class="proficiency-dot"></label>
                                         </div>
                                     </div>
-                                    <div class="language-item">
-                                        <div class="language-name">Nepali</div>
-                                        <div class="proficiency-selector">
-                                            <select name="nepali_proficiency" class="form-control proficiency-select">
-                                                <option value="basic">Basic</option>
-                                                <option value="conversational">Conversational</option>
-                                                <option value="fluent">Fluent</option>
-                                                <option value="native" selected>Native/Bilingual</option>
-                                            </select>
+                                    
+                                    <div class="language-proficiency-input">
+                                        <span class="language-name">Nepali</span>
+                                        <div class="proficiency-level-input">
+                                            <input type="radio" id="nepali-1" name="nepali_proficiency" value="1" class="proficiency-radio">
+                                            <label for="nepali-1" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="nepali-2" name="nepali_proficiency" value="2" class="proficiency-radio">
+                                            <label for="nepali-2" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="nepali-3" name="nepali_proficiency" value="3" class="proficiency-radio">
+                                            <label for="nepali-3" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="nepali-4" name="nepali_proficiency" value="4" class="proficiency-radio">
+                                            <label for="nepali-4" class="proficiency-dot"></label>
+                                            
+                                            <input type="radio" id="nepali-5" name="nepali_proficiency" value="5" class="proficiency-radio" checked>
+                                            <label for="nepali-5" class="proficiency-dot"></label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="input-hint">Select your proficiency level for each language</div>
+                                <div class="input-hint">Click on the dots to select your proficiency level (1 = Basic, 5 = Native)</div>
                             </div>
                         </div>
                         
@@ -131,52 +148,32 @@
                                 <input type="text" id="skills_search" class="form-control" placeholder="Search skills...">
                                 
                                 <div class="skills-checkbox-container" id="skills-options">
+                                    {% for skill in all_skills %}
                                     <div class="skill-option">
-                                        <input type="checkbox" id="skill_1" name="skills" value="React">
-                                        <label for="skill_1">React</label>
+                                        <input type="checkbox" 
+                                            id="skill_{{ skill.id }}" 
+                                            name="skills" 
+                                            value="{{ skill.id }}"
+                                            {% if skill in freelancer_skills %}checked{% endif %}>
+                                        <span class="custom-checkbox"></span>
+                                        <label for="skill_{{ skill.id }}">{{ skill.name }}</label>
                                     </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_2" name="skills" value="JavaScript">
-                                        <label for="skill_2">JavaScript</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_3" name="skills" value="Node.js">
-                                        <label for="skill_3">Node.js</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_4" name="skills" value="Python">
-                                        <label for="skill_4">Python</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_5" name="skills" value="Django">
-                                        <label for="skill_5">Django</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_6" name="skills" value="HTML">
-                                        <label for="skill_6">HTML</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_7" name="skills" value="CSS">
-                                        <label for="skill_7">CSS</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_8" name="skills" value="TypeScript">
-                                        <label for="skill_8">TypeScript</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_9" name="skills" value="MongoDB">
-                                        <label for="skill_9">MongoDB</label>
-                                    </div>
-                                    <div class="skill-option">
-                                        <input type="checkbox" id="skill_10" name="skills" value="MySQL">
-                                        <label for="skill_10">MySQL</label>
-                                    </div>
+                                    {% empty %}
+                                    <div class="no-skills-available">No skills available</div>
+                                    {% endfor %}
                                 </div>
-                                
+
                                 <div class="selected-skills-container" id="selected-skills">
                                     <h4>Selected Skills:</h4>
                                     <div class="selected-skills-list">
-                                        
+                                        {% for skill in freelancer_skills %}
+                                        <div class="selected-skill" data-skill-id="{{ skill.id }}">
+                                            {{ skill.name }}
+                                            <span class="remove-skill">
+                                                <i class="fas fa-times"></i>
+                                            </span>
+                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 
@@ -198,8 +195,6 @@
         </div>
     </div>
 </div>
-
-
 {% endblock %}
 
 {% block footer %}{% endblock %}

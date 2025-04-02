@@ -1,10 +1,9 @@
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
-from dateutil.relativedelta import relativedelta
 from django.shortcuts import render, redirect
-from .models import Education, Certificate
-from accounts.models import Freelancer
+from .models import *
 from django.contrib import messages
+from projects.models import Skill
 from datetime import datetime
 from django.views import View
 from django.conf import settings
@@ -140,10 +139,14 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
         try:
             freelancer = Freelancer.objects.get(user=request.user)
             sorted_cities = sorted(settings.NEPALI_CITIES) 
+            all_skills = Skill.objects.all().order_by('name')
             return render(request, self.professional_info_template, {
                 'freelancer': freelancer,
-                'cities': sorted_cities 
+                'cities': sorted_cities,
+                'all_skills': all_skills
             })
         except Exception as e:
             messages.error(request, 'Failed to load your profile. Please try again later.')
             return redirect(self.freelancer_profile_url)
+        
+    

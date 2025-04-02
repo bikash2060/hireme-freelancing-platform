@@ -1,12 +1,10 @@
-from django.views import View
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from datetime import datetime
 from accounts.mixins import CustomLoginRequiredMixin
-from projects.models import Project
-from accounts.models import Client, Freelancer
-from home.models import Notification
+from freelancerprofile.models import Freelancer
+from django.shortcuts import render
+from clientprofile.models import Client
 from django.db.models import Count
+from django.views import View
+from datetime import datetime
 
 class ClientDashboardView(CustomLoginRequiredMixin, View):
     

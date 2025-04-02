@@ -1,5 +1,5 @@
-import re
 from .models import User
+import re
 
 def validate_signup_form(email, username, password, confirm_password):
     reserved_words = {

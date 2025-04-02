@@ -1,5 +1,5 @@
-from django.db import models
 from accounts.models import User
+from django.db import models
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
