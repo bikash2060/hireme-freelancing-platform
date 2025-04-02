@@ -21,11 +21,9 @@ class ClientDashboardView(CustomLoginRequiredMixin, View):
             greeting = "Good Evening"
 
         client = Client.objects.get(user=request.user)
-        projects = Project.objects.filter(client=client).annotate(num_proposals=Count('proposals'))
 
         context = {
             'greeting': greeting,
-            'projects': projects,
         }
         return render(request, self.rendered_template, context)
     
@@ -46,10 +44,8 @@ class FreelancerDashboardView(CustomLoginRequiredMixin, View):
             greeting = "Good Night"
 
         freelancer = Freelancer.objects.get(user=request.user)
-        projects = Project.objects.exclude(status='draft').order_by('-created_at')
         context = {
             'greeting': greeting,
-            'projects': projects,
             'freelancer': freelancer
         }
         return render(request, self.freelancer_dashboard_template, context)

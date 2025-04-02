@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static%}
+{% load indian_numbers %}
 
 {% block title %}Account Settings - HireMe{% endblock %}
 
@@ -127,7 +128,7 @@
                                 <span>Hourly Rate</span>
                             </div>
                             <div class="info-value">
-                                <span class="rate-amount">Rs 5,000.00 NPR</span>
+                                <span class="rate-amount">Rs {{ freelancer.hourly_rate|indian_currency }} NPR</span>
                                 <span class="rate-note">Negotiable for large projects</span>
                             </div>
                         </div>
@@ -140,11 +141,11 @@
                             <div class="info-value">
                                 <div class="location-detail">
                                     <i class="fas fa-city"></i>
-                                    <span>Kathmandu</span>
+                                    <span>{{ user.city|default:"Not specified" }}</span>
                                 </div>
                                 <div class="location-detail">
                                     <i class="fas fa-globe-asia"></i>
-                                    <span>Nepal</span>
+                                    <span>{{ user.country|default:"Nepal" }}</span>
                                 </div>
                             </div>
                         </div>
@@ -155,25 +156,25 @@
                                 <span>Languages</span>
                             </div>
                             <div class="info-value">
-                                <div class="language-proficiency">
-                                    <span class="language-name">English</span>
-                                    <div class="proficiency-level">
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot"></span>
+                                <div class="languages-scrollable-container">
+                                    {% for freelancer_language in freelancer_languages %}
+                                    <div class="language-proficiency">
+                                        <span class="language-name">{{ freelancer_language.language.name }}</span>
+                                        <div class="proficiency-level">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= freelancer_language.proficiency %}
+                                                    <span class="proficiency-dot filled"></span>
+                                                {% else %}
+                                                    <span class="proficiency-dot"></span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="language-proficiency">
-                                    <span class="language-name">Nepali</span>
-                                    <div class="proficiency-level">
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot filled"></span>
-                                        <span class="proficiency-dot filled"></span>
+                                    {% empty %}
+                                    <div class="language-proficiency">
+                                        <span class="language-name">No languages specified</span>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -185,16 +186,11 @@
                             </div>
                             <div class="info-value">
                                 <div class="skills-container">
-                                    <span class="skill-tag">React</span>
-                                    <span class="skill-tag">JavaScript</span>
-                                    <span class="skill-tag">Node.js</span>
-                                    <span class="skill-tag">Python</span>
-                                    <span class="skill-tag">Django</span>
-                                    <span class="skill-tag">Express</span>
-                                    <span class="skill-tag">UI/UX</span>
-                                    <span class="skill-tag">Figma</span>
-                                    <span class="skill-tag">TypeScript</span>
-                                    <span class="skill-tag">Adobe XD</span>
+                                    {% for skill in freelancer.skills.all %}
+                                        <span class="skill-tag">{{ skill.name }}</span>
+                                    {% empty %}
+                                        <span class="skill-tag empty-skills">No skills added yet</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

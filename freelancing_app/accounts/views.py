@@ -2,6 +2,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import make_password
 from freelancerprofile.models import Freelancer
 from django.shortcuts import render, redirect
+from clientprofile.models import Client
 from django.contrib import messages
 from django.utils import timezone
 from smtplib import SMTPException
