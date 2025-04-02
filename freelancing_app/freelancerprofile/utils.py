@@ -93,3 +93,31 @@ def validate_user_data(profile_image, full_name, username, phone_number, bio, re
     
     except Exception as e:
         return False, "Something went wrong. Please try again."
+
+def validate_professional_info(city, hourly_rate, selected_skills, language_proficiencies):
+    try:
+        if not city or str(city).strip().lower() == "none":
+            return False, "City is required."
+        
+        if not hourly_rate or str(hourly_rate).strip().lower() == "none":
+            return False, "Hourly rate is required."
+            
+        try:
+            hourly_rate = float(hourly_rate)
+            if hourly_rate < 0:
+                return False, "Hourly rate cannot be negative."
+            if hourly_rate > 100000:
+                return False, "Hourly rate exceeds the maximum limit of 10,000 NPR."
+        except ValueError:
+            return False, "Please enter a valid number for hourly rate."
+        
+        if not selected_skills or len(selected_skills) == 0:
+            return False, "At least one skill is required."
+        
+        if not language_proficiencies or len(language_proficiencies) == 0:
+            return False, "At least one language proficiency is required."
+            
+        return True, None
+        
+    except Exception as e:
+        return False, f"Something went wrong. Please try again. Error: {str(e)}"

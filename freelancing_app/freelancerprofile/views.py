@@ -146,18 +146,11 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                 'language_proficiencies': language_proficiencies,
             }
             
-            if not city or city not in settings.NEPALI_CITIES:
-                messages.error(request, "Please select a valid city from the list")
+            valid, error_message = validate_professional_info(city, hourly_rate, selected_skills, language_proficiencies)
+            if not valid:
+                messages.error(request, error_message)
                 return render(request, self.professional_info_template, context)
-            
-            if not hourly_rate:
-                messages.error(request, "Hourly rate is required")
-                return render(request, self.professional_info_template, context)
-                
-            if not selected_skills or len(selected_skills) < 1:
-                messages.error(request, "Please select at least one skill")
-                return render(request, self.professional_info_template, context)
-            
+
             user.city = city
             user.country = 'Nepal'
             freelancer.hourly_rate = hourly_rate
