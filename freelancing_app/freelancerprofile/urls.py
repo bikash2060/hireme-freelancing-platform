@@ -11,4 +11,5 @@ urlpatterns = [
     path('profile/experience/add/', AddFreelancerExperienceView.as_view(), name='add-experience'),
     path('profile/experience/<int:experience_id>/update/', EditFreelancerExperienceView.as_view(), name='edit-experience'),
     path('get-cities/', GetCitiesByCountryView.as_view(), name='get-cities'),
+    path('profile/password/change/', FreelancerPasswordChangeView.as_view(), name='change-password'),
 ]

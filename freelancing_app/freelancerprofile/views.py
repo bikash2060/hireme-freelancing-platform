@@ -1,3 +1,4 @@
+from django.contrib.auth import update_session_auth_hash
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
 from django.shortcuts import render, redirect
@@ -423,3 +424,40 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
         except Exception:
             messages.error(request, 'Something went wrong while updating your experience.')
             return redirect(reverse(self.edit_experience_url, kwargs={'experience_id': experience_id}))
+        
+class FreelancerPasswordChangeView(CustomLoginRequiredMixin, View):
+    password_update_template = 'freelancerprofile/passwordupdate.html'
+    password_update_url = 'freelancer:change-password'
+    home_url = 'home:home'
+    
+    def get(self, request):
+        try:
+            return render(request, self.password_update_template)
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)
+        
+    def post(self, request):
+        try:
+            user = request.user
+            
+            oldpassword = request.POST.get('old_password').strip()
+            newpassword = request.POST.get('new_password1').strip()
+            confirmpassword = request.POST.get('new_password2').strip()
+            
+            valid, error_message = validate_change_password_form(oldpassword, newpassword, confirmpassword, request)
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.password_update_template)    
+             
+            user.set_password(newpassword)
+            user.save()
+            update_session_auth_hash(request, user)
+            
+            messages.success(request, 'Your password has been updated successfully!')
+            return redirect(self.password_update_url)
+
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.password_update_url)
+            

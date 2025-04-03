@@ -182,4 +182,35 @@ def validate_employment_data(
             return False, "At least one skill is required."
     
     return True, None
+
+def validate_change_password_form(oldpassword, newpassword, confirmpassword, request=None):
+    try:
+        
+        if not oldpassword or not newpassword or not confirmpassword:
+            return False, 'All fields are required.'
+        
+        if not request.user.check_password(oldpassword):
+            return False, 'Your old password was entered incorrectly.'
+        
+        if ' ' in newpassword or ' ' in confirmpassword:
+            return False, 'Password should not contain spaces.'
+        
+        if newpassword != confirmpassword:
+            return False, 'Password do not match.'
     
+        if len(newpassword) < 8:
+            return False, "Password must be at least 8 characters long."
+        
+        if not re.search(r'[A-Z]', newpassword):
+            return False, "Password must contain at least one uppercase letter."
+        
+        if not re.search(r'[0-9]', newpassword):
+            return False, "Password must contain at least one number."
+        
+        if not re.search(r'[@$!%*?&]', newpassword):
+            return False, "Password must contain at least one special character."
+        
+    except Exception as e:
+        return False, "Something went wrong. Please try again."
+    
+    return True, None
