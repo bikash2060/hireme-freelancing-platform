@@ -1,12 +1,12 @@
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
-from accounts.models import City, Country
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from accounts.models import City, Country
 from django.http import JsonResponse
 from django.contrib import messages
 from projects.models import Skill
 from django.conf import settings
+from django.urls import reverse
 from django.views import View
 from datetime import datetime
 from .models import *
@@ -147,6 +147,7 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             })
             
         except Exception as e:
+            print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
     

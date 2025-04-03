@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load professional_tags %}
 
 {% block title %}Update Professional Information - HireMe{% endblock %}
 
@@ -101,10 +102,11 @@
                                         <div class="proficiency-level-input">
                                             {% for level in "12345" %}
                                             <input type="radio" 
-                                                   id="{{ language.code }}-{{ level }}" 
-                                                   name="{{ language.code }}_proficiency" 
-                                                   value="{{ level }}"
-                                                   class="proficiency-radio">
+                                                id="{{ language.code }}-{{ level }}" 
+                                                name="{{ language.code }}_proficiency" 
+                                                value="{{ level }}"
+                                                {% if language_proficiencies|get_item:language.code == level|stringformat:"s" %}checked{% endif %}
+                                                class="proficiency-radio">
                                             <label for="{{ language.code }}-{{ level }}" class="proficiency-dot"></label>
                                             {% endfor %}
                                         </div>
@@ -171,23 +173,7 @@
 {% block footer %}{% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/freelancerprofile/profile-utils.js' %}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const proficiencies = {
-            {% for code, level in language_proficiencies.items %}
-            "{{ code }}": {{ level }},
-            {% endfor %}
-        };
-        
-        for (const [code, level] of Object.entries(proficiencies)) {
-            const radioBtn = document.getElementById(`${code}-${level}`);
-            if (radioBtn) {
-                radioBtn.checked = true;
-            }
-        }
-    });
-</script>
+<script src="{% static 'js/freelancerprofile/dynamic-skills-filter.js' %}"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

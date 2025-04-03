@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const otpInputs = document.querySelectorAll(".otp-box");
+  const otpInputs = document.querySelectorAll(".otp-box");
   
     otpInputs.forEach((input, index) => {
       input.addEventListener("input", (e) => {

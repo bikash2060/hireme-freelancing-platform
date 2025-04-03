@@ -1,4 +1,3 @@
-// Handles responsive testimonial slider with autoplay, swipe, and navigation.
 document.addEventListener('DOMContentLoaded', function() {
     const track = document.querySelector('.testimonial-track');
     const slides = document.querySelectorAll('.testimonial-slide');

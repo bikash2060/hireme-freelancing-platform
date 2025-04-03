@@ -1,4 +1,3 @@
-// Toggles action menu visibility for project items and closes others when clicking outside.
 document.addEventListener('DOMContentLoaded', function() {
     const actionBtns = document.querySelectorAll('.action-btn');
     

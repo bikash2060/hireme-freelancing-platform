@@ -1,4 +1,3 @@
-// Renders a dynamic Chart.js line chart with filter buttons for week/month/year views, tooltips, and custom data formatting.
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof Chart === 'undefined') {
         console.error('Chart.js is not loaded');
