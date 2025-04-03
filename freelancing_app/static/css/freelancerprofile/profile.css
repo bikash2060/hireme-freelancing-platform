@@ -743,6 +743,8 @@
     margin-right: 20px;
     flex-shrink: 0;
     transition: all 0.3s ease;
+    position: relative; 
+    overflow: hidden; 
 }
 
 .experience-info .experience-item:hover .company-logo {
@@ -753,6 +755,13 @@
 .experience-info .company-logo i {
     font-size: 28px;
     color: #4361ee;
+}
+
+.experience-info .company-logo img.company-image {
+    width: 80%; 
+    height: 80%;
+    object-fit: contain; 
+    position: absolute; 
 }
 
 .experience-info .job-details {

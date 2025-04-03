@@ -1,5 +1,6 @@
 from django.conf import settings
 from accounts.models import User
+from datetime import datetime
 import os
 import re
 
@@ -128,4 +129,57 @@ def validate_professional_info(city_id, country_id, hourly_rate, selected_skills
         return True, None
         
     except Exception as e:
-        return False, f"Something went wrong during validation. Please try again. Error: {str(e)}"
+        return False, "Something went wrong during validation. Please try again."
+
+def validate_employment_data(
+        company_name, job_title, employment_type, start_date, 
+        currently_working, end_date, country_id, city_id, selected_skill_ids
+    ):
+    
+    if not company_name or company_name.strip() == '':
+        return False, 'Company name is required.'
+    
+    if not job_title or job_title.strip() == '':
+        return False, 'Job title is required.'
+    
+    if not employment_type or employment_type.strip() == '':
+        return False, 'Employment type is required.'
+    
+    if not start_date or start_date.strip() == '':
+        return False, 'Start date is required.'
+    
+    if not currently_working and (not end_date or end_date.strip() == ''):
+        return False, 'End date is required if not currently working.'
+    
+    if not country_id or country_id.strip() == '':
+        return False, 'Country is required.'
+    
+    if not city_id or city_id.strip() == '':
+        return False, 'City is required.'
+    
+    try:
+        start_date_obj = datetime.strptime(start_date, '%Y-%m')
+        
+        if start_date_obj > datetime.now():
+            return False, 'Start date cannot be in the future.'
+        
+        if not currently_working and end_date:
+            try:
+                end_date_obj = datetime.strptime(end_date, '%Y-%m')
+                
+                if end_date_obj > datetime.now():
+                    return False, 'End date cannot be in the future.'
+                
+                if end_date_obj < start_date_obj:
+                   return False, 'End date must be after start date.'
+                    
+            except ValueError:
+                return False, 'Invalid end date format.'
+    except ValueError:
+       return False, 'Invalid start date format.'
+    
+    if not selected_skill_ids or len(selected_skill_ids) == 0:
+            return False, "At least one skill is required."
+    
+    return True, None
+    

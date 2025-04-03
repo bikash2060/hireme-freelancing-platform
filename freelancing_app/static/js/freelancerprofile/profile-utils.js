@@ -256,90 +256,75 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSelectedSkills();
 });
 
-
 document.addEventListener('DOMContentLoaded', function() {
-    const showMoreBtn = document.querySelector('.show-more-btn');
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', function() {
-            const experienceList = document.querySelector('.experience-list');
-            experienceList.classList.toggle('show-experiences');
+    const jobDescriptionTextarea = document.getElementById('job_description');
+    const descCharCount = document.getElementById('desc-char-count');
+    const maxChars = 500;
+
+    if (jobDescriptionTextarea && descCharCount) {
+        descCharCount.textContent = jobDescriptionTextarea.value.length;
+        
+        function updateDescCount() {
+            const length = jobDescriptionTextarea.value.length;
+            descCharCount.textContent = length;
             
-            const showText = this.querySelector('.show-text');
-            const showLessText = this.querySelector('.show-less-text');
-            const icon = this.querySelector('i');
-            
-            if (experienceList.classList.contains('show-experiences')) {
-                showText.style.display = 'none';
-                showLessText.style.display = 'inline';
+            if (length > maxChars * 0.9) {
+                descCharCount.style.color = '#e74c3c';
             } else {
-                showText.style.display = 'inline';
-                showLessText.style.display = 'none';
+                descCharCount.style.color = '#2ecc71';
+            }
+        }
+        
+        jobDescriptionTextarea.addEventListener('input', function() {
+            if (this.value.length > maxChars) {
+                this.value = this.value.substring(0, maxChars);
+            }
+            updateDescCount();
+        });
+        
+        jobDescriptionTextarea.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pasteData = e.clipboardData.getData('text/plain');
+            const remainingChars = maxChars - this.value.length;
+            
+            if (remainingChars <= 0) return;
+            
+            const truncatedPaste = pasteData.substring(0, remainingChars);
+            document.execCommand('insertText', false, truncatedPaste);
+            updateDescCount();
+        });
+        
+        jobDescriptionTextarea.addEventListener('keydown', function(e) {
+            if (this.value.length >= maxChars && 
+                e.key !== 'Backspace' && 
+                e.key !== 'Delete' &&
+                !e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
             }
         });
+        
+        updateDescCount();
     }
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    const showMoreBtn = document.querySelector('.education-info .show-more-btn');
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', function() {
-            const educationList = document.querySelector('.education-info .education-list');
-            educationList.classList.toggle('show-educations');
-            
-            const showText = this.querySelector('.show-text');
-            const showLessText = this.querySelector('.show-less-text');
-            const icon = this.querySelector('i');
-            
-            if (educationList.classList.contains('show-educations')) {
-                showText.style.display = 'none';
-                showLessText.style.display = 'inline';
-            } else {
-                showText.style.display = 'inline';
-                showLessText.style.display = 'none';
-            }
-        });
-    }
-});
+    const currentlyWorkingCheckbox = document.getElementById('currently_working');
+    const endDateInput = document.getElementById('end_date');
 
-document.addEventListener('DOMContentLoaded', function() {
-    const showMoreBtn = document.querySelector('.certifications-info .show-more-btn');
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', function() {
-            const certificationsList = document.querySelector('.certifications-info .certifications-list');
-            certificationsList.classList.toggle('show-certifications');
-            
-            const showText = this.querySelector('.show-text');
-            const showLessText = this.querySelector('.show-less-text');
-            const icon = this.querySelector('i');
-            
-            if (certificationsList.classList.contains('show-certifications')) {
-                showText.style.display = 'none';
-                showLessText.style.display = 'inline';
-            } else {
-                showText.style.display = 'inline';
-                showLessText.style.display = 'none';
-            }
-        });
-    }
-});
+    if (currentlyWorkingCheckbox && endDateInput) {
+        if (currentlyWorkingCheckbox.checked) {
+            endDateInput.disabled = true;
+            endDateInput.value = '';
+        }
 
-document.addEventListener('DOMContentLoaded', function() {
-    const showMoreBtn = document.querySelector('.portfolio-info .show-more-btn');
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', function() {
-            const portfolioGrid = document.querySelector('.portfolio-info .portfolio-grid');
-            portfolioGrid.classList.toggle('show-projects');
-            
-            const showText = this.querySelector('.show-text');
-            const showLessText = this.querySelector('.show-less-text');
-            const icon = this.querySelector('i');
-            
-            if (portfolioGrid.classList.contains('show-projects')) {
-                showText.style.display = 'none';
-                showLessText.style.display = 'inline';
+        currentlyWorkingCheckbox.addEventListener('change', function() {
+            if (currentlyWorkingCheckbox.checked) {
+                endDateInput.disabled = true;
+                endDateInput.value = '';
+                endDateInput.style.backgroundColor = '#f8f9fa';
+                endDateInput.style.cursor = 'not-allowed';
             } else {
-                showText.style.display = 'inline';
-                showLessText.style.display = 'none';
+                endDateInput.disabled = false;
+                endDateInput.style.backgroundColor = ''; 
+                endDateInput.style.cursor = ''; 
             }
         });
     }

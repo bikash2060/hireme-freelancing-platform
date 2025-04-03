@@ -14,7 +14,6 @@ from .utils import *
 class GetCitiesByCountryView(View):
     def get(self, request, *args, **kwargs):
         country_id = request.GET.get('country_id')
-        print('This view is being triggered!')
         if not country_id:
             return JsonResponse({'cities': []})
         
@@ -32,9 +31,11 @@ class FreelancerBasicInfoView(CustomLoginRequiredMixin, View):
         try:
             freelancer = Freelancer.objects.get(user=request.user)
             freelancer_languages = FreelancerLanguage.objects.filter(freelancer=freelancer).select_related('language')
+            experiences = WorkExperience.objects.filter(freelancer=freelancer).order_by('-start_date')
             return render(request, self.profile_template, {
                 'freelancer': freelancer,
-                'freelancer_languages': freelancer_languages
+                'freelancer_languages': freelancer_languages,
+                'experiences': experiences
             })
     
         except Exception:
@@ -227,4 +228,90 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.professional_info_url)
         
+class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
+    new_experience_template = 'freelancerprofile/addexperience.html'
+    new_experience_url = 'freelancer:add-experience'
+    freelancer_profile_url = 'freelancer:profile'
     
+    def get(self, request):
+        try:
+            all_skills = Skill.objects.all().order_by('name')
+            all_countries = Country.objects.all().order_by('name')
+            return render(request, self.new_experience_template, {
+                'skills': all_skills,
+                'countries': all_countries,
+            })
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.freelancer_profile_url)
+    
+    def post(self, request):
+        try:
+            user = request.user
+            freelancer = Freelancer.objects.get(user=request.user) 
+            
+            company_name = request.POST.get('company_name')
+            job_title = request.POST.get('job_title')
+            employment_type = request.POST.get('employment_type')
+            start_date = request.POST.get('start_date')
+            currently_working = request.POST.get('currently_working') == 'on'  
+            end_date = request.POST.get('end_date') if not currently_working else None
+            country_id = request.POST.get('country')
+            city_id = request.POST.get('city')
+            job_description = request.POST.get('job_description')
+            selected_skill_ids = request.POST.getlist('skills')
+            selected_skill_ids = [int(skill_id) for skill_id in selected_skill_ids]
+            
+            all_skills = Skill.objects.all().order_by('name')
+            all_countries = Country.objects.all().order_by('name')
+            current_country = Country.objects.filter(id=country_id).first() if country_id else None
+            
+            form_data={
+                'company_name': company_name,
+                'job_title': job_title,
+                'employment_type': employment_type,
+                'start_date': start_date,
+                'currently_working': currently_working,
+                'end_date': end_date,
+                'countries': all_countries,
+                'current_country': current_country.id if current_country else None,
+                'current_city': city_id,
+                'skills': all_skills,
+                'skills_select': selected_skill_ids,
+            }
+            
+            valid, error_message = validate_employment_data(company_name, job_title, employment_type, start_date,
+                currently_working, end_date, country_id, city_id, selected_skill_ids
+            )
+            if not valid:
+                messages.error(request, error_message)
+                return render(request, self.new_experience_template, form_data)
+            
+            country = Country.objects.get(id=country_id)
+            city = City.objects.get(id=city_id) if city_id else None
+                
+            start_date_parsed = datetime.strptime(start_date, '%Y-%m').date()
+            end_date_parsed = datetime.strptime(end_date, '%Y-%m').date() if end_date else None
+            
+            experience = WorkExperience(
+                freelancer=freelancer,
+                company_name=company_name,
+                job_title=job_title,
+                employment_type=employment_type,
+                start_date=start_date_parsed,
+                end_date=end_date_parsed,
+                currently_working=currently_working,
+                country=country,
+                city=city,
+                description=job_description,
+            )
+            experience.save()
+            
+            experience.skills.set(selected_skill_ids)
+            
+            messages.success(request, 'Your work experience has been successfully added!')
+            return redirect(self.freelancer_profile_url)
+            
+        except Exception:
+            messages.error(request, 'Something went wrong while saving your experience.')
+            return redirect(self.new_experience_url)

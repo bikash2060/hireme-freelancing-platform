@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import User
+from accounts.models import User, City, Country
 from projects.models import Skill
 
 class Language(models.Model):
@@ -49,3 +49,31 @@ class FreelancerLanguage(models.Model):
         return f"{self.freelancer.user.username} - {self.language.name} ({self.get_proficiency_display()})"
 
 
+class WorkExperience(models.Model):
+    EMPLOYMENT_TYPE_CHOICES = [
+        ('full-time', 'Full-time'),
+        ('part-time', 'Part-time'),
+        ('contract', 'Contract'),
+        ('freelance', 'Freelance'),
+        ('internship', 'Internship'),
+    ]
+    
+    id = models.AutoField(primary_key=True)
+    company_name = models.CharField(max_length=100)
+    job_title = models.CharField(max_length=100)
+    employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPE_CHOICES, blank=True, null=True)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+    currently_working = models.BooleanField(default=False)
+    description = models.TextField(blank=True, null=True)
+    freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
+    skills = models.ManyToManyField(Skill, blank=True)
+    
+    def __str__(self):
+        return f"{self.job_title} at {self.company_name}"
+
+    class Meta:
+        db_table = 'work_experience'
+        ordering = ['-start_date']

@@ -207,146 +207,73 @@
                         <i class="fas fa-history profile-icon"></i>
                         <h2>Work Experience</h2>
                     </div>
-                    <a href="" class="add-btn">
+                    <a href="{% url 'freelancer:add-experience'%}" class="add-btn">
                         <i class="fas fa-plus"></i> Add Experience
                     </a>
                 </div>
                 <div class="card-body">
                     <div class="experience-list">
-                        <div class="experience-item">
-                            <div class="experience-actions">
-                                <a href="" class="action-btn edit-action">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                <a href="" class="action-btn delete-action">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </div>
-                            <div class="experience-header">
-                                <div class="company-logo">
-                                    <i class="fas fa-building"></i>
+                        {% for experience in experiences %}
+                            <div class="experience-item">
+                                <div class="experience-actions">
+                                    <a href="" class="action-btn edit-action">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a href="" class="action-btn delete-action">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
                                 </div>
-                                <div class="job-details">
-                                    <h3 class="job-title">Senior Frontend Developer</h3>
-                                    <div class="company-name">
-                                        <i class="fas fa-briefcase"></i>
-                                        <span>TechInnovate Solutions</span>
+                                <div class="experience-header">
+                                    <div class="company-logo">
+                                        <i class="fas fa-building"></i>
                                     </div>
-                                    <div class="job-duration">
-                                        <i class="fas fa-calendar-alt"></i>
-                                        <span>January 2022 - Present</span>
-                                        <span class="duration-badge current">Current</span>
-                                    </div>
-                                    <div class="job-location">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span>Kathmandu, Nepal</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="job-description">
-                                <p>Leading the frontend development team in creating responsive and user-friendly web applications. Implementing modern JavaScript frameworks and ensuring cross-browser compatibility.</p>
-                            </div>
-                            <div class="experience-skills">
-                                <span class="exp-skill-tag">React</span>
-                                <span class="exp-skill-tag">JavaScript</span>
-                                <span class="exp-skill-tag">TypeScript</span>
-                                <span class="exp-skill-tag">UI/UX</span>
-                            </div>
-                        </div>
-        
-                        <div class="experience-item">
-                            <div class="experience-actions">
-                                <a href="" class="action-btn edit-action">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                <a href="" class="action-btn delete-action">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </div>
-                            <div class="experience-header">
-                                <div class="company-logo">
-                                    <i class="fas fa-building"></i>
-                                </div>
-                                <div class="job-details">
-                                    <h3 class="job-title">Web Developer</h3>
-                                    <div class="company-name">
-                                        <i class="fas fa-briefcase"></i>
-                                        <span>Digital Nepal Inc.</span>
-                                    </div>
-                                    <div class="job-duration">
-                                        <i class="fas fa-calendar-alt"></i>
-                                        <span>June 2020 - December 2021</span>
-                                        <span class="duration-badge years">1.5 years</span>
-                                    </div>
-                                    <div class="job-location">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span>Kathmandu, Nepal</span>
+                                    <div class="job-details">
+                                        <h3 class="job-title">{{ experience.job_title }}</h3>
+                                        <div class="company-name">
+                                            <i class="fas fa-briefcase"></i>
+                                            <span>{{ experience.company_name }}</span>
+                                        </div>
+                                        <div class="job-duration">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            <span>
+                                                {{ experience.start_date|date:"F Y" }} - 
+                                                {% if experience.currently_working %}
+                                                    Present
+                                                    <span class="duration-badge current">Current</span>
+                                                {% else %}
+                                                    {{ experience.end_date|date:"F Y" }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="job-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span>
+                                                {% if experience.city %}{{ experience.city.name }}, {% endif %}
+                                                {{ experience.country.name }}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="job-description">
-                                <p>Developed and maintained multiple client websites, implemented new features, and ensured optimal performance. Collaborated with design and backend teams to deliver complete web solutions.</p>
-                            </div>
-                            <div class="experience-skills">
-                                <span class="exp-skill-tag">JavaScript</span>
-                                <span class="exp-skill-tag">Node.js</span>
-                                <span class="exp-skill-tag">Express</span>
-                                <span class="exp-skill-tag">Django</span>
-                            </div>
-                        </div>
-        
-                        <div class="experience-item hidden-experience">
-                            <div class="experience-actions">
-                                <a href="" class="action-btn edit-action">
-                                    <i class="fas fa-pencil-alt"></i>
-                                </a>
-                                <a href="" class="action-btn delete-action">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </div>
-                            <div class="experience-header">
-                                <div class="company-logo">
-                                    <i class="fas fa-building"></i>
+                                <div class="job-description">
+                                    <p>{{ experience.description }}</p>
                                 </div>
-                                <div class="job-details">
-                                    <h3 class="job-title">UI/UX Design Intern</h3>
-                                    <div class="company-name">
-                                        <i class="fas fa-briefcase"></i>
-                                        <span>CreativeMinds Studio</span>
-                                    </div>
-                                    <div class="job-duration">
-                                        <i class="fas fa-calendar-alt"></i>
-                                        <span>January 2020 - May 2020</span>
-                                        <span class="duration-badge months">5 months</span>
-                                    </div>
-                                    <div class="job-location">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span>Lalitpur, Nepal</span>
-                                    </div>
+                                <div class="experience-skills">
+                                    {% for skill in experience.skills.all %}
+                                    <span class="exp-skill-tag">{{ skill.name }}</span>
+                                    {% endfor %}
                                 </div>
                             </div>
-                            <div class="job-description">
-                                <p>Assisted the design team in creating wireframes and prototypes. Conducted user research and translated findings into design improvements.</p>
+                        {% empty %}
+                            <div class="no-experiences">
+                                <i class="fas fa-info-circle"></i>
+                                <p>No work experiences added yet. Add your first experience to showcase your professional background.</p>
                             </div>
-                            <div class="experience-skills">
-                                <span class="exp-skill-tag">Figma</span>
-                                <span class="exp-skill-tag">Adobe XD</span>
-                                <span class="exp-skill-tag">UI/UX</span>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                    
-                    <div class="show-more-container">
-                        <button class="show-more-btn">
-                            <span class="show-text">Show More</span>
-                            <span class="show-less-text" style="display: none;">Show Less</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                    </div>
+
                 </div>
             </div>
         </div>
-
 
         <!-- Education Information Section 
         <div class="education-info">
