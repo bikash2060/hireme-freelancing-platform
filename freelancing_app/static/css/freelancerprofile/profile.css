@@ -678,14 +678,6 @@
     transform: translateY(-3px);
 }
 
-.experience-info .hidden-experience {
-    display: none;
-}
-
-.experience-info .show-experiences .hidden-experience {
-    display: block;
-}
-
 .experience-info .experience-actions {
     position: absolute;
     top: 20px;
@@ -773,6 +765,46 @@
     font-size: 18px;
     font-weight: 600;
     color: #2d3748;
+}
+
+.experience-info .job-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.experience-info .employment-type-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.experience-info .employment-type-badge.full-time {
+    background-color: rgba(52, 211, 153, 0.1);
+    color: #10b981;
+}
+
+.experience-info .employment-type-badge.part-time {
+    background-color: rgba(251, 191, 36, 0.1);
+    color: #f59e0b;
+}
+
+.experience-info .employment-type-badge.contract {
+    background-color: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+}
+
+.experience-info .employment-type-badge.freelance {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: #ec4899;
+}
+
+.experience-info .employment-type-badge.internship {
+    background-color: rgba(6, 182, 212, 0.1);
+    color: #06b6d4;
 }
 
 .experience-info .company-name,

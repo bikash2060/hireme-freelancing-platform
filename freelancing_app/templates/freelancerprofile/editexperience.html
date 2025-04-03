@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Add Experience - HireMe{% endblock %}
+{% block title %}Edit Experience - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/freelancerprofile/addexperience.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/editexperience.css' %}">
 <link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
 {% endblock %}
 
@@ -26,8 +26,8 @@
                         <i class="fas fa-briefcase profile-icon"></i>
                     </div>
                     <div>
-                        <h2>Add Work Experience</h2>
-                        <p class="subtitle">Showcase your professional journey to potential clients</p>
+                        <h2>Edit Work Experience</h2>
+                        <p class="subtitle">Update your professional experience details</p>
                     </div>
                 </div>
                 <div class="action-buttons">
@@ -38,7 +38,7 @@
             </div>
             
             <div class="card-body">
-                <form id="experience-add-form" action="{% url 'freelancer:add-experience'%}" method="POST" enctype="multipart/form-data">
+                <form id="experience-add-form" action="{% url 'freelancer:edit-experience' experience.id %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     
                     <div class="form-grid">
@@ -51,7 +51,7 @@
                                 <label for="company_name">
                                     <i class="fas fa-briefcase"></i> Company Name
                                 </label>
-                                <input type="text" id="company_name" name="company_name" value="{{company_name|default:""}}" class="form-control" placeholder="e.g. TechInnovate Solutions" >
+                                <input type="text" id="company_name" name="company_name" value="{{ experience.company_name }}" class="form-control" placeholder="e.g. TechInnovate Solutions" >
                             </div>
                         </div>
                         
@@ -64,7 +64,7 @@
                                 <label for="job_title">
                                     <i class="fas fa-id-badge"></i> Job Title
                                 </label>
-                                <input type="text" id="job_title" name="job_title" value="{{ job_title|default:""}}"class="form-control" placeholder="e.g. Senior Frontend Developer" >
+                                <input type="text" id="job_title" name="job_title" value="{{ experience.job_title }}" class="form-control" placeholder="e.g. Senior Frontend Developer" >
                             </div>
                             
                             <div class="form-group">
@@ -72,12 +72,12 @@
                                     <i class="fas fa-clock"></i> Employment Type
                                 </label>
                                 <select id="employment_type" name="employment_type" class="form-control">
-                                    <option value="" disabled {% if not employment_type %}selected{% endif %}>Select employment type</option>
-                                    <option value="full-time" {% if employment_type == 'full-time' %}selected{% endif %}>Full-time</option>
-                                    <option value="part-time" {% if employment_type == 'part-time' %}selected{% endif %}>Part-time</option>
-                                    <option value="contract" {% if employment_type == 'contract' %}selected{% endif %}>Contract</option>
-                                    <option value="freelance" {% if employment_type == 'freelance' %}selected{% endif %}>Freelance</option>
-                                    <option value="internship" {% if employment_type == 'internship' %}selected{% endif %}>Internship</option>
+                                    <option value="" disabled>Select employment type</option>
+                                    <option value="full-time" {% if experience.employment_type == 'full-time' %}selected{% endif %}>Full-time</option>
+                                    <option value="part-time" {% if experience.employment_type == 'part-time' %}selected{% endif %}>Part-time</option>
+                                    <option value="contract" {% if experience.employment_type == 'contract' %}selected{% endif %}>Contract</option>
+                                    <option value="freelance" {% if experience.employment_type == 'freelance' %}selected{% endif %}>Freelance</option>
+                                    <option value="internship" {% if experience.employment_type == 'internship' %}selected{% endif %}>Internship</option>
                                 </select>
                             </div>
                         </div>
@@ -92,10 +92,10 @@
                                         <i class="fas fa-calendar-plus"></i> Start Date
                                     </label>
                                     <input type="month" id="start_date" name="start_date" 
-                                        value="{{ start_date|default:'' }}" class="form-control">
+                                        value="{{ experience.start_date|date:'Y-m' }}" class="form-control">
                                     <div class="checkbox-container">
                                         <input type="checkbox" id="currently_working" name="currently_working" 
-                                            {% if currently_working %}checked{% endif %}>
+                                        {% if experience.currently_working %}checked{% endif %}>
                                         <span class="custom-checkbox"></span>
                                         <label for="currently_working">I currently work here</label>
                                     </div>
@@ -106,7 +106,7 @@
                                         <i class="fas fa-calendar-minus"></i> End Date
                                     </label>
                                     <input type="month" id="end_date" name="end_date" 
-                                        value="{{ end_date|default:'' }}" class="form-control">
+                                        value="{% if not experience.currently_working %}{{ experience.end_date|date:'Y-m' }}{% endif %}" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -124,7 +124,7 @@
                                         <option value="" selected disabled>Select your country</option>
                                         {% for country in countries %}
                                             <option value="{{ country.id }}" 
-                                                {% if current_country == country.id %}selected{% endif %}>
+                                                {% if experience.country.id == country.id %}selected{% endif %}>
                                                 {{ country.name }}
                                             </option>
                                         {% endfor %}
@@ -150,7 +150,7 @@
                                 <label for="job_description">
                                     <i class="fas fa-align-left"></i> Responsibilities & Achievements
                                 </label>
-                                <textarea id="job_description" name="job_description" class="form-control" rows="5" placeholder="Describe your role, responsibilities, and key achievements...">{{ job_description|default:'' }}</textarea>
+                                <textarea id="job_description" name="job_description" class="form-control" rows="5" placeholder="Describe your role, responsibilities, and key achievements..."></textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
                                         <span id="desc-char-count">0</span>/100 characters

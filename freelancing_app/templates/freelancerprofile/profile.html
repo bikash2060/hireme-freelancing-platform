@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static%}
 {% load indian_numbers %}
+{% load duration_filters %}
 
 {% block title %}Account Settings - HireMe{% endblock %}
 
@@ -216,7 +217,7 @@
                         {% for experience in experiences %}
                             <div class="experience-item">
                                 <div class="experience-actions">
-                                    <a href="" class="action-btn edit-action">
+                                    <a href="{% url 'freelancer:edit-experience' experience.id %}" class="action-btn edit-action">
                                         <i class="fas fa-pencil-alt"></i>
                                     </a>
                                     <a href="" class="action-btn delete-action">
@@ -228,7 +229,12 @@
                                         <i class="fas fa-building"></i>
                                     </div>
                                     <div class="job-details">
-                                        <h3 class="job-title">{{ experience.job_title }}</h3>
+                                        <div class="job-title-wrapper">
+                                            <h3 class="job-title">{{ experience.job_title }}</h3>
+                                            <span class="employment-type-badge {{ experience.employment_type|slugify }}">
+                                                {{ experience.get_employment_type_display }}
+                                            </span>
+                                        </div>
                                         <div class="company-name">
                                             <i class="fas fa-briefcase"></i>
                                             <span>{{ experience.company_name }}</span>
@@ -243,6 +249,7 @@
                                                 {% else %}
                                                     {{ experience.end_date|date:"F Y" }}
                                                 {% endif %}
+                                                · {{ experience.start_date|months_between:experience.end_date }} month{% if experience.start_date|months_between:experience.end_date != 1 %}s{% endif %}
                                             </span>
                                         </div>
                                         <div class="job-location">
