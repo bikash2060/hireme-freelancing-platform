@@ -131,10 +131,9 @@ def validate_professional_info(city_id, country_id, hourly_rate, selected_skills
     except Exception as e:
         return False, "Something went wrong during validation. Please try again."
 
-def validate_employment_data(
-        company_name, job_title, employment_type, start_date, 
-        currently_working, end_date, country_id, city_id, selected_skill_ids
-    ):
+def validate_employment_data( company_name, job_title, employment_type, start_date, currently_working, end_date, country_id, city_id, 
+    selected_skill_ids
+    ):  
     
     if not company_name or company_name.strip() == '':
         return False, 'Company name is required.'

@@ -38,29 +38,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    const removeImageBtn = document.getElementById('remove-image');
-    const confirmationModal = document.getElementById('confirmation-modal');
-    const cancelRemoveBtn = document.getElementById('cancel-remove');
-    const confirmRemoveBtn = document.getElementById('confirm-remove');
-    if (removeImageBtn && confirmationModal) {
-        removeImageBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            confirmationModal.style.display = 'block';
-        });
-        
-        cancelRemoveBtn.addEventListener('click', function() {
-            confirmationModal.style.display = 'none';
-        });
-        
-        confirmRemoveBtn.addEventListener('click', function() {
-            window.location.href = removeImageBtn.getAttribute('href');
-        });
-        
-        confirmationModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-            }
-        });
-    }
 });

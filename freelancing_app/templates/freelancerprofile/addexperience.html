@@ -38,7 +38,8 @@
             </div>
             
             <div class="card-body">
-                <form id="experience-add-form" action="{% url 'freelancer:add-experience'%}" method="POST" enctype="multipart/form-data">
+                <form id="experience-add-form" action="{% url 'freelancer:add-experience'%}" method="POST" enctype="multipart/form-data"
+                    data-cities-url="{% url 'freelancer:get-cities' %}">
                     {% csrf_token %}
                     
                     <div class="form-grid">
@@ -51,7 +52,7 @@
                                 <label for="company_name">
                                     <i class="fas fa-briefcase"></i> Company Name
                                 </label>
-                                <input type="text" id="company_name" name="company_name" value="{{company_name|default:""}}" class="form-control" placeholder="e.g. TechInnovate Solutions" >
+                                <input type="text" id="company_name" name="company_name" value="{{ company_name|default:"" }}" class="form-control" placeholder="e.g. TechInnovate Solutions" >
                             </div>
                         </div>
                         
@@ -134,8 +135,8 @@
                                     <label for="city">
                                         <i class="fas fa-city"></i> City
                                     </label>
-                                    <select id="city" name="city" class="form-control">
-                                        <option value="" selected disabled>Select City</option>
+                                    <select id="city" name="city" class="form-control" data-previous-city="{{ current_city }}">
+                                        <option value="" selected disabled>Select your city</option>
                                     </select>
                                 </div>
                                 
@@ -212,52 +213,8 @@
 
 {% block footer %}{% endblock %}
 {% block js_files %}
-<script src="{% static 'js/freelancerprofile/profile-utils.js' %}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const countrySelect = document.getElementById('country');
-        const citySelect = document.getElementById('city');
-        
-        countrySelect.addEventListener('change', function() {
-            const countryId = this.value;
-            citySelect.innerHTML = '<option value="" selected disabled>Loading cities...</option>';
-            
-            if (countryId) {
-                const url = "{% url 'freelancer:get-cities' %}?country_id=" + countryId;
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        citySelect.innerHTML = '<option value="" selected disabled>Select your city</option>';
-                        data.cities.forEach(city => {
-                            const option = document.createElement('option');
-                            option.value = city.id;
-                            console.log(city.id)
-                            option.textContent = city.name;
-                            citySelect.appendChild(option);
-                        });
-                        
-                        const previousCity = "{{ current_city|default:'' }}";
-                        if (previousCity) {
-                            for (let i = 0; i < citySelect.options.length; i++) {
-                                if (citySelect.options[i].value === previousCity) {
-                                    citySelect.options[i].selected = true;
-                                    break;
-                                }
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching cities:', error);
-                        citySelect.innerHTML = '<option value="" selected disabled>Error loading cities</option>';
-                    });
-            } else {
-                citySelect.innerHTML = '<option value="" selected disabled>Select country first</option>';
-            }
-        });
-        
-        if (countrySelect.value) {
-            countrySelect.dispatchEvent(new Event('change'));
-        }
-    });
-</script>
+<script src="{% static 'js/freelancerprofile/job-description-limiter.js' %}"></script>
+<script src="{% static 'js/freelancerprofile/toggle-enddate.js' %}"></script>
+<script src="{% static 'js/freelancerprofile/dynamic-skills-filter.js' %}"></script>
+<script src="{% static 'js/freelancerprofile/dynamic-cities-filter.js' %}"></script>
 {% endblock %}

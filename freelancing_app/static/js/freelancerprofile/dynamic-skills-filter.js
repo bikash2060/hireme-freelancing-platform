@@ -72,15 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-        
-        const hintElement = document.querySelector('.tags-hint');
-        if (checkedSkills.length >= 5) {
-            hintElement.textContent = 'Great! Your profile is better now.';
-            hintElement.style.color = '#28a745';
-        } else {
-            hintElement.textContent = `Add ${5 - checkedSkills.length} more skills to increase your visibility`;
-            hintElement.style.color = '#6c757d';
-        }
     }
     
     updateSelectedSkills();

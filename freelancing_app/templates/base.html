@@ -386,6 +386,18 @@
     </div>
 {% endif %}
 
+<!-- Confirmation Modal Section -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <h3>Confirm Removal</h3>
+        <p id="confirmation-message">Are you sure you want to remove this item?</p>
+        <div class="modal-actions">
+            <button id="confirm-remove" class="btn-danger">Yes, Remove</button>
+            <button id="cancel-remove" class="btn-cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
 {% block content %}
 {% endblock %}
 
@@ -469,5 +481,6 @@
 <script src="{% static 'js/common/loader.js'%}"></script>
 <script src="{% static 'js/common/form-handler.js' %}"></script>
 <script src="{% static 'js/common/mobile-menu.js' %}" defer></script>
+<script src="{% static 'js/common/confirmation-modal.js' %}"></script>
 </body>
 </html>

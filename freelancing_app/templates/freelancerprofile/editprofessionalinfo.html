@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
-{% load professional_tags %}
+{% load proficiency_filters %}
+{% load indian_numbers %}
 
 {% block title %}Update Professional Information - HireMe{% endblock %}
 
@@ -39,7 +40,8 @@
             </div>
             
             <div class="card-body">
-                <form id="professional-edit-form" action="{% url 'freelancer:edit-professional-info' %}" method="POST">
+                <form id="professional-edit-form" action="{% url 'freelancer:edit-professional-info' %}" method="POST"
+                    data-cities-url="{% url 'freelancer:get-cities' %}">
                     {% csrf_token %}
                     
                     <div class="form-grid">
@@ -55,7 +57,7 @@
                                     <option value="" selected disabled>Select your country</option>
                                     {% for country in countries %}
                                         <option value="{{ country.id }}" 
-                                            {% if submitted_data.country == country.id or current_country == country.id %}selected{% endif %}>
+                                            {% if current_country == country.id %}selected{% endif %}>
                                             {{ country.name }}
                                         </option>
                                     {% endfor %}
@@ -65,7 +67,7 @@
                                 <label for="city">
                                     <i class="fas fa-city"></i> City
                                 </label>
-                                <select id="city" name="city" class="form-control">
+                                <select id="city" name="city" class="form-control" data-previous-city="{{ current_city }}">
                                     <option value="" selected disabled>Select your city</option>
                                 </select>
                             </div>
@@ -82,7 +84,7 @@
                                 <div class="input-with-symbol">
                                     <span class="input-symbol">Rs</span>
                                     <input type="number" id="hourly_rate" name="hourly_rate" 
-                                        value="{{ submitted_data.hourly_rate|default:freelancer.hourly_rate|default:'' }}" 
+                                        value="{{ hourly_rate|default:freelancer.hourly_rate|default:'' }}" 
                                         class="form-control" min="0" 
                                     >
                                 </div>
@@ -96,18 +98,18 @@
                             </h3>
                             <div class="form-group">
                                 <div class="language-container">
-                                    {% for language in all_languages %}
+                                    {% for language_item in language_proficiencies_list %}
                                     <div class="language-proficiency-input">
-                                        <span class="language-name">{{ language.name }}</span>
+                                        <span class="language-name">{{ language_item.name }}</span>
                                         <div class="proficiency-level-input">
                                             {% for level in "12345" %}
                                             <input type="radio" 
-                                                id="{{ language.code }}-{{ level }}" 
-                                                name="{{ language.code }}_proficiency" 
+                                                id="{{ language_item.code }}-{{ level }}" 
+                                                name="{{ language_item.code }}_proficiency" 
                                                 value="{{ level }}"
-                                                {% if language_proficiencies|get_item:language.code == level|stringformat:"s" %}checked{% endif %}
+                                                {% if language_item.proficiency == level|add:"0" %}checked{% endif %}
                                                 class="proficiency-radio">
-                                            <label for="{{ language.code }}-{{ level }}" class="proficiency-dot"></label>
+                                            <label for="{{ language_item.code }}-{{ level }}" class="proficiency-dot"></label>
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -174,52 +176,5 @@
 
 {% block js_files %}
 <script src="{% static 'js/freelancerprofile/dynamic-skills-filter.js' %}"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const countrySelect = document.getElementById('country');
-    const citySelect = document.getElementById('city');
-    
-    countrySelect.addEventListener('change', function() {
-        const countryId = this.value;
-        citySelect.innerHTML = '<option value="" selected disabled>Loading cities...</option>';
-        
-        if (countryId) {
-            const url = "{% url 'freelancer:get-cities' %}?country_id=" + countryId;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    citySelect.innerHTML = '<option value="" selected disabled>Select your city</option>';
-                    data.cities.forEach(city => {
-                        const option = document.createElement('option');
-                        option.value = city.id;
-                        console.log(city.id)
-                        option.textContent = city.name;
-                        citySelect.appendChild(option);
-                    });
-                    
-                    const previousCity = "{{ submitted_data.city|default:current_city|default:'' }}";
-                    if (previousCity) {
-                        for (let i = 0; i < citySelect.options.length; i++) {
-                            if (citySelect.options[i].value === previousCity) {
-                                citySelect.options[i].selected = true;
-                                break;
-                            }
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching cities:', error);
-                    citySelect.innerHTML = '<option value="" selected disabled>Error loading cities</option>';
-                });
-        } else {
-            citySelect.innerHTML = '<option value="" selected disabled>Select country first</option>';
-        }
-    });
-    
-    if (countrySelect.value) {
-        countrySelect.dispatchEvent(new Event('change'));
-    }
-});
-</script>
+<script src="{% static 'js/freelancerprofile/dynamic-cities-filter.js' %}"></script>
 {% endblock %}

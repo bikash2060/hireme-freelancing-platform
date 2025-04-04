@@ -567,6 +567,25 @@
     color: white;
 }
 
+.professional-info .skill-tag.empty-skills {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    background: #f5f5f5;  
+    color: #757575;      
+    border: 1px dashed #bdbdbd;
+    cursor: default;      
+    font-style: italic;   
+}
+
+.professional-info .skill-tag.empty-skills:hover {
+    transform: none;
+    box-shadow: none;
+    background: #f5f5f5;
+    color: #757575;
+}
+
 /* Experience Information Section */
 .experience-info {
     margin: 25px 0;
@@ -758,6 +777,9 @@
 
 .experience-info .job-details {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .experience-info .job-title {
@@ -770,8 +792,9 @@
 .experience-info .job-title-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 8px;
+    flex-wrap: wrap;
 }
 
 .experience-info .employment-type-badge {
@@ -780,6 +803,19 @@
     border-radius: 4px;
     font-weight: 500;
     text-transform: capitalize;
+    display: inline-block;
+}
+
+.experience-info .current-badge {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-block;
+    margin-left: 5px;
+    animation: pulse 2s infinite;
 }
 
 .experience-info .employment-type-badge.full-time {
@@ -827,29 +863,16 @@
     font-size: 15px;
 }
 
-.experience-info .duration-badge {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-left: 10px;
+.experience-info .job-duration {
+    color: #718096;
 }
 
-.experience-info .duration-badge.current {
-    background: rgba(74, 222, 128, 0.15);
-    color: #16a34a;
+.experience-info .job-location {
+    font-size: 13px;
+    color: #718096;
+    font-style: italic;
 }
 
-.experience-info .duration-badge.years {
-    background: rgba(251, 146, 60, 0.15);
-    color: #ea580c;
-}
-
-.experience-info .duration-badge.months {
-    background: rgba(56, 189, 248, 0.15);
-    color: #0284c7;
-}
 
 .experience-info .job-description {
     margin-bottom: 15px;
@@ -888,6 +911,15 @@
     color: white;
 }
 
+.experience-info .hidden-experience {
+    display: none;
+}
+
+.experience-info .experience-list.show-all .hidden-experience {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
 .experience-info .show-more-container {
     display: flex;
     justify-content: center;
@@ -920,6 +952,44 @@
 
 .experience-info .show-experiences .show-more-btn i {
     transform: rotate(180deg);
+}
+
+.experience-info .no-experiences {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #f8fafc;
+    border-radius: 10px;
+    border: 2px dashed #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.experience-info .no-experiences:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.experience-info .no-experiences i {
+    font-size: 48px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.experience-info .no-experiences:hover i {
+    color: #64748b;
+    transform: scale(1.05);
+}
+
+.experience-info .no-experiences p {
+    margin: 0;
+    color: #64748b;
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 500px;
 }
 
 /* Education Information Section */
@@ -2034,4 +2104,3 @@
 .portfolio-info .show-projects .show-more-btn i {
     transform: rotate(180deg);
 }
-

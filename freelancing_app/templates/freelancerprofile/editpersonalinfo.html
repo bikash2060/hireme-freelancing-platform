@@ -68,7 +68,8 @@
                                             <i class="fas fa-cloud-upload-alt"></i> Upload New
                                         </label>
                                         {% if user.profile_image %}
-                                            <a href="{% url 'freelancer:delete-profile-image' %}" id="remove-image" class="remove-image-btn">
+                                            <a href="{% url 'freelancer:delete-profile-image' %}" id="remove-image" class="remove-image-btn delete-action"
+                                            data-item-type="profile image">
                                                 <i class="fas fa-trash-alt"></i> Remove
                                             </a>
                                         {% endif %}
@@ -163,17 +164,6 @@
     </div>
 </div>
 
-<!-- Confirmation Modal for Image Removal -->
-<div id="confirmation-modal" class="modal">
-    <div class="modal-content">
-        <h3>Confirm Removal</h3>
-        <p>Are you sure you want to remove this image?</p>
-        <div class="modal-actions">
-            <button id="confirm-remove" class="btn-danger">Yes, Remove</button>
-            <button id="cancel-remove" class="btn-cancel">Cancel</button>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block footer %}{% endblock %}

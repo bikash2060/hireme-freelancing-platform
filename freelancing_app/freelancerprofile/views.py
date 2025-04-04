@@ -10,10 +10,11 @@ from django.conf import settings
 from django.urls import reverse
 from django.views import View
 from datetime import datetime
+from itertools import chain
 from .models import *
 from .utils import *
 
-class GetCitiesByCountryView(View):
+class GetCitiesByCountryView(CustomLoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         country_id = request.GET.get('country_id')
         if not country_id:
@@ -33,11 +34,18 @@ class FreelancerBasicInfoView(CustomLoginRequiredMixin, View):
         try:
             freelancer = Freelancer.objects.get(user=request.user)
             freelancer_languages = FreelancerLanguage.objects.filter(freelancer=freelancer).select_related('language')
-            experiences = WorkExperience.objects.filter(freelancer=freelancer).order_by('-start_date')
+            
+            experiences = WorkExperience.objects.filter(freelancer=freelancer)
+            ongoing_experiences = experiences.filter(currently_working=True).order_by('-start_date')
+            past_experiences = experiences.filter(currently_working=False).order_by(
+                '-end_date' if WorkExperience._meta.get_field('end_date').null else 'end_date'
+            )
+            ordered_experiences = list(chain(ongoing_experiences, past_experiences))
+            
             return render(request, self.profile_template, {
                 'freelancer': freelancer,
                 'freelancer_languages': freelancer_languages,
-                'experiences': experiences
+                'experiences': ordered_experiences
             })
     
         except Exception as e:
@@ -55,7 +63,7 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
             freelancer = Freelancer.objects.get(user=request.user)
             return render(request, self.personal_details_template, {'freelancer': freelancer})
         except Exception:
-            messages.error(request, 'Failed to load your profile. Please try again later.')
+            messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
 
     def post(self, request):
@@ -69,10 +77,10 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
             bio = request.POST.get('bio').strip()
             
             form_data = {
-                'full_name': full_name,
-                'username': username,
-                'phone_number': phone_number,
-                'bio': bio
+                'full_name': full_name if full_name else None,
+                'username': username if username else None,
+                'phone_number': phone_number if phone_number else None,
+                'bio': bio if bio else None,
             }
             
             valid, error_message = validate_user_data(profile_image, full_name, username, phone_number, bio, request)
@@ -96,7 +104,8 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
             messages.success(request, 'Your profile has been updated successfully!')
             return redirect(self.freelancer_profile_url)
             
-        except Exception:
+        except Exception as e:
+            print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.personal_details_url)
 
@@ -107,8 +116,16 @@ class DeleteProfileImageView(CustomLoginRequiredMixin, View):
     def get(self, request):
         try:
             user = request.user
+            
+            if user.profile_image:
+                file_path = os.path.join(settings.MEDIA_ROOT, 'profile_images', str(user.profile_image.name))
+                
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+            
             user.profile_image = None
             user.save()
+            
             messages.success(request, 'Your profile image has been deleted successfully!')
             return redirect(self.freelancer_profile_url)
         except Exception:
@@ -126,25 +143,33 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             freelancer = Freelancer.objects.get(user=user)
             all_skills = Skill.objects.all().order_by('name')
             selected_skills = freelancer.skills.values_list('id', flat=True)
+           
             all_languages = Language.objects.all()
-            
-            language_proficiencies = {}
-            for freelancer_language in FreelancerLanguage.objects.filter(freelancer=freelancer):
-                language_proficiencies[freelancer_language.language.code] = freelancer_language.proficiency
-            
-            all_countries = Country.objects.all().order_by('name')
-            current_country = user.country
-            current_city = user.city
+            language_proficiencies_list = []
+            for language in all_languages:
+                proficiency = FreelancerLanguage.objects.filter(
+                    freelancer=freelancer, 
+                    language=language
+                ).values_list('proficiency', flat=True).first()
+                language_proficiencies_list.append({
+                    'code': language.code,
+                    'name': language.name,
+                    'proficiency': proficiency if proficiency else None
+                })
 
+            all_countries = Country.objects.all().order_by('name')
+            current_country = user.country.id if user.country else None
+            current_city = user.city.id if user.city else None
+            
             return render(request, self.professional_info_template, {
                 'freelancer': freelancer,
                 'skills': all_skills,
                 'skills_select': selected_skills,
                 'all_languages': all_languages,
-                'language_proficiencies': language_proficiencies,
+                'language_proficiencies_list': language_proficiencies_list,
                 'countries': all_countries,
-                'current_country': current_country.id if current_country else None,
-                'current_city': current_city.id if current_city else None,
+                'current_country': current_country,
+                'current_city': current_city,
             })
             
         except Exception as e:
@@ -158,6 +183,7 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             freelancer = Freelancer.objects.get(user=request.user)
             all_skills = Skill.objects.all().order_by('name')
             all_languages = Language.objects.all()
+            all_countries = Country.objects.all().order_by('name')
             
             city_id = request.POST.get('city')
             country_id = request.POST.get('country')
@@ -166,28 +192,28 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             selected_skills = [int(skill_id) for skill_id in selected_skills]
 
             language_proficiencies = {}
+            language_proficiencies_list = []
             for language in all_languages:
                 proficiency_value = request.POST.get(f"{language.code}_proficiency")
                 if proficiency_value:
                     language_proficiencies[language.code] = int(proficiency_value)
                     
-            all_countries = Country.objects.all().order_by('name')
-            current_country = Country.objects.filter(id=country_id).first() if country_id else None
-            
+                language_proficiencies_list.append({
+                    'code': language.code,
+                    'name': language.name,
+                    'proficiency': int(proficiency_value) if proficiency_value else None
+                })
+
             context = {
                 'freelancer': freelancer,
                 'skills': all_skills,
                 'skills_select': selected_skills,
                 'all_languages': all_languages,
-                'language_proficiencies': language_proficiencies,
+                'language_proficiencies_list': language_proficiencies_list, 
                 'countries': all_countries,
-                'current_country': current_country.id if current_country else None,
-                'current_city': city_id,
-                'submitted_data': {
-                    'hourly_rate': hourly_rate,
-                    'city_id': city_id,
-                    'country_id': country_id,
-                }
+                'current_country': int(country_id) if country_id else None,
+                'current_city': int(city_id) if city_id else None,
+                'hourly_rate': hourly_rate,
             }
             
             valid, error_message = validate_professional_info(city_id, country_id, hourly_rate, selected_skills, language_proficiencies)
@@ -195,8 +221,14 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                 messages.error(request, error_message)
                 return render(request, self.professional_info_template, context)
 
-            if current_country:
-                user.country = current_country
+            if country_id:
+                try:
+                    country = Country.objects.get(id=country_id)
+                    user.country = country
+                except Country.DoesNotExist:
+                    messages.error(request, 'Selected country is not valid')
+                    return render(request, self.professional_info_template, context)
+            
             if city_id:
                 try:
                     city = City.objects.get(id=city_id)
@@ -206,6 +238,7 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                     return render(request, self.professional_info_template, context)
                 
             freelancer.hourly_rate = hourly_rate
+            
             freelancer.skills.clear()
             skills = Skill.objects.filter(id__in=selected_skills)
             freelancer.skills.add(*skills)
@@ -214,7 +247,6 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             for language_code, proficiency_level in language_proficiencies.items():
                 try:
                     language = Language.objects.get(code=language_code)
-                    print('Language:', language)
                     FreelancerLanguage.objects.create(
                         freelancer=freelancer,
                         language=language,
@@ -222,14 +254,14 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                     )
                 except Language.DoesNotExist:
                     continue
-            
+                
             user.save()
             freelancer.save()
             messages.success(request, "Your profile has been updated successfully!")
             return redirect(self.freelancer_profile_url)
             
-        except Exception as e:
-            messages.error(request, 'Something went wrong. Please try again later.')
+        except Exception:
+            messages.error(request, f'Something went wrong: {str(e)}')
             return redirect(self.professional_info_url)
         
 class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
@@ -245,6 +277,7 @@ class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
                 'skills': all_skills,
                 'countries': all_countries,
             })
+            
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
@@ -268,7 +301,6 @@ class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
             
             all_skills = Skill.objects.all().order_by('name')
             all_countries = Country.objects.all().order_by('name')
-            current_country = Country.objects.filter(id=country_id).first() if country_id else None
             
             form_data={
                 'company_name': company_name,
@@ -277,9 +309,10 @@ class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
                 'start_date': start_date,
                 'currently_working': currently_working,
                 'end_date': end_date,
+                'job_description': job_description,
                 'countries': all_countries,
-                'current_country': current_country.id if current_country else None,
-                'current_city': city_id,
+                'current_country': int(country_id) if country_id else None,
+                'current_city': int(city_id) if city_id else None,
                 'skills': all_skills,
                 'skills_select': selected_skill_ids,
             }
@@ -291,7 +324,7 @@ class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
                 messages.error(request, error_message)
                 return render(request, self.new_experience_template, form_data)
             
-            country = Country.objects.get(id=country_id)
+            country = Country.objects.get(id=country_id) if country_id else None
             city = City.objects.get(id=city_id) if city_id else None
                 
             start_date_parsed = datetime.strptime(start_date, '%Y-%m').date()
@@ -310,7 +343,6 @@ class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
                 description=job_description,
             )
             experience.save()
-            
             experience.skills.set(selected_skill_ids)
             
             messages.success(request, 'Your work experience has been successfully added!')
@@ -334,26 +366,30 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
             all_countries = Country.objects.all().order_by('name')
             selected_skill_ids = list(experience.skills.values_list('id', flat=True))
             
+            current_country = experience.country.id if user.country else None
+            current_city = experience.city.id if user.city else None
+            
             form_data = {
                 'freelancer': freelancer,
                 'experience': experience,
                 'countries': all_countries,
+                'current_country': current_country,
+                'current_city': current_city,
                 'skills': all_skills,
                 'skills_select': selected_skill_ids,
             }
-            
             return render(request, self.edit_experience_template, form_data)
-            
-        except WorkExperience.DoesNotExist:
-            messages.error(request, 'Experience not found or you don\'t have permission to edit it.')
-            return redirect(self.freelancer_profile_url)
-        except Exception:
+
+        except Exception as e:
+            print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
     
     def post(self, request, experience_id):
         try:
-            experience = WorkExperience.objects.get(id=experience_id, freelancer__user=request.user)
+            user = request.user
+            freelancer = Freelancer.objects.get(user=request.user)
+            experience = WorkExperience.objects.get(id=experience_id, freelancer__user=user)
             
             company_name = request.POST.get('company_name')
             job_title = request.POST.get('job_title')
@@ -369,10 +405,10 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
             
             all_skills = Skill.objects.all().order_by('name')
             all_countries = Country.objects.all().order_by('name')
-            current_country = Country.objects.filter(id=country_id).first() if country_id else None
             
             form_data = {
-                'experience_id': experience.id,
+                'freelancer': freelancer,
+                'experience': experience,
                 'company_name': company_name,
                 'job_title': job_title,
                 'employment_type': employment_type,
@@ -380,8 +416,8 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
                 'currently_working': currently_working,
                 'end_date': end_date,
                 'countries': all_countries,
-                'current_country': current_country.id if current_country else None,
-                'current_city': city_id,
+                'current_country': int(country_id) if country_id else None,
+                'current_city': int(city_id) if city_id else None,
                 'job_description': job_description,
                 'skills': all_skills,
                 'skills_select': selected_skill_ids,
@@ -390,13 +426,12 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
             valid, error_message = validate_employment_data(
                 company_name, job_title, employment_type, start_date,
                 currently_working, end_date, country_id, city_id, selected_skill_ids
-            )
-            
+            )            
             if not valid:
                 messages.error(request, error_message)
                 return render(request, self.edit_experience_template, form_data)
             
-            country = Country.objects.get(id=country_id)
+            country = Country.objects.get(id=country_id) if country_id else None
             city = City.objects.get(id=city_id) if city_id else None
             
             start_date_parsed = datetime.strptime(start_date, '%Y-%m').date()
@@ -411,19 +446,36 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
             experience.country = country
             experience.city = city
             experience.description = job_description
-            experience.save()
             
+            experience.save()
             experience.skills.set(selected_skill_ids)
             
             messages.success(request, 'Your work experience has been successfully updated!')
             return redirect(self.freelancer_profile_url)
             
-        except WorkExperience.DoesNotExist:
-            messages.error(request, 'Experience not found or you don\'t have permission to edit it.')
+        except Exception as e:
+            print('Exception:', e)
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.edit_experience_url, experience_id=experience_id)
+        
+class DeleteFreelancerExperienceView(CustomLoginRequiredMixin, View):
+    freelancer_profile_url = 'freelancer:profile'
+    
+    def get(self, request, experience_id):
+        try:
+            experience = WorkExperience.objects.get(
+                id=experience_id, 
+                freelancer__user=request.user
+            )
+            experience.delete()
+            
+            messages.success(request, 'Your work experience has been successfully deleted!')
             return redirect(self.freelancer_profile_url)
-        except Exception:
-            messages.error(request, 'Something went wrong while updating your experience.')
-            return redirect(reverse(self.edit_experience_url, kwargs={'experience_id': experience_id}))
+                    
+        except Exception as e:
+            print('Exception:', e)
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.freelancer_profile_url)
         
 class FreelancerPasswordChangeView(CustomLoginRequiredMixin, View):
     password_update_template = 'freelancerprofile/passwordupdate.html'
