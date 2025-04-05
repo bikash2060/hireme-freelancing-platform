@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static%}
+
+{% block title %}Role - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/accounts/roleselection.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Loading Screen Section -->
+<div id="loading-screen" style="display: none;">
+    <div class="spinner"></div>
+</div>
+
+<!-- Role Selection Box Section -->
+<div class="role-selection">
+    <div class="container">
+        <h2>Select Your <span>Role</span></h2>
+        <p>Choose how you'd like to get started:</p>
+        <form method="POST" action="{% url 'account:oauth_role_selection' %}">
+            {% csrf_token %}
+            <div class="role-boxes">
+                <div class="role-box" id="client-role">
+                    <i class="fa fa-user-tie"></i>
+                    <h3>Get Started as a <br>Client</h3>
+                    <p>Post projects and hire talented freelancers to get your work done.</p>
+                    <input type="radio" id="client" name="role" value="client" required>
+                    <label for="client">Client</label>
+                </div>
+                <div class="role-box" id="freelancer-role">
+                    <i class="fa fa-briefcase"></i>
+                    <h3>Get Started as a <br>Freelancer</h3>
+                    <p>Find projects and earn by offering your skills and expertise.</p>
+                    <input type="radio" id="freelancer" name="role" value="freelancer">
+                    <label for="freelancer">Freelancer</label>
+                </div>
+            </div>
+            <button type="submit" class="role-btn">Get Started</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

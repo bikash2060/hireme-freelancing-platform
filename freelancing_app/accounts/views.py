@@ -1,16 +1,23 @@
+from allauth.socialaccount.models import SocialLogin, SocialAccount
 from django.contrib.auth import login, authenticate, logout
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
 from freelancerprofile.models import Freelancer
+from django.core.files.base import ContentFile
 from django.shortcuts import render, redirect
 from clientprofile.models import Client
 from django.contrib import messages
-from django.utils import timezone
 from smtplib import SMTPException
+from django.utils import timezone
+from django.conf import settings
 from datetime import timedelta
 from django.views import View
 from .formvalidation import *
 from .models import *
 from .utils import *
+import requests
+import uuid
+import os
 
 class UserLoginView(View):
     login_template = 'accounts/login.html'
@@ -496,7 +503,164 @@ class UserRoleRedirectView(View):
 
 class UserLogoutView(View):
     login_url = 'account:login'
+    
     def get(self, request):
-        logout(request)
-        messages.success(request, 'You have been logged out successfully.')
-        return redirect(self.login_url)
+        try:
+            logout(request)
+            messages.success(request, 'You have successfully logged out.')
+            return redirect(self.login_url)
+        except Exception as e:
+            print("Exception inside UserLogoutView: ", e)
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.login_url)
+        
+class OAuthRoleSelectionView(View):
+    role_selection_template = 'accounts/oauth_role_selection.html'
+    login_url = 'account:login'
+    home_url = 'home:home'
+    
+    def get(self, request):
+        """
+        Display the role selection page for OAuth users
+        """
+        try:
+            # Check if user came from OAuth flow
+            if not request.session.get('sociallogin'):
+                messages.error(request, 'Invalid request.')
+                return redirect(self.login_url)
+            
+            email = request.session.get('sociallogin_email')
+            if not email:
+                messages.error(request, 'Email information missing.')
+                return redirect(self.login_url)
+            
+            return render(request, self.role_selection_template, {'email': email})
+        
+        except Exception as e:
+            print("Exception inside OAuthRoleSelectionView.get: ", e)
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.login_url)
+    
+    def post(self, request):
+        """
+        Process the selected role for OAuth users and create the user
+        """
+        try:
+            # Check if user came from OAuth flow
+            serialized_sociallogin = request.session.get('sociallogin')
+            if not serialized_sociallogin:
+                messages.error(request, 'Invalid request.')
+                return redirect(self.login_url)
+            
+            # Get the role from the form
+            role = request.POST.get('role')
+            if not role or role not in ['client', 'freelancer']:
+                messages.error(request, 'Please select a valid role.')
+                return render(request, self.role_selection_template, {
+                    'email': request.session.get('sociallogin_email')
+                })
+            
+            # Deserialize the sociallogin object
+            sociallogin = SocialLogin.deserialize(serialized_sociallogin)
+            
+            # Get email and username from social account
+            email = sociallogin.account.extra_data.get('email')
+            full_name = sociallogin.account.extra_data.get('name', '')
+            
+            # Get profile picture URL if available
+            profile_picture_url = None
+            if sociallogin.account.provider == 'google':
+                profile_picture_url = sociallogin.account.extra_data.get('picture')
+                # Get a higher resolution image by replacing the size parameter
+                if profile_picture_url and 's96-c' in profile_picture_url:
+                    profile_picture_url = profile_picture_url.replace('s96-c', 's256-c')
+            
+            # Check if user with this email already exists
+            if User.objects.filter(email=email).exists():
+                # User exists, log them in
+                user = User.objects.get(email=email)
+                # Specify the authentication backend
+                messages.success(request, 'You have successfully logged in.')
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect(self.home_url)
+            
+            # Create a username from the email (before the @)
+            username = email.split('@')[0]
+            
+            # Ensure username is unique
+            base_username = username
+            counter = 1
+            while User.objects.filter(username=username).exists():
+                username = f"{base_username}{counter}"
+                counter += 1
+            
+            # Get provider details
+            provider = sociallogin.account.provider
+            uid = sociallogin.account.uid
+            
+            # Create user manually
+            user = User.objects.create(
+                username=username,
+                email=email,
+                full_name=full_name,
+                role=role,
+                is_verified=True  # OAuth users are verified by default
+            )
+            
+            # Set random password (user will authenticate via OAuth)
+            random_password = str(uuid.uuid4())
+            user.set_password(random_password)
+            
+            # Download and save profile picture if available
+            if profile_picture_url:
+                try:
+                    # Download the image
+                    response = requests.get(profile_picture_url)
+                    if response.status_code == 200:
+                        # Create a unique filename
+                        filename = f"google_profile_{username}.jpg"
+                        
+                        # Use FileSystemStorage with the correct path
+                        fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'profile_images'))
+                        
+                        # Save the file using FileSystemStorage
+                        saved_filename = fs.save(filename, ContentFile(response.content))
+                        
+                        # Update the user's profile_image field with just the filename (not the path)
+                        user.profile_image = os.path.basename(saved_filename)
+                except Exception as e:
+                    print(f"Failed to save profile picture: {e}")
+            
+            # Save the user with any additional changes
+            user.save()
+            
+            # Create social account connection
+            SocialAccount.objects.create(
+                user=user,
+                provider=provider,
+                uid=uid,
+                extra_data=sociallogin.account.extra_data
+            )
+            
+            # Create client or freelancer profile based on role
+            if role == 'client':
+                Client.objects.create(user=user)
+            elif role == 'freelancer':
+                Freelancer.objects.create(user=user)
+            
+            # Log the user in - specify the authentication backend
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            
+            # Clean up session
+            keys_to_remove = ['sociallogin', 'sociallogin_email', 'sociallogin_provider', 'oauth_timestamp']
+            for key in keys_to_remove:
+                if key in request.session:
+                    del request.session[key]
+            
+            messages.success(request, 'You have successfully logged in.')
+            return redirect(self.home_url)
+            
+        except Exception as e:
+            print("Exception inside OAuthRoleSelectionView.post: ", e)
+            messages.error(request, 'Something went wrong. Please try again later.')
+            return redirect(self.login_url)

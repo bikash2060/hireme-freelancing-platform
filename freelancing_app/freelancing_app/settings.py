@@ -133,25 +133,26 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
-# Social account providers
+# Use our custom social account adapter
+SOCIALACCOUNT_ADAPTER = 'accounts.adapters.CustomSocialAccountAdapter'
+ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
+SOCIALACCOUNT_AUTO_SIGNUP = False
+
+# Basic allauth settings
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+
+# Google OAuth provider settings
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': ['email'],
+        'SCOPE': ['email', 'profile'],
         'AUTH_PARAMS': {'access_type': 'online'},
         'OAUTH_PKCE_ENABLED': True,
-    },
-    'github': {
-        'SCOPE': ['user', 'repo', 'read:org'],
-        'AUTH_PARAMS': {'allow_signup': 'true'},
-    },
+        'VERIFIED_EMAIL': True,
+    }
 }
-
-SOCIALACCOUNT_PIPELINE = (
-    'socialaccount.pipeline.social_auth.social_login',
-    'socialaccount.pipeline.user.get_username',
-    'socialaccount.pipeline.user.create_user',
-    'accounts.pipeline.redirect_to_role_selection', 
-)
 
 # Language and timezone settings
 LANGUAGE_CODE = 'en'
