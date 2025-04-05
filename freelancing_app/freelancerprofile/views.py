@@ -261,7 +261,7 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
             return redirect(self.freelancer_profile_url)
             
         except Exception:
-            messages.error(request, f'Something went wrong: {str(e)}')
+            messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.professional_info_url)
         
 class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
@@ -476,7 +476,7 @@ class DeleteFreelancerExperienceView(CustomLoginRequiredMixin, View):
             print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
-        
+       
 class FreelancerPasswordChangeView(CustomLoginRequiredMixin, View):
     password_update_template = 'freelancerprofile/passwordupdate.html'
     password_update_url = 'freelancer:change-password'

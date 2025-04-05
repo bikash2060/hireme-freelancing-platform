@@ -48,7 +48,6 @@ class FreelancerLanguage(models.Model):
     def __str__(self):
         return f"{self.freelancer.user.username} - {self.language.name} ({self.get_proficiency_display()})"
 
-
 class WorkExperience(models.Model):
     EMPLOYMENT_TYPE_CHOICES = [
         ('full-time', 'Full-time'),
@@ -77,3 +76,4 @@ class WorkExperience(models.Model):
     class Meta:
         db_table = 'work_experience'
         ordering = ['-start_date']
+        

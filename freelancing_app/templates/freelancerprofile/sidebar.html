@@ -4,8 +4,8 @@
 <div class="sidebar">
     <div class="menu_content">
         <ul class="menu_items">
-            <li class="item">
-                <a href="{% url 'freelancer:profile' %}" class="nav_link">
+            <li class="item"> 
+                <a href="{% url 'freelancer:profile' %}" class="nav_link {% if '/freelancer/profile/' in request.path %}active{% endif %}">
                     <span class="navlink_icon">
                         <i class="fa-solid fa-user"></i>
                     </span>
@@ -13,7 +13,7 @@
                 </a>
             </li>
             <li class="item">
-                <a href="" class="nav_link">
+                <a href="{% url 'freelancer:change-password' %}" class="nav_link {% if request.resolver_match.url_name == 'change-password' %}active{% endif %}">
                     <span class="navlink_icon">
                         <i class="fa-solid fa-key"></i>
                     </span>

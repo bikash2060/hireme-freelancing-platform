@@ -1640,12 +1640,24 @@
     background: #fff;
 }
 
-.recommended-section .poster-profile {
+.recommended-section .poster-profile,
+.recommended-section .poster-profile-icon {
     width: 42px;
     height: 42px;
-    border-radius: 50%;
     object-fit: cover;
+    border-radius: 50%;
     margin-right: 12px;
+}
+
+.recommended-section .poster-profile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    color: #666;
+    font-size: 18px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .recommended-section .poster-details {
