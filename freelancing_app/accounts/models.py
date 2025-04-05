@@ -74,7 +74,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('freelancer', 'Freelancer'),
         ('admin', 'Admin')
     ])
-    phone_number = models.CharField(max_length=15, unique=True)
+    phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)
     is_verified = models.BooleanField(default=False) 
     date_joined = models.DateTimeField(auto_now_add=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  
