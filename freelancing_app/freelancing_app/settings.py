@@ -201,29 +201,6 @@ RESERVED_USERNAMES = {
     "system", "operator", "security", "bot", "official"
 }
 
-NEPALI_CITIES = [
-    "Bhadrapur", "Bharatpur", "Biratnagar", "Damak", "Dharan", 
-    "Dhankuta", "Ilam", "Inaruwa", "Itahari", "Jhapa",
-    "Kankai", "Mechinagar", "Panchthar", "Sankhuwasabha", "Sunsari",
-    "Taplejung", "Tehrathum", "Udayapur",
-    "Bara", "Birgunj", "Dhanusa", "Gaur", "Janakpur",
-    "Jaleshwar", "Kalaiya", "Lahan", "Mahottari", "Malangwa",
-    "Parsa", "Rajbiraj", "Rautahat", "Saptari", "Sarlahi",
-    "Siraha",
-    "Banepa", "Bhaktapur", "Bidur", "Chitwan", "Dhading",
-    "Dhulikhel", "Hetauda", "Kathmandu", "Kavrepalanchok", "Lalitpur",
-    "Makwanpur", "Nuwakot", "Ramechhap", "Rasuwa", "Sindhuli",
-    "Sindhupalchok",
-    "Baglung", "Bandipur", "Besisahar", "Damauli", "Gorkha",
-    "Kaski", "Lamjung", "Manang", "Mustang", "Myagdi",
-    "Pokhara", "Putalibazar", "Syangja", "Tanahun",
-    "Butwal", "Gulariya", "Kapilvastu", "Nepalgunj", "Pyuthan",
-    "Siddharthanagar", "Tansen",
-    "Birendranagar", "Dailekh", "Dolpa", "Jajarkot", "Jumla",
-    "Kalikot", "Mugu", "Rukum", "Surkhet",
-    "Amargadhi", "Baitadi", "Bajhang", "Bajura", "Dadeldhura",
-    "Darchula", "Dhangadhi", "Doti", "Kailali", "Mahendranagar", "Tikapur"
-]
 
 skills_list = [
     # Programming Languages

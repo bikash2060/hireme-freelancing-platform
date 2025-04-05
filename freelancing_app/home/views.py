@@ -19,11 +19,15 @@ class HomeView(View):
                 
                 if user_role == 'client':
                     return redirect(self.client_dashboard_url)
-                else:
+                elif user_role == 'freelancer':
                     return redirect(self.freelancer_dashboard_url)
-                
-            freelancer_count = Freelancer.objects.count()
-        except Exception:
+                else:
+                    messages.error(request, 'Something went wrong. Please try again.')
+                    logout(request)
+                    return render(request, self.home_template)
+        
+            freelancer_count = Freelancer.objects.count() or 0
+        except Exception as e:
             messages.error(request, 'Something went wrong. Please try again.')
             logout(request)
             return render(request, self.home_template)
