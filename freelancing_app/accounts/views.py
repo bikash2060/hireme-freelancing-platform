@@ -48,6 +48,11 @@ class UserLoginView(View):
                 messages.error(request, error_message)
                 return render(request, self.login_template, {'form_data': login_data})
             
+            google_user = User.objects.filter(email=email, auth_method='google').first()
+            if google_user:
+                messages.error(request, 'This email is registered with Google. Please login with Google.')
+                return render(request, self.login_template, {'form_data': login_data})
+            
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 login(request, user)
@@ -282,6 +287,7 @@ class UserSignupView(View):
     otp_verification_url = 'account:otp_verification'
     home_url = 'home:home'
     signup_url = 'account:signup'   
+    login_url = 'account:login'
 
     def get(self, request):
         try:
@@ -316,6 +322,17 @@ class UserSignupView(View):
             if not valid:
                 messages.error(request, error_message)
                 return render(request, self.signup_template, {'form_data': signup_data})
+
+            # Check if user already exists
+            if User.objects.filter(email=email_address).exists():
+                user = User.objects.get(email=email_address)
+                # Check if registered with Google OAuth
+                if user.auth_method == 'google':
+                    messages.error(request, 'This email is registered with Google. Please login with Google.')
+                    return redirect(self.login_url)
+                else:
+                    messages.error(request, 'This email is already registered. Please use a different email.')
+                    return render(request, self.signup_template, {'form_data': signup_data})
 
             request.session['signup_data'] = signup_data
             request.session.set_expiry(timedelta(minutes=10))
@@ -483,7 +500,8 @@ class UserRoleRedirectView(View):
                 username=username,
                 password=password,
                 role=role.lower(),  
-                is_verified=True
+                is_verified=True,
+                auth_method='traditional'
             )
             
             role_models = {
@@ -534,6 +552,7 @@ class OAuthRoleSelectionView(View):
                 messages.error(request, 'Email information missing.')
                 return redirect(self.login_url)
             
+            print("User is redirected to role selection page after selecting google")
             return render(request, self.role_selection_template, {'email': email})
         
         except Exception as e:
@@ -575,15 +594,6 @@ class OAuthRoleSelectionView(View):
                 if profile_picture_url and 's96-c' in profile_picture_url:
                     profile_picture_url = profile_picture_url.replace('s96-c', 's256-c')
             
-            # Check if user with this email already exists
-            if User.objects.filter(email=email).exists():
-                # User exists, log them in
-                user = User.objects.get(email=email)
-                # Specify the authentication backend
-                messages.success(request, 'You have successfully logged in.')
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                return redirect(self.home_url)
-            
             # Create a username from the email (before the @)
             username = email.split('@')[0]
             
@@ -604,7 +614,8 @@ class OAuthRoleSelectionView(View):
                 email=email,
                 full_name=full_name,
                 role=role,
-                is_verified=True  # OAuth users are verified by default
+                is_verified=True,  # OAuth users are verified by default
+                auth_method='google'  # Set auth method to Google
             )
             
             # Set random password (user will authenticate via OAuth)

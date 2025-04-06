@@ -62,9 +62,6 @@ def validate_signup_form(email, username, password, confirm_password):
         if User.objects.filter(username=username).exists():
             return False, "Username is already taken."
         
-        if User.objects.filter(email=email).exists():
-            return False, "An account with this email already exists."
-        
         return True, None
     
     except Exception:

@@ -5,6 +5,7 @@ from django.utils import timezone
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.exceptions import ImmediateHttpResponse
 from django.contrib import messages
+from .models import User
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
@@ -18,17 +19,22 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         # Get email from the social account data
         email = sociallogin.account.extra_data.get('email')
         
-        # Check if user with this email already exists
-        if sociallogin.is_existing:
-            # User already exists - continue with normal login flow
+        # Check if user exists in our database
+        try:
+            user = User.objects.get(email=email)
+            # If user exists with traditional auth
+            if user.auth_method == 'traditional':
+                messages.error(request, 'This email is already registered with password. Please login using your password.')
+                raise ImmediateHttpResponse(redirect(reverse('account:login')))
+            
+            # If user exists with OAuth - let the normal login flow continue
             return
-        else:
+            
+        except User.DoesNotExist:
             # New user - store data in session and redirect to role selection
             request.session['sociallogin_provider'] = sociallogin.account.provider
             request.session['sociallogin_email'] = email
             request.session['sociallogin'] = sociallogin.serialize()
-            
-            # Force immediate redirect to role selection page
             raise ImmediateHttpResponse(redirect(reverse('account:oauth_role_selection')))
 
 # Add a custom account adapter to handle the connect form

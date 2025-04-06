@@ -14,5 +14,5 @@ urlpatterns = [
     path("password/reset/otp/", PasswordResetOTPVerifyView.as_view(), name="verify-otp"),
     path("password/reset/otp/resend/", ForgotPasswordResendOTPView.as_view(), name="resendotp"),
     path("password/update/", ChangePasswordView.as_view(), name="change-password"),
-    path("oauth/role-selection/", OAuthRoleSelectionView.as_view(), name="oauth_role_selection"),
+    path("oauth/role/selection/", OAuthRoleSelectionView.as_view(), name="oauth_role_selection"),
 ]

@@ -74,6 +74,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('freelancer', 'Freelancer'),
         ('admin', 'Admin')
     ])
+    auth_method = models.CharField(max_length=20, choices=[
+        ('traditional', 'Traditional'),
+        ('google', 'Google')
+    ])
     phone_number = models.CharField(max_length=15, unique=True, blank=True, null=True)
     is_verified = models.BooleanField(default=False) 
     date_joined = models.DateTimeField(auto_now_add=True)
