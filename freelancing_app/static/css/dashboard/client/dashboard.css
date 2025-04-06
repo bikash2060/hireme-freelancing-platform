@@ -1,5 +1,4 @@
-/* Client Dashboard Styles */
-/* Hero Section */
+/* Client Hero Section */
 .hero-section {
     padding: 25px 0;
     background-color: #f8f9fa;
@@ -107,65 +106,84 @@
     font-weight: 500;
 }
 
-.hero-section .stats-overview .projects-card {
-    border-left-color: #2196F3;
+/* Client-specific card styles */
+.hero-section .stats-overview .active-card {
+    border-left-color: #FF5722;
 }
 
-.hero-section .stats-overview .projects-card .stat-icon {
-    background-color: rgba(33, 150, 243, 0.1);
-    color: #2196F3;
+.hero-section .stats-overview .active-card .stat-icon {
+    background-color: rgba(255, 87, 34, 0.1);
+    color: #FF5722;
 }
 
-.hero-section .stats-overview .projects-card .stat-number {
-    color: #0D47A1;
+.hero-section .stats-overview .active-card .stat-number {
+    color: #E64A19;
 }
 
 .hero-section .stats-overview .proposals-card {
-    border-left-color: #FF9800;
+    border-left-color: #009688;
 }
 
 .hero-section .stats-overview .proposals-card .stat-icon {
-    background-color: rgba(255, 152, 0, 0.1);
-    color: #FF9800;
+    background-color: rgba(0, 150, 136, 0.1);
+    color: #009688;
 }
 
 .hero-section .stats-overview .proposals-card .stat-number {
-    color: #E65100;
+    color: #00796B;
 }
 
 .hero-section .stats-overview .completed-card {
-    border-left-color: #4CAF50;
+    border-left-color: #3F51B5;
 }
 
 .hero-section .stats-overview .completed-card .stat-icon {
-    background-color: rgba(76, 175, 80, 0.1);
-    color: #4CAF50;
+    background-color: rgba(63, 81, 181, 0.1);
+    color: #3F51B5;
 }
 
 .hero-section .stats-overview .completed-card .stat-number {
-    color: #2E7D32;
+    color: #303F9F;
 }
 
 .hero-section .stats-overview .spending-card {
-    border-left-color: #9C27B0;
+    border-left-color: #FFC107;
 }
 
 .hero-section .stats-overview .spending-card .stat-icon {
-    background-color: rgba(156, 39, 176, 0.1);
-    color: #9C27B0;
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #FFC107;
 }
 
 .hero-section .stats-overview .spending-card .stat-number {
-    color: #6A1B9A;
+    color: #FFA000;
 }
 
-/* Quick Actions Section */
+/* Animation */
+.hero-section .stats-overview .stat-card {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Client Quick Actions Section - Original Color Scheme */
 .quick-actions-section {
-   margin-top: 50px;
+    margin-top: 50px;
 }
-
-/* Quick Action Header Section */
-.quick-actions-section .section-title {
+ 
+ /* Quick Action Header Section */
+ .quick-actions-section .section-title {
     font-size: 2rem;
     color: #2c3e50;
     position: relative;
@@ -173,8 +191,8 @@
     line-height: 1;
     font-weight: 550;
 }
-
-.quick-actions-section .section-title:after {
+ 
+ .quick-actions-section .section-title:after {
     content: '';
     position: absolute;
     bottom: -10px;
@@ -185,22 +203,22 @@
     background: linear-gradient(90deg, #1E88E5, #0d47a1);
     border-radius: 2px;
 }
-
-.quick-actions-section .section-subtitle {
+ 
+ .quick-actions-section .section-subtitle {
     color: #7f8c8d;
     margin-bottom: 30px;
     font-size: 1.1rem;
 }
-
-/* Quick Actions Grid Section */
-.quick-actions-section .quick-actions-grid {
+ 
+ /* Quick Actions Grid Section */
+ .quick-actions-section .quick-actions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
     margin: 0 auto;
 }
-
-.quick-actions-section .action-card {
+ 
+ .quick-actions-section .action-card {
     background: white;
     border-radius: 10px;
     padding: 30px 25px;
@@ -209,13 +227,13 @@
     transition: all 0.3s ease;
     border-top: 4px solid #3498db;
 }
-
-.quick-actions-section .action-card:hover {
+ 
+ .quick-actions-section .action-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
-
-.quick-actions-section .action-icon {
+ 
+ .quick-actions-section .action-icon {
     width: 70px;
     height: 70px;
     background: #e3f2fd;
@@ -228,26 +246,26 @@
     font-size: 1.8rem;
     transition: all 0.3s ease;
 }
-
-.quick-actions-section .action-card:hover .action-icon {
+ 
+ .quick-actions-section .action-card:hover .action-icon {
     background: #3498db;
     color: white;
 }
-
-.quick-actions-section .action-card h3 {
+ 
+ .quick-actions-section .action-card h3 {
     font-size: 1.3rem;
     color: #2c3e50;
     margin-bottom: 15px;
 }
-
-.quick-actions-section .action-card p {
+ 
+ .quick-actions-section .action-card p {
     color: #7f8c8d;
     font-size: 0.95rem;
     line-height: 1.5;
     margin-bottom: 20px;
 }
-
-.quick-actions-section .action-btn {
+ 
+ .quick-actions-section .action-btn {
     display: inline-block;
     text-decoration: none;
     padding: 10px 25px;
@@ -257,7 +275,9 @@
     font-weight: 500;
     transition: all 0.3s ease;
 }
-
-.quick-actions-section .action-btn:hover {
+ 
+ .quick-actions-section .action-btn:hover {
     background-color: #1565C0;
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
 }
+

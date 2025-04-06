@@ -1,28 +1,25 @@
 {% load static %}
+
+<!-- Vertical Sidebar Section -->
 <div class="sidebar">
     <div class="menu_content">
         <ul class="menu_items">
-            
-            <!-- Navigation item for personal information -->
-            <li class="item">
-                <a href="{% url 'client:profile' %}" class="nav_link">
+            <li class="item"> 
+                <a href="{% url 'client:profile' %}" class="nav_link {% if '/client/profile/' in request.path %}active{% endif %}">
                     <span class="navlink_icon">
-                        <i class="bx bx-user"></i>
+                        <i class="fa-solid fa-user"></i>
                     </span>
                     <span class="navlink">My Info</span>
                 </a>
             </li>
-
-            <!-- Navigation item for changing password -->
             <li class="item">
-                <a href="{% url 'client:change-password' %}" class="nav_link">
+                <a href="{% url 'client:change-password' %}" class="nav_link {% if request.resolver_match.url_name == 'change-password' %}active{% endif %}">
                     <span class="navlink_icon">
-                        <i class="bx bx-key"></i>
+                        <i class="fa-solid fa-key"></i>
                     </span>
                     <span class="navlink">Change Password</span>
                 </a>
             </li>
-                
         </ul>
     </div>
 </div>

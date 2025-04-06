@@ -15,62 +15,54 @@
         <!-- Hero Content Section -->
         <div class="hero-content">
             <div class="welcome-message">
-                {% if user.first_name %}
-                    <h2>{{ greeting }}, {{ user.first_name }}</h2>
-                {% else %}
-                    <h2>{{ greeting }}, {{ user.username }}</h2>
-                {% endif %}
-                <p class="welcome-text">Manage your projects and find top talent</p>
+                <h2>{{ greeting }}, {{ user.username }}</h2>
+                <p class="welcome-text">Manage your projects and find talented freelancers</p>
             </div>
             <div class="hero-actions">
                 <a href="" class="post-project-btn">
-                    <i class="fas fa-plus"></i> Post New Project
+                    <i class="fas fa-plus-circle"></i> Post New Project
                 </a>
             </div>
         </div>
-        
         <!-- Hero Stats Overview Section -->
         <div class="stats-overview">
-            <div class="stat-card projects-card">
+            <div class="stat-card active-card">
                 <div class="stat-icon">
-                    <i class="fas fa-briefcase"></i>
+                    <i class="fas fa-tasks"></i>
                 </div>
                 <div class="stat-info">
                     <h4>Active Projects</h4>
-                    <p class="stat-number">3</p>
-                    <p class="stat-subtext">1 nearing deadline</p>
+                    <p class="stat-number">8</p>
+                    <p class="stat-subtext">3 in hiring phase</p>
                 </div>
             </div>
-            
             <div class="stat-card proposals-card">
                 <div class="stat-icon">
-                    <i class="fas fa-file-alt"></i>
+                    <i class="fas fa-envelope-open-text"></i>
                 </div>
                 <div class="stat-info">
                     <h4>New Proposals</h4>
-                    <p class="stat-number">12</p>
-                    <p class="stat-subtext">5 unread</p>
+                    <p class="stat-number">24</p>
+                    <p class="stat-subtext">12 unread</p>
                 </div>
             </div>           
-            
             <div class="stat-card completed-card">
                 <div class="stat-icon">
-                    <i class="fas fa-check-circle"></i>
+                    <i class="fas fa-check-double"></i>
                 </div>
                 <div class="stat-info">
                     <h4>Completed Projects</h4>
-                    <p class="stat-number">8</p>
-                    <p class="stat-subtext">4.7★ average rating</p>
+                    <p class="stat-number">32</p>
+                    <p class="stat-subtext">92% satisfaction rate</p>
                 </div>
             </div>           
-            
             <div class="stat-card spending-card">
                 <div class="stat-icon">
-                    <i class="fas fa-wallet"></i>
+                    <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Total Spending</h4>
-                    <p class="stat-number">Rs 45,000.00</p>
+                    <h4>Monthly Spending</h4>
+                    <p class="stat-number">Rs 15,800.00</p>
                     <p class="stat-subtext">+22% from last month</p>
                 </div>
             </div>
@@ -83,48 +75,45 @@
     <div class="container">
         <!-- Quick Action Header Section -->
         <h2 class="section-title">Quick Actions</h2>
-        <p class="section-subtitle">Get started with these common tasks</p>       
-        
+        <p class="section-subtitle">Manage your projects efficiently</p>       
         <!-- Quick Actions Grid Section -->
         <div class="quick-actions-grid">
             <div class="action-card">
                 <div class="action-icon">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-plus-circle"></i>
                 </div>
                 <h3>Post Project</h3>
-                <p>Create a new project and get proposals</p>
+                <p>Create a new project listing to find talented freelancers</p>
                 <a href="#" class="action-btn">Create</a>
             </div>           
-            
             <div class="action-card">
                 <div class="action-icon">
-                    <i class="fas fa-search"></i>
+                    <i class="fas fa-envelope-open-text"></i>
                 </div>
-                <h3>Find Freelancers</h3>
-                <p>Browse top talent for your needs</p>
-                <a href="#" class="action-btn">Browse</a>
+                <h3>Review Proposals</h3>
+                <p>View and evaluate freelancer proposals for your projects</p>
+                <a href="#" class="action-btn">Review</a>
             </div>            
-            
             <div class="action-card">
                 <div class="action-icon">
-                    <i class="fas fa-clipboard-list"></i>
+                    <i class="fas fa-users"></i>
                 </div>
-                <h3>My Projects</h3>
-                <p>Manage your active projects</p>
+                <h3>Manage Team</h3>
+                <p>View and communicate with your hired freelancers</p>
                 <a href="#" class="action-btn">Manage</a>
             </div>           
-            
             <div class="action-card">
                 <div class="action-icon">
-                    <i class="fas fa-file-alt"></i>
+                    <i class="fas fa-file-invoice-dollar"></i>
                 </div>
-                <h3>Proposals</h3>
-                <p>Review received proposals</p>
+                <h3>Payments</h3>
+                <p>Process payments and view transaction history</p>
                 <a href="#" class="action-btn">View</a>
             </div>
         </div>
     </div>
 </div>
+
 
 
 {% endblock %}

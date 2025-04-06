@@ -30,7 +30,7 @@ def validate_user_data(profile_image, full_name, username, phone_number, bio, re
         if len(full_name) < 3:
             return False, "Full name must be at least 3 characters long."    
         
-        if len(full_name) > 20: 
+        if len(full_name) > 30: 
             return False, "Full name must not exceed 20 characters."
         
         if full_name.isdigit():
@@ -58,7 +58,7 @@ def validate_user_data(profile_image, full_name, username, phone_number, bio, re
         if len(username) < 5:
             return False, "Username must be at least 5 characters long."
         
-        if len(username) > 15:
+        if len(username) > 30:
             return False, "Username must not exceed 15 characters."
         
         if not re.match(r'^[a-zA-Z0-9_\.]+$', username):

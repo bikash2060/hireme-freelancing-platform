@@ -1,88 +1,200 @@
 {% extends "base.html" %}
-{% load static%}
+{% load static %}
 
-{% block title %}Personal Details - HireMe{% endblock %}
+{% block title %}Update Personal Information - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
 <link rel="stylesheet" href="{% static 'css/clientprofile/editpersonalinfo.css' %}">
+<link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
 {% endblock %}
 
 {% block content %}
 {% include 'clientprofile/sidebar.html' %}
-
-<!-- Loading Screen -->
-<div id="loading-screen" style="display: none;">
-    <div class="spinner"></div>
-</div>
-
-<!-- Personal Details -->
-<div class="edit-personal-container">
-    <div class="back-button">
-        <a href="{% url 'client:profile' %}">
-            <i class="fa fa-arrow-left"></i> Back
-        </a>
-    </div>
-    <div class="personal-info-form">
-        <form action="{% url 'client:edit-personal-info' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="first-name">First Name</label>
-                <input type="text" id="first-name" name="first_name" placeholder="Enter your first name" value="{{ form_data.first_name|default:user.first_name|default:'' }}">
-            </div>
-            <div class="form-group">
-                <label for="last-name">Last Name</label>
-                <input type="text" id="last-name" name="last_name" placeholder="Enter your last name" value="{{ form_data.last_name|default:user.last_name|default:'' }}">
-            </div>
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" value="{{ user.email }}" readonly>
-            </div>
-            <div class="form-group">
-                <label for="phone-number">Phone Number</label>
-                <input type="text" id="phone-number" name="phone_number" placeholder="Enter your phone number" value="{{ form_data.phone_number|default:user.phone_number|default:'' }}">
-            </div>
-            <div class="form-group">
-                <label for="language">Languages</label>
-                <div class="form-group">
-                    <input type="text" id="language-search" name="language-search" placeholder="Search languages..." autocomplete="off">
+<!-- Edit Personal Form Section -->
+<div class="content-wrapper">
+    <div class="edit-profile-container">
+        <div class="profile-card">
+            <div class="card-header">
+                <div class="header-content">
+                    <div class="icon-circle">
+                        <i class="fas fa-user-edit profile-icon"></i>
+                    </div>
+                    <div>
+                        <h2>Edit Your Profile</h2>
+                        <p class="subtitle">Update your personal information</p>
+                    </div>
                 </div>
-                <div class="form-group" id="selected-languages">
-                </div>
-                <div class="form-group">
-                    <div id="languages-list">
-                        {% for language in available_languages %}
-                            <label class="language-item" data-language-name="{{ language }}">
-                                <input type="checkbox" 
-                                       name="languages-select" 
-                                       value="{{ language }}"
-                                       data-language-name="{{ language }}"
-                                       {% if selected_languages and language in selected_languages %}checked{% endif %}> 
-                                {{ language }}
-                            </label>
-                        {% endfor %}
-                    </div>                    
+                <div class="action-buttons">
+                    <a href="{% url 'client:profile' %}" class="back-to-profile-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Profile
+                    </a>
                 </div>
             </div>
             
-            <div class="form-group">
-                <label for="bio">Bio</label>
-                <textarea id="bio" placeholder="Tell us about yourself" name="bio">{{ form_data.bio|default:client.bio|default:"" }}</textarea>
+            <div class="card-body">
+                <form id="profile-edit-form" action="{% url 'client:edit-personal-info' %}" method="POST" enctype="multipart/form-data"
+                    data-cities-url="{% url 'client:get-cities' %}">
+                    {% csrf_token %}
+                    
+                    <div class="profile-image-section">
+                        <div class="profile-image-upload">
+                            <div class="current-image-container">
+                                <div class="current-image">
+                                    {% if user.profile_image %}
+                                        <img src="{% get_media_prefix %}profile_images/{{ user.profile_image }}" alt="Profile Picture" class="profile-img">
+                                    {% else %}
+                                        <div class="avatar-placeholder">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="image-overlay">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Change Photo</span>
+                                    </div>
+                                </div>
+                                <input type="file" id="profile_image" name="profile_image" class="file-input">
+                            </div>
+                            <div class="upload-controls">
+                                <div class="image-instructions">
+                                    <h4>Profile Photo</h4>
+                                    <p>Upload a clear, professional photo of yourself. Max 10MB.</p>
+                                    <div class="image-actions">
+                                        <label for="profile_image" class="upload-btn">
+                                            <i class="fas fa-cloud-upload-alt"></i> Upload New
+                                        </label>
+                                        {% if user.profile_image %}
+                                            <a href="{% url 'client:delete-profile-image' %}" id="remove-image" class="remove-image-btn delete-action"
+                                            data-item-type="profile image">
+                                                <i class="fas fa-trash-alt"></i> Remove
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="image-preview" id="image-preview"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-id-card"></i> Basic Information
+                            </h3>
+                            <div class="form-group">
+                                <label for="full_name">
+                                    <i class="fas fa-user"></i> Full Name
+                                </label>
+                                <input type="text" id="full_name" name="full_name" value="{{ full_name|default:user.full_name|default:'' }}" class="form-control" placeholder="Enter your full name">
+                                <div class="input-hint">This is how freelancers will see your name</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">
+                                    <i class="fas fa-at"></i> Username
+                                </label>
+                                <input type="text" id="username" name="username" value="{{ username|default:user.username|default:'' }}" class="form-control">
+                                <div class="input-hint">Your unique identifier on HireMe</div>
+                            </div>
+                        </div>
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-address-book"></i> Contact Details
+                            </h3>
+                            <div class="form-group">
+                                <label for="phone_number">
+                                    <i class="fas fa-phone"></i> Phone Number
+                                </label>
+                                <div class="phone-input-container">
+                                    <div class="country-code-display">
+                                        +977
+                                        <input type="hidden" name="country_code" value="+977">
+                                    </div>
+                                    <input type="tel" id="phone_number" name="phone_number" value="{{ phone_number|default:user.phone_number|default:'' }}" class="form-control phone-number-input" placeholder="98XXXXXXXX" pattern="[9]{1}[0-9]{9}" maxlength="10">
+                                </div>
+                                <div class="input-hint">Enter your 10-digit Nepali mobile number (starting with 98, 97, etc.)</div>
+                            </div>
+                            <div class="form-group email-group">
+                                <label for="email">
+                                    <i class="fas fa-envelope"></i> Email
+                                </label>
+                                <div class="email-input-container">
+                                    <input type="email" id="email" name="email" value="{{ user.email }}" class="form-control" placeholder="Enter your email" readonly>
+                                    <span class="email-lock-icon"><i class="fas fa-lock"></i></span>
+                                </div>
+                                <div class="input-hint">Email address cannot be modified here</div>
+                            </div>  
+                        </div>
+
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-map-marker-alt"></i> Location
+                            </h3>
+                            <div class="form-group">
+                                <label for="country">
+                                    <i class="fas fa-globe-asia"></i> Country
+                                </label>
+                                <select id="country" name="country" class="form-control country-select">
+                                    <option value="" selected disabled>Select your country</option>
+                                    {% for country in countries %}
+                                        <option value="{{ country.id }}" 
+                                            {% if current_country == country.id %}selected{% endif %}>
+                                            {{ country.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">
+                                    <i class="fas fa-city"></i> City
+                                </label>
+                                <select id="city" name="city" class="form-control city-select" data-previous-city="{{ current_city }}">
+                                    <option value="" selected disabled>Select your city</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-user-edit"></i> About You
+                            </h3>
+                            <div class="form-group">
+                                <label for="bio">
+                                    <i class="fas fa-info-circle"></i> Professional Summary
+                                </label>
+                                <textarea id="bio" name="bio" class="form-control" rows="5" placeholder="Explain your business, services, and what makes you unique...">{{ bio|default:user.bio|default:'' }}</textarea>
+                                <div class="textarea-footer">
+                                    <div class="char-counter">
+                                        <span id="char-count">0</span>/500 characters
+                                    </div>
+                                    <div class="bio-tips">
+                                        <i class="fas fa-lightbulb"></i> Tip: Keep it concise but impactful
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="{% url 'client:profile' %}" class="cancel-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="save-btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>       
+                    </div>
+                </form>
             </div>
-            <div class="form-actions">
-                <button type="submit" class="save-btn">Save Changes</button>
-                <a href="{% url 'client:profile' %}" class="cancel-btn">Cancel</a>
-            </div>
-        </form>
-        
-        
+        </div>
     </div>
 </div>
+
 {% endblock %}
 
-{% block footer %}
-{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/clientprofile/search-language.js' %}"></script>
+<script src="{% static 'js/clientprofile/profile-image-handler.js' %}"></script>
+<script src="{% static 'js/clientprofile/bio-char-limit.js' %}"></script>
+<script src="{% static 'js/clientprofile/email-cursor-lock.js' %}"></script>
+<script src="{% static 'js/clientprofile/phone-input-validation.js' %}"></script>
+<script src="{% static 'js/clientprofile/dynamic-cities-filter.js' %}"></script>
 {% endblock %}

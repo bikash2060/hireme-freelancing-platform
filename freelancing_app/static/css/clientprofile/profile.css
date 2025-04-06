@@ -1,10 +1,8 @@
-/* User Profile Style */
+/* User Profile Section */
 .user-basic-info {
     background-color: #F5F5F5;
-    width: calc(100% - 260px);
-    position: relative;
-    top: 97px;
-    left: 260px;
+    margin-left: 280px; 
+    margin-top: 100px;
 }
 
 .user-basic-info .settings-container {
@@ -14,465 +12,309 @@
     padding: 20px 40px;
 }
 
-.settings-container .title{
-    font-size: 25px;
-}
-
-/* Profile Image and Username Information Styles */
-.profile-info{
+.user-basic-info .settings-container .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    padding-bottom: 15px;
     position: relative;
 }
-.profile-info .box {
-    display: flex;
-    margin-top: 25px;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+
+.user-basic-info .settings-container .title::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 70px;
+    height: 3px;
+    background: #4070f4;
 }
 
-.profile-info .left-side{
-    display: flex;
-    align-items: center;
+/* Personal Information Section */
+.personal-info {
+    margin: 25px 0;
 }
 
-.profile-info .left-side img{
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.profile-info .left-side .details {
-    margin-left: 20px;
-}
-
-.profile-info .left-side .details .name{
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.profile-info .left-side .details .position{
-    margin-top: 5px;
-    font-size: 15px;
-    color: #919191;
-    font-weight: 450;
-}
-
-.profile-info .left-side .details .address{
-    font-size: 15px;
-    color: #a7a5a5;
-}
-
-.profile-info .right-side .edit-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.profile-info .right-side .edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.profile-info .right-side .edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.profile-info .right-side .edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-/* Personal Information Styles */
-.personal-info .box {
-    padding: 25px 20px;
-    margin-top: 25px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-}
-
-.personal-info .header{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.personal-info .header .caption i{
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.personal-info .caption{
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.personal-info .body-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-}
-
-.personal-info .body-content p {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 430;
-    color: #080808;
-}
-
-.personal-info .body-content .col-1, 
-.personal-info .body-content .col-2,
-.personal-info .body-content .col-3, 
-.personal-info .body-content .col-4, 
-.personal-info .body-content .col-5,
-.personal-info .body-content .col-6,
-.personal-info .body-content .col-7 {
-    display: flex;
-    flex-direction: column;
-}
-
-.personal-info .body-content .col-7 {
-    grid-column: span 2; 
-    display: flex;
-    flex-direction: column;
-}
-
-.personal-info .body-content .col-1 strong,
-.personal-info .body-content .col-2 strong,
-.personal-info .body-content .col-3 strong,
-.personal-info .body-content .col-4 strong,
-.personal-info .body-content .col-5 strong,
-.personal-info .body-content .col-6 strong,
-.personal-info .body-content .col-7 strong {
-    font-size: 16px;
-    font-weight: 400;
-    color: #555;
-}
-
-.personal-info .body-content .col-7 .bio-text{
-    height: auto;
-    line-height: 1.6; 
-    max-height: 6.4em; 
+.personal-info .profile-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    text-align: justify;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.personal-info .profile-card:hover {
+    /* transform: translateY(-5px); */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.personal-info .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    position: relative;
+}
+
+.personal-info .header-content {
+    display: flex;
+    align-items: center;
+}
+
+.personal-info .profile-icon {
+    font-size: 28px;
+    margin-right: 15px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.personal-info .card-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+}
+
+.personal-info .edit-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.personal-info .edit-btn i {
+    margin-right: 8px;
+    font-size: 13px;
+}
+
+.personal-info .edit-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.personal-info .card-body {
+    padding: 30px;
+}
+
+.personal-info .profile-image-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.personal-info .image-container {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.personal-info .image-container:hover {
+    transform: scale(1.05);
+}
+
+.personal-info .profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.personal-info .avatar-placeholder {
+    font-size: 40px;
+    color: #a1a8b3;
+}
+
+.personal-info .user-name h3 {
+    margin: 0 0 5px 0;
+    font-size: 26px;
+    font-weight: 600;
+    color: #2d3748;
+    line-height: 1;
+}
+
+.personal-info .username {
+    margin: 0;
+    color: #718096;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.personal-info .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.personal-info .info-item {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    background: #f8fafc;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    border: 1px solid #edf2f7;
+}
+
+.personal-info .info-item.expanded {
+    width: auto;
+    min-width: max-content;
+}
+
+.personal-info .info-item:hover {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+    transform: translateY(-3px);
+}
+
+.personal-info .info-item.full-width {
+    grid-column: 1 / span 4;
+}
+
+.personal-info .info-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #4a5568;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+}
+
+.personal-info .info-label .icon {
+    margin-right: 10px;
+    color: #667eea;
+    font-size: 16px;
+}
+
+.personal-info .info-value {
+    font-size: 16px;
+    color: #1a202c;
+    font-weight: 500;
+    word-break: break-word;
+    min-height: 24px;
+    line-height: 1.5;
+}
+
+.personal-info .email-value, .phone-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.personal-info .email-value {
+    transition: all 0.3s ease;
+    max-width: 100%;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.body-content .col-7 .read-more {
-    color: #007bff;
+.personal-info .email-value.revealed {
+    min-width: 100%;
+}
+
+.personal-info .visibility-toggle {
+    margin-left: auto; 
+    font-size: 12px;
+    color: #667eea;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(102, 126, 234, 0.1);
+    transition: all 0.2s ease;
     cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 10px;
-}
-
-.body-content .col-7 .read-more:hover {
-    text-decoration: underline;
-}
-
-.personal-info .header .edit-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
     font-weight: 500;
-    transition: all 0.3s ease; 
 }
 
-.personal-info .header .edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
+.personal-info .visibility-toggle:hover {
+    background: rgba(102, 126, 234, 0.2);
 }
 
-.personal-info .header .edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
+.personal-info .bio-value {
+    line-height: 1.6;
+    color: #4a5568;
 }
 
-.personal-info .header .edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-.toggle-btn {
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: all 0.3s ease;
-}
-
-.toggle-btn:hover {
-    background: #e0e0e0;
-    border-color: #aaa;
-}
-
-/* Address Information Styles */
-.addreess-info .box {
-    margin-top: 25px;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-}
-
-.addreess-info .header{
+.personal-info .footer-section {
     display: flex;
-    width: 100%;
     justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.addreess-info .header .caption i{
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.addreess-info .caption{
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.addreess-info .body-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
-}
-
-.addreess-info .body-content p {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 430;
-    color: #080808;
-}
-
-.addreess-info .body-content .col-1,
-.addreess-info .body-content .col-2,
-.addreess-info .body-content .col-3, 
-.addreess-info .body-content .col-4{
-    display: flex;
-    flex-direction: column;
-}
-
-.addreess-info .body-content .col-1 strong,
-.addreess-info .body-content .col-2 strong,
-.addreess-info .body-content .col-3 strong, 
-.addreess-info .body-content .col-4 strong{
-    font-size: 16px;
-    font-weight: 400;
-    color: #555;
-}
-
-.addreess-info .edit-link {
-    display: flex;
     align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
 }
 
-.addreess-info .edit-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.addreess-info .edit-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.addreess-info .edit-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-/* Company Information Styles */
-.company-info .box {
-    margin-top: 25px;
-    padding: 25px 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.company-info .header {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.company-info .header .caption i {
-    margin-right: 10px;
-    font-size: 18px;
-    padding: 10px;
-    color: #1E88E5;
-    background: #f0f0f0;
-    border-radius: 50%;
-}
-
-.company-info .caption {
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.company-info .header .add-link {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
-    color: #919191; 
-    border: 1px solid #a7a5a5;
-    padding: 10px 20px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease; 
-}
-
-.company-info .header .add-link i {
-    margin-left: 8px; 
-    font-size: 18px;
-    transition: transform 0.3s ease, color 0.3s ease; 
-}
-
-.company-info .header .add-link:hover {
-    color: #0056b3; 
-    border-color: #0056b3;
-}
-
-.company-info .header .add-link:hover i {
-    transform: translateX(5px); 
-    color: #0056b3; 
-}
-
-.company-info .body-content {
-    margin-top: 15px;
-}
-
-.company-item {
-    display: flex;
-    align-items: flex-start;
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-}
-
-.company-item:last-child {
-    border-bottom: none;
-}
-
-.company-item .company-logo {
-    width: 60px;
-    height: 60px;
-    margin-right: 15px;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #f8f8f8;
-    flex-shrink: 0;
-}
-
-.company-item .company-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.company-item .company-details {
-    flex: 1;
-}
-
-.company-details  .position {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.company-details  .company-name {
+.personal-info .member-since {
     font-size: 14px;
-    color: #666;
-    margin-bottom: 5px;
+    color: #718096;
+    display: flex;
+    align-items: center;
 }
 
-.company-details  .duration, .location {
+.personal-info .member-since i {
+    margin-right: 8px;
+    color: #a0aec0;
+}
+
+.personal-info .verified-badge {
+    color: #38a169;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: rgba(56, 161, 105, 0.1);
+    border-radius: 20px;
     font-size: 14px;
-    color: #333;
-    margin-bottom: 5px;
 }
 
-.company-item .edit-icon {
-    position: absolute;
-    right: 10px;
-    top: 20px;
-    font-size: 18px;
-    color: #666;
-    text-decoration: none;
+.personal-info .verified-badge i {
+    margin-right: 6px;
+    font-size: 16px;
+}
+
+.personal-info .location-card {
+    grid-column: span 1;
+}
+
+.personal-info .location-card .info-value {
+    padding: 8px 0;
+}
+
+.personal-info .location-detail {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    transition: background 0.3s ease;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #2d3748;
 }
 
-.company-item .edit-icon:hover {
-    color: #0056b3; 
+.personal-info .location-detail:last-child {
+    margin-bottom: 0;
 }
 
-.company-item .delete-icon {
-    position: absolute;
-    right: 10px; 
-    top: 60px;
-    font-size: 18px;
-    color: #666;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #f0f0f0;
-    transition: 0.3s ease;
-}
-
-.company-item .delete-icon:hover {
-    color: #e74c3c; 
+.personal-info .location-detail i {
+    margin-right: 10px;
+    color: #FF9800; 
+    width: 16px;
+    text-align: center;
+    font-size: 15px;
 }
