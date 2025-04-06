@@ -56,6 +56,7 @@ class MarkAllAsReadView(CustomLoginRequiredMixin, View):
             return redirect(self.home_url)  
 
 class GetUserProfileView(CustomLoginRequiredMixin, View):
+    home_template = 'home/index.html'
     freelancer_profile_url = 'freelancer:profile'
     client_profile_url = 'client:profile'
     home_url = 'home:home'
@@ -66,8 +67,12 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
             
             if user_role.lower() == 'client':
                 return redirect(self.client_profile_url)
-            else:
+            elif user_role.lower() == 'freelancer':
                 return redirect(self.freelancer_profile_url)
+            else:
+                messages.error(request, 'Something went wrong. Please try again.')
+                logout(request)
+                return render(request, self.home_template)
         
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')

@@ -15,14 +15,17 @@ class ClientDashboardView(CustomLoginRequiredMixin, View):
 
         if 0 <= current_hour < 12:
             greeting = "Good Morning"
-        elif 12 <= current_hour < 17:
+        elif 12 <= current_hour < 18:
             greeting = "Good Afternoon"
-        else:
+        elif 18 <= current_hour < 21:
             greeting = "Good Evening"
+        else:
+            greeting = "Good Night"
 
         client = Client.objects.get(user=request.user)
 
         context = {
+            'client': client,
             'greeting': greeting,
         }
         return render(request, self.rendered_template, context)

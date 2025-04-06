@@ -1,283 +1,134 @@
 {% extends "base.html" %}
 {% load static%}
+{% load humanize %}
 
-{% block title %}HireMe{% endblock %}
+{% block title %}My Dashboard - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/dashboard/clientdashboard.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard/client/dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
 <div class="hero-section">
     <div class="container">
+        <!-- Hero Content Section -->
         <div class="hero-content">
-            {% if user.first_name %}
-                <h3>{{ greeting }}, {{user.first_name}}</h3>
-            {% else %}
-                <h3>{{ greeting }}, {{user.username}}</h3>
-            {% endif %}
-            <a href="{% url 'project:add-new-project' %}" class="post-project-btn">
-                <i class="fas fa-plus"></i> Post a Project
-            </a>
+            <div class="welcome-message">
+                {% if user.first_name %}
+                    <h2>{{ greeting }}, {{ user.first_name }}</h2>
+                {% else %}
+                    <h2>{{ greeting }}, {{ user.username }}</h2>
+                {% endif %}
+                <p class="welcome-text">Manage your projects and find top talent</p>
+            </div>
+            <div class="hero-actions">
+                <a href="" class="post-project-btn">
+                    <i class="fas fa-plus"></i> Post New Project
+                </a>
+            </div>
+        </div>
+        
+        <!-- Hero Stats Overview Section -->
+        <div class="stats-overview">
+            <div class="stat-card projects-card">
+                <div class="stat-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>Active Projects</h4>
+                    <p class="stat-number">3</p>
+                    <p class="stat-subtext">1 nearing deadline</p>
+                </div>
+            </div>
+            
+            <div class="stat-card proposals-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>New Proposals</h4>
+                    <p class="stat-number">12</p>
+                    <p class="stat-subtext">5 unread</p>
+                </div>
+            </div>           
+            
+            <div class="stat-card completed-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>Completed Projects</h4>
+                    <p class="stat-number">8</p>
+                    <p class="stat-subtext">4.7★ average rating</p>
+                </div>
+            </div>           
+            
+            <div class="stat-card spending-card">
+                <div class="stat-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-info">
+                    <h4>Total Spending</h4>
+                    <p class="stat-number">Rs 45,000.00</p>
+                    <p class="stat-subtext">+22% from last month</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Quick Actions Section -->
-<div class="quick-actions">
+<div class="quick-actions-section">
     <div class="container">
-        <h2>What would you like to do?</h2>
-        <div class="action-grid">
+        <!-- Quick Action Header Section -->
+        <h2 class="section-title">Quick Actions</h2>
+        <p class="section-subtitle">Get started with these common tasks</p>       
+        
+        <!-- Quick Actions Grid Section -->
+        <div class="quick-actions-grid">
             <div class="action-card">
-                <i class="fas fa-search"></i>
-                <h3>Find Freelancers</h3>
-                <p>Browse top talents for your project</p>
-                <a href="{% url 'homes:freelancers' %}" class="btn">Explore Talents</a>
-            </div>
-            <div class="action-card">
-                <i class="fas fa-briefcase"></i>
-                <h3>Post a Project</h3>
-                <p>Get proposals from skilled professionals</p>
-                <a href="{% url 'project:add-new-project' %}" class="btn">Add New Project</a>
-            </div>
-            <div class="action-card">
-                <i class="fas fa-clipboard-list"></i>
-                <h3>My Projects</h3>
-                <p>Manage and track your ongoing projects</p>
-                <a href="#" class="btn">View Projects</a>
-            </div>
-            <div class="action-card">
-                <i class="fas fa-clipboard-check"></i>
-                <h3>Proposals</h3>
-                <p>Review and manage project proposals</p>
-                <a href="#" class="btn">Check Proposals</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Recent Projects Section -->
-{% if projects %}
-<div class="projects-section">
-    <div class="container">
-        <div class="text">
-            <h3>Recent Projects</h3>
-        </div>
-        <div class="card-grid">
-            {% for project in projects %}
-                <div class="project-card">
-                    <div class="project-image">
-                        {% if project.image %}
-                            <img src="{% get_media_prefix %}project_images/{{ project.image }}" alt="{{ project.image }}">
-                        {% else %}
-                            <img src="{% static 'images/programming.png' %}" alt="Default Project Image">
-                        {% endif %}
-                    </div>
-                    <div class="project-info">
-                        <h4>{{ project.title|capfirst }}</h4>
-                        <p class="category">{{ project.category|capfirst }}</p>
-                        <p class="deadline">Deadline: {{ project.deadline|date:"M j, Y" }}</p>
-                        <p class="budget">Budget: Rs. {{ project.budget }}</p>
-                        <p class="proposals-count">
-                            Proposals: {{ project.num_proposals }}
-                        </p>
-                        <div class="status {% if project.status == 'draft' %}status-draft{% elif project.status == 'pending' %}status-pending{% elif project.status == 'ongoing' %}status-ongoing{% else %}status-completed{% endif %}">
-                            {{ project.status|title }}
-                        </div>
-                    </div>
-                    <div class="card-buttons">
-                        <a href="" class="edit-project-btn">Manage Project</a>
-                    </div>
+                <div class="action-icon">
+                    <i class="fas fa-plus"></i>
                 </div>
-            {% endfor %}
-        </div>
-        <div class="view-all-button">
-            <a href="" class="view-all-projects-btn">View All Projects</a>
-        </div>
-    </div>
-</div>
-{% else %}
-<div class="overview">
-    <div class="container">
-        <h3>Overview</h3>
-        <div class="no-projects">
-            <i class="fas fa-briefcase"></i> 
-            <p>You've not posted any jobs yet</p>
-            <a href="{% url 'project:add-new-project' %}" class="post-project-btn">
-                <i class="fas fa-plus"></i> Post a Project
-            </a>
-        </div>
-    </div>
-</div>
-{% endif %}
-
-<!-- Recommended Freelancers Section -->
-<div class="recommended-section">
-    <div class="container">
-        <div class="text">
-            <h3>Just For You</h3>
-        </div>
-        <div class="card-grid">
-            
-            <div class="freelancer-card">
-                <div class="slider-container">
-                    <div class="slider">
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work1/work1.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work1/work2.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                    </div>
-                    <button class="prev-btn">&#10094;</button>
-                    <button class="next-btn">&#10095;</button>
-                </div>
-                <div class="freelancer-info">
-                    <div class="profile">
-                        <img src="{% static 'images/ronaldo.jpg' %}" alt="Profile Picture">
-                        <div>
-                            <h4>Cristiano Ronaldo</h4>
-                            <p>Software Engineer</p>
-                        </div>
-                    </div>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
-                    </p>
-                    <p class="skills">Skills: JavaScript, React, Python, MERN Stack</p>
-                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
-                    <p class="experience">Experience: 5+ Years</p>
-                    <div class="rating">
-                        <span>&#9733; 4.9</span>
-                        <span>(503)</span>
-                    </div>
-                </div>
-                <div class="card-buttons">
-                    <button class="view-profile-btn">View Profile</button>
-                    <button class="send-message-btn">Send Message</button>
-                </div>
-            </div>
-            
-            <div class="freelancer-card">
-                <div class="slider-container">
-                    <div class="slider">
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work2/work1.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work2/work2.jpeg' %}" alt="Work Screenshot 1">
-                        </div>
-                    </div>
-                    <button class="prev-btn">&#10094;</button>
-                    <button class="next-btn">&#10095;</button>
-                </div>
-                <div class="freelancer-info">
-                    <div class="profile">
-                        <img src="{% static 'images/messi.jpg' %}" alt="Profile Picture">
-                        <div>
-                            <h4>Lionel Messi</h4>
-                            <p>Devops Developer</p>
-                        </div>
-                    </div>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
-                    </p>
-                    <p class="skills">Skills: JavaScript, React, Python</p>
-                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
-                    <p class="experience">Experience: 5+ Years</p>
-                    <div class="rating">
-                        <span>&#9733; 4.9</span>
-                        <span>(503)</span>
-                    </div>
-                </div>
-                <div class="card-buttons">
-                    <button class="view-profile-btn">View Profile</button>
-                    <button class="send-message-btn">Send Message</button>
-                </div>
-            </div>
-
-            <div class="freelancer-card">
-                <div class="slider-container">
-                    <div class="slider">
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work3/work1.png' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work3/work2.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                    </div>
-                    <button class="prev-btn">&#10094;</button>
-                    <button class="next-btn">&#10095;</button>
-                </div>
-                <div class="freelancer-info">
-                    <div class="profile">
-                        <img src="{% static 'images/neymar.jpeg' %}" alt="Profile Picture">
-                        <div>
-                            <h4>Neymar Kafle</h4>
-                            <p>UI/UX Developer</p>
-                        </div>
-                    </div>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
-                    </p>
-                    <p class="skills">Skills: JavaScript, React, Python</p>
-                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
-                    <p class="experience">Experience: 5+ Years</p>
-                    <div class="rating">
-                        <span>&#9733; 4.9</span>
-                        <span>(503)</span>
-                    </div>
-                </div>
-                <div class="card-buttons">
-                    <button class="view-profile-btn">View Profile</button>
-                    <button class="send-message-btn">Send Message</button>
-                </div>
-            </div>
-
-            <div class="freelancer-card">
-                <div class="slider-container">
-                    <div class="slider">
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work4/work1.jpg' %}" alt="Work Screenshot 1">
-                        </div>
-                        <div class="slider-item">
-                            <img src="{% static 'images/demowork/work4/work2.png' %}" alt="Work Screenshot 1">
-                        </div>
-                    </div>
-                    <button class="prev-btn">&#10094;</button>
-                    <button class="next-btn">&#10095;</button>
-                </div>
-                <div class="freelancer-info">
-                    <div class="profile">
-                        <img src="{% static 'images/default-user-pic.png' %}" alt="Profile Picture">
-                        <div>
-                            <h4>Hasibul Islam</h4>
-                            <p>Frontend Developer</p>
-                        </div>
-                    </div>
-                    <p class="description">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore vero molestiae mollitia ipsam ea numquam at dicta soluta quas ab quae, dolores eos debitis cumque veniam harum corrupti est odit!
-                    </p>
-                    <p class="skills">Skills: JavaScript, React, Python</p>
-                    <p class="hourly-rate">Hourly Rate: $50/hr</p>
-                    <p class="experience">Experience: 5+ Years</p>
-                    <div class="rating">
-                        <span>&#9733; 4.9</span>
-                        <span>(503)</span>
-                    </div>
-                </div>
-                <div class="card-buttons">
-                    <button class="view-profile-btn">View Profile</button>
-                    <button class="send-message-btn">Send Message</button>
-                </div>
+                <h3>Post Project</h3>
+                <p>Create a new project and get proposals</p>
+                <a href="#" class="action-btn">Create</a>
             </div>           
-
+            
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Find Freelancers</h3>
+                <p>Browse top talent for your needs</p>
+                <a href="#" class="action-btn">Browse</a>
+            </div>            
+            
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3>My Projects</h3>
+                <p>Manage your active projects</p>
+                <a href="#" class="action-btn">Manage</a>
+            </div>           
+            
+            <div class="action-card">
+                <div class="action-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>Proposals</h3>
+                <p>Review received proposals</p>
+                <a href="#" class="action-btn">View</a>
+            </div>
         </div>
     </div>
 </div>
+
 
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/dashboard/freelancer-profile-slider.js' %}"></script>
+
 {% endblock %}

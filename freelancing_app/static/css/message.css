@@ -78,7 +78,7 @@
     }
 }
 
-.progress-bar {
+.alert-container .progress-bar {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -88,7 +88,7 @@
     overflow: hidden;
 }
 
-.progress {
+.alert-container .progress {
     height: 100%;
     width: 100%;
     transform: scaleX(1);
