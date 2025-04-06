@@ -6,60 +6,79 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/signup.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <!-- SignUp Form Section -->
 <div class="signup">
   <div class="signup-container">
-    <div class="signup-form">
-      <form action="{% url 'account:signup' %}" method="POST">
-        {% csrf_token %}
-        <h3>Sign Up with</h3>
-        <div class="signup-options">
-          <div class="signup-option">
-            <a href="{% provider_login_url 'google' %}">
-              <img src="{% static 'images/logo/Google.png'%}" alt="Google" />
-              <span>Google</span>
-            </a>
+    <div class="signup_wrapper">
+      <div class="signup_illustration">
+        <object type="image/svg+xml" data="{% static 'images/illustrations/signup-illustration.svg' %}" width="280" height="220">
+          <!-- Fallback if SVG not supported -->
+          <img src="{% static 'images/logo/Logo.png' %}" alt="Signup" width="100">
+        </object>
+        <h2>Create Account</h2>
+        <p>Join our community and start your journey</p>
+      </div>
+      <div class="signup-form">
+        <h3>Sign Up for HireMe</h3>
+        <form action="{% url 'account:signup' %}" method="POST">
+          {% csrf_token %}
+          <div class="signup-options">
+            <div class="signup-option">
+              <a href="{% provider_login_url 'google' %}">
+                <img src="{% static 'images/logo/Google.png'%}" alt="Google" />
+                <span>Google</span>
+              </a>
+            </div>
+            <div class="signup-option">
+              <a href="#">
+                <img src="{% static 'images/logo/Github.png'%}" alt="Github" />
+                <span>GitHub</span>
+              </a>
+            </div>
           </div>
-          <div class="signup-option">
-            <a href="#">
-              <img src="{% static 'images/logo/Github.png'%}" alt="Github" />
-              <span>GitHub</span>
-            </a>
+          <p class="signup-separator">
+            <span>or continue with email</span>
+          </p>
+          <div class="signup-input-box">
+            <label for="signup-email">Email</label>
+            <div class="input-container">
+              <i class="far fa-envelope input-icon"></i>
+              <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}" required/>
+            </div>
           </div>
-        </div>
-        <p class="signup-separator">
-          <span>or</span>
-        </p>
-        <div class="signup-input-box">
-          <label for="signup-email">Email</label>
-          <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}" required/>
-        </div>
-        <div class="signup-input-box">
-          <label for="signup-username">Username</label>
-          <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}" required/>
-        </div>
-        <div class="signup-input-box">
-          <label for="signup-password">Password</label>
-          <div class="password-container">
-            <input type="password" id="signup-password" placeholder="Enter your password" name="password" required/>
-            <i class="fa fa-eye" id="toggleSignupPassword"></i>
+          <div class="signup-input-box">
+            <label for="signup-username">Username</label>
+            <div class="input-container">
+              <i class="far fa-user input-icon"></i>
+              <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}" required/>
+            </div>
           </div>
-        </div>
-        <div class="signup-input-box">
-          <label for="signup-confirm-password">Confirm Password</label>
-          <div class="password-container">
-            <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword" required/>
-            <i class="fa fa-eye" id="toggleSignupConfirmPassword"></i>
+          <div class="signup-input-box">
+            <label for="signup-password">Password</label>
+            <div class="input-container password-container">
+              <i class="fas fa-lock input-icon"></i>
+              <input type="password" id="signup-password" placeholder="Enter your password" name="password" required/>
+              <button type="button" class="far fa-eye toggle-icon" id="toggleSignupPassword" aria-label="Toggle password visibility"></button>
+            </div>
           </div>
-        </div>
-        <button type="submit" class="signup-button">Sign Up</button>
-        <p class="signup-login-link">
-          Already have an account ? <a href="{% url 'account:login' %}">Log in</a>
-        </p>
-      </form> 
+          <div class="signup-input-box">
+            <label for="signup-confirm-password">Confirm Password</label>
+            <div class="input-container password-container">
+              <i class="fas fa-lock input-icon"></i>
+              <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword" required/>
+              <button type="button" class="far fa-eye toggle-icon" id="toggleSignupConfirmPassword" aria-label="Toggle password visibility"></button>
+            </div>
+          </div>
+          <button type="submit" class="signup-button">Create Account</button>
+          <p class="signup-login-link">
+            Already have an account? <a href="{% url 'account:login' %}">Sign in</a>
+          </p>
+        </form> 
+      </div>
     </div>
   </div>
 </div>

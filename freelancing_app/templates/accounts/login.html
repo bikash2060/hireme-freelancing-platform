@@ -6,50 +6,67 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/login.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 {% endblock %}
 
 {% block content %}
 <!-- Login Form Section -->
 <div class="login">
   <div class="container">
-    <div class="login_form">
-      <form action="{% url 'account:login' %}" method="POST">
-        {% csrf_token %}
-        <h3>Log in with</h3>
-        <div class="login_option">
-          <div class="option">
-            <a href="{% provider_login_url 'google' %}">
-              <img src="{% static 'images/logo/Google.png'%}" alt="Google" />
-              <span>Google</span>
-            </a>
+    <div class="login_wrapper">
+      <div class="login_illustration">
+        <object type="image/svg+xml" data="{% static 'images/illustrations/login-illustration.svg' %}" width="280" height="220">
+          <img src="{% static 'images/logo/Logo.png' %}" alt="Login" width="100">
+        </object>
+        <h2>Welcome Back!</h2>
+        <p>Enter your credentials to access your account</p>
+      </div>
+      
+      <div class="login_form">
+        <h3>Sign In to HireMe</h3>
+        <form action="{% url 'account:login' %}" method="POST">
+          {% csrf_token %}
+          <div class="login_option">
+            <div class="option">
+              <a href="{% provider_login_url 'google' %}">
+                <img src="{% static 'images/logo/Google.png'%}" alt="Google" />
+                <span>Google</span>
+              </a>
+            </div>
+            <div class="option">
+              <a href="#">
+                <img src="{% static 'images/logo/Github.png' %}" alt="Github" />
+                <span>GitHub</span>
+              </a>
+            </div>
           </div>
-          <div class="option">
-            <a href="#">
-              <img src="{% static 'images/logo/Github.png' %}" alt="Github" />
-              <span>GitHub</span>
-            </a>
+          <p class="separator">
+            <span>or continue with email</span>
+          </p>
+
+          <div class="input_box">
+            <label for="email">Email</label>
+            <div class="input_container">
+              <i class="far fa-envelope input_icon"></i>
+              <input type="email" id="email" name="emailaddress" placeholder="Enter your email" value="{{ form_data.email|default:'' }}">
+            </div>
           </div>
-        </div>
-        <p class="separator">
-          <span>or</span>
-        </p>
-        <div class="input_box">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="emailaddress" placeholder="Enter email address"/ value="{{ form_data.email|default:'' }}">
-        </div>
-        <div class="input_box">
-          <div class="password_title">
-            <label for="password">Password</label>
-            <a href="{% url 'account:forgotpassword' %}">Forgot Password?</a>
+          
+          <div class="input_box">
+            <div class="password_title">
+              <label for="password">Password</label>
+              <a href="{% url 'account:forgotpassword' %}" class="forgot_link">Forgot Password?</a>
+            </div>
+            <div class="input_container password_container">
+              <i class="fas fa-lock input_icon"></i>
+              <input type="password" id="password" name="password" placeholder="Enter your password" />
+              <button type="button" class="far fa-eye toggle_icon" id="togglePassword" aria-label="Toggle password visibility"></button>
+            </div>
           </div>
-          <div class="password_container">
-            <input type="password" id="password" name="password" placeholder="Enter your password" />
-            <i class="fa fa-eye" id="togglePassword"></i>
-          </div>
-        </div>
-        <button type="submit">Log In</button>
-        <p class="sign_up">Don't have an account? <a href="{% url 'account:signup' %}">Sign up</a></p>
-      </form>
+          <button type="submit">Sign In</button>
+          <p class="sign_up">Don't have an account? <a href="{% url 'account:signup' %}">Sign up</a></p>
+        </form>
+      </div>
     </div>
   </div>
 </div>

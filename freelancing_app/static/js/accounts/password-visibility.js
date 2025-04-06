@@ -1,12 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const toggleIcons = document.querySelectorAll(".fa-eye");
+  // Handle all toggle password icons
+  const toggleIcons = document.querySelectorAll(".toggle_icon, .toggle-icon");
 
   toggleIcons.forEach((icon) => {
-    icon.addEventListener("click", function () {
-      const passwordField = this.previousElementSibling;
-      const type = passwordField.type === "password" ? "text" : "password";
-      passwordField.type = type;
-      this.className = type === "password" ? "fa fa-eye" : "fa fa-eye-slash";
+    icon.addEventListener("click", function (e) {
+      e.preventDefault();
+      const passwordField = this.parentElement.querySelector('input');
+      
+      // Toggle password visibility
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        this.classList.remove("fa-eye");
+        this.classList.add("fa-eye-slash");
+      } else {
+        passwordField.type = "password";
+        this.classList.remove("fa-eye-slash");
+        this.classList.add("fa-eye");
+      }
     });
   });
 });
