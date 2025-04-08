@@ -89,7 +89,11 @@
                                     value="{% if start_date %}{{ start_date }}{% else %}{{ experience.start_date|date:'Y-m' }}{% endif %}" class="form-control">
                                     <div class="checkbox-container">
                                         <input type="checkbox" id="currently_working" name="currently_working" 
-                                        {% if currently_working == 'on' or experience.currently_working and not currently_working == 'off' %}checked{% endif %}>
+                                        {% if currently_working is not none %}
+                                                {% if currently_working %}checked{% endif %}
+                                            {% else %}
+                                                {% if experience.currently_working %}checked{% endif %}
+                                            {% endif %}>
                                         <span class="custom-checkbox"></span>
                                         <label for="currently_working">I currently work here</label>
                                     </div>

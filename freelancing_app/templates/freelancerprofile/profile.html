@@ -76,6 +76,22 @@
                                 {{ user.role|capfirst }}  
                             </div>
                         </div>
+                        <div class="info-item location-card">
+                            <div class="info-label">
+                                <i class="fas fa-map-marker-alt icon"></i>
+                                <span>Location</span>
+                            </div>
+                            <div class="info-value">
+                                <div class="location-detail">
+                                    <i class="fas fa-city"></i>
+                                    <span>{{ user.city.name|default:"Not specified" }}</span>
+                                </div>
+                                <div class="location-detail">
+                                    <i class="fas fa-globe-asia"></i>
+                                    <span>{{ user.country.name|default:"Not specified" }}</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="info-item full-width">
                             <div class="info-label">
                                 <i class="fas fa-info-circle icon"></i>
@@ -127,21 +143,54 @@
                                 <span class="rate-note">Negotiable for large projects</span>
                             </div>
                         </div>
-                        
-                        <div class="info-item location-card">
+
+                        <div class="info-item experience-card">
                             <div class="info-label">
-                                <i class="fas fa-map-marker-alt icon"></i>
-                                <span>Location</span>
+                                <i class="fas fa-clock icon"></i>
+                                <span>Years of Experience</span>
                             </div>
                             <div class="info-value">
-                                <div class="location-detail">
-                                    <i class="fas fa-city"></i>
-                                    <span>{{ user.city.name|default:"Not specified" }}</span>
-                                </div>
-                                <div class="location-detail">
-                                    <i class="fas fa-globe-asia"></i>
-                                    <span>{{ user.country|default:"Not specified" }}</span>
-                                </div>
+                                {{ freelancer.years_of_experience|default:"Not specified" }} years
+                            </div>
+                        </div>
+
+                        <div class="info-item expertise-card">
+                            <div class="info-label">
+                                <i class="fas fa-star icon"></i>
+                                <span>Expertise Level</span>
+                            </div>
+                            <div class="info-value">
+                                {{ freelancer.get_expertise_level_display|default:"Not specified" }}
+                            </div>
+                        </div>
+
+                        <div class="info-item availability-card">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-check icon"></i>
+                                <span>Availability</span>
+                            </div>
+                            <div class="info-value">
+                                {{ freelancer.get_availability_display|default:"Not specified" }}
+                            </div>
+                        </div>
+
+                        <div class="info-item duration-card">
+                            <div class="info-label">
+                                <i class="fas fa-hourglass-half icon"></i>
+                                <span>Preferred Project Duration</span>
+                            </div>
+                            <div class="info-value">
+                                {{ freelancer.get_preferred_project_duration_display|default:"Not specified" }}
+                            </div>
+                        </div>
+
+                        <div class="info-item communication-card">
+                            <div class="info-label">
+                                <i class="fas fa-comments icon"></i>
+                                <span>Communication Preference</span>
+                            </div>
+                            <div class="info-value">
+                                {{ freelancer.get_communication_preference_display|default:"Not specified" }}
                             </div>
                         </div>
                         
@@ -287,6 +336,153 @@
             </div>
         </div>
 
+        <!-- Education Information Section -->
+        <div class="education-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-graduation-cap profile-icon"></i>
+                        <h2>Education</h2>
+                    </div>
+                    <a href="{% url 'freelancer:add-education' %}" class="add-btn">
+                        <i class="fas fa-plus"></i> Add Education
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="education-list">
+                        {% for education in educations %}
+                        <div class="education-item {% if forloop.counter > 2 %}hidden-education{% endif %} {% if education.currently_studying %}current-education{% endif %}">
+                            <div class="education-actions">
+                                <a href="{% url 'freelancer:edit-education' education.id %}" class="action-btn edit-action">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="{% url 'freelancer:delete-education' education.id %}" class="action-btn delete-action"
+                                data-item-type="education">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                            <div class="education-header">
+                                <div class="institution-logo">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="education-details">
+                                    <div class="degree-wrapper">
+                                        <h3 class="degree">{{ education.degree }}</h3>
+                                    </div>
+                                    <div class="institution-name">
+                                        <i class="fas fa-university"></i>
+                                        <span>{{ education.institution }}</span>
+                                    </div>
+                                    <div class="education-duration">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>
+                                            {{ education.start_date|date:"F Y" }} - 
+                                            {% if education.currently_studying %}
+                                                Present
+                                            {% else %}
+                                                {{ education.end_date|date:"F Y" }}
+                                            {% endif %}
+                                            · {{ education.start_date|months_between:education.end_date }}
+                                        </span>
+                                    </div>
+                                    {% if education.gpa %}
+                                    <div class="education-gpa">
+                                        <i class="fas fa-star"></i>
+                                        <span>GPA: {{ education.gpa }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="no-education">
+                            <i class="fas fa-info-circle"></i>
+                            <p>No education history added yet. Add your educational background to showcase your qualifications.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if educations|length > 2 %}
+                        <div class="show-more-container">
+                            <button class="show-more-btn" data-count="{{ educations|length }}">
+                                Show all {{ educations|length }} Education
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Social & Portfolio Links Section -->
+        <div class="social-links-info">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <i class="fas fa-link profile-icon"></i>
+                        <h2>Social & Portfolio Links</h2>
+                    </div>
+                    <a href="{% url 'freelancer:edit-links' %}" class="edit-btn">
+                        <i class="fas fa-pencil-alt"></i> Edit Links
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="info-grid">
+                        <div class="info-item portfolio-card">
+                            <div class="info-label">
+                                <i class="fas fa-briefcase icon"></i>
+                                <span>Portfolio</span>
+                            </div>
+                            <div class="info-value">
+                                {% if freelancer.portfolio_link %}
+                                    <a href="{{ freelancer.portfolio_link }}" target="_blank" class="social-link">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        {{ freelancer.portfolio_url|truncatechars:30 }}
+                                    </a>
+                                {% else %}
+                                    <span class="no-link">No portfolio link added</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="info-item github-card">
+                            <div class="info-label">
+                                <i class="fab fa-github icon"></i>
+                                <span>GitHub</span>
+                            </div>
+                            <div class="info-value">
+                                {% if freelancer.github_link %}
+                                    <a href="{{ freelancer.github_link }}" target="_blank" class="social-link">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        {{ freelancer.github_link|truncatechars:30 }}
+                                    </a>
+                                {% else %}
+                                    <span class="no-link">No GitHub link added</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="info-item linkedin-card">
+                            <div class="info-label">
+                                <i class="fab fa-linkedin icon"></i>
+                                <span>LinkedIn</span>
+                            </div>
+                            <div class="info-value">
+                                {% if freelancer.linkedin_link %}
+                                    <a href="{{ freelancer.linkedin_link }}" target="_blank" class="social-link">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        {{ freelancer.linkedin_link|truncatechars:30 }}
+                                    </a>
+                                {% else %}
+                                    <span class="no-link">No LinkedIn link added</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 
@@ -298,5 +494,6 @@
 {% block js_files %}
 <script src="{% static 'js/freelancerprofile/email-visibility-toggle.js' %}"></script>
 <script src="{% static 'js/freelancerprofile/toggle-experience.js' %}"></script>
+<script src="{% static 'js/freelancerprofile/toggle-education.js' %}"></script>
 {% endblock %}
 

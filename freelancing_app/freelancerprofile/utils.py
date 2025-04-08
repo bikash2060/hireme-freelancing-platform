@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 import re
 
-def validate_user_data(profile_image, full_name, username, phone_number, bio, request=None):
+def validate_user_data(profile_image, full_name, username, phone_number, bio, city_id, country_id, request=None):
     try:
         if profile_image:
             valid_extensions = ['.png', '.jpg', '.jpeg']
@@ -83,6 +83,9 @@ def validate_user_data(profile_image, full_name, username, phone_number, bio, re
         if User.objects.filter(phone_number=phone_number).exclude(id=request.user.id if request else None).exists():
             return False, "This phone number is already registered."
         
+        if not city_id or not country_id:
+            return False, "City and country are required."
+        
         if bio:
             bio = str(bio).strip()
             if len(bio) < 10:
@@ -95,14 +98,10 @@ def validate_user_data(profile_image, full_name, username, phone_number, bio, re
     except Exception as e:
         return False, "Something went wrong. Please try again."
 
-def validate_professional_info(city_id, country_id, hourly_rate, selected_skills, language_proficiencies):
+def validate_professional_info(hourly_rate, years_of_experience, expertise_level, availability, preferred_project_duration, communication_preference, selected_skills, 
+    language_proficiencies):
+    
     try:
-        if not country_id:
-            return False, "Country is required."
-
-        if not city_id:
-            return False, "City is required."
-
         if not hourly_rate:
             return False, "Hourly rate is required."
             
@@ -116,6 +115,28 @@ def validate_professional_info(city_id, country_id, hourly_rate, selected_skills
                 return False, "Hourly rate should be a whole number."
         except ValueError:
             return False, "Please enter a valid number for hourly rate."
+        
+        if years_of_experience:
+            try:
+                years_of_experience = int(years_of_experience)
+                if years_of_experience < 0:
+                    return False, "Years of experience cannot be negative."
+                if years_of_experience > 10:
+                    return False, "Years of experience cannot exceed 50."
+            except ValueError:
+                return False, "Please enter a valid number for years of experience."
+        
+        if not expertise_level:
+            return False, "Expertise level is required."
+        
+        if not availability:
+            return False, "Availability is required."
+        
+        if not preferred_project_duration:
+            return False, "Preferred project duration is required."
+        
+        if not communication_preference:
+            return False, "Communication preference is required."
 
         if not selected_skills or len(selected_skills) == 0:
             return False, "At least one skill is required."
@@ -182,6 +203,50 @@ def validate_employment_data( company_name, job_title, employment_type, start_da
     
     return True, None
 
+def validate_education_data(institution, degree, start_date, currently_studying, end_date, gpa):
+    if not institution or institution.strip() == '':
+        return False, 'Institution name is required.'
+    
+    if not degree or degree.strip() == '':
+        return False, 'Degree is required.'
+    
+    if not start_date or start_date.strip() == '':
+        return False, 'Start date is required.'
+    
+    if not currently_studying and (not end_date or end_date.strip() == ''):
+        return False, 'End date is required if not currently studying.'
+    
+    if gpa and gpa.strip() != '':
+        try:
+            gpa_value = float(gpa)
+            if gpa_value < 0 or gpa_value > 4:
+                return False, 'GPA must be between 0 and 4.0'
+        except ValueError:
+            return False, 'Invalid GPA format. Please use numbers only (e.g., 3.5)'
+    
+    try:
+        start_date_obj = datetime.strptime(start_date, '%Y-%m')
+        
+        if start_date_obj > datetime.now():
+            return False, 'Start date cannot be in the future.'
+        
+        if not currently_studying and end_date:
+            try:
+                end_date_obj = datetime.strptime(end_date, '%Y-%m')
+                
+                if end_date_obj > datetime.now():
+                    return False, 'End date cannot be in the future.'
+                
+                if end_date_obj < start_date_obj:
+                    return False, 'End date must be after start date.'
+                    
+            except ValueError:
+                return False, 'Invalid end date format.'
+    except ValueError:
+        return False, 'Invalid start date format.'
+    
+    return True, None
+
 def validate_change_password_form(oldpassword, newpassword, confirmpassword, request=None):
     try:
         
@@ -213,3 +278,29 @@ def validate_change_password_form(oldpassword, newpassword, confirmpassword, req
         return False, "Something went wrong. Please try again."
     
     return True, None
+
+def validate_urls(portfolio_url=None, github_url=None, linkedin_url=None):
+    try:
+        url_regex = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$'
+        
+        if portfolio_url:
+            if not re.match(url_regex, portfolio_url):
+                return False, "Please enter a valid portfolio URL (e.g., https://example.com)"
+            
+        if github_url:
+            if not re.match(url_regex, github_url):
+                return False, "Please enter a valid GitHub URL (e.g., https://github.com/username)"
+            if not github_url.lower().startswith(('http://github.com/', 'https://github.com/', 'http://www.github.com/', 'https://www.github.com/')):
+                return False, "Please enter a valid GitHub URL starting with 'https://github.com/'"
+            
+        if linkedin_url:
+            if not re.match(url_regex, linkedin_url):
+                return False, "Please enter a valid LinkedIn URL (e.g., https://linkedin.com/in/username)"
+            if not linkedin_url.lower().startswith(('http://linkedin.com/', 'https://linkedin.com/', 'http://www.linkedin.com/', 'https://www.linkedin.com/')):
+                return False, "Please enter a valid LinkedIn URL starting with 'https://linkedin.com/'"
+            
+        return True, None
+    
+    except Exception as e:
+        return False, "Something went wrong. Please try again."
+

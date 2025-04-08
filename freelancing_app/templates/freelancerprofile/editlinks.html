@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Social Links - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/editlinks.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'freelancerprofile/sidebar.html' %}
+<!-- Social Links Edit Form -->
+<div class="user-links-info content-wrapper">
+    <div class="settings-container">
+        <h1 class="title">Edit Social Links</h1>
+        
+        <div class="links-edit-section">
+            <div class="profile-card">
+                <div class="card-header">
+                    <div class="header-content">
+                        <div class="icon-circle">
+                            <i class="fas fa-link profile-icon"></i>
+                        </div>
+                        <div>
+                            <h2>Social & Portfolio Links</h2>
+                            <p class="subtitle">Update your social and portfolio links</p>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="{% url 'freelancer:profile' %}" class="back-to-profile-btn">
+                            <i class="fas fa-arrow-left"></i> Back to Profile
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <form action="{% url 'freelancer:edit-links' %}" method="POST" class="links-edit-form">
+                        {% csrf_token %}
+                        
+                        <div class="info-grid links-grid">
+                            <div class="info-item portfolio-card">
+                                <div class="info-label">
+                                    <i class="fas fa-briefcase icon"></i>
+                                    <span>Portfolio URL</span>
+                                </div>
+                                <div class="info-value">
+                                    <div class="link-input-container">
+                                        <input type="url" name="portfolio_url" id="id_portfolio_url" 
+                                            class="link-input" placeholder="https://www.yourportfolio.com" 
+                                            value="{{ freelancer.portfolio_url|default:'' }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item github-card">
+                                <div class="info-label">
+                                    <i class="fab fa-github icon"></i>
+                                    <span>GitHub URL</span>
+                                </div>
+                                <div class="info-value">
+                                    <div class="link-input-container">
+                                        <input type="url" name="github_url" id="id_github_url" 
+                                            class="link-input" placeholder="https://github.com/yourusername"
+                                            value="{{ freelancer.github_url|default:'' }}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item linkedin-card">
+                                <div class="info-label">
+                                    <i class="fab fa-linkedin icon"></i>
+                                    <span>LinkedIn URL</span>
+                                </div>
+                                <div class="info-value">
+                                    <div class="link-input-container">
+                                        <input type="url" name="linkedin_url" id="id_linkedin_url" 
+                                            class="link-input" placeholder="https://www.linkedin.com/in/yourusername"
+                                            value="{{ freelancer.linkedin_url|default:'' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="update-btn">
+                                <i class="fas fa-save"></i> Save Links
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}

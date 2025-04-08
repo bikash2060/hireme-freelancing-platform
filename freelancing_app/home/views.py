@@ -1,6 +1,7 @@
 from accounts.mixins import CustomLoginRequiredMixin
 from freelancerprofile.models import Freelancer
 from django.shortcuts import render, redirect
+from clientprofile.models import Client
 from django.contrib.auth import logout
 from django.utils.timezone import now
 from django.contrib import messages
@@ -18,15 +19,30 @@ class HomeView(View):
                 user_role = request.user.role.lower()  
                 
                 if user_role == 'client':
-                    return redirect(self.client_dashboard_url)
+                    try:
+                        client = Client.objects.get(user=request.user)
+                        return redirect(self.client_dashboard_url)
+                    except Client.DoesNotExist:
+                        messages.error(request, 'No client profile found for this account.')
+                        logout(request)
+                        return render(request, self.home_template)
+                
                 elif user_role == 'freelancer':
-                    return redirect(self.freelancer_dashboard_url)
+                    try:
+                        freelancer = Freelancer.objects.get(user=request.user)
+                        return redirect(self.freelancer_dashboard_url)
+                    except Freelancer.DoesNotExist:
+                        messages.error(request, 'No freelancer profile found for this account.')
+                        logout(request)
+                        return render(request, self.home_template)
+                
                 else:
-                    messages.error(request, 'Something went wrong. Please try again.')
+                    messages.error(request, 'Invalid user role. Please try again.')
                     logout(request)
                     return render(request, self.home_template)
         
             freelancer_count = Freelancer.objects.count() or 0
+            
         except Exception as e:
             messages.error(request, 'Something went wrong. Please try again.')
             logout(request)

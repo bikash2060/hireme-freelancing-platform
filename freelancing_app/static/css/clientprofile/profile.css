@@ -3,6 +3,7 @@
     background-color: #F5F5F5;
     margin-left: 280px; 
     margin-top: 100px;
+    min-height: calc(100vh - 100px);
 }
 
 .user-basic-info .settings-container {

@@ -20,6 +20,35 @@ class Freelancer(models.Model):
         related_name='freelancer_profile'
     )
     hourly_rate = models.IntegerField(default=0)
+    years_of_experience = models.PositiveIntegerField(default=0)
+    
+    expertise_level = models.CharField(max_length=20, choices=[
+        ('entry', 'Entry Level'),
+        ('intermediate', 'Intermediate'),
+        ('expert', 'Expert')
+    ], blank=True, null=True)
+    
+    availability = models.CharField(max_length=20, choices=[
+        ('full-time', 'Full-time'),
+        ('part-time', 'Part-time'),
+        ('not-available', 'Not Available'),
+    ], blank=True, null=True)
+    
+    preferred_project_duration = models.CharField(max_length=20, choices=[
+        ('short', 'Less than 1 month'),
+        ('medium', '1-3 months'),
+        ('long', '3+ months')
+    ], blank=True, null=True)
+    
+    communication_preference = models.CharField(max_length=20, choices=[
+        ('email', 'Email'),
+        ('phone', 'Phone'),
+        ('chat', 'Chat'),
+    ], blank=True, null=True)
+    
+    portfolio_link = models.URLField(blank=True, null=True)
+    github_link = models.URLField(blank=True, null=True)
+    linkedin_link = models.URLField(blank=True, null=True)
     skills = models.ManyToManyField(Skill, blank=True) 
 
     def __str__(self):
@@ -76,4 +105,20 @@ class WorkExperience(models.Model):
     class Meta:
         db_table = 'work_experience'
         ordering = ['-start_date']
+        
+class Education(models.Model):
+    id = models.AutoField(primary_key=True)
+    institution = models.CharField(max_length=200)
+    degree = models.CharField(max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+    currently_studying = models.BooleanField(default=False)
+    gpa = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return f"{self.degree} from {self.institution}"
+    
+    class Meta:
+        db_table = 'education'
         

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Education - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/addexperience.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'freelancerprofile/sidebar.html' %}
+<!-- Add Education Form Section -->
+<div class="content-wrapper" id="add-education-form">
+    <div class="edit-profile-container">
+        <div class="profile-card">
+            <div class="card-header">
+                <div class="header-content">
+                    <div class="icon-circle">
+                        <i class="fas fa-graduation-cap profile-icon"></i>
+                    </div>
+                    <div>
+                        <h2>Edit Education</h2>
+                        <p class="subtitle">Update your academic background information</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{% url 'freelancer:profile' %}" id="close-education-form" class="back-to-profile-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Profile
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <form id="education-add-form" action="{% url 'freelancer:edit-education' education.id %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-university"></i> Institution Information
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label for="institution">
+                                    <i class="fas fa-school"></i> Institution Name
+                                </label>
+                                <input type="text" id="institution" name="institution" value="{{ institution|default:education.institution|default:'' }}" class="form-control" placeholder="e.g. Harvard University">
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-certificate"></i> Degree Details
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label for="degree">
+                                    <i class="fas fa-scroll"></i> Degree
+                                </label>
+                                <input type="text" id="degree" name="degree" value="{{ degree|default:education.degree|default:'' }}" class="form-control" placeholder="e.g. Bachelor of Computer Science">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="gpa">
+                                    <i class="fas fa-star"></i> GPA (Optional)
+                                </label>
+                                <input type="number" id="gpa" name="gpa" value="{{ gpa|default:education.gpa|default:'' }}" class="form-control" placeholder="e.g. 3.8" step="0.01" min="0" max="4">
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-calendar-alt"></i> Duration
+                            </h3>
+                            <div class="duration-grid">
+                                <div class="form-group">
+                                    <label for="start_date">
+                                        <i class="fas fa-calendar-plus"></i> Start Date
+                                    </label>
+                                    <input type="month" id="start_date" name="start_date" 
+                                        value="{% if start_date %}{{ start_date }}{% else %}{{ education.start_date|date:'Y-m' }}{% endif %}" class="form-control">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="currently_studying" name="currently_studying"
+                                            {% if currently_studying is not none %}
+                                                {% if currently_studying %}checked{% endif %}
+                                            {% else %}
+                                                {% if education.currently_studying %}checked{% endif %}
+                                            {% endif %}>
+                                        <span class="custom-checkbox"></span>
+                                        <label for="currently_studying">I currently study here</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="end_date">
+                                        <i class="fas fa-calendar-minus"></i> End Date (or Expected)
+                                    </label>
+                                    <input type="month" id="end_date" name="end_date" 
+                                    value="{% if end_date %}{{ end_date }}{% else %}{{ experience.end_date|date:'Y-m' }}{% endif %}" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="{% url 'freelancer:profile' %}" class="cancel-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <button type="submit" class="save-btn">
+                            <i class="fas fa-save"></i> Save Education
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+{% block js_files %}
+<script src="{% static 'js/freelancerprofile/toggle-enddate.js' %}"></script>
+{% endblock %}

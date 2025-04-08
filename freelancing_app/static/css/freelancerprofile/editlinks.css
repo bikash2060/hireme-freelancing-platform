@@ -1,5 +1,5 @@
 /* Main Container */
-.user-password-info {
+.user-links-info {
     background-color: #F5F5F5;
     margin-left: 280px; 
     margin-top: 100px;
@@ -7,14 +7,14 @@
     padding-bottom: 40px;
 }
 
-.user-password-info .settings-container {
+.user-links-info .settings-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 20px 40px;
 }
 
-.user-password-info .settings-container .title {
+.user-links-info .settings-container .title {
     font-size: 28px;
     font-weight: 700;
     color: #2c3e50;
@@ -22,7 +22,7 @@
     position: relative;
 }
 
-.user-password-info .settings-container .title::after {
+.user-links-info .settings-container .title::after {
     content: '';
     position: absolute;
     bottom: -1px;
@@ -32,7 +32,7 @@
     background: #4070f4;
 }
 
-.password-change-section {
+.links-edit-section {
     margin: 25px 0;
 }
 
@@ -48,32 +48,72 @@
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
-.card-header {
+/* Card header styling from the provided code */
+.content-wrapper .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px 30px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: #fff;
     position: relative;
+    overflow: hidden;
 }
 
-.header-content {
+.content-wrapper .header-content {
     display: flex;
     align-items: center;
+    gap: 15px;
+    position: relative;
+    z-index: 1;
 }
 
-.profile-icon {
-    font-size: 28px;
-    margin-right: 15px;
-    color: rgba(255, 255, 255, 0.9);
+.content-wrapper .icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.card-header h2 {
+.content-wrapper .profile-icon {
+    font-size: 24px;
+    color: white;
+}
+
+.content-wrapper .card-header h2 {
     margin: 0;
-    font-weight: 600;
-    font-size: 22px;
-    letter-spacing: 0.5px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.content-wrapper .subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.content-wrapper .action-buttons .back-to-profile-btn {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.content-wrapper .action-buttons .back-to-profile-btn:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateX(-3px);
 }
 
 .card-body {
@@ -85,7 +125,7 @@
     gap: 20px;
 }
 
-.password-grid {
+.links-grid {
     grid-template-columns: 1fr;
 }
 
@@ -107,6 +147,18 @@
     transform: translateY(-3px);
 }
 
+.portfolio-card:hover {
+    border-left: 3px solid #ff7e67;
+}
+
+.github-card:hover {
+    border-left: 3px solid #333333;
+}
+
+.linkedin-card:hover {
+    border-left: 3px solid #0077b5;
+}
+
 .info-label {
     display: flex;
     align-items: center;
@@ -122,6 +174,18 @@
     font-size: 16px;
 }
 
+.portfolio-card .info-label .icon {
+    color: #ff7e67;
+}
+
+.github-card .info-label .icon {
+    color: #333333;
+}
+
+.linkedin-card .info-label .icon {
+    color: #0077b5;
+}
+
 .info-value {
     font-size: 16px;
     color: #1a202c;
@@ -129,7 +193,7 @@
     word-break: break-word;
 }
 
-.password-input {
+.link-input {
     width: 100%;
     padding: 12px 15px;
     border: 1px solid #e2e8f0;
@@ -139,30 +203,18 @@
     background-color: #f8fafc;
 }
 
-.password-input:focus {
+.link-input:focus {
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     outline: none;
     background-color: white;
 }
 
-.password-match {
+.form-actions {
     display: flex;
-    align-items: center;
-    margin-top: 8px;
-    font-size: 13px;
-    color: #38a169;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.password-match.visible {
-    opacity: 1;
-}
-
-.password-match .match-icon {
-    margin-right: 5px;
-    font-size: 14px;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 .update-btn {
@@ -177,7 +229,6 @@
     display: inline-flex;
     align-items: center;
     transition: all 0.3s;
-    margin-top: 20px;
 }
 
 .update-btn:hover {
@@ -190,57 +241,33 @@
     margin-right: 8px;
 }
 
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
+.link-input.valid {
+    border-color: #38a169;
 }
 
+.link-input.invalid {
+    border-color: #e53e3e;
+}
 
-.password-input-container {
+.link-input-container {
     position: relative;
 }
 
-.password-input {
-    width: 100%;
-    padding: 12px 40px 12px 15px; 
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: all 0.3s;
-    background-color: #f8fafc;
-}
-
-.toggle-password {
+.link-input-container .tooltip {
     position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #718096;
-    transition: color 0.2s;
+    bottom: -25px;
+    left: 0;
+    background-color: #e53e3e;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
 }
 
-.toggle-password:hover {
-    color: #667eea;
+.link-input-container .tooltip.visible {
+    opacity: 1;
 }
 
-.google-auth-message {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.google-auth-message i {
-    font-size: 1.5rem;
-    color: #4285F4;
-}
-
-.google-auth-message p {
-    margin: 0;
-    color: #495057;
-    line-height: 1.5;
-}
