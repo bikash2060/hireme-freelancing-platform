@@ -48,7 +48,7 @@
                                     <div class="link-input-container">
                                         <input type="url" name="portfolio_url" id="id_portfolio_url" 
                                             class="link-input" placeholder="https://www.yourportfolio.com" 
-                                            value="{{ freelancer.portfolio_url|default:'' }}">
+                                            value="{{ portfolio_url|default:freelancer.portfolio_link|default:'' }}">
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                                     <div class="link-input-container">
                                         <input type="url" name="github_url" id="id_github_url" 
                                             class="link-input" placeholder="https://github.com/yourusername"
-                                            value="{{ freelancer.github_url|default:'' }}">
+                                            value="{{ github_url|default:freelancer.github_link|default:'' }}">
                                     </div>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@
                                     <div class="link-input-container">
                                         <input type="url" name="linkedin_url" id="id_linkedin_url" 
                                             class="link-input" placeholder="https://www.linkedin.com/in/yourusername"
-                                            value="{{ freelancer.linkedin_url|default:'' }}">
+                                            value="{{ linkedin_url|default:freelancer.linkedin_link|default:'' }}">
                                     </div>
                                 </div>
                             </div>

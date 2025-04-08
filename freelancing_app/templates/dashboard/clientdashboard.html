@@ -12,7 +12,6 @@
 <!-- Hero Section -->
 <div class="hero-section">
     <div class="container">
-        <!-- Hero Content Section -->
         <div class="hero-content">
             <div class="welcome-message">
                 <h2>{{ greeting }}, {{ user.username }}</h2>
@@ -24,7 +23,6 @@
                 </a>
             </div>
         </div>
-        <!-- Hero Stats Overview Section -->
         <div class="stats-overview">
             <div class="stat-card active-card">
                 <div class="stat-icon">
@@ -73,10 +71,8 @@
 <!-- Quick Actions Section -->
 <div class="quick-actions-section">
     <div class="container">
-        <!-- Quick Action Header Section -->
         <h2 class="section-title">Quick Actions</h2>
         <p class="section-subtitle">Manage your projects efficiently</p>       
-        <!-- Quick Actions Grid Section -->
         <div class="quick-actions-grid">
             <div class="action-card">
                 <div class="action-icon">
@@ -114,10 +110,105 @@
     </div>
 </div>
 
+<!-- Active Projects Section -->
+<div class="active-projects-section">
+    <div class="container">
+        <div class="projects-header">
+            <div>
+                <h2 class="section-title">Your Active Projects</h2>
+                <p class="section-subtitle">Track progress and collaborate with your team</p>
+            </div>
+            <div class="view-toggle-actions">
+                <div class="projects-filter-sort">
+                    <div class="filter-container">
+                        <select class="filter-dropdown">
+                            <option value="all">All Status</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="on-hold">On Hold</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="sort-container">
+                        <select class="sort-dropdown">
+                            <option value="date-desc">Due Date (Newest)</option>
+                            <option value="date-asc">Due Date (Oldest)</option>
+                            <option value="progress-asc">Progress (Low to High)</option>
+                            <option value="progress-desc">Progress (High to Low)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="projects-grid-view">
+            <div class="project-card in-progress">
+                <div class="project-card-header">
+                    <div class="project-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="project-meta">
+                        <h3 class="project-title">Website Redesign</h3>
+                        <span class="project-category">Development</span>
+                    </div>
+                </div>
+                
+                <div class="project-progress">
+                    <div class="progress-info">
+                        <span>Progress</span>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                
+                <div class="project-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user-tie"></i>
+                        <div>
+                            <span>Freelancer</span>
+                            <span class="detail-value">Sarah Johnson</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <span>Due Date</span>
+                            <span class="detail-value">May 15, 2023</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-rupee-sign"></i>
+                        <div>
+                            <span>Budget</span>
+                            <span class="detail-value">Rs 2,500</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-footer">
+                    <button class="btn-action message-btn">
+                        <i class="fas fa-comment-alt"></i> Message
+                    </button>
+                    <button class="btn-action primary-btn">
+                        <i class="fas fa-eye"></i> View Project
+                    </button>
+                </div>
+            </div>
 
+        </div>
+        
+        <div class="view-all-container">
+            <a href="#" class="view-all-link">
+                View All Projects <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+</div>
 
 {% endblock %}
 
 {% block js_files %}
-
+<script src="{% static 'js/dashboard/client/project-list-view.js' %}"></script>
 {% endblock %}

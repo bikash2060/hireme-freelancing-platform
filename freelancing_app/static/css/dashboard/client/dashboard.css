@@ -177,12 +177,11 @@
 .stat-card:nth-child(3) { animation-delay: 0.3s; }
 .stat-card:nth-child(4) { animation-delay: 0.4s; }
 
-/* Client Quick Actions Section - Original Color Scheme */
+/* Client Quick Actions Section */
 .quick-actions-section {
     margin-top: 50px;
 }
  
- /* Quick Action Header Section */
  .quick-actions-section .section-title {
     font-size: 2rem;
     color: #2c3e50;
@@ -210,7 +209,6 @@
     font-size: 1.1rem;
 }
  
- /* Quick Actions Grid Section */
  .quick-actions-section .quick-actions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -281,3 +279,324 @@
     box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
 }
 
+/* Active Projects Section */
+.active-projects-section{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    background-color: #f8f9fa;
+    padding: 35px 0;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.active-projects-section .projects-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.active-projects-section .section-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    position: relative;
+    margin-bottom: 10px;
+    line-height: 1;
+    font-weight: 550;
+}
+
+.active-projects-section .section-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    transform: translateX(0);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, #1E88E5, #0d47a1);
+    border-radius: 2px;
+}
+
+.active-projects-section .section-subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.active-projects-section .view-toggle-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.active-projects-section .projects-filter-sort {
+    display: flex;
+    gap: 15px;
+}
+
+.active-projects-section .filter-dropdown,
+.active-projects-section .sort-dropdown {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    font-size: 0.9rem;
+    color: #2c3e50;
+    min-width: 180px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232c3e50' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+.active-projects-section .filter-dropdown:focus,
+.active-projects-section .sort-dropdown:focus {
+    outline: none;
+    border-color: #1E88E5;
+    box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.2);
+}
+
+.active-projects-section .projects-grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.active-projects-section .project-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-top: 4px solid #1E88E5;  /* Consistent border top for all projects */
+}
+
+.active-projects-section .project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.active-projects-section .project-card.in-progress {
+    border-top-color: #1E88E5;
+}
+
+.active-projects-section .project-card.on-hold {
+    border-top-color: #FFA000;
+}
+
+.active-projects-section .project-card.completed {
+    border-top-color: #4CAF50;
+}
+
+.active-projects-section .project-card-header {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.active-projects-section .project-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1.2rem;
+    color: white;
+    background: linear-gradient(135deg, #1E88E5, #64b5f6);  /* Same icon for all projects */
+}
+
+.active-projects-section .project-meta {
+    flex: 1;
+}
+
+.active-projects-section .project-title {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+    margin-bottom: 5px;
+}
+
+.active-projects-section .project-category {
+    font-size: 0.85rem;
+    color: #1E88E5;
+    font-weight: 500;
+    background-color: rgba(30, 136, 229, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.active-projects-section .project-card.on-hold .project-category {
+    color: #FFA000;
+    background-color: rgba(255, 160, 0, 0.1);
+}
+
+.active-projects-section .project-card.completed .project-category {
+    color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.active-projects-section .project-progress {
+    padding: 15px 20px;
+}
+
+.active-projects-section .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.active-projects-section .progress-bar {
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.active-projects-section .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.active-projects-section .project-card.in-progress .progress-fill {
+    background: linear-gradient(90deg, #1E88E5, #64b5f6);
+}
+
+.active-projects-section .project-card.on-hold .progress-fill {
+    background: linear-gradient(90deg, #FFA000, #FFC107);
+}
+
+.active-projects-section .project-card.completed .progress-fill {
+    background: linear-gradient(90deg, #4CAF50, #81C784);
+}
+
+.active-projects-section .project-details {
+    padding: 15px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.active-projects-section .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.active-projects-section .detail-item i {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+.active-projects-section .detail-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.active-projects-section .detail-item span:first-child {
+    font-size: 0.75rem;
+    color: #95a5a6;
+    text-transform: uppercase;
+}
+
+.active-projects-section .detail-value {
+    font-size: 0.9rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.active-projects-section .project-footer {
+    padding: 15px 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.active-projects-section .btn-action {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.active-projects-section .message-btn {
+    background: #f5f5f5;
+    color: #2c3e50;
+}
+
+.active-projects-section .message-btn:hover {
+    background: #e0e0e0;
+}
+
+.active-projects-section .primary-btn {
+    background: #1E88E5;
+    color: white;
+}
+
+.active-projects-section .primary-btn:hover {
+    background: #1565C0;
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+}
+
+.active-projects-section .project-card.on-hold .primary-btn {
+    background: #FFA000;
+}
+
+.active-projects-section .project-card.on-hold .primary-btn:hover {
+    background: #FF8F00;
+    box-shadow: 0 4px 12px rgba(255, 160, 0, 0.3);
+}
+
+.active-projects-section .project-card.completed .primary-btn {
+    background: #4CAF50;
+}
+
+.active-projects-section .project-card.completed .primary-btn:hover {
+    background: #388E3C;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.active-projects-section .view-all-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.active-projects-section .view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 25px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.active-projects-section .view-all-link:hover {
+    background: #1E88E5;
+    color: white;
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+}
