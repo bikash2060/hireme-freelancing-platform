@@ -59,18 +59,6 @@ class HomeView(View):
         }
         return render(request, self.home_template, context)
 
-class MarkAllAsReadView(CustomLoginRequiredMixin, View):
-    home_url = 'home:home'
-    
-    def get(self, request):
-        try:
-            unread_notifications = Notification.objects.filter(user=request.user, is_read=False)
-            unread_notifications.update(is_read=True)
-            return redirect(self.home_url)  
-        except Exception:
-            messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.home_url)  
-
 class GetUserProfileView(CustomLoginRequiredMixin, View):
     home_template = 'home/index.html'
     freelancer_profile_url = 'freelancer:profile'
@@ -93,6 +81,32 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.home_url)
+
+class FreelancerListView(View):
+    freelancer_list_template = 'home/freelancerslist.html'
+    home_url = 'home:home'
+    
+    def get(self, request):
+        return render(request, self.freelancer_list_template, {})
+    
+class ProjectListView(View):
+    project_list_template = 'home/projectlist.html'
+    home_url = 'home:home'
+    
+    def get(self, request):
+        return render(request, self.project_list_template, {})
+
+class MarkAllAsReadView(CustomLoginRequiredMixin, View):
+    home_url = 'home:home'
+    
+    def get(self, request):
+        try:
+            unread_notifications = Notification.objects.filter(user=request.user, is_read=False)
+            unread_notifications.update(is_read=True)
+            return redirect(self.home_url)  
+        except Exception:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)  
 
 def handling_404(request, exception):
     error_page_template = '404.html'

@@ -6,6 +6,8 @@ from django.views import View
 from .models import *
 from .utils import *
 
+
+
 class NewProjectView(CustomLoginRequiredMixin, View):
     new_project_template = 'projects/newproject.html'
     new_project_url = 'project:new-project'

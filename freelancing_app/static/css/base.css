@@ -259,17 +259,32 @@ html[lang="ne"] body {
 }
 
 .navbar .notification-box {
-    display: none; 
+    display: none;
     position: absolute;
     top: 75px;
     right: 0;
     width: 400px;
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-    border-radius: 8px;
     padding: 15px;
     z-index: 1000;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    transform-origin: top right;
+    animation: fadeIn 0.2s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .navbar .notification-box hr{
@@ -357,13 +372,28 @@ html[lang="ne"] body {
     position: absolute;
     top: 75px;
     right: 0;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    width: 150px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    background-color: #ffffff;
+    padding: 15px;
     z-index: 1000;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    transform-origin: top right;
+    animation: fadeIn 0.2s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .navbar .language-main .language-box select {
@@ -445,11 +475,26 @@ html[lang="ne"] body {
     right: 0;
     width: 375px;
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-    border-radius: 8px;
     padding: 15px;
     z-index: 1000;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    transform-origin: top right;
+    animation: fadeIn 0.2s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .navbar .message-main .message-box .header {
@@ -632,7 +677,7 @@ html[lang="ne"] body {
 .navbar .profile-main .profile-dropdown {
     display: none;
     position: absolute;
-    top: 75px;
+    top: 82px;
     right: 0;
     width: 320px;
     background-color: #fff;
