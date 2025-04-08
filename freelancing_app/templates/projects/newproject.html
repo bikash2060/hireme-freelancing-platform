@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}New Project - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/projects/addproject.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="edit-profile-container">
+        <div class="profile-card">
+            <div class="card-header">
+                <div class="header-content">
+                    <div class="icon-circle">
+                        <i class="fas fa-project-diagram profile-icon"></i>
+                    </div>
+                    <div>
+                        <h2>Post a New Project</h2>
+                        <p class="subtitle">Provide details about your project to find the right freelancers</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{% url 'home:home' %}" id="close-experience-form" class="back-to-profile-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <form id="project-form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-info-circle"></i> Basic Information
+                            </h3>
+                            <div class="form-group">
+                                <label for="title">
+                                    <i class="fas fa-heading"></i> Project Title
+                                </label>
+                                <input type="text" id="title" name="title" class="form-control" value="{{ title }}" 
+                                    placeholder="e.g. Build a responsive website">
+                                <div class="input-hint">Clear, descriptive titles attract better proposals</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="category">
+                                    <i class="fas fa-folder"></i> Project Category
+                                </label>
+                                <select id="category" name="category" class="form-control">
+                                    <option value="" selected disabled>Select a category</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category.id == category_id %}selected{% endif %}>{{ category.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="input-hint">Select the most relevant category for your project</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-chart-line"></i> Requirements
+                            </h3>
+                            <div class="form-group">
+                                <label for="experience_level">
+                                    <i class="fas fa-user-tie"></i> Experience Level Needed
+                                </label>
+                                <select id="experience_level" name="experience_level" class="form-control" >
+                                    <option value="" selected disabled>Select experience level</option>
+                                    <option value="entry" {% if experience_level == 'entry' %}selected{% endif %}>Entry Level</option>
+                                    <option value="intermediate" {% if experience_level == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                                    <option value="expert" {% if experience_level == 'expert' %}selected{% endif %}>Expert</option>
+                                </select>
+                                <div class="input-hint">Select the expertise level required</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="estimated_duration">
+                                    <i class="fas fa-calendar-alt"></i> Estimated Duration (weeks)
+                                </label>
+                                <input type="number" id="estimated_duration" name="estimated_duration" 
+                                    class="form-control" min="1" max="104" value="{{ estimated_duration }}" >
+                                <div class="input-hint">How long do you expect this project to take?</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-money-bill-wave"></i> Budget
+                            </h3>
+                            <div class="form-group">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="is_price_range" name="is_price_range" {% if is_price_range %}checked{% endif %}>
+                                    <span class="custom-checkbox"></span>   
+                                    <label for="is_price_range">This project has a budget range</label>
+                                </div>
+                                
+                                <div id="single-price-fields">
+                                    <label for="fixed_budget">
+                                        <i class="fas fa-rupee-sign"></i> Fixed Budget (NPR)
+                                    </label>
+                                    <div class="input-with-symbol">
+                                        <span class="input-symbol">Rs</span>
+                                        <input type="number" id="fixed_budget" name="fixed_budget" 
+                                            class="form-control" min="1000" value="{{ fixed_budget }}">
+                                    </div>
+                                    <div class="input-hint">Total amount you're willing to pay for this project</div>
+                                </div>
+                                
+                                <div id="range-price-fields" style="display: none;">
+                                    <div class="duration-grid">
+                                        <div>
+                                            <label for="budget_min">
+                                                <i class="fas fa-rupee-sign"></i> Minimum Budget (NPR)
+                                            </label>
+                                            <div class="input-with-symbol">
+                                                <span class="input-symbol">Rs</span>
+                                                <input type="number" id="budget_min" name="budget_min" 
+                                                    class="form-control" min="1000" value="{{ budget_min }}">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="budget_max">
+                                                <i class="fas fa-rupee-sign"></i> Maximum Budget (NPR)
+                                            </label>
+                                            <div class="input-with-symbol">
+                                                <span class="input-symbol">Rs</span>
+                                                <input type="number" id="budget_max" name="budget_max" 
+                                                    class="form-control" min="2000" value="{{ budget_max }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-hint">Range of fixed prices you're willing to pay</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-align-left"></i> Project Description
+                            </h3>
+                            <div class="form-group">
+                                <label for="description">
+                                    <i class="fas fa-pen"></i> Detailed Description
+                                </label>
+                                <textarea id="description" name="description" class="form-control" 
+                                    rows="6" maxlength="500">{{ description }}</textarea>
+                                <div class="textarea-footer">
+                                    <div class="char-counter">
+                                        <span id="desc-char-count">0</span>/500 characters
+                                    </div>
+                                    <div class="bio-tips">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Tip: Be specific about requirements, deliverables, and timelines</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-code"></i> Required Skills
+                            </h3>
+                            <div class="form-group">
+                                <label for="skills_search">
+                                    <i class="fas fa-search"></i> Search Skills
+                                </label>
+                                <input type="text" id="skills_search" class="form-control" placeholder="Search skills...">
+                                
+                                <div class="skills-checkbox-container" id="skills-options">
+                                    {% for skill in skills %}
+                                    <div class="skill-option">
+                                        <input type="checkbox" 
+                                            id="skill_{{ skill.id }}" 
+                                            name="skills_required" 
+                                            value="{{ skill.id }}"
+                                            {% if skill.id in selected_skills %}checked{% endif %}>
+                                        <span class="custom-checkbox"></span>
+                                        <label for="skill_{{ skill.id }}">{{ skill.name }}</label>
+                                    </div>
+                                    {% empty %}
+                                    <div class="no-skills-available">No skills available</div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="selected-skills-container" id="selected-skills">
+                                    <h4>Selected Skills:</h4>
+                                    <div class="selected-skills-list"></div>
+                                </div>
+                                
+                                <div class="tags-hint">Add relevant skills to help us match you with qualified freelancers</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width attachment-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-paperclip"></i> Attachments (Optional)
+                            </h3>
+                            <div class="form-group">
+                                <div class="file-upload-container">
+                                    <label for="attachment" class="file-upload-label">
+                                        <div class="upload-area">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <h4>Drag & drop files here or click to browse</h4>
+                                            <p class="file-types">Supports: PDF, DOC, JPG, PNG (Max 5MB each)</p>
+                                        </div>
+                                        <input type="file" id="attachment" name="attachment[]" class="file-upload-input" multiple
+                                            {% if attachments %}value="{{ attachments }}"{% endif %}>
+                                    </label>
+                                    
+                                    <div class="file-preview-container" id="file-preview">
+                                        
+                                    </div>
+                                    
+                                    <div class="upload-status">
+                                        <div class="progress-bar" id="upload-progress" style="display: none;">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                        <span class="status-text" id="status-text"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" name="status" value="draft" class="save-btn draft-btn">
+                            <i class="fas fa-save"></i> Save Draft
+                        </button>
+                        <button type="submit" name="status" value="posted" class="save-btn">
+                            <i class="fas fa-paper-plane"></i> Post Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/projects/addproject.js' %}"></script>
+<script src="{% static 'js/projects/dynamic-skills-filter.js' %}"></script>
+{% endblock %}

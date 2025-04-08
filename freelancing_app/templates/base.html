@@ -280,14 +280,14 @@
                             <i class="fa-solid fa-bell"></i>
                             <span>Notifications</span>
                         </a>
-                        <a href="#" class="menu-item">
+                        {% comment %} <a href="#" class="menu-item">
                             <i class="fa-solid fa-moon"></i>
                             <span>Dark Mode</span>
                             <label class="toggle-switch">
                                 <input type="checkbox">
                                 <span class="slider"></span>
                             </label>
-                        </a>
+                        </a> {% endcomment %}
                     </nav>
                     
                     <div class="dropdown-divider"></div>
@@ -489,5 +489,6 @@
 <script src="{% static 'js/common/form-handler.js' %}"></script>
 <script src="{% static 'js/common/mobile-menu.js' %}" defer></script>
 <script src="{% static 'js/common/confirmation-modal.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </body>
 </html>
