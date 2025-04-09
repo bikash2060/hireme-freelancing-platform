@@ -31,6 +31,7 @@ class ChatListView(CustomLoginRequiredMixin, View):
                 },
                 'unread_count': room.messages.filter(read=False).exclude(sender=request.user).count(),
             })
+        print(chats)
         return JsonResponse({'chats': chats})
 
 class ChatMessagesView(CustomLoginRequiredMixin, View):
