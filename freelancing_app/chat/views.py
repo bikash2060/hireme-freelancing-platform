@@ -1,10 +1,9 @@
-from django.views import View
-from django.http import JsonResponse
+from accounts.mixins import CustomLoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-from .models import ChatRoom, ChatMessage
-from accounts.mixins import CustomLoginRequiredMixin
-import json
+from django.http import JsonResponse
+from django.views import View
+from .models import ChatRoom
 
 User = get_user_model()
 
