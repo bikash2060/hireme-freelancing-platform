@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "clientprofile",
     "freelancerprofile",
     "projects",
+    "channels",
+    "chat",
 ]
 
 # Middleware stack for request/response processing
@@ -87,6 +89,15 @@ TEMPLATES = [
 
 # WSGI application entry point for the project
 WSGI_APPLICATION = "freelancing_app.wsgi.application"
+
+ASGI_APPLICATION = "freelancing_app.asgi.application"
+
+# Channel layers configuration for WebSocket support
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 # Database configuration for MySQL backend
 DATABASES = {

@@ -169,66 +169,7 @@
                             </div>
                             <hr>
                             <div class="chat-list">
-                                <div class="chat-row">
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                            <span class="time">24h</span>
-                                        </div>
-                                    </div>
-                                </div>  
-                                <div class="chat-row">
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                            <span class="time">24h</span>
-                                        </div>
-                                    </div>
-                                </div>  
-                                <div class="chat-row">
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                            <span class="time">24h</span>
-                                        </div>
-                                    </div>
-                                </div>  
-                                <div class="chat-row">
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                            <span class="time">24h</span>
-                                        </div>
-                                    </div>
-                                </div>  
-                                <div class="chat-row">
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                            <span class="time">24h</span>
-                                        </div>
-                                    </div>
-                                </div>  
-                                <div class="chat-row">
-                                    <i class="fa-regular fa-user user-icon"></i>
-                                    <div class="chat-details">
-                                        <p class="chat-name">Bikash Bhattarai</p>
-                                        <div class="chat-meta">
-                                            <span class="message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis sunt sequi quam ex ullam. Hic dicta totam quo natus similique mollitia optio fugit, quidem quis expedita porro dolorum praesentium aperiam.</span>
-                                            <span class="time">24h</span>
-                                        </div>
-                                    </div>
-                                </div>  
+                                <!-- Chat list will be populated dynamically by JavaScript -->
                             </div>
                         </div>
                     </div>
@@ -323,10 +264,8 @@
     <div class="main-box">
         <div class="header-content">
             <div class="user-info">
-                <!-- <i class="fa-regular fa-user"></i> -->
-                <img src="{% static 'images/ronaldo.jpg' %} " alt="user-profile" class="profile-img">
+                <img src="}" alt="user-profile" class="profile-img" style="display: none;">
                 <span class="user-name">Cristiano Ronaldo</span>
-                
             </div>
             <div class="header-actions">
                 <button id="minimize-chat" class="minimize-btn-icon"><i class="fa-solid fa-minus"></i></button>
@@ -335,47 +274,13 @@
         </div>
         <div class="text-message">
             <div class="messages">
-                <div class="message sent">
-                    <div class="message-content">Hello, how can I assist you today?</div>
-                    <span class="message-time">12:30 PM</span>
-                </div>
-                <div class="message received">
-                    <div class="message-content">Hi! I need help with my project proposal. I'm having trouble structuring it.</div>
-                    <span class="message-time">12:31 PM</span>
-                </div>
-                <div class="message sent">
-                    <div class="message-content">Sure, I can help with that. What is the project about? Maybe I can suggest a structure for it.</div>
-                    <span class="message-time">12:32 PM</span>
-                </div>
-                <div class="message received">
-                    <div class="message-content">It's a web development project. I want to create a platform for local businesses to connect with freelancers.</div>
-                    <span class="message-time">12:33 PM</span>
-                </div>
-                <div class="message sent">
-                    <div class="message-content">That sounds interesting! A good structure could be an introduction, project goals, features, timeline, and budget. What do you think?</div>
-                    <span class="message-time">12:34 PM</span>
-                </div>
-                <div class="message received">
-                    <div class="message-content">I like that structure. I'll start with the introduction and goals first. Thanks for the suggestion!</div>
-                    <span class="message-time">12:35 PM</span>
-                </div>
-                <div class="message sent">
-                    <div class="message-content">You're welcome! Feel free to ask if you need help with anything else. Good luck with your proposal!</div>
-                    <span class="message-time">12:36 PM</span>
-                </div>
-                
+                <!-- Messages will be dynamically added here -->
             </div>
-        
             <div class="message-input">
-                <label for="file-upload" class="fa-solid fa-paperclip attach-icon"></label>
-                <input type="file" id="file-upload" class="file-input" />
-                <textarea placeholder="Type a message" id="message-input"></textarea>
-                <button id="send-message" class="send-btn">
-                    <i class="fa-solid fa-paper-plane send-icon"></i>
-                </button>
-            </div>            
-        </div>       
-        
+                <textarea id="message-input" placeholder="Type a message..." rows="1"></textarea>
+                <button id="send-message"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
     </div>
 </div> 
 {% endif %}
@@ -490,5 +395,6 @@
 <script src="{% static 'js/common/mobile-menu.js' %}" defer></script>
 <script src="{% static 'js/common/confirmation-modal.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="{% static 'js/common/chat.js' %}"></script>
 </body>
 </html>
