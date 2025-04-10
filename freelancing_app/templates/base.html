@@ -160,7 +160,7 @@
                 <div class="message-main">
                     <div class="language-selector">
                         <div class="icon" id="messenger-icon">
-                            <i class="fa-brands fa-facebook-messenger"><span>2</span></i>
+                            <i class="fa-brands fa-facebook-messenger"><span style="display: none;"></span></i>
                         </div>
                         <div class="message-box" id="message-box">
                             <div class="header">
@@ -173,96 +173,14 @@
                             
                             <div class="message-filter-tabs">
                                 <div class="message-filter-tab active">
-                                    All Messages <span class="count">24</span>
+                                    All Messages <span class="count">0</span>
                                 </div>
                                 <div class="message-filter-tab unread">
-                                    Unread Messages <span class="count">8</span>
+                                    Unread Messages <span class="count">0</span>
                                 </div>
                             </div>
                             <div class="chat-list">
-                                <div class="chat-row unread">
-                                    <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="User" />
-                                    <div class="chat-details">
-                                        <div class="chat-name">
-                                            Sarah Johnson
-                                            <span class="status-indicator"></span>
-                                        </div>
-                                        <div class="chat-meta">
-                                            <div class="message">Can we meet to discuss the project tomorrow?</div>
-                                            <div class="time">12:45 PM</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="chat-row">
-                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" />
-                                    <div class="chat-details">
-                                        <div class="chat-name">
-                                            Michael Chen
-                                        </div>
-                                        <div class="chat-meta">
-                                            <div class="message">Thanks for sending the files! I'll review them.</div>
-                                            <div class="time">10:22 AM</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="chat-row">
-                                    <div class="user-icon">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="chat-details">
-                                        <div class="chat-name">
-                                            Alex Rodriguez
-                                        </div>
-                                        <div class="chat-meta">
-                                            <div class="message">Let me check with the team and get back to you</div>
-                                            <div class="time">Yesterday</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="chat-row unread">
-                                    <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="User" />
-                                    <div class="chat-details">
-                                        <div class="chat-name">
-                                            Jessica Williams
-                                            <span class="status-indicator"></span>
-                                        </div>
-                                        <div class="chat-meta">
-                                            <div class="message">I've shared the presentation with everyone</div>
-                                            <div class="time">Yesterday</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="chat-row">
-                                    <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="User" />
-                                    <div class="chat-details">
-                                        <div class="chat-name">
-                                            David Thompson
-                                        </div>
-                                        <div class="chat-meta">
-                                            <div class="message">Great job on the latest design update!</div>
-                                            <div class="time">Apr 8</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="chat-row unread">
-                                    <div class="user-icon">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="chat-details">
-                                        <div class="chat-name">
-                                            Emily Parker
-                                        </div>
-                                        <div class="chat-meta">
-                                            <div class="message">Can you share the analytics report with me?</div>
-                                            <div class="time">Apr 7</div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- Chat list will be loaded dynamically via JavaScript -->
                             </div>
                         </div>
                     </div>
@@ -314,14 +232,6 @@
                             <i class="fa-solid fa-bell"></i>
                             <span>Notifications</span>
                         </a>
-                        {% comment %} <a href="#" class="menu-item">
-                            <i class="fa-solid fa-moon"></i>
-                            <span>Dark Mode</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
-                        </a> {% endcomment %}
                     </nav>
                     
                     <div class="dropdown-divider"></div>
@@ -357,15 +267,13 @@
         <div class="chat-header">
             <div class="user-details">
                 <div class="avatar">
-                    <div class="initials">
-                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="User" />
-                    </div>
+                    <img src="" alt="User">
                 </div>
                 <div class="user-info">
-                    <div class="user-name">Cristiano Ronaldo</div>
+                    <div class="user-name"></div>
                     <div class="status">
                         <span class="status-indicator"></span>
-                        <span>Online</span>
+                        <span class="status-text">Online</span>
                     </div>
                 </div>
             </div>
@@ -379,25 +287,11 @@
             </div>
         </div>
         <div class="messages-container" id="messages">
-            <div class="message received">
-                <div class="message-content">Hi there! How can I help you today?</div>
-                <div class="message-meta">10:30 AM</div>
-            </div>
-            <div class="message sent">
-                <div class="message-content">Hello! I wanted to ask about the latest training schedule.</div>
-                <div class="message-meta">10:32 AM</div>
-            </div>
-            <div class="message received">
-                <div class="message-content">Sure! I've updated the training schedule for this week. We have intense sessions on Monday, Wednesday and Friday, with recovery sessions on Tuesday and Thursday.</div>
-                <div class="message-meta">10:33 AM</div>
-            </div>
+            <!-- Messages will be loaded dynamically -->
         </div>
         <div class="input-container">
             <div class="input-wrapper">
                 <textarea id="message-text" placeholder="Type a message..." rows="1"></textarea>
-                <button class="attachment-btn">
-                    <i class="fas fa-paperclip"></i>
-                </button>
             </div>
             <button class="send-btn" id="send-btn">
                 <i class="fas fa-paper-plane"></i>
@@ -516,6 +410,6 @@
 <script src="{% static 'js/common/mobile-menu.js' %}" defer></script>
 <script src="{% static 'js/common/confirmation-modal.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-{% comment %} <script src="{% static 'js/common/chat.js' %}"></script> {% endcomment %}
+<script src="{% static 'js/common/chat.js' %}"></script>
 </body>
 </html>

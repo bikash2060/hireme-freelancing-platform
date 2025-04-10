@@ -622,7 +622,6 @@ html[lang="ne"] body {
 .navbar .message-main .chat-list {
     overflow-y: auto;
     max-height: 350px; 
-    padding: 12px 10px;
     border-radius: 8px;
     background-color: #ffffff;
 }
@@ -630,7 +629,7 @@ html[lang="ne"] body {
 .navbar .message-main .chat-list .chat-row {
     display: flex;
     align-items: center;
-    padding: 12px 14px;
+    padding: 12px 6px;
     margin-bottom: 8px;
     cursor: pointer;
     border-radius: 12px;
@@ -663,9 +662,6 @@ html[lang="ne"] body {
     font-size: 18px;
     color: #4a5568;
     text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 48px; 
     height: 48px; 
     border-radius: 50%;
@@ -1059,7 +1055,7 @@ html[lang="ne"] body {
 .chat-container {
     display: none;
     position: fixed;
-    bottom: 24px;
+    bottom: 5px;
     right: 24px;
     width: 380px;
     height: 520px;
@@ -1069,7 +1065,12 @@ html[lang="ne"] body {
     flex-direction: column;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    z-index: 1000;
+    z-index: 100;
+}
+
+/* Add a new class for when the chat should be visible */
+.chat-container.visible {
+    display: flex;
 }
 
 .chat-container.minimized {
@@ -1210,14 +1211,14 @@ html[lang="ne"] body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-.chat-container .message.received {
+.chat-container .message.sent {
     align-self: flex-start;
     background-color: #f0f2f5;
     border-bottom-left-radius: 4px;
     color: #333;
 }
 
-.chat-container .message.sent {
+.chat-container .message.received {
     align-self: flex-end;
     background-color: #1a73e8;
     color: white;
@@ -1237,7 +1238,7 @@ html[lang="ne"] body {
     opacity: 0.8;
 }
 
-.chat-container .message.received .message-meta {
+.chat-container .message.sent .message-meta {
     color: #666;
 }
 
@@ -1276,24 +1277,6 @@ html[lang="ne"] body {
     font-size: 14px;
     line-height: 1.5;
     outline: none;
-}
-
-.chat-container .attachment-btn {
-    background: transparent;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: all 0.2s ease;
-}
-
-.chat-container .attachment-btn:hover {
-    color: #1a73e8;
-    background-color: rgba(26, 115, 232, 0.1);
 }
 
 .chat-container .send-btn {
@@ -1897,4 +1880,22 @@ footer .bottom-details .bottom_text {
     .navbar .profile-main .user-box .logout a {
         font-size: 14px;
     }
+}
+
+/* Status indicator styling for online users */
+.navbar .user-icon-container {
+    position: relative;
+    padding-left: 10px;
+}
+
+.navbar .user-icon-container .status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #2ecc71;
+    border: 2px solid #ffffff;
+    z-index: 2;
 }

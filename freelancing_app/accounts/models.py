@@ -85,6 +85,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     bio = models.TextField(blank=True, null=True)  
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
+    last_activity = models.DateTimeField(null=True, blank=True)
     
     last_login = None
     is_staff = models.BooleanField(default=False)  
@@ -97,6 +98,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+    @property
+    def is_online(self):
+        if not self.last_activity:
+            return False
+        from django.utils import timezone
+        return (timezone.now() - self.last_activity).seconds < 300 
 
     class Meta:
         db_table = "user"

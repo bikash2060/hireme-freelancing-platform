@@ -9,19 +9,29 @@ User = get_user_model()
 
 class ChatListView(CustomLoginRequiredMixin, View):
     def get(self, request):
+        # Get existing chat rooms
         chat_rooms = request.user.chat_rooms.all()
-        chats = []
+        existing_chats = []
+        
         for room in chat_rooms:
             other_user = room.participants.exclude(id=request.user.id).first()
             last_message = room.messages.last()
             profile_image = f"/media/profile_images/{other_user.profile_image}" if other_user.profile_image else None
-            chats.append({
+            
+            # Check if user is online (has been active in the last 5 minutes)
+            is_online = False
+            if hasattr(other_user, 'last_activity'):
+                from django.utils import timezone
+                is_online = other_user.last_activity and (timezone.now() - other_user.last_activity).seconds < 300
+            
+            existing_chats.append({
                 'room_name': room.name,
                 'other_user': {
                     'id': other_user.id,
                     'username': other_user.username,
                     'full_name': other_user.full_name or other_user.username,
                     'profile_image': profile_image,
+                    'is_online': is_online
                 },
                 'last_message': {
                     'content': last_message.content if last_message else None,
@@ -29,9 +39,41 @@ class ChatListView(CustomLoginRequiredMixin, View):
                     'sender': last_message.sender.username if last_message else None,
                 },
                 'unread_count': room.messages.filter(read=False).exclude(sender=request.user).count(),
+                'is_existing': True
             })
-        print(chats)
-        return JsonResponse({'chats': chats})
+        
+        # Get all other users who don't have chats yet
+        existing_user_ids = [chat['other_user']['id'] for chat in existing_chats]
+        other_users = User.objects.exclude(id=request.user.id).exclude(id__in=existing_user_ids).exclude(is_superuser=True)
+        
+        potential_chats = []
+        for user in other_users:
+            profile_image = f"/media/profile_images/{user.profile_image}" if user.profile_image else None
+            
+            # Check if user is online (has been active in the last 5 minutes)
+            is_online = False
+            if hasattr(user, 'last_activity'):
+                from django.utils import timezone
+                is_online = user.last_activity and (timezone.now() - user.last_activity).seconds < 300
+            
+            potential_chats.append({
+                'room_name': None,  # No room exists yet
+                'other_user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'full_name': user.full_name or user.username,
+                    'profile_image': profile_image,
+                    'is_online': is_online
+                },
+                'last_message': None,
+                'unread_count': 0,
+                'is_existing': False
+            })
+        
+        # Combine existing and potential chats
+        all_chats = existing_chats + potential_chats
+        
+        return JsonResponse({'chats': all_chats})
 
 class ChatMessagesView(CustomLoginRequiredMixin, View):
     def get(self, request, room_name):
@@ -61,21 +103,36 @@ class ChatMessagesView(CustomLoginRequiredMixin, View):
 class StartChatView(CustomLoginRequiredMixin, View):
     def post(self, request, user_id):
         other_user = get_object_or_404(User, id=user_id)
+        
+        # Prevent users from chatting with themselves
+        if other_user == request.user:
+            return JsonResponse({'error': 'Cannot chat with yourself'}, status=400)
+        
+        # Create consistent room name by sorting user IDs
         user_ids = sorted([request.user.id, other_user.id])
         room_name = f"chat_{user_ids[0]}_{user_ids[1]}"
+        
+        # Get or create the chat room
         room, created = ChatRoom.objects.get_or_create(name=room_name)
         
+        # Add participants if they're not already in the room
         if request.user not in room.participants.all():
             room.participants.add(request.user)
         if other_user not in room.participants.all():
             room.participants.add(other_user)
         
         profile_image = f"/media/profile_images/{other_user.profile_image}" if other_user.profile_image else None
+        
+        # Check if user is online
+        is_online = other_user.is_online if hasattr(other_user, 'is_online') else False
+        
         return JsonResponse({
             'room_name': room_name,
             'other_user': {
                 'id': other_user.id,
                 'username': other_user.username,
+                'full_name': other_user.full_name or other_user.username,
                 'profile_image': profile_image,
+                'is_online': is_online
             }
         })
