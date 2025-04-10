@@ -4,6 +4,7 @@ class ChatApp {
         this.chatSocket = null;
         this.currentRoom = null;
         this.currentUser = null;
+        this.typingTimeout = null;
         
         try {
             this.initElements();
@@ -29,6 +30,7 @@ class ChatApp {
         this.messengerIcon = document.getElementById('messenger-icon');
         this.minimizeBtn = document.getElementById('minimize-btn');
         this.closeBtn = document.getElementById('close-btn');
+        this.typingIndicator = null; // Will be created when needed
     }
     
     bindEvents() {
@@ -73,11 +75,16 @@ class ChatApp {
                 }
             });
             
-            // Add typing indicator
+            // Add typing indicator with debounce
             this.messageInput.addEventListener('input', () => {
                 // Auto-resize the textarea
                 this.messageInput.style.height = 'auto';
                 this.messageInput.style.height = (this.messageInput.scrollHeight) + 'px';
+                
+                // Clear existing timeout
+                if (this.typingTimeout) {
+                    clearTimeout(this.typingTimeout);
+                }
                 
                 // Send typing indicator
                 if (this.chatSocket && this.chatSocket.readyState === WebSocket.OPEN) {
@@ -87,6 +94,17 @@ class ChatApp {
                     });
                     this.chatSocket.send(typingData);
                 }
+                
+                // Set new timeout to stop typing indicator after 2 seconds
+                this.typingTimeout = setTimeout(() => {
+                    if (this.chatSocket && this.chatSocket.readyState === WebSocket.OPEN) {
+                        const typingData = JSON.stringify({
+                            'type': 'stop_typing',
+                            'room_name': this.currentRoom
+                        });
+                        this.chatSocket.send(typingData);
+                    }
+                }, 2000);
             });
         }
         
@@ -317,14 +335,21 @@ class ChatApp {
                 
                 // Handle different message types
                 if (data.type === 'typing') {
-                    // Show typing indicator when someone else is typing
-                    if (data.sender !== this.currentUser.id) {
+                    // Show typing indicator when the sender is the current user (the person we're chatting with)
+                    if (data.sender === this.currentUser.id) {
                         this.showTypingIndicator();
+                    }
+                } else if (data.type === 'stop_typing') {
+                    // Hide typing indicator when the sender is the current user
+                    if (data.sender === this.currentUser.id) {
+                        this.hideTypingIndicator();
                     }
                 } else if (data.type === 'status_change') {
                     // Handle status change events
                     this.handleStatusChange(data.user_id, data.is_online);
                 } else {
+                    // Regular message - hide typing indicator if it exists
+                    this.hideTypingIndicator();
                     // Regular message
                     this.appendMessage({
                         content: data.message,
@@ -845,35 +870,29 @@ class ChatApp {
     }
     
     showTypingIndicator() {
-        if (!this.messagesContainer) return;
-        
         // Remove existing typing indicator if any
-        const existingIndicator = this.messagesContainer.querySelector('.typing-indicator');
-        if (existingIndicator) return;
+        this.hideTypingIndicator();
         
-        // Create typing indicator
-        const typingIndicator = document.createElement('div');
-        typingIndicator.className = 'typing-indicator';
+        // Create new typing indicator
+        this.typingIndicator = document.createElement('div');
+        this.typingIndicator.className = 'message sent typing-indicator';
+        this.typingIndicator.innerHTML = `
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        `;
         
-        // Add three dots
-        for (let i = 0; i < 3; i++) {
-            const dot = document.createElement('span');
-            typingIndicator.appendChild(dot);
-        }
-        
-        this.messagesContainer.appendChild(typingIndicator);
+        // Add to messages container
+        this.messagesContainer.appendChild(this.typingIndicator);
         this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
-        
-        // Set a timeout to remove the indicator
-        setTimeout(() => this.removeTypingIndicator(), 3000);
     }
     
-    removeTypingIndicator() {
-        if (!this.messagesContainer) return;
-        
-        const typingIndicator = this.messagesContainer.querySelector('.typing-indicator');
-        if (typingIndicator) {
-            typingIndicator.remove();
+    hideTypingIndicator() {
+        if (this.typingIndicator) {
+            this.typingIndicator.remove();
+            this.typingIndicator = null;
         }
     }
 

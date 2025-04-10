@@ -57,6 +57,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'sender': self.user.id
                 }
             )
+        elif text_data_json.get('type') == 'stop_typing':
+            # Handle stop typing
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'stop_typing_indicator',
+                    'sender': self.user.id
+                }
+            )
         else:
             # Handle regular message
             message = text_data_json['message']
@@ -89,6 +98,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send typing indicator to WebSocket
         await self.send(text_data=json.dumps({
             'type': 'typing',
+            'sender': event['sender']
+        }))
+
+    async def stop_typing_indicator(self, event):
+        # Send stop typing indicator to WebSocket
+        await self.send(text_data=json.dumps({
+            'type': 'stop_typing',
             'sender': event['sender']
         }))
 
