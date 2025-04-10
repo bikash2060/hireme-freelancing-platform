@@ -558,65 +558,76 @@ html[lang="ne"] body {
     color: #4299e1;
 }
 
-.navbar .message-main .message-box .message-filter-tabs {
+.message-main .message-filter {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-}
-
-.navbar .message-main .message-box .message-filter-tab {
-    padding: 12px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #718096;
-    cursor: pointer;
-    position: relative;
-    transition: color 0.2s ease;
-}
-
-.navbar .message-main .message-box .message-filter-tab:hover {
-    color: #4299e1;
-}
-
-.navbar .message-main .message-box .message-filter-tab.active {
-    color: #4299e1;
-    font-weight: 600;
-}
-
-.navbar .message-main .message-box .message-filter-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: #4299e1;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-}
-
-.navbar .message-main .message-box .message-filter-tab .count {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-width: 20px;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #fafafa;
+}
+
+.message-main .message-filter span {
+    font-size: 14px;
+    color: #555;
+}
+
+.message-main .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.message-main .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.message-main .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e0e0e0;
+    transition: .3s ease;
+    border-radius: 24px;
+}
+
+.message-main .slider:before {
+    position: absolute;
+    content: "";
     height: 20px;
-    padding: 0 6px;
-    border-radius: 10px;
-    background-color: #e2e8f0;
-    color: #4a5568;
-    font-size: 12px;
-    margin-left: 6px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .3s ease;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.navbar .message-main .message-box .message-filter-tab.active .count {
-    background-color: #4299e1;
-    color: white;
+.message-main input:checked + .slider {
+    background-color: #0084ff;
 }
 
-.navbar .message-main .message-box .message-filter-tab.unread .count {
-    background-color: #f56565;
-    color: white;
+.message-main input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.message-main input:focus + .slider {
+    box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.2);
+}
+
+.message-main .toggle-switch:hover .slider {
+    background-color: #d0d0d0;
+}
+
+.message-main .toggle-switch:hover input:checked + .slider {
+    background-color: #0073e6;
 }
 
 .navbar .message-main .chat-list {
@@ -630,7 +641,6 @@ html[lang="ne"] body {
     display: flex;
     align-items: center;
     padding: 12px 6px;
-    margin-bottom: 8px;
     cursor: pointer;
     border-radius: 12px;
     transition: all 0.2s ease;

@@ -8,6 +8,11 @@ class ChatApp {
         
         try {
             this.initElements();
+            // Reset unread toggle state on page load
+            const unreadToggle = document.getElementById('unread-toggle');
+            if (unreadToggle) {
+                unreadToggle.checked = false;
+            }
             this.bindEvents();
             this.loadChatList();
         } catch (error) {
@@ -37,6 +42,18 @@ class ChatApp {
         if (!this.chatList || !this.messengerIcon) {
             console.error('Required elements not found, cannot bind events');
             return;
+        }
+        
+        // Add unread toggle functionality
+        const unreadToggle = document.getElementById('unread-toggle');
+        if (unreadToggle) {
+            unreadToggle.addEventListener('change', () => {
+                if (unreadToggle.checked) {
+                    this.showUnreadMessages();
+                } else {
+                    this.showAllMessages();
+                }
+            });
         }
         
         const searchInput = document.querySelector('.message-box .search-bar input[type="text"]');
@@ -170,9 +187,10 @@ class ChatApp {
             return;
         }
         
-        // Save current search term if any
+        // Save current search term and unread toggle state
         const searchInput = document.querySelector('.message-box .search-bar input[type="text"]');
         const searchTerm = searchInput ? searchInput.value.trim() : '';
+        const unreadToggle = document.getElementById('unread-toggle');
         
         try {
             const languagePrefix = this.getLanguagePrefix();
@@ -217,27 +235,14 @@ class ChatApp {
             // Update unread count in the messenger icon
             this.updateUnreadCount(unreadCount);
             
-            // Update All Messages count - only show count of EXISTING chats
-            const allMessagesCountSpan = document.querySelector('.message-filter-tab.active .count');
-            if (allMessagesCountSpan) {
-                allMessagesCountSpan.textContent = existingChatCount;
-            }
-            
-            // Update Unread Messages count
-            const unreadMessagesCountSpan = document.querySelector('.message-filter-tab.unread .count');
-            if (unreadMessagesCountSpan) {
-                unreadMessagesCountSpan.textContent = unreadCount;
-            }
-            
             // Apply search filter if there's an active search
             if (searchTerm) {
                 this.filterChatList(searchTerm);
-                return; // Skip the tab filtering if we're searching
+                return; // Skip the unread filtering if we're searching
             }
             
-            // Check which tab is active and apply the appropriate filter
-            const isUnreadTab = document.querySelector('.message-filter-tab.unread.active');
-            if (isUnreadTab) {
+            // Apply unread filter if toggle is checked
+            if (unreadToggle && unreadToggle.checked) {
                 this.showUnreadMessages();
             } else {
                 this.showAllMessages();
@@ -272,10 +277,12 @@ class ChatApp {
             this.detailedChat.classList.remove('minimized');
         }
         
+        // Store current user ID in chat state
+        const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
         localStorage.setItem('chatState', JSON.stringify({
             isOpen: true,
             roomName: roomName,
-            otherUser: otherUser,
+            otherUser: { ...otherUser, current_user_id: currentUserId },
             isMinimized: isMinimized
         }));
         
@@ -656,7 +663,9 @@ class ChatApp {
         const chatState = localStorage.getItem('chatState');
         if (chatState) {
             const { isOpen, roomName, otherUser, isMinimized } = JSON.parse(chatState);
-            if (isOpen) {
+            // Check if the current user matches the chat state user
+            const currentUserId = document.querySelector('meta[name="user-id"]')?.content;
+            if (isOpen && otherUser && otherUser.current_user_id === currentUserId) {
                 // First make sure the chat container has the visible class
                 if (this.detailedChat) {
                     this.detailedChat.classList.add('visible');
@@ -670,6 +679,9 @@ class ChatApp {
                         this.detailedChat.classList.remove('minimized');
                     }
                 });
+            } else {
+                // Clear chat state if user doesn't match
+                localStorage.removeItem('chatState');
             }
         }
     }
@@ -687,16 +699,31 @@ class ChatApp {
             return;
         }
         
-        // Check which tab is active
-        const isUnreadTab = document.querySelector('.message-filter-tab.unread.active');
+        // Check unread toggle state
+        const unreadToggle = document.getElementById('unread-toggle');
+        const showOnlyUnread = unreadToggle && unreadToggle.checked;
         
-        if (isUnreadTab) {
-            // If unread tab is active, only show unread messages that match search
-            this.showUnreadMessages();
-        } else {
-            // Otherwise show all messages that match search
-            this.showAllMessages();
-        }
+        const chatRows = this.chatList.querySelectorAll('.chat-row');
+        let visibleCount = 0;
+        
+        chatRows.forEach(row => {
+            const userName = row.querySelector('.chat-name')?.textContent?.toLowerCase() || '';
+            const lastMessage = row.querySelector('.message')?.textContent?.toLowerCase() || '';
+            const isUnread = row.classList.contains('unread');
+            
+            // Hide all rows initially
+            row.style.display = 'none';
+            
+            // Show row if it matches search and unread filter
+            if ((userName.includes(searchTerm) || lastMessage.includes(searchTerm)) &&
+                (!showOnlyUnread || isUnread)) {
+                row.style.display = 'flex';
+                visibleCount++;
+            }
+        });
+        
+        // Update no results message if needed
+        this.updateNoResultsMessage(visibleCount, searchTerm);
     }
 
     activateTab(activeTab, inactiveTab) {
@@ -715,57 +742,34 @@ class ChatApp {
         
         const chatRows = this.chatList.querySelectorAll('.chat-row');
         
-        // If no chat rows found, reload the chat list to get the appropriate "No messages" display
+        // If no chat rows found and no search term, reload the chat list
         if (chatRows.length === 0 && !searchTerm) {
             console.log('No chat rows found, reload to get proper display');
             this.loadChatList();
             return;
         }
         
-        // If there's a search term, first hide all chat rows
-        if (searchTerm) {
-            chatRows.forEach(row => {
-                row.style.display = 'none';
-            });
-        }
-        
         let visibleCount = 0;
-        let existingChatCount = 0;
         
         chatRows.forEach(row => {
-            // Check if this is an existing chat room (has a room_name attribute)
-            const hasExistingChat = row.dataset.roomName ? true : false;
-            
             if (searchTerm) {
-                // If searching, only show matching rows
                 const userName = row.querySelector('.chat-name')?.textContent?.toLowerCase() || '';
                 const lastMessage = row.querySelector('.message')?.textContent?.toLowerCase() || '';
                 
                 if (userName.includes(searchTerm) || lastMessage.includes(searchTerm)) {
-                    row.style.display = 'flex'; // Show matching rows
+                    row.style.display = 'flex';
                     visibleCount++;
-                    if (hasExistingChat) {
-                        existingChatCount++;
-                    }
+                } else {
+                    row.style.display = 'none';
                 }
             } else {
-                // If not searching, show all rows
                 row.style.display = 'flex';
                 visibleCount++;
-                if (hasExistingChat) {
-                    existingChatCount++;
-                }
             }
         });
         
         // Update no results message if needed
         this.updateNoResultsMessage(visibleCount, searchTerm);
-        
-        // Update the count in the tab - only show count of EXISTING chats
-        const allMessagesCountSpan = document.querySelector('.message-filter-tab.active .count');
-        if (allMessagesCountSpan) {
-            allMessagesCountSpan.textContent = existingChatCount;
-        }
     }
     
     showUnreadMessages() {
@@ -775,52 +779,31 @@ class ChatApp {
         const searchInput = document.querySelector('.message-box .search-bar input[type="text"]');
         const searchTerm = searchInput ? searchInput.value.trim().toLowerCase() : '';
         
-        // First hide all chat rows
-        const allChatRows = this.chatList.querySelectorAll('.chat-row');
-        allChatRows.forEach(row => {
-            row.style.display = 'none';
-        });
-        
         const chatRows = this.chatList.querySelectorAll('.chat-row');
         let visibleCount = 0;
-        let unreadChatCount = 0;
         
         chatRows.forEach(row => {
             const isUnread = row.classList.contains('unread');
-            const hasExistingChat = row.dataset.roomName ? true : false;
+            row.style.display = 'none';
             
             if (isUnread) {
                 if (searchTerm) {
-                    // If searching, only show unread rows that match
                     const userName = row.querySelector('.chat-name')?.textContent?.toLowerCase() || '';
                     const lastMessage = row.querySelector('.message')?.textContent?.toLowerCase() || '';
                     
                     if (userName.includes(searchTerm) || lastMessage.includes(searchTerm)) {
                         row.style.display = 'flex';
                         visibleCount++;
-                        if (hasExistingChat) {
-                            unreadChatCount++;
-                        }
                     }
                 } else {
-                    // If not searching, show all unread rows
                     row.style.display = 'flex';
                     visibleCount++;
-                    if (hasExistingChat) {
-                        unreadChatCount++;
-                    }
                 }
             }
         });
         
         // Update no results message if needed
         this.updateNoResultsMessage(visibleCount, searchTerm);
-        
-        // Update the count in the tab - should reflect unread messages in actual chat rooms
-        const unreadMessagesCountSpan = document.querySelector('.message-filter-tab.unread .count');
-        if (unreadMessagesCountSpan) {
-            unreadMessagesCountSpan.textContent = unreadChatCount;
-        }
     }
     
     updateNoResultsMessage(visibleCount, searchTerm) {
