@@ -410,45 +410,38 @@ class ChatApp {
     createChatRow(chat) {
         const chatRow = document.createElement('div');
         chatRow.className = 'chat-row';
-        if (chat.room_name) {
-            chatRow.dataset.roomName = chat.room_name;
+        if (chat.unread_count > 0) {
+            chatRow.classList.add('unread');
         }
-        chatRow.dataset.userId = chat.other_user.id;
         
-        // User icon/image with status indicator properly positioned
         const userIconContainer = document.createElement('div');
         userIconContainer.className = 'user-icon-container';
-        
-        const userIcon = document.createElement('div');
-        userIcon.className = 'user-icon';
         
         if (chat.other_user.profile_image) {
             const img = document.createElement('img');
             img.src = chat.other_user.profile_image;
-            img.alt = chat.other_user.full_name || 'User';
-            userIcon.appendChild(img);
+            img.alt = chat.other_user.full_name;
+            userIconContainer.appendChild(img);
         } else {
-            const icon = document.createElement('i');
-            icon.className = 'fa-regular fa-user';
-            userIcon.appendChild(icon);
+            const userIcon = document.createElement('div');
+            userIcon.className = 'user-icon';
+            userIcon.textContent = chat.other_user.full_name.charAt(0).toUpperCase();
+            userIconContainer.appendChild(userIcon);
         }
         
-        // Add status indicator only if user is online
+        // Add status indicator if user is online
         if (chat.other_user.is_online) {
             const statusIndicator = document.createElement('span');
             statusIndicator.className = 'status-indicator';
             userIconContainer.appendChild(statusIndicator);
         }
         
-        userIconContainer.appendChild(userIcon);
-        
         const chatDetails = document.createElement('div');
         chatDetails.className = 'chat-details';
         
-        const chatName = document.createElement('p');
+        const chatName = document.createElement('div');
         chatName.className = 'chat-name';
         chatName.textContent = chat.other_user.full_name;
-        chatName.title = chat.other_user.full_name;
         
         const chatMeta = document.createElement('div');
         chatMeta.className = 'chat-meta';
@@ -456,8 +449,13 @@ class ChatApp {
         const message = document.createElement('span');
         message.className = 'message';
         if (chat.last_message?.content) {
-            message.textContent = chat.last_message.content;
-            message.title = chat.last_message.content;
+            // Add "You:" prefix if the message is sent by the logged-in user
+            if (chat.last_message.sender === 'You') {
+                message.textContent = `You: ${chat.last_message.content}`;
+            } else {
+                message.textContent = chat.last_message.content;
+            }
+            message.title = message.textContent;
         } else {
             message.textContent = 'Start a new conversation';
             message.style.fontStyle = 'italic';

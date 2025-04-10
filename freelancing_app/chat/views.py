@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views import View
 from .models import ChatRoom
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -21,7 +22,6 @@ class ChatListView(CustomLoginRequiredMixin, View):
             # Check if user is online (has been active in the last 5 minutes)
             is_online = False
             if hasattr(other_user, 'last_activity'):
-                from django.utils import timezone
                 is_online = other_user.last_activity and (timezone.now() - other_user.last_activity).seconds < 300
             
             existing_chats.append({
@@ -36,11 +36,15 @@ class ChatListView(CustomLoginRequiredMixin, View):
                 'last_message': {
                     'content': last_message.content if last_message else None,
                     'timestamp': last_message.timestamp if last_message else None,
-                    'sender': last_message.sender.username if last_message else None,
+                    'sender': 'You' if last_message and last_message.sender == request.user else None,
                 },
                 'unread_count': room.messages.filter(read=False).exclude(sender=request.user).count(),
-                'is_existing': True
+                'is_existing': True,
+                'last_activity': last_message.timestamp if last_message else None
             })
+        
+        # Sort existing chats by last message timestamp (most recent first)
+        existing_chats.sort(key=lambda x: (x['last_activity'] or timezone.datetime.min).replace(tzinfo=None), reverse=True)
         
         # Get all other users who don't have chats yet
         existing_user_ids = [chat['other_user']['id'] for chat in existing_chats]
@@ -53,7 +57,6 @@ class ChatListView(CustomLoginRequiredMixin, View):
             # Check if user is online (has been active in the last 5 minutes)
             is_online = False
             if hasattr(user, 'last_activity'):
-                from django.utils import timezone
                 is_online = user.last_activity and (timezone.now() - user.last_activity).seconds < 300
             
             potential_chats.append({
@@ -67,7 +70,8 @@ class ChatListView(CustomLoginRequiredMixin, View):
                 },
                 'last_message': None,
                 'unread_count': 0,
-                'is_existing': False
+                'is_existing': False,
+                'last_activity': None
             })
         
         # Combine existing and potential chats
