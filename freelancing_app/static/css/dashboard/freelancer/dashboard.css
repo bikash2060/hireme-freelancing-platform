@@ -59,11 +59,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     display: flex;
     gap: 15px;
-    align-items: center;
+    align-items: flex-start;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     border-left: 4px solid transparent;
+    flex-direction: column;
 }
 
 .hero-section .stats-overview .stat-card:hover {
@@ -83,7 +84,7 @@
 }
 
 .hero-section .stats-overview .stat-info {
-    flex: 1;
+    width: 100%;
 }
 
 .hero-section .stats-overview .stat-info h4 {
@@ -106,43 +107,58 @@
     font-weight: 500;
 }
 
+.hero-section .stats-overview .stat-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #1E88E5;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.hero-section .stats-overview .stat-link:hover {
+    text-decoration: underline;
+    color: #0D47A1;
+}
+
 .hero-section .stats-overview .success-card {
-    border-left-color: #4CAF50;
+    border-left-color: #FFC107;
 }
 
 .hero-section .stats-overview .success-card .stat-icon {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #FFC107;
+}
+
+.hero-section .stats-overview .success-card .stat-number {
+    color: #FFA000;
+}
+
+.hero-section .stats-overview .ongoing-card {
+    border-left-color: #1E88E5;
+}
+
+.hero-section .stats-overview .ongoing-card .stat-icon {
+    background-color: rgba(30, 136, 229, 0.1);
+    color: #1E88E5;
+}
+
+.hero-section .stats-overview .ongoing-card .stat-number {
+    color: #0D47A1;
+}
+
+.hero-section .stats-overview .proposals-card {
+    border-left-color: #4CAF50;
+}
+
+.hero-section .stats-overview .proposals-card .stat-icon {
     background-color: rgba(76, 175, 80, 0.1);
     color: #4CAF50;
 }
 
-.hero-section .stats-overview .success-card .stat-number {
+.hero-section .stats-overview .proposals-card .stat-number {
     color: #2E7D32;
-}
-
-.hero-section .stats-overview .ongoing-card {
-    border-left-color: #FF9800;
-}
-
-.hero-section .stats-overview .ongoing-card .stat-icon {
-    background-color: rgba(255, 152, 0, 0.1);
-    color: #FF9800;
-}
-
-.hero-section .stats-overview .ongoing-card .stat-number {
-    color: #E65100;
-}
-
-.hero-section .stats-overview .completed-card {
-    border-left-color: #2196F3;
-}
-
-.hero-section .stats-overview .completed-card .stat-icon {
-    background-color: rgba(33, 150, 243, 0.1);
-    color: #2196F3;
-}
-
-.hero-section .stats-overview .completed-card .stat-number {
-    color: #0D47A1;
 }
 
 .hero-section .stats-overview .earnings-card {
@@ -176,18 +192,18 @@
 .stat-card:nth-child(4) { animation-delay: 0.4s; }
 
 /* Quick Actions Section */
+/* Quick Actions Section - Freelancer Dashboard */
 .quick-actions-section {
-   margin-top: 50px;
+    margin-top: 50px;
 }
 
-/* Quick Action Header Section */
 .quick-actions-section .section-title {
     font-size: 2rem;
     color: #2c3e50;
     position: relative;
     margin-bottom: 10px;
-    line-height: 1;
-    font-weight: 550;
+    line-height: 1.2;
+    font-weight: 600;
 }
 
 .quick-actions-section .section-title:after {
@@ -195,35 +211,36 @@
     position: absolute;
     bottom: -10px;
     left: 0;
-    transform: translateX(0);
-    width: 92px;
+    width: 60px;
     height: 4px;
     background: linear-gradient(90deg, #1E88E5, #0d47a1);
     border-radius: 2px;
 }
 
 .quick-actions-section .section-subtitle {
-    color: #7f8c8d;
+    color: #64748b;
     margin-bottom: 30px;
     font-size: 1.1rem;
+    font-weight: 400;
 }
 
-/* Quick Actions Grid Section */
 .quick-actions-section .quick-actions-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
-    margin: 0 auto;
+    margin-top: 30px;
 }
 
 .quick-actions-section .action-card {
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 30px 25px;
     text-align: center;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    border-top: 4px solid #3498db;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-top: 4px solid;
+    position: relative;
+    overflow: hidden;
 }
 
 .quick-actions-section .action-card:hover {
@@ -234,32 +251,26 @@
 .quick-actions-section .action-icon {
     width: 70px;
     height: 70px;
-    background: #e3f2fd;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    color: #3498db;
     font-size: 1.8rem;
     transition: all 0.3s ease;
 }
 
-.quick-actions-section .action-card:hover .action-icon {
-    background: #3498db;
-    color: white;
-}
-
 .quick-actions-section .action-card h3 {
     font-size: 1.3rem;
-    color: #2c3e50;
+    color: #1e293b;
     margin-bottom: 15px;
+    font-weight: 600;
 }
 
 .quick-actions-section .action-card p {
-    color: #7f8c8d;
+    color: #64748b;
     font-size: 0.95rem;
-    line-height: 1.5;
+    line-height: 1.6;
     margin-bottom: 20px;
 }
 
@@ -267,15 +278,76 @@
     display: inline-block;
     text-decoration: none;
     padding: 10px 25px;
-    border-radius: 5px;
+    border-radius: 6px;
     background-color: #1E88E5;
     color: white;
     font-weight: 500;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
 }
 
 .quick-actions-section .action-btn:hover {
     background-color: #1565C0;
+    box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+    transform: translateY(-2px);
+}
+
+.quick-actions-section .action-card:nth-child(1) {
+    border-top-color: #3F51B5;
+}
+
+.quick-actions-section .action-card:nth-child(1) .action-icon {
+    background-color: rgba(63, 81, 181, 0.1);
+    color: #3F51B5;
+}
+
+.quick-actions-section .action-card:nth-child(1):hover .action-icon {
+    background-color: #3F51B5;
+    color: white;
+}
+
+.quick-actions-section .action-card:nth-child(2) {
+    border-top-color: #FF9800;
+}
+
+.quick-actions-section .action-card:nth-child(2) .action-icon {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #FF9800;
+}
+
+.quick-actions-section .action-card:nth-child(2):hover .action-icon {
+    background-color: #FF9800;
+    color: white;
+}
+
+.quick-actions-section .action-card:nth-child(3) {
+    border-top-color: #4CAF50;
+}
+
+.quick-actions-section .action-card:nth-child(3) .action-icon {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.quick-actions-section .action-card:nth-child(3):hover .action-icon {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.quick-actions-section .action-card:nth-child(4) {
+    border-top-color: #9C27B0;
+}
+
+.quick-actions-section .action-card:nth-child(4) .action-icon {
+    background-color: rgba(156, 39, 176, 0.1);
+    color: #9C27B0;
+}
+
+.quick-actions-section .action-card:nth-child(4):hover .action-icon {
+    background-color: #9C27B0;
+    color: white;
 }
 
 /* Upcoming Deadlines Section */
@@ -529,13 +601,11 @@
 .deadlines-section .empty-deadlines {
     background-color: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: 40px 20px;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px dashed #e2e8f0;
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 20px;
 }
 
 .deadlines-section .empty-illustration {
@@ -573,7 +643,7 @@
 }
 
 .deadlines-section .btn-primary {
-    background-color: #6366f1;
+    background-color: #1E88E5;
     color: white;
     padding: 10px 20px;
     border-radius: 8px;
@@ -581,14 +651,14 @@
     font-weight: 500;
     font-size: 0.95rem;
     transition: all 0.2s ease;
-    border: 1px solid #6366f1;
+    border: 1px solid #1E88E5;
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
 .deadlines-section .btn-primary:hover {
-    background-color: #4f46e5;
+    background-color: #1565C0;
     transform: translateY(-1px);
 }
 
@@ -1430,17 +1500,15 @@
 .ongoing-projects .empty-projects {
     background-color: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: 40px 20px;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     border: 1px dashed #e2e8f0;
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: 20px;
 }
 
 .ongoing-projects .empty-illustration {
-    margin: 0 auto 25px;
+    margin: 0 auto 20px;
     color: #cbd5e0;
     width: 120px;
     height: 120px;
@@ -1452,9 +1520,9 @@
 }
 
 .ongoing-projects .empty-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: #2d3748;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     font-weight: 600;
 }
 
@@ -1486,20 +1554,38 @@
 }
 
 .ongoing-projects .empty-actions .primary-btn {
-    background-color: #6366f1;
+    background-color: #1E88E5;
     color: white;
-    border: 1px solid #6366f1;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    border: 1px solid #1E88E5;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .ongoing-projects .empty-actions .primary-btn:hover {
-    background-color: #4f46e5;
+    background-color: #1565C0;
     transform: translateY(-1px);
 }
 
 .ongoing-projects .empty-actions .secondary-btn {
     background-color: white;
     color: #4a5568;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
     border: 1px solid #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .ongoing-projects .empty-actions .secondary-btn:hover {
@@ -1522,7 +1608,6 @@
 
 .ongoing-projects .empty-projects .empty-tip i {
     color: #0ea5e9;
-    flex-shrink: 0;
 }
 
 /* Project Recommended Section Styles */

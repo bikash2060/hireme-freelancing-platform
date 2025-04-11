@@ -38,6 +38,7 @@ class Project(models.Model):
         ('draft', 'Draft'),
         ('posted', 'Published'),
         ('in progress', 'In Progress'),
+        ('pending review', 'Pending Review'),
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
     ]
