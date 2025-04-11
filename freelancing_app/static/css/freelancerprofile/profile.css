@@ -501,12 +501,9 @@
     overflow-y: auto;
     padding-right: 8px;
     margin-right: 2px;
-    scrollbar-width: thin;
-    scrollbar-color: #7B1FA2 #F3E5F5;
-    scrollbar-gutter: stable;
-    scroll-behavior: smooth;
 }
 
+/* Webkit browsers (Chrome, Safari, Edge) specific styling */
 .professional-info .languages-scrollable-container::-webkit-scrollbar {
     width: 8px;
     height: 8px; 
