@@ -23,6 +23,7 @@ class BaseAuthView(View):
     """Base view for authentication-related views with common properties"""
     login_url = 'account:login'
     home_url = 'home:home'
+    signup_url = 'account:signup'
     
     def dispatch(self, request, *args, **kwargs):
         """Check if user is already authenticated"""
