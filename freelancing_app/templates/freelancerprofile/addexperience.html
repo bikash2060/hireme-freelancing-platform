@@ -68,11 +68,11 @@
                                 </label>
                                 <select id="employment_type" name="employment_type" class="form-control">
                                     <option value="" disabled {% if not employment_type %}selected{% endif %}>Select employment type</option>
-                                    <option value="full-time" {% if employment_type == 'full-time' %}selected{% endif %}>Full-time</option>
-                                    <option value="part-time" {% if employment_type == 'part-time' %}selected{% endif %}>Part-time</option>
-                                    <option value="contract" {% if employment_type == 'contract' %}selected{% endif %}>Contract</option>
-                                    <option value="freelance" {% if employment_type == 'freelance' %}selected{% endif %}>Freelance</option>
-                                    <option value="internship" {% if employment_type == 'internship' %}selected{% endif %}>Internship</option>
+                                    {% for value, label in employment_types %}
+                                        <option value="{{ value }}" {% if employment_type == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>

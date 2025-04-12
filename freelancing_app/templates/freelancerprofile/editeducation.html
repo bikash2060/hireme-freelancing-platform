@@ -53,12 +53,20 @@
                             <h3 class="section-title">
                                 <i class="fas fa-certificate"></i> Degree Details
                             </h3>
-                            
+
                             <div class="form-group">
                                 <label for="degree">
                                     <i class="fas fa-scroll"></i> Degree
                                 </label>
-                                <input type="text" id="degree" name="degree" value="{{ degree|default:education.degree|default:'' }}" class="form-control" placeholder="e.g. Bachelor of Computer Science">
+                                <select id="degree" name="degree" class="form-control">
+                                    <option value="" disabled>Select your degree</option>
+                                    {% for value, label in degree_choices %}
+                                        <option value="{{ value }}" 
+                                            {% if degree == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
                             </div>
                             
                             <div class="form-group">

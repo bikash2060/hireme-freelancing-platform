@@ -39,7 +39,6 @@
                     {% csrf_token %}
                     
                     <div class="form-grid">
-                        <!-- Experience Level Section -->
                         <div class="form-section">
                             <h3 class="section-title">
                                 <i class="fas fa-chart-line"></i> Experience Level
@@ -61,15 +60,17 @@
                                 </label>
                                 <select id="expertise_level" name="expertise_level" class="form-control">
                                     <option value="" selected disabled>Select your level</option>
-                                    <option value="entry" {% if expertise_level == 'entry' or freelancer.expertise_level == 'entry' %}selected{% endif %}>Entry Level</option>
-                                    <option value="intermediate" {% if expertise_level == 'intermediate' or freelancer.expertise_level == 'intermediate' %}selected{% endif %}>Intermediate</option>
-                                    <option value="expert" {% if expertise_level == 'expert' or freelancer.expertise_level == 'expert' %}selected{% endif %}>Expert</option>
+                                    {% for value, label in expertise_levels %}
+                                        <option value="{{ value }}" 
+                                            {% if value == expertise_level or value == freelancer.expertise_level %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                                 <div class="input-hint">Select your professional expertise level</div>
                             </div>
                         </div>
                         
-                        <!-- Availability Section -->
                         <div class="form-section">
                             <h3 class="section-title">
                                 <i class="fas fa-clock"></i> Availability
@@ -80,9 +81,12 @@
                                 </label>
                                 <select id="availability" name="availability" class="form-control">
                                     <option value="" selected disabled>Select availability</option>
-                                    <option value="full-time" {% if availability == 'full-time' or freelancer.availability == 'full-time' %}selected{% endif %}>Full-time</option>
-                                    <option value="part-time" {% if availability == 'part-time' or freelancer.availability == 'part-time' %}selected{% endif %}>Part-time</option>
-                                    <option value="not-available" {% if availability == 'not-available' or freelancer.availability == 'not-available' %}selected{% endif %}>Not Available</option>
+                                    {% for value, label in availability_options %}
+                                        <option value="{{ value }}" 
+                                            {% if value == availability or value == freelancer.availability %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                                 <div class="input-hint">Your current work availability status</div>
                             </div>
@@ -93,31 +97,36 @@
                                 </label>
                                 <select id="preferred_project_duration" name="preferred_project_duration" class="form-control">
                                     <option value="" selected disabled>Select preferred duration</option>
-                                    <option value="short" {% if preferred_project_duration == 'short' or freelancer.preferred_project_duration == 'short' %}selected{% endif %}>Less than 1 month</option>
-                                    <option value="medium" {% if preferred_project_duration == 'medium' or freelancer.preferred_project_duration == 'medium' %}selected{% endif %}>1-3 months</option>
-                                    <option value="long" {% if preferred_project_duration == 'long' or freelancer.preferred_project_duration == 'long' %}selected{% endif %}>3+ months</option>
+                                    {% for value, label in project_durations %}
+                                        <option value="{{ value }}" 
+                                            {% if value == preferred_project_duration or value == freelancer.preferred_project_duration %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                                 <div class="input-hint">Type of projects you prefer</div>
                             </div>
                         </div>
                         
-                        <!-- Rates Section -->
                         <div class="form-section">
                             <h3 class="section-title">
-                                <i class="fas fa-money-bill-wave"></i> Rates
+                                <i class="fas fa-id-badge"></i> Your Professional Presence
                             </h3>
+
                             <div class="form-group">
-                                <label for="hourly_rate">
-                                    <i class="fas fa-rupee-sign"></i> Hourly Rate (NPR)
+                                <label for="professional_title">
+                                    <i class="fas fa-user-tie"></i> Professional Title
                                 </label>
-                                <div class="input-with-symbol">
-                                    <span class="input-symbol">Rs</span>
-                                    <input type="number" id="hourly_rate" name="hourly_rate" 
-                                        value="{{ hourly_rate|default:freelancer.hourly_rate|default:'' }}" 
-                                        class="form-control" min="0" 
-                                    >
-                                </div>
-                                <div class="input-hint">Your standard hourly rate in Nepali Rupees</div>
+                                <input 
+                                    type="text" 
+                                    id="professional_title" 
+                                    name="professional_title" 
+                                    class="form-control"
+                                    value="{{ professional_title|default:freelancer.professional_title|default:'' }}"
+                                    placeholder="e.g. Senior Web Developer, UX Designer"
+                                    maxlength="100"
+                                >
+                                <div class="input-hint">Your professional job title (what you want to be called)</div>
                             </div>
                             
                             <div class="form-group">
@@ -126,15 +135,17 @@
                                 </label>
                                 <select id="communication_preference" name="communication_preference" class="form-control">
                                     <option value="" selected disabled>Select preferred method</option>
-                                    <option value="email" {% if communication_preference == 'email' or freelancer.communication_preference == 'email' %}selected{% endif %}>Email</option>
-                                    <option value="phone" {% if communication_preference == 'phone' or freelancer.communication_preference == 'phone' %}selected{% endif %}>Phone</option>
-                                    <option value="chat" {% if communication_preference == 'chat' or freelancer.communication_preference == 'chat' %}selected{% endif %}>Chat</option>
+                                    {% for value, label in communication_preferences %}
+                                        <option value="{{ value }}" 
+                                            {% if value == communication_preference or value == freelancer.communication_preference %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                                 <div class="input-hint">How clients should contact you</div>
                             </div>
                         </div>
                         
-                        <!-- Languages Section -->
                         <div class="form-section full-width">
                             <h3 class="section-title">
                                 <i class="fas fa-language"></i> Languages
@@ -162,7 +173,6 @@
                             </div>
                         </div>
                         
-                        <!-- Skills Section -->
                         <div class="form-section full-width">
                             <h3 class="section-title">
                                 <i class="fas fa-code"></i> Skills

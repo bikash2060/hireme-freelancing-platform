@@ -416,6 +416,10 @@
     background: #667eea;
 }
 
+.professional-info .info-item.title-card::before {
+    background: #607D8B;
+}
+
 .professional-info .info-item.rate-card::before {
     background: #4CAF50;
 }

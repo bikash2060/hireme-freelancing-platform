@@ -13,28 +13,39 @@ from datetime import datetime
 from itertools import chain
 from .models import *
 from .utils import *
+import os
 
-class GetCitiesByCountryView(CustomLoginRequiredMixin, View):
+class BaseFreelancerView(CustomLoginRequiredMixin, View):
+    """Base view for freelancer profile with common properties"""
+    profile_template = 'freelancerprofile/profile.html'
+    home_url = 'home:home'
+    freelancer_profile_url = 'freelancer:profile'
+
+    def get_freelancer(self, request):
+        """Helper method to get freelancer instance"""
+        return Freelancer.objects.get(user=request.user)
+
+class GetCitiesByCountryView(BaseFreelancerView):
+    """Handle fetching cities by country"""
     def get(self, request, *args, **kwargs):
-        country_id = request.GET.get('country_id')
-        if not country_id:
-            return JsonResponse({'cities': []})
-        
         try:
+            country_id = request.GET.get('country_id')
+            if not country_id:
+                return JsonResponse({'cities': []})
+            
             cities = City.objects.filter(country_id=country_id).order_by('name').values('id', 'name')
             return JsonResponse({'cities': list(cities)})
         except Exception as e:
             return JsonResponse({'cities': []})
 
-class FreelancerBasicInfoView(CustomLoginRequiredMixin, View):
-    profile_template = 'freelancerprofile/profile.html'
-    home_url = 'home:home'
-
+class FreelancerProfileView(BaseFreelancerView):
+    """Display freelancer profile information"""
     def get(self, request):
         try:
-            freelancer = Freelancer.objects.get(user=request.user)
+            freelancer = self.get_freelancer(request)
             freelancer_languages = FreelancerLanguage.objects.filter(freelancer=freelancer).select_related('language')
             
+            # Get ordered work experiences
             experiences = WorkExperience.objects.filter(freelancer=freelancer)
             ongoing_experiences = experiences.filter(currently_working=True).order_by('-start_date')
             past_experiences = experiences.filter(currently_working=False).order_by(
@@ -42,6 +53,7 @@ class FreelancerBasicInfoView(CustomLoginRequiredMixin, View):
             )
             ordered_experiences = list(chain(ongoing_experiences, past_experiences))
             
+            # Get ordered educations
             educations = Education.objects.filter(freelancer=freelancer)
             ongoing_educations = educations.filter(currently_studying=True).order_by('-start_date')
             past_educations = educations.filter(currently_studying=False).order_by(
@@ -61,24 +73,22 @@ class FreelancerBasicInfoView(CustomLoginRequiredMixin, View):
             messages.error(request, 'Failed to load your profile. Please try again later.')
             return redirect(self.home_url)
 
-class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
-    personal_details_template = 'freelancerprofile/editpersonalinfo.html'
-    personal_details_url = 'freelancer:edit-personal-info'
-    freelancer_profile_url = 'freelancer:profile'
+class PersonalInfoView(BaseFreelancerView):
+    """Handle freelancer personal information"""
+    template_name = 'freelancerprofile/editpersonalinfo.html'
+    edit_url = 'freelancer:edit-personal-info'
 
     def get(self, request):
         try:
             user = request.user
-            freelancer = Freelancer.objects.get(user=request.user)
+            freelancer = self.get_freelancer(request)
             all_countries = Country.objects.all().order_by('name')
-            current_country = user.country.id if user.country else None
-            current_city = user.city.id if user.city else None
             
-            return render(request, self.personal_details_template, {
+            return render(request, self.template_name, {
                 'freelancer': freelancer,
                 'countries': all_countries,
-                'current_country': current_country,
-                'current_city': current_city,
+                'current_country': user.country.id if user.country else None,
+                'current_city': user.city.id if user.city else None,
             })
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
@@ -87,9 +97,10 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
     def post(self, request):
         try:
             user = request.user
-            freelancer = Freelancer.objects.get(user=request.user)
+            freelancer = self.get_freelancer(request)
             all_countries = Country.objects.all().order_by('name')
             
+            # Get form data
             profile_image = request.FILES.get('profile_image')
             full_name = request.POST.get('full_name').strip()
             username = request.POST.get('username').strip().lower()
@@ -98,6 +109,7 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
             country_id = request.POST.get('country')
             bio = request.POST.get('bio').strip()
             
+            # Prepare context for form re-rendering
             context = {
                 'freelancer': freelancer,
                 'full_name': full_name if full_name else None,
@@ -109,18 +121,22 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
                 'current_city': int(city_id) if city_id else None,
             }
             
-            valid, error_message = validate_user_data(profile_image, full_name, username, phone_number, bio, city_id, country_id, request)
+            # Validate form data
+            valid, error_message = ProfileValidator.validate_user_data(
+                profile_image, full_name, username, phone_number, bio, city_id, country_id, request
+            )
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.personal_details_template, context)
+                return render(request, self.template_name, context)
             
+            # Update country and city
             if country_id:
                 try:
                     country = Country.objects.get(id=country_id)
                     user.country = country
                 except Country.DoesNotExist:
                     messages.error(request, 'Selected country is not valid')
-                    return render(request, self.professional_info_template, context)
+                    return render(request, self.template_name, context)
             
             if city_id:
                 try:
@@ -128,30 +144,32 @@ class EditFreelancerPersonalInfoView(CustomLoginRequiredMixin, View):
                     user.city = city
                 except City.DoesNotExist:
                     messages.error(request, 'Selected city is not valid')
-                    return render(request, self.professional_info_template, context)
+                    return render(request, self.template_name, context)
 
+            # Handle profile image
             if profile_image:
                 fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'profile_images'))
                 filename = fs.save(profile_image.name, profile_image)
                 user.profile_image = filename.split('/')[-1]
                 
+            # Update user fields
             user.full_name = full_name
             user.username = username
             user.phone_number = phone_number
             user.bio = bio
-
             user.save()    
+            
             messages.success(request, 'Your profile has been updated successfully!')
             return redirect(self.freelancer_profile_url)
             
         except Exception as e:
             print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.personal_details_url)
+            return redirect(self.edit_url)
 
-class DeleteProfileImageView(CustomLoginRequiredMixin, View):
-    freelancer_profile_url = 'freelancer:profile'
-    personal_details_url = 'freelancer:edit-personal-info'
+class DeleteProfileImageView(BaseFreelancerView):
+    """Handle profile image deletion"""
+    edit_url = 'freelancer:edit-personal-info'
     
     def get(self, request):
         try:
@@ -170,39 +188,44 @@ class DeleteProfileImageView(CustomLoginRequiredMixin, View):
             return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.personal_details_url)
+            return redirect(self.edit_url)
 
-class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
-    professional_info_template = 'freelancerprofile/editprofessionalinfo.html'
-    professional_info_url = 'freelancer:edit-professional-info'
-    freelancer_profile_url = 'freelancer:profile'
+class ProfessionalInfoView(BaseFreelancerView):
+    """Handle freelancer professional information"""
+    template_name = 'freelancerprofile/editprofessionalinfo.html'
+    edit_url = 'freelancer:edit-professional-info'
 
     def get(self, request):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user)
+            freelancer = self.get_freelancer(request)
             all_skills = Skill.objects.all().order_by('name')
             selected_skills = freelancer.skills.values_list('id', flat=True)
            
             all_languages = Language.objects.all()
             language_proficiencies_list = []
+            
             for language in all_languages:
                 proficiency = FreelancerLanguage.objects.filter(
                     freelancer=freelancer, 
                     language=language
                 ).values_list('proficiency', flat=True).first()
+                
                 language_proficiencies_list.append({
                     'code': language.code,
                     'name': language.name,
                     'proficiency': proficiency if proficiency else None
                 })
 
-            return render(request, self.professional_info_template, {
+            return render(request, self.template_name, {
                 'freelancer': freelancer,
                 'skills': all_skills,
                 'skills_select': selected_skills,
                 'all_languages': all_languages,
-                'language_proficiencies_list': language_proficiencies_list
+                'language_proficiencies_list': language_proficiencies_list,
+                'expertise_levels': Freelancer.ExpertiseLevel.choices,
+                'availability_options': Freelancer.Availability.choices,
+                'project_durations': Freelancer.ProjectDuration.choices,
+                'communication_preferences': Freelancer.CommunicationPreference.choices,
             })
             
         except Exception as e:
@@ -212,23 +235,23 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
     
     def post(self, request):
         try: 
-            user = request.user
-            freelancer = Freelancer.objects.get(user=request.user)
+            freelancer = self.get_freelancer(request)
             all_skills = Skill.objects.all().order_by('name')
             all_languages = Language.objects.all()
 
-            hourly_rate = request.POST.get('hourly_rate')
+            # Get form data
             years_of_experience = request.POST.get('years_of_experience')
             expertise_level = request.POST.get('expertise_level')
             availability = request.POST.get('availability')
             preferred_project_duration = request.POST.get('preferred_project_duration')
             communication_preference = request.POST.get('communication_preference')
-            
-            selected_skills = request.POST.getlist('skills')
-            selected_skills = [int(skill_id) for skill_id in selected_skills]
+            professional_title = request.POST.get('professional_title').strip()
+            selected_skills = [int(skill_id) for skill_id in request.POST.getlist('skills')]
 
+            # Process language proficiencies
             language_proficiencies = {}
             language_proficiencies_list = []
+            
             for language in all_languages:
                 proficiency_value = request.POST.get(f"{language.code}_proficiency")
                 if proficiency_value:
@@ -240,45 +263,57 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                     'proficiency': int(proficiency_value) if proficiency_value else None
                 })
 
+            # Prepare context
             context = {
                 'freelancer': freelancer,
                 'skills': all_skills,
                 'skills_select': selected_skills,
                 'all_languages': all_languages,
                 'language_proficiencies_list': language_proficiencies_list, 
-                'hourly_rate': hourly_rate,
                 'years_of_experience': years_of_experience,
                 'expertise_level': expertise_level,
                 'availability': availability,
                 'preferred_project_duration': preferred_project_duration,
+                'professional_title': professional_title,
                 'communication_preference': communication_preference,
+                'expertise_levels': Freelancer.ExpertiseLevel.choices,
+                'availability_options': Freelancer.Availability.choices,
+                'project_durations': Freelancer.ProjectDuration.choices,
+                'communication_preferences': Freelancer.CommunicationPreference.choices,
             }
             
-            valid, error_message = validate_professional_info(
-                hourly_rate, 
+            # Validate professional info
+            valid, error_message = ProfessionalValidator.validate_professional_info(
                 years_of_experience,
                 expertise_level,
                 availability,
                 preferred_project_duration,
+                professional_title,
                 communication_preference,
                 selected_skills, 
                 language_proficiencies
             )
+            
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.professional_info_template, context)
+                return render(request, self.template_name, context)
                 
-            freelancer.hourly_rate = hourly_rate
+            # Update freelancer fields
             freelancer.years_of_experience = years_of_experience if years_of_experience else 0
             freelancer.expertise_level = expertise_level
             freelancer.availability = availability
             freelancer.preferred_project_duration = preferred_project_duration
+            freelancer.professional_title = professional_title
             freelancer.communication_preference = communication_preference
             
+            freelancer.save()
+            
+            # Update skills
             freelancer.skills.clear()
             skills = Skill.objects.filter(id__in=selected_skills)
             freelancer.skills.add(*skills)
             
+            # Update languages
             FreelancerLanguage.objects.filter(freelancer=freelancer).delete()
             for language_code, proficiency_level in language_proficiencies.items():
                 try:
@@ -291,54 +326,56 @@ class EditFreelancerProfessionalInfoView(CustomLoginRequiredMixin, View):
                 except Language.DoesNotExist:
                     continue
                 
-            user.save()
-            freelancer.save()
+            request.user.save()
             messages.success(request, "Your professional information has been updated successfully!")
             return redirect(self.freelancer_profile_url)
             
-        except Exception:
+        except Exception as e:
+            print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.professional_info_url)
-        
-class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
-    new_experience_template = 'freelancerprofile/addexperience.html'
-    new_experience_url = 'freelancer:add-experience'
-    freelancer_profile_url = 'freelancer:profile'
-    
+            return redirect(self.edit_url)
+
+class ExperienceBaseView(BaseFreelancerView):
+    """Base view for experience-related operations"""
+    def get_common_data(self, request):
+        """Helper method to get common data for experience views"""
+        return {
+            'skills': Skill.objects.all().order_by('name'),
+            'countries': Country.objects.all().order_by('name'),
+            'employment_types': WorkExperience.EmploymentType.choices
+        }
+
+class AddExperienceView(ExperienceBaseView):
+    """Handle adding new work experience"""
+    template_name = 'freelancerprofile/addexperience.html'
+    add_url = 'freelancer:add-experience'
+
     def get(self, request):
         try:
-            all_skills = Skill.objects.all().order_by('name')
-            all_countries = Country.objects.all().order_by('name')
-            return render(request, self.new_experience_template, {
-                'skills': all_skills,
-                'countries': all_countries,
-            })
-            
+            context = self.get_common_data(request)
+            return render(request, self.template_name, context)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
     
     def post(self, request):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user) 
+            freelancer = self.get_freelancer(request)
             
-            company_name = request.POST.get('company_name')
-            job_title = request.POST.get('job_title')
+            # Get form data
+            company_name = request.POST.get('company_name').strip()
+            job_title = request.POST.get('job_title').strip()
             employment_type = request.POST.get('employment_type')
             start_date = request.POST.get('start_date')
             currently_working = request.POST.get('currently_working') == 'on'  
             end_date = request.POST.get('end_date') if not currently_working else None
             country_id = request.POST.get('country')
             city_id = request.POST.get('city')
-            job_description = request.POST.get('job_description')
-            selected_skill_ids = request.POST.getlist('skills')
-            selected_skill_ids = [int(skill_id) for skill_id in selected_skill_ids]
+            job_description = request.POST.get('job_description').strip()
+            selected_skill_ids = [int(skill_id) for skill_id in request.POST.getlist('skills')]
             
-            all_skills = Skill.objects.all().order_by('name')
-            all_countries = Country.objects.all().order_by('name')
-            
-            form_data={
+            # Prepare form data for re-rendering
+            form_data = {
                 'company_name': company_name,
                 'job_title': job_title,
                 'employment_type': employment_type,
@@ -346,20 +383,23 @@ class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
                 'currently_working': currently_working,
                 'end_date': end_date,
                 'job_description': job_description,
-                'countries': all_countries,
+                **self.get_common_data(request),
                 'current_country': int(country_id) if country_id else None,
                 'current_city': int(city_id) if city_id else None,
-                'skills': all_skills,
                 'skills_select': selected_skill_ids,
             }
             
-            valid, error_message = validate_employment_data(company_name, job_title, employment_type, start_date,
+            # Validate employment data
+            valid, error_message = EmploymentValidator.validate_employment_data(
+                company_name, job_title, employment_type, start_date,
                 currently_working, end_date, country_id, city_id, selected_skill_ids
             )
+            
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.new_experience_template, form_data)
+                return render(request, self.template_name, form_data)
             
+            # Create experience
             country = Country.objects.get(id=country_id) if country_id else None
             city = City.objects.get(id=city_id) if city_id else None
                 
@@ -386,35 +426,26 @@ class AddFreelancerExperienceView(CustomLoginRequiredMixin, View):
             
         except Exception:
             messages.error(request, 'Something went wrong while saving your experience.')
-            return redirect(self.new_experience_url)
-        
-class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
-    edit_experience_template = 'freelancerprofile/editexperience.html'
-    edit_experience_url = 'freelancer:edit-experience'
-    freelancer_profile_url = 'freelancer:profile'
-    
+            return redirect(self.add_url)
+
+class EditExperienceView(ExperienceBaseView):
+    """Handle editing work experience"""
+    template_name = 'freelancerprofile/editexperience.html'
+    edit_url = 'freelancer:edit-experience'
+
     def get(self, request, experience_id):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user) 
             experience = WorkExperience.objects.get(id=experience_id, freelancer__user=request.user)
-            all_skills = Skill.objects.all().order_by('name')
-            all_countries = Country.objects.all().order_by('name')
             selected_skill_ids = list(experience.skills.values_list('id', flat=True))
             
-            current_country = experience.country.id if user.country else None
-            current_city = experience.city.id if user.city else None
-            
             form_data = {
-                'freelancer': freelancer,
                 'experience': experience,
-                'countries': all_countries,
-                'current_country': current_country,
-                'current_city': current_city,
-                'skills': all_skills,
+                'current_country': experience.country.id if experience.country else None,
+                'current_city': experience.city.id if experience.city else None,
                 'skills_select': selected_skill_ids,
+                **self.get_common_data(request),
             }
-            return render(request, self.edit_experience_template, form_data)
+            return render(request, self.template_name, form_data)
 
         except Exception as e:
             print('Exception:', e)
@@ -423,10 +454,10 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
     
     def post(self, request, experience_id):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=request.user)
-            experience = WorkExperience.objects.get(id=experience_id, freelancer__user=user)
+            freelancer = self.get_freelancer(request)
+            experience = WorkExperience.objects.get(id=experience_id, freelancer__user=request.user)
             
+            # Get form data
             company_name = request.POST.get('company_name')
             job_title = request.POST.get('job_title')
             employment_type = request.POST.get('employment_type')
@@ -436,14 +467,10 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
             country_id = request.POST.get('country')
             city_id = request.POST.get('city')
             job_description = request.POST.get('job_description')
-            selected_skill_ids = request.POST.getlist('skills')
-            selected_skill_ids = [int(skill_id) for skill_id in selected_skill_ids]
+            selected_skill_ids = [int(skill_id) for skill_id in request.POST.getlist('skills')]
             
-            all_skills = Skill.objects.all().order_by('name')
-            all_countries = Country.objects.all().order_by('name')
-            
+            # Prepare form data
             form_data = {
-                'freelancer': freelancer,
                 'experience': experience,
                 'company_name': company_name,
                 'job_title': job_title,
@@ -451,22 +478,24 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
                 'start_date': start_date,
                 'currently_working': currently_working,
                 'end_date': end_date,
-                'countries': all_countries,
+                **self.get_common_data(request),
                 'current_country': int(country_id) if country_id else None,
                 'current_city': int(city_id) if city_id else None,
                 'job_description': job_description,
-                'skills': all_skills,
                 'skills_select': selected_skill_ids,
             }
             
-            valid, error_message = validate_employment_data(
+            # Validate employment data
+            valid, error_message = EmploymentValidator.validate_employment_data(
                 company_name, job_title, employment_type, start_date,
                 currently_working, end_date, country_id, city_id, selected_skill_ids
             )            
+            
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.edit_experience_template, form_data)
+                return render(request, self.template_name, form_data)
             
+            # Update experience
             country = Country.objects.get(id=country_id) if country_id else None
             city = City.objects.get(id=city_id) if city_id else None
             
@@ -482,7 +511,6 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
             experience.country = country
             experience.city = city
             experience.description = job_description
-            
             experience.save()
             experience.skills.set(selected_skill_ids)
             
@@ -492,11 +520,10 @@ class EditFreelancerExperienceView(CustomLoginRequiredMixin, View):
         except Exception as e:
             print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.edit_experience_url, experience_id=experience_id)
-        
-class DeleteFreelancerExperienceView(CustomLoginRequiredMixin, View):
-    freelancer_profile_url = 'freelancer:profile'
-    
+            return redirect(reverse(self.edit_url, kwargs={'experience_id': experience_id}))
+
+class DeleteExperienceView(BaseFreelancerView):
+    """Handle deleting work experience"""
     def get(self, request, experience_id):
         try:
             experience = WorkExperience.objects.get(
@@ -512,24 +539,44 @@ class DeleteFreelancerExperienceView(CustomLoginRequiredMixin, View):
             print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
-       
-class AddFreelancerEducationView(CustomLoginRequiredMixin, View):
-    add_education_template = 'freelancerprofile/addeducation.html'
-    add_education_url = 'freelancer:add-education'
-    freelancer_profile_url = 'freelancer:profile'
-    
+
+class EducationBaseView(BaseFreelancerView):
+    """Base view for education-related operations"""
+    def get_education_context(self, education=None):
+        """Helper method to get education context"""
+        context = {
+            'degree_choices': Education.DegreeType.choices  # Add degree choices to context
+        }
+        if education:
+            context.update({
+                'education': education,
+                'institution': education.institution,
+                'degree': education.degree,
+                'gpa': education.gpa,
+                'start_date': education.start_date.strftime('%Y-%m') if education.start_date else None,
+                'currently_studying': education.currently_studying,
+                'end_date': education.end_date.strftime('%Y-%m') if education.end_date else None,
+            })
+        return context
+
+class AddEducationView(EducationBaseView):
+    """Handle adding new education"""
+    template_name = 'freelancerprofile/addeducation.html'
+    add_url = 'freelancer:add-education'
+
     def get(self, request):
         try:
-            return render(request, self.add_education_template)
+            context = self.get_education_context()  # Get base context with choices
+            return render(request, self.template_name, context)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
         
     def post(self, request):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user)
+            freelancer = self.get_freelancer(request)
             
+            # Get form data
             institution = request.POST.get('institution')
             degree = request.POST.get('degree')
             gpa = request.POST.get('gpa')
@@ -537,20 +584,27 @@ class AddFreelancerEducationView(CustomLoginRequiredMixin, View):
             currently_studying = request.POST.get('currently_studying') == 'on'  
             end_date = request.POST.get('end_date') if not currently_studying else None
             
-            context = {
+            # Prepare context
+            context = self.get_education_context()
+            context.update({
                 'institution': institution,
                 'degree': degree,
                 'gpa': gpa,
                 'start_date': start_date,
                 'currently_studying': currently_studying,
                 'end_date': end_date,
-            }
+            })
             
-            valid, error_message = validate_education_data(institution, degree, start_date, currently_studying, end_date, gpa)
+            # Validate education data
+            valid, error_message = EducationValidator.validate_education_data(
+                institution, degree, start_date, currently_studying, end_date, gpa
+            )
+            
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.add_education_template, context)
+                return render(request, self.template_name, context)
             
+            # Create education
             start_date_parsed = datetime.strptime(start_date, '%Y-%m').date()
             end_date_parsed = datetime.strptime(end_date, '%Y-%m').date() if end_date else None
             
@@ -570,33 +624,32 @@ class AddFreelancerEducationView(CustomLoginRequiredMixin, View):
             
         except Exception:
             messages.error(request, 'Something went wrong while saving your experience.')
-            return redirect(self.add_education_url)
+            return redirect(self.add_url)
 
-class EditFreelancerEducationView(CustomLoginRequiredMixin, View):
-    edit_education_template = 'freelancerprofile/editeducation.html'
-    edit_education_url = 'freelancer:edit-education'
-    freelancer_profile_url = 'freelancer:profile'
-    
+class EditEducationView(EducationBaseView):
+    """Handle editing education"""
+    template_name = 'freelancerprofile/editeducation.html'
+    edit_url = 'freelancer:edit-education'
+
     def get(self, request, education_id):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user) 
-            education = Education.objects.get(id=education_id, freelancer__user=user)
-            
-            return render(request, self.edit_education_template, {
-                'freelancer': freelancer,
-                'education': education
-            })
+            education = Education.objects.get(id=education_id, freelancer__user=request.user)
+            context = self.get_education_context(education)  # This now includes degree_choices
+            context['freelancer'] = self.get_freelancer(request)
+            return render(request, self.template_name, context)
+        except Education.DoesNotExist:
+            messages.error(request, 'Education record not found.')
+            return redirect(self.freelancer_profile_url)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
        
     def post(self, request, education_id):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user) 
-            education = Education.objects.get(id=education_id, freelancer__user=user)
+            freelancer = self.get_freelancer(request)
+            education = Education.objects.get(id=education_id, freelancer__user=request.user)
             
+            # Get form data
             institution = request.POST.get('institution')
             degree = request.POST.get('degree')
             gpa = request.POST.get('gpa')
@@ -604,22 +657,28 @@ class EditFreelancerEducationView(CustomLoginRequiredMixin, View):
             currently_studying = request.POST.get('currently_studying') == 'on'  
             end_date = request.POST.get('end_date') if not currently_studying else None
             
-            context = {
+            # Prepare context with degree choices
+            context = self.get_education_context(education)  # Get base context with choices
+            context.update({
                 'freelancer': freelancer,
-                'education': education,
                 'institution': institution,
                 'degree': degree,
                 'gpa': gpa,
                 'start_date': start_date,
                 'currently_studying': currently_studying,
                 'end_date': end_date,
-            }
+            })
             
-            valid, error_message = validate_education_data(institution, degree, start_date, currently_studying, end_date, gpa)
+            # Validate education data
+            valid, error_message = EducationValidator.validate_education_data(
+                institution, degree, start_date, currently_studying, end_date, gpa
+            )
+            
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.edit_education_template, context)
+                return render(request, self.template_name, context)
             
+            # Update education
             start_date_parsed = datetime.strptime(start_date, '%Y-%m').date()
             end_date_parsed = datetime.strptime(end_date, '%Y-%m').date() if end_date else None
             
@@ -634,14 +693,16 @@ class EditFreelancerEducationView(CustomLoginRequiredMixin, View):
             messages.success(request, 'Your education has been successfully updated!')
             return redirect(self.freelancer_profile_url)
             
+        except Education.DoesNotExist:
+            messages.error(request, 'Education record not found.')
+            return redirect(self.freelancer_profile_url)
         except Exception as e:
-                print('Exception:', e)
-                messages.error(request, 'Something went wrong. Please try again later.')
-                return redirect(self.edit_education_url, education_id=education_id)
+            print(f'Error updating education: {str(e)}')
+            messages.error(request, 'Something went wrong while updating your education.')
+            return redirect(reverse(self.edit_url, kwargs={'education_id': education_id}))
 
-class DeleteFreelancerEducationView(CustomLoginRequiredMixin, View):
-    freelancer_profile_url = 'freelancer:profile'
-    
+class DeleteEducationView(BaseFreelancerView):
+    """Handle deleting education"""
     def get(self, request, education_id):
         try:
             education = Education.objects.get(
@@ -657,17 +718,16 @@ class DeleteFreelancerEducationView(CustomLoginRequiredMixin, View):
             print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.freelancer_profile_url)
-        
-class EditFreelancerLinksView(CustomLoginRequiredMixin, View):
-    edit_links_template = 'freelancerprofile/editlinks.html'
-    edit_links_url = 'freelancer:edit-links'
-    freelancer_profile_url = 'freelancer:profile'
-    
+
+class EditLinksView(BaseFreelancerView):
+    """Handle editing freelancer links"""
+    template_name = 'freelancerprofile/editlinks.html'
+    edit_url = 'freelancer:edit-links'
+
     def get(self, request):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user)
-            return render(request, self.edit_links_template, {
+            freelancer = self.get_freelancer(request)
+            return render(request, self.template_name, {
                 'freelancer': freelancer
             })
         except Exception:
@@ -676,13 +736,14 @@ class EditFreelancerLinksView(CustomLoginRequiredMixin, View):
         
     def post(self, request):
         try:
-            user = request.user
-            freelancer = Freelancer.objects.get(user=user)
+            freelancer = self.get_freelancer(request)
             
+            # Get form data
             portfolio_url = request.POST.get('portfolio_url', '').strip()
             github_url = request.POST.get('github_url', '').strip()
             linkedin_url = request.POST.get('linkedin_url', '').strip()
             
+            # Prepare context
             context = {
                 'freelancer': freelancer,
                 'portfolio_url': portfolio_url,
@@ -690,11 +751,14 @@ class EditFreelancerLinksView(CustomLoginRequiredMixin, View):
                 'linkedin_url': linkedin_url,
             }
             
-            valid, error_message = validate_urls(portfolio_url, github_url, linkedin_url)
+            # Validate URLs
+            valid, error_message = URLValidator.validate_urls(portfolio_url, github_url, linkedin_url)
+            
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.edit_links_template, context)
+                return render(request, self.template_name, context)
             
+            # Update links
             freelancer.portfolio_link = portfolio_url
             freelancer.github_link = github_url
             freelancer.linkedin_link = linkedin_url
@@ -706,41 +770,44 @@ class EditFreelancerLinksView(CustomLoginRequiredMixin, View):
         except Exception as e:
             print('Exception:', e)
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.edit_links_url)
+            return redirect(self.edit_url)
 
-class FreelancerPasswordChangeView(CustomLoginRequiredMixin, View):
-    password_update_template = 'freelancerprofile/passwordupdate.html'
-    password_update_url = 'freelancer:change-password'
-    home_url = 'home:home'
-    
+class PasswordChangeView(BaseFreelancerView):
+    """Handle password change"""
+    template_name = 'freelancerprofile/passwordupdate.html'
+    edit_url = 'freelancer:change-password'
+
     def get(self, request):
         try:
-            return render(request, self.password_update_template)
+            return render(request, self.template_name)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.home_url)
         
     def post(self, request):
         try:
-            user = request.user
-            
+            # Get form data
             oldpassword = request.POST.get('old_password').strip()
             newpassword = request.POST.get('new_password1').strip()
             confirmpassword = request.POST.get('new_password2').strip()
             
-            valid, error_message = validate_change_password_form(oldpassword, newpassword, confirmpassword, request)
+            # Validate password change
+            valid, error_message = PasswordValidator.validate_change_password_form(
+                oldpassword, newpassword, confirmpassword, request
+            )
+            
             if not valid:
                 messages.error(request, error_message)
-                return render(request, self.password_update_template)    
+                return render(request, self.template_name)    
              
-            user.set_password(newpassword)
-            user.save()
-            update_session_auth_hash(request, user)
+            # Update password
+            request.user.set_password(newpassword)
+            request.user.save()
+            update_session_auth_hash(request, request.user)
             
             messages.success(request, 'Your password has been updated successfully!')
-            return redirect(self.password_update_url)
+            return redirect(self.edit_url)
 
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.password_update_url)
-            
+            return redirect(self.edit_url)

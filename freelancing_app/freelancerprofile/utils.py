@@ -1,306 +1,486 @@
-from django.conf import settings
+# utils.py
+from django.core.files.uploadedfile import UploadedFile
+from django.http import HttpRequest
 from accounts.models import User
+from typing import Optional, Tuple, Dict, Any
+from django.conf import settings
 from datetime import datetime
 import os
 import re
 
-def validate_user_data(profile_image, full_name, username, phone_number, bio, city_id, country_id, request=None):
-    try:
-        if profile_image:
-            valid_extensions = ['.png', '.jpg', '.jpeg']
-            file_extension = os.path.splitext(profile_image.name)[1].lower()
-            
-            if file_extension not in valid_extensions:
-                return False, "Only JPG, PNG, or JPEG file types are allowed."
-            
-            max_size = 10 * 1024 * 1024
-            if profile_image.size > max_size:
-                return False, "File size exceeds the 10MB limit."
-
-            try:
-                from PIL import Image
-                Image.open(profile_image).verify()
-            except:
-                return False, "Invalid image file."
-
-        if not full_name or str(full_name).strip().lower() == "none":
-            return False, "Full name is required."
-        
-        full_name = str(full_name).strip()
-        if len(full_name) < 3:
-            return False, "Full name must be at least 3 characters long."    
-        
-        if len(full_name) > 30: 
-            return False, "Full name must not exceed 20 characters."
-        
-        if full_name.isdigit():
-            return False, "Full name cannot be only numbers."
-        
-        if full_name[0].isdigit():
-            return False, "Full name cannot start with a number."
-        
-        if not re.match(r'^[a-zA-Z\s\-\.\']+$', full_name):
-            return False, "Full name contains invalid characters."
-
-        if not username:
-            return False, "Username is required."
-        
-        username = str(username).strip()
-        if " " in username:
-            return False, "Username cannot contain spaces."
-
-        if username.isdigit():
-            return False, "Username cannot be only numbers."
-        
-        if username[0].isdigit():
-            return False, "Username cannot start with a number."
-        
-        if len(username) < 5:
-            return False, "Username must be at least 5 characters long."
-        
-        if len(username) > 30:
-            return False, "Username must not exceed 15 characters."
-        
-        if not re.match(r'^[a-zA-Z0-9_\.]+$', username):
-            return False, "Username can only contain letters, numbers, underscores."
-        
-        if username.lower() in settings.RESERVED_USERNAMES:
-            return False, "This username is reserved. Please choose another."
-        
-        if User.objects.filter(username__iexact=username).exclude(id=request.user.id if request else None).exists():
-            return False, "Username already taken. Please choose another."
-        
-        if not phone_number or str(phone_number).strip().lower() == "none":
-            return False, "Phone number is required."
-        
-        phone_number = str(phone_number).strip()
-        if not phone_number.isdigit() or len(phone_number) != 10:
-            return False, "Phone number must be exactly 10 digits."       
-        
-        if not phone_number.startswith(('98', '97', '99')):
-            return False, "Phone number must start with a valid prefix (e.g., 98, 97)."
-        
-        if User.objects.filter(phone_number=phone_number).exclude(id=request.user.id if request else None).exists():
-            return False, "This phone number is already registered."
-        
-        if not city_id or not country_id:
-            return False, "City and country are required."
-        
-        if bio:
-            bio = str(bio).strip()
-            if len(bio) < 10:
-                return False, "Bio must be at least 10 characters."
-            if len(bio) > 500: 
-                return False, "Bio must not exceed 500 characters."
-        
-        return True, None
+class Validator:
+    """Base validator class with common validation methods"""
     
-    except Exception as e:
-        return False, "Something went wrong. Please try again."
-
-def validate_professional_info(hourly_rate, years_of_experience, expertise_level, availability, preferred_project_duration, communication_preference, selected_skills, 
-    language_proficiencies):
+    @classmethod
+    def validate_required(cls, value: Any, field_name: str) -> Tuple[bool, str]:
+        """Validate that a required field has a value"""
+        if not value:
+            return False, f"{field_name.replace('_', ' ').title()} is required."
+        return True, ""
     
-    try:
-        if not hourly_rate:
-            return False, "Hourly rate is required."
+    @classmethod
+    def validate_length(cls, value: str, min_len: int, max_len: int, field_name: str) -> Tuple[bool, str]:
+        """Validate string length constraints"""
+        if len(value) < min_len:
+            return False, f"{field_name.replace('_', ' ').title()} must be at least {min_len} characters."
+        if len(value) > max_len:
+            return False, f"{field_name.replace('_', ' ').title()} must not exceed {max_len} characters."
+        return True, ""
+
+class ProfileValidator(Validator):
+    """Handles validation of profile data"""
+    
+    MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB
+    VALID_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg']
+    NAME_REGEX = r'^[a-zA-Z\s\-\.\']+$'
+    USERNAME_REGEX = r'^[a-zA-Z0-9_\.]+$'
+    
+    @classmethod
+    def validate_profile_image(cls, image: Optional[UploadedFile]) -> Tuple[bool, str]:
+        """Validate profile image file"""
+        if not image:
+            return True, ""
+            
+        ext = os.path.splitext(image.name)[1].lower()
+        if ext not in cls.VALID_IMAGE_EXTENSIONS:
+            return False, "Only JPG, PNG, or JPEG file types are allowed."
+        
+        if image.size > cls.MAX_IMAGE_SIZE:
+            return False, "File size exceeds the 10MB limit."
             
         try:
-            hourly_rate = float(hourly_rate)
-            if hourly_rate < 100:
-                return False, "Hourly rate should be at least 100 NPR."
-            if hourly_rate > 10000:
-                return False, "Hourly rate cannot exceed 10,000 NPR."
-            if not hourly_rate.is_integer():
-                return False, "Hourly rate should be a whole number."
-        except ValueError:
-            return False, "Please enter a valid number for hourly rate."
-        
-        if years_of_experience:
-            try:
-                years_of_experience = int(years_of_experience)
-                if years_of_experience < 0:
-                    return False, "Years of experience cannot be negative."
-                if years_of_experience > 10:
-                    return False, "Years of experience cannot exceed 50."
-            except ValueError:
-                return False, "Please enter a valid number for years of experience."
-        
-        if not expertise_level:
-            return False, "Expertise level is required."
-        
-        if not availability:
-            return False, "Availability is required."
-        
-        if not preferred_project_duration:
-            return False, "Preferred project duration is required."
-        
-        if not communication_preference:
-            return False, "Communication preference is required."
-
-        if not selected_skills or len(selected_skills) == 0:
-            return False, "At least one skill is required."
+            from PIL import Image
+            Image.open(image).verify()
+        except ImportError:
+            return False, "Image processing library not available."
+        except Exception:
+            return False, "Invalid image file."
             
-        if len(selected_skills) > 20:
-            return False, "You can select maximum 20 skills."
+        return True, ""
 
-        if not language_proficiencies or len(language_proficiencies) == 0:
-            return False, "At least one language proficiency is required."
+    @classmethod
+    def validate_full_name(cls, name: str) -> Tuple[bool, str]:
+        """Validate full name format"""
+        name = str(name).strip()
+        
+        if not name or name.lower() == "none":
+            return False, "Full name is required"
+            
+        valid, message = cls.validate_length(name, 3, 30, "full name")
+        if not valid:
+            return valid, message
+            
+        if name.isdigit():
+            return False, "Full name cannot be only numbers."
+            
+        if name[0].isdigit():
+            return False, "Full name cannot start with a number."
+            
+        if not re.match(cls.NAME_REGEX, name):
+            return False, "Full name contains invalid characters."
+            
+        return True, ""
 
-        return True, None
+    @classmethod
+    def validate_username(cls, username: str, request: Optional[HttpRequest] = None) -> Tuple[bool, str]:
+        """Validate username format and uniqueness"""
+        username = str(username).strip()
         
-    except Exception as e:
-        return False, "Something went wrong during validation. Please try again."
+        valid, message = cls.validate_required(username, "username")
+        if not valid:
+            return valid, message
+            
+        if " " in username:
+            return False, "Username cannot contain spaces."
+            
+        if username.isdigit():
+            return False, "Username cannot be only numbers."
+            
+        if username[0].isdigit():
+            return False, "Username cannot start with a number."
+            
+        valid, message = cls.validate_length(username, 5, 30, "username")
+        if not valid:
+            return valid, message
+            
+        if not re.match(cls.USERNAME_REGEX, username):
+            return False, "Username can only contain letters, numbers, underscores."
+            
+        if username.lower() in settings.RESERVED_USERNAMES:
+            return False, "This username is reserved. Please choose another."
+            
+        user_id = request.user.id if request and hasattr(request, 'user') else None
+        if User.objects.filter(username__iexact=username).exclude(id=user_id).exists():
+            return False, "Username already taken."
+            
+        return True, ""
 
-def validate_employment_data( company_name, job_title, employment_type, start_date, currently_working, end_date, country_id, city_id, 
-    selected_skill_ids
-    ):  
-    
-    if not company_name or company_name.strip() == '':
-        return False, 'Company name is required.'
-    
-    if not job_title or job_title.strip() == '':
-        return False, 'Job title is required.'
-    
-    if not employment_type or employment_type.strip() == '':
-        return False, 'Employment type is required.'
-    
-    if not start_date or start_date.strip() == '':
-        return False, 'Start date is required.'
-    
-    if not currently_working and (not end_date or end_date.strip() == ''):
-        return False, 'End date is required if not currently working.'
-    
-    if not country_id or country_id.strip() == '':
-        return False, 'Country is required.'
-    
-    if not city_id or city_id.strip() == '':
-        return False, 'City is required.'
-    
-    try:
-        start_date_obj = datetime.strptime(start_date, '%Y-%m')
+    @classmethod
+    def validate_phone_number(cls, phone: str, request: Optional[HttpRequest] = None) -> Tuple[bool, str]:
+        """Validate phone number format and uniqueness"""
+        phone = str(phone).strip()
         
-        if start_date_obj > datetime.now():
-            return False, 'Start date cannot be in the future.'
+        valid, message = cls.validate_required(phone, "phone number")
+        if not valid:
+            return valid, message
+            
+        if not phone.isdigit() or len(phone) != 10:
+            return False, "Phone number must be exactly 10 digits."
+            
+        if not phone.startswith(('98', '97', '99')):
+            return False, "Phone number must start with 98, 97 or 99."
+            
+        user_id = request.user.id if request and hasattr(request, 'user') else None
+        if User.objects.filter(phone_number=phone).exclude(id=user_id).exists():
+            return False, "Phone number already registered."
+            
+        return True, ""
+
+    @classmethod
+    def validate_bio(cls, bio: Optional[str]) -> Tuple[bool, str]:
+        """Validate bio text length"""
+        if not bio:
+            return True, ""
+            
+        bio = str(bio).strip()
+        return cls.validate_length(bio, 10, 500, "bio")
+
+    @classmethod
+    def validate_location(cls, city_id: Optional[int], country_id: Optional[int]) -> Tuple[bool, str]:
+        """Validate location selection"""
+        if not city_id or not country_id:
+            return False, "City and country are required."
+        return True, ""
+
+    @classmethod
+    def validate_user_data(
+        cls, 
+        profile_image: Optional[UploadedFile],
+        full_name: str,
+        username: str,
+        phone_number: str,
+        bio: str,
+        city_id: Optional[int],
+        country_id: Optional[int],
+        request: HttpRequest
+    ) -> Tuple[bool, str]:
+        """Validate all user profile data"""
+        validators = [
+            (cls.validate_profile_image, (profile_image,)),
+            (cls.validate_full_name, (full_name,)),
+            (cls.validate_username, (username, request)),
+            (cls.validate_phone_number, (phone_number, request)),
+            (cls.validate_bio, (bio,)),
+            (cls.validate_location, (city_id, country_id)),
+        ]
         
-        if not currently_working and end_date:
-            try:
-                end_date_obj = datetime.strptime(end_date, '%Y-%m')
+        for validator, args in validators:
+            valid, message = validator(*args)
+            if not valid:
+                return False, message
                 
-                if end_date_obj > datetime.now():
-                    return False, 'End date cannot be in the future.'
-                
-                if end_date_obj < start_date_obj:
-                   return False, 'End date must be after start date.'
-                    
-            except ValueError:
-                return False, 'Invalid end date format.'
-    except ValueError:
-       return False, 'Invalid start date format.'
+        return True, ""
+
+class ProfessionalValidator(Validator):
+    """Handles validation of professional information"""
     
-    if not selected_skill_ids or len(selected_skill_ids) == 0:
+    @classmethod
+    def validate_professional_title(cls, title: str) -> Tuple[bool, str]:
+        """Validate professional title"""
+        if not title:
+            return False, "Professional title is required."
+        if len(title) > 100:
+            return False, "Professional title cannot exceed 100 characters."
+        return True, ""
+    
+    @classmethod
+    def validate_experience(cls, years: Optional[str]) -> Tuple[bool, str]:
+        """Validate years of experience"""
+        if not years:
+            return True, ""
+            
+        try:
+            years_int = int(years)
+            if years_int < 0:
+                return False, "Experience cannot be negative."
+            if years_int > 50:
+                return False, "Experience cannot exceed 50 years."
+        except ValueError:
+            return False, "Enter a valid number for experience."
+            
+        return True, ""
+
+    @classmethod
+    def validate_skills(cls, skills: list, max_skills: int = 20) -> Tuple[bool, str]:
+        """Validate skills selection"""
+        if not skills or len(skills) == 0:
             return False, "At least one skill is required."
-    
-    return True, None
+        if len(skills) > max_skills:
+            return False, f"You can select maximum {max_skills} skills."
+        return True, ""
 
-def validate_education_data(institution, degree, start_date, currently_studying, end_date, gpa):
-    if not institution or institution.strip() == '':
-        return False, 'Institution name is required.'
+    @classmethod
+    def validate_professional_info(
+        cls,
+        years_of_experience: str,
+        expertise_level: str,
+        availability: str,
+        preferred_project_duration: str,
+        professional_title: str,
+        communication_preference: str,
+        selected_skills: list,
+        language_proficiencies: Dict[str, int]
+    ) -> Tuple[bool, str]:
+        """Validate all professional information"""
+        required_fields = {
+            "expertise_level": expertise_level,
+            "availability": availability,
+            "preferred_project_duration": preferred_project_duration,
+            "professional_title": professional_title,
+            "communication_preference": communication_preference,
+        }
+        
+        for field, value in required_fields.items():
+            valid, message = cls.validate_required(value, field)
+            if not valid:
+                return False, message
+            
+        valid, message = cls.validate_professional_title(professional_title)
+        if not valid:
+            return False, message
+                
+        valid, message = cls.validate_experience(years_of_experience)
+        if not valid:
+            return False, message
+            
+        valid, message = cls.validate_skills(selected_skills)
+        if not valid:
+            return False, message
+            
+        return True, ""
+
+class DateValidator(Validator):
+    """Handles date validation logic"""
     
-    if not degree or degree.strip() == '':
-        return False, 'Degree is required.'
+    DATE_FORMAT = '%Y-%m'
     
-    if not start_date or start_date.strip() == '':
-        return False, 'Start date is required.'
+    @classmethod
+    def validate_date_range(
+        cls, 
+        start_date: str, 
+        end_date: Optional[str], 
+        currently_active: bool
+    ) -> Tuple[bool, str]:
+        """Validate date range for experiences/education"""
+        try:
+            start = datetime.strptime(start_date, cls.DATE_FORMAT)
+            
+            if start > datetime.now():
+                return False, "Start date cannot be in the future."
+                
+            if not currently_active:
+                if not end_date:
+                    return False, "End date is required if you're not currently working here."
+
+                try:
+                    end = datetime.strptime(end_date, cls.DATE_FORMAT)
+
+                    if end > datetime.now():
+                        return False, "End date cannot be in the future."
+                    if end < start:
+                        return False, "End date must be after start date."
+                except ValueError:
+                    return False, "Invalid end date format."
+                    
+        except ValueError:
+            return False, "Invalid start date format."
+            
+        return True, ""
+
+class EducationValidator(Validator):
+    """Handles education data validation"""
     
-    if not currently_studying and (not end_date or end_date.strip() == ''):
-        return False, 'End date is required if not currently studying.'
-    
-    if gpa and gpa.strip() != '':
+    @classmethod
+    def validate_gpa(cls, gpa: Optional[str]) -> Tuple[bool, str]:
+        """Validate GPA value"""
+        if not gpa or gpa.strip() == '':
+            return True, ""
+            
         try:
             gpa_value = float(gpa)
             if gpa_value < 0 or gpa_value > 4:
-                return False, 'GPA must be between 0 and 4.0'
+                return False, "GPA must be between 0 and 4.0."
         except ValueError:
-            return False, 'Invalid GPA format. Please use numbers only (e.g., 3.5)'
-    
-    try:
-        start_date_obj = datetime.strptime(start_date, '%Y-%m')
+            return False, "Invalid GPA format."
+            
+        return True, ""
+
+    @classmethod
+    def validate_education_data(
+        cls,
+        institution: str,
+        degree: str,
+        start_date: str,
+        currently_studying: bool,
+        end_date: Optional[str],
+        gpa: Optional[str]
+    ) -> Tuple[bool, str]:
+        """Validate all education data"""
+        required_fields = {
+            "institution": institution,
+            "degree": degree,
+            "start_date": start_date,
+        }
         
-        if start_date_obj > datetime.now():
-            return False, 'Start date cannot be in the future.'
-        
-        if not currently_studying and end_date:
-            try:
-                end_date_obj = datetime.strptime(end_date, '%Y-%m')
+        for field, value in required_fields.items():
+            valid, message = cls.validate_required(value, field)
+            if not valid:
+                return False, message
                 
-                if end_date_obj > datetime.now():
-                    return False, 'End date cannot be in the future.'
+        valid, message = DateValidator.validate_date_range(
+            start_date, end_date, currently_studying
+        )
+        if not valid:
+            return False, message
+            
+        valid, message = cls.validate_gpa(gpa)
+        if not valid:
+            return False, message
+            
+        return True, ""
+
+class EmploymentValidator(Validator):
+    """Handles employment/experience data validation"""
+    
+    @classmethod
+    def validate_employment_data(
+        cls,
+        company_name: str,
+        job_title: str,
+        employment_type: str,
+        start_date: str,
+        currently_working: bool,
+        end_date: Optional[str],
+        country_id: Optional[int],
+        city_id: Optional[int],
+        selected_skill_ids: list
+    ) -> Tuple[bool, str]:
+        """Validate all employment data"""
+        required_fields = {
+            "company_name": company_name,
+            "job_title": job_title,
+            "employment_type": employment_type,
+            "start_date": start_date,
+        }
+        
+        for field, value in required_fields.items():
+            valid, message = cls.validate_required(value, field)
+            if not valid:
+                return False, message
                 
-                if end_date_obj < start_date_obj:
-                    return False, 'End date must be after start date.'
-                    
-            except ValueError:
-                return False, 'Invalid end date format.'
-    except ValueError:
-        return False, 'Invalid start date format.'
-    
-    return True, None
-
-def validate_change_password_form(oldpassword, newpassword, confirmpassword, request=None):
-    try:
-        
-        if not oldpassword or not newpassword or not confirmpassword:
-            return False, 'All fields are required.'
-        
-        if not request.user.check_password(oldpassword):
-            return False, 'Your old password was entered incorrectly.'
-        
-        if ' ' in newpassword or ' ' in confirmpassword:
-            return False, 'Password should not contain spaces.'
-        
-        if newpassword != confirmpassword:
-            return False, 'Password do not match.'
-    
-        if len(newpassword) < 8:
-            return False, "Password must be at least 8 characters long."
-        
-        if not re.search(r'[A-Z]', newpassword):
-            return False, "Password must contain at least one uppercase letter."
-        
-        if not re.search(r'[0-9]', newpassword):
-            return False, "Password must contain at least one number."
-        
-        if not re.search(r'[@$!%*?&]', newpassword):
-            return False, "Password must contain at least one special character."
-        
-    except Exception as e:
-        return False, "Something went wrong. Please try again."
-    
-    return True, None
-
-def validate_urls(portfolio_url=None, github_url=None, linkedin_url=None):
-    try:
-        url_regex = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$'
-        
-        if portfolio_url:
-            if not re.match(url_regex, portfolio_url):
-                return False, "Please enter a valid portfolio URL (e.g., https://example.com)"
+        valid, message = DateValidator.validate_date_range(
+            start_date, end_date, currently_working
+        )
+        if not valid:
+            return False, message
             
-        if github_url:
-            if not re.match(url_regex, github_url):
-                return False, "Please enter a valid GitHub URL (e.g., https://github.com/username)"
-            if not github_url.lower().startswith(('http://github.com/', 'https://github.com/', 'http://www.github.com/', 'https://www.github.com/')):
-                return False, "Please enter a valid GitHub URL starting with 'https://github.com/'"
+        valid, message = ProfileValidator.validate_location(city_id, country_id)
+        if not valid:
+            return False, message
             
-        if linkedin_url:
-            if not re.match(url_regex, linkedin_url):
-                return False, "Please enter a valid LinkedIn URL (e.g., https://linkedin.com/in/username)"
-            if not linkedin_url.lower().startswith(('http://linkedin.com/', 'https://linkedin.com/', 'http://www.linkedin.com/', 'https://www.linkedin.com/')):
-                return False, "Please enter a valid LinkedIn URL starting with 'https://linkedin.com/'"
+        valid, message = ProfessionalValidator.validate_skills(selected_skill_ids)
+        if not valid:
+            return False, message
             
-        return True, None
-    
-    except Exception as e:
-        return False, "Something went wrong. Please try again."
+        return True, ""
 
+class PasswordValidator(Validator):
+    """Handles password validation"""
+    
+    @classmethod
+    def validate_new_password(cls, password: str, confirm_password: str) -> Tuple[bool, str]:
+        """Validate password requirements"""
+        if ' ' in password or ' ' in confirm_password:
+            return False, "Password should not contain spaces."
+            
+        if password != confirm_password:
+            return False, "Passwords do not match."
+            
+        valid, message = cls.validate_length(password, 8, 128, "password")
+        if not valid:
+            return valid, message
+            
+        if not re.search(r'[A-Z]', password):
+            return False, "Password must contain an uppercase letter."
+            
+        if not re.search(r'[0-9]', password):
+            return False, "Password must contain a number."
+            
+        if not re.search(r'[@$!%*?&]', password):
+            return False, "Password must contain a special character (@$!%*?&)."
+            
+        return True, ""
+
+    @classmethod
+    def validate_change_password_form(
+        cls,
+        old_password: str,
+        new_password: str,
+        confirm_password: str,
+        request: HttpRequest
+    ) -> Tuple[bool, str]:
+        """Validate password change form"""
+        user = request.user
+        if not user.check_password(old_password):
+            return False, "Your old password was entered incorrectly."
+            
+        return cls.validate_new_password(new_password, confirm_password)
+
+class URLValidator(Validator):
+    """Handles URL validation"""
+    
+    URL_REGEX = r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$'
+    
+    @classmethod
+    def validate_url(cls, url: Optional[str], url_type: str) -> Tuple[bool, str]:
+        """Validate URL format and domain"""
+        if not url:
+            return True, ""
+            
+        if not re.match(cls.URL_REGEX, url):
+            return False, f"Please enter a valid {url_type} URL."
+            
+        url = url.lower()
+        domain_rules = {
+            "GitHub": ["github.com/"],
+            "LinkedIn": ["linkedin.com/"],
+            "Portfolio": []  # No specific domain requirement
+        }
+        
+        if url_type in domain_rules:
+            required_prefixes = domain_rules[url_type]
+            if required_prefixes and not any(prefix in url for prefix in required_prefixes):
+                return False, f"{url_type} URL must contain {required_prefixes[0]}. "
+                
+        return True, ""
+
+    @classmethod
+    def validate_urls(
+        cls,
+        portfolio_url: str,
+        github_url: str,
+        linkedin_url: str
+    ) -> Tuple[bool, str]:
+        """Validate multiple URLs"""
+        urls_to_validate = [
+            (portfolio_url, "Portfolio"),
+            (github_url, "GitHub"),
+            (linkedin_url, "LinkedIn")
+        ]
+        
+        for url, url_type in urls_to_validate:
+            valid, message = cls.validate_url(url, url_type)
+            if not valid and url:  # Only validate if URL is provided
+                return False, message
+                
+        return True, ""

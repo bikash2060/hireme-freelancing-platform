@@ -133,14 +133,14 @@
                 </div>
                 <div class="card-body">
                     <div class="info-grid">
-                        <div class="info-item rate-card">
+
+                        <div class="info-item title-card">
                             <div class="info-label">
-                                <i class="fas fa-money-bill-wave icon"></i>
-                                <span>Hourly Rate</span>
+                                <i class="fas fa-user-tie icon"></i>
+                                <span>Professional Title</span>
                             </div>
                             <div class="info-value">
-                                <span class="rate-amount">Rs {{ freelancer.hourly_rate|indian_currency }} NPR</span>
-                                <span class="rate-note">Negotiable for large projects</span>
+                                {{ freelancer.professional_title|default:"Not specified" }}
                             </div>
                         </div>
 
@@ -367,7 +367,7 @@
                                 </div>
                                 <div class="education-details">
                                     <div class="degree-wrapper">
-                                        <h3 class="degree">{{ education.degree }}</h3>
+                                        <h3 class="degree">{{ education.get_degree_display }}</h3>   
                                     </div>
                                     <div class="institution-name">
                                         <i class="fas fa-university"></i>
@@ -495,5 +495,6 @@
 <script src="{% static 'js/freelancerprofile/email-visibility-toggle.js' %}"></script>
 <script src="{% static 'js/freelancerprofile/toggle-experience.js' %}"></script>
 <script src="{% static 'js/freelancerprofile/toggle-education.js' %}"></script>
+<script src="{% static 'js/freelancerprofile/target-values.js' %}"></script>
 {% endblock %}
 

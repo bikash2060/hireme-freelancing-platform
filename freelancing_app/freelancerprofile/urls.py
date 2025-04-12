@@ -1,20 +1,30 @@
+# urls.py
 from django.urls import path
 from .views import *
 
 app_name = 'freelancer'
 
 urlpatterns = [
-    path('profile/', FreelancerBasicInfoView.as_view(), name='profile'),
-    path('profile/personalinfo/', EditFreelancerPersonalInfoView.as_view(), name='edit-personal-info'),
-    path('profile/image/delete/', DeleteProfileImageView.as_view(), name='delete-profile-image'),
-    path('profile/professionalinfo/', EditFreelancerProfessionalInfoView.as_view(), name='edit-professional-info'),
-    path('profile/experience/add/', AddFreelancerExperienceView.as_view(), name='add-experience'),
-    path('profile/experience/<int:experience_id>/edit/', EditFreelancerExperienceView.as_view(), name='edit-experience'),
-    path('profile/experience/<int:experience_id>/delete/', DeleteFreelancerExperienceView.as_view(), name='delete-experience'),
-    path('profile/education/add/', AddFreelancerEducationView.as_view(), name='add-education'),
-    path('profile/education/<int:education_id>/edit/', EditFreelancerEducationView.as_view(), name='edit-education'),
-    path('profile/education/<int:education_id>/delete/', DeleteFreelancerEducationView.as_view(), name='delete-education'), 
-    path('profile/links/edit/', EditFreelancerLinksView.as_view(), name='edit-links'),     
-    path('get-cities/', GetCitiesByCountryView.as_view(), name='get-cities'),
-    path('password/change/', FreelancerPasswordChangeView.as_view(), name='change-password'),
+    # Profile views
+    path('my-profile/', FreelancerProfileView.as_view(), name='profile'),
+    path('my-profile/personal-info/', PersonalInfoView.as_view(), name='edit-personal-info'),
+    path('my-profile/remove-image/', DeleteProfileImageView.as_view(), name='delete-profile-image'),
+    path('my-profile/professional-info/', ProfessionalInfoView.as_view(), name='edit-professional-info'),
+    
+    # Experience views
+    path('my-profile/experience/new/', AddExperienceView.as_view(), name='add-experience'),
+    path('my-profile/experience/<int:experience_id>/edit/', EditExperienceView.as_view(), name='edit-experience'),
+    path('my-profile/experience/<int:experience_id>/delete/', DeleteExperienceView.as_view(), name='delete-experience'),
+    
+    # Education views
+    path('my-profile/education/new/', AddEducationView.as_view(), name='add-education'),
+    path('my-profile/education/<int:education_id>/edit/', EditEducationView.as_view(), name='edit-education'),
+    path('my-profile/education/<int:education_id>/delete/', DeleteEducationView.as_view(), name='delete-education'),
+    
+    # Other profile sections
+    path('my-profile/links/', EditLinksView.as_view(), name='edit-links'),
+    path('my-profile/change-password/', PasswordChangeView.as_view(), name='change-password'),
+    
+    # Utilities
+    path('locations/cities/', GetCitiesByCountryView.as_view(), name='get-cities'),
 ]
