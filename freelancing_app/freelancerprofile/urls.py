@@ -23,7 +23,7 @@ urlpatterns = [
     
     # Other profile sections
     path('my-profile/links/', EditLinksView.as_view(), name='edit-links'),
-    path('my-profile/change-password/', PasswordChangeView.as_view(), name='change-password'),
+    path('change-password/', PasswordChangeView.as_view(), name='change-password'),
     
     # Utilities
     path('locations/cities/', GetCitiesByCountryView.as_view(), name='get-cities'),
