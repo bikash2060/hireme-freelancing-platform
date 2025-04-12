@@ -69,11 +69,14 @@
                                 <label for="experience_level">
                                     <i class="fas fa-user-tie"></i> Experience Level Needed
                                 </label>
-                                <select id="experience_level" name="experience_level" class="form-control" >
+                                <select id="experience_level" name="experience_level" class="form-control">
                                     <option value="" selected disabled>Select experience level</option>
-                                    <option value="entry" {% if experience_level == 'entry' %}selected{% endif %}>Entry Level</option>
-                                    <option value="intermediate" {% if experience_level == 'intermediate' %}selected{% endif %}>Intermediate</option>
-                                    <option value="expert" {% if experience_level == 'expert' %}selected{% endif %}>Expert</option>
+                                    {% for value, label in experience_levels %}
+                                        <option value="{{ value }}" 
+                                            {% if experience_level == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
                                 </select>
                                 <div class="input-hint">Select the expertise level required</div>
                             </div>
@@ -92,50 +95,66 @@
                             <h3 class="section-title">
                                 <i class="fas fa-money-bill-wave"></i> Budget
                             </h3>
-                            <div class="form-group">
-                                <div class="checkbox-container">
-                                    <input type="checkbox" id="is_price_range" name="is_price_range" {% if is_price_range %}checked{% endif %}>
-                                    <span class="custom-checkbox"></span>   
-                                    <label for="is_price_range">This project has a budget range</label>
+                            
+                            <div class="budget-toggle-container">
+                                <div class="budget-option">
+                                    <input type="radio" id="fixed_budget_option" name="budget_type" value="fixed" {% if not is_price_range %}checked{% endif %}>
+                                    <label for="fixed_budget_option" class="option-content">
+                                        <i class="fas fa-tag"></i>
+                                        <div class="option-title">Fixed Price</div>
+                                        <div class="option-description">One set amount for the project</div>
+                                    </label>
                                 </div>
                                 
-                                <div id="single-price-fields">
+                                <div class="budget-option">
+                                    <input type="radio" id="range_budget_option" name="budget_type" value="range" {% if is_price_range %}checked{% endif %}>
+                                    <label for="range_budget_option" class="option-content">
+                                        <i class="fas fa-sliders-h"></i>
+                                        <div class="option-title">Price Range</div>
+                                        <div class="option-description">Flexible budget range</div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div id="fixed-budget-fields" class="budget-fields {% if is_price_range %}hidden{% endif %}">
+                                <div class="budget-input-group">
                                     <label for="fixed_budget">
-                                        <i class="fas fa-rupee-sign"></i> Fixed Budget (NPR)
+                                        Fixed Budget (NPR)
                                     </label>
                                     <div class="input-with-symbol">
                                         <span class="input-symbol">Rs</span>
                                         <input type="number" id="fixed_budget" name="fixed_budget" 
                                             class="form-control" min="1000" value="{{ fixed_budget }}">
                                     </div>
-                                    <div class="input-hint">Total amount you're willing to pay for this project</div>
+                                    <div class="budget-hint">Total amount you're willing to pay for this project</div>
                                 </div>
-                                
-                                <div id="range-price-fields" style="display: none;">
-                                    <div class="duration-grid">
-                                        <div>
-                                            <label for="budget_min">
-                                                <i class="fas fa-rupee-sign"></i> Minimum Budget (NPR)
-                                            </label>
-                                            <div class="input-with-symbol">
-                                                <span class="input-symbol">Rs</span>
-                                                <input type="number" id="budget_min" name="budget_min" 
-                                                    class="form-control" min="1000" value="{{ budget_min }}">
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="budget_max">
-                                                <i class="fas fa-rupee-sign"></i> Maximum Budget (NPR)
-                                            </label>
-                                            <div class="input-with-symbol">
-                                                <span class="input-symbol">Rs</span>
-                                                <input type="number" id="budget_max" name="budget_max" 
-                                                    class="form-control" min="2000" value="{{ budget_max }}">
-                                            </div>
+                            </div>
+                            
+                            <div id="range-budget-fields" class="budget-fields {% if not is_price_range %}hidden{% endif %}">
+                                <div class="duration-grid">
+                                    <div class="budget-input-group">
+                                        <label for="budget_min">
+                                            Minimum Budget (NPR)
+                                        </label>
+                                        <div class="input-with-symbol">
+                                            <span class="input-symbol">Rs</span>
+                                            <input type="number" id="budget_min" name="budget_min" 
+                                                class="form-control" min="1000" value="{{ budget_min }}">
                                         </div>
                                     </div>
-                                    <div class="input-hint">Range of fixed prices you're willing to pay</div>
+                                    
+                                    <div class="budget-input-group">
+                                        <label for="budget_max">
+                                            Maximum Budget (NPR)
+                                        </label>
+                                        <div class="input-with-symbol">
+                                            <span class="input-symbol">Rs</span>
+                                            <input type="number" id="budget_max" name="budget_max" 
+                                                class="form-control" min="2000" value="{{ budget_max }}">
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="budget-hint">Range of fixed prices you're willing to pay</div>
                             </div>
                         </div>
                         
@@ -147,7 +166,7 @@
                                 <label for="description">
                                     <i class="fas fa-pen"></i> Detailed Description
                                 </label>
-                                <textarea id="description" name="description" class="form-control" 
+                                <textarea id="description" name="description" class="form-control" placeholder="Explain your project in detail"
                                     rows="6" maxlength="500">{{ description }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
@@ -228,7 +247,7 @@
                     </div>
                     
                     <div class="form-actions">
-                        <button type="submit" name="status" value="draft" class="save-btn draft-btn">
+                        <button type="hidden" name="status" value="draft" class="save-btn draft-btn">
                             <i class="fas fa-save"></i> Save Draft
                         </button>
                         <button type="submit" name="status" value="posted" class="save-btn">
@@ -243,6 +262,9 @@
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/projects/addproject.js' %}"></script>
+<script src="{% static 'js/projects/budget-toggle.js' %}"></script>
+<script src="{% static 'js/projects/description-handler.js' %}"></script>
+<script src="{% static 'js/projects/attachments-handler.js' %}"></script>
 <script src="{% static 'js/projects/dynamic-skills-filter.js' %}"></script>
+<script src="{% static 'js/projects/project-form.js' %}"></script>
 {% endblock %}
