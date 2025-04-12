@@ -97,38 +97,23 @@
                 <div class="notification-main">
                     <div class="icon notification-icon">
                         <i class="fa-regular fa-bell">
-                            {% if unread_count > 9 %}
-                                <span style="height: 22px; width: 22px ;">9+</span>
-                            {% elif unread_count > 0 %}
-                                <span>{{ unread_count }}</span>
-                            {% endif %}
+                            <span style="height: 22px; width: 22px ;">9</span>
                         </i>
                     </div>
                     
                     <div class="notification-box">
                         <div class="notification-header">
                             <span>Notifications</span>
-                            <a href="{% url 'home:mark_all_as_read' %}" class="mark-read" 
-                                {% if unread_count == 0 %}
-                                    style="cursor: not-allowed; opacity: 0.8;"
-                                    onclick="return false;"
-                                {% endif %}>
+                            <a href="" class="mark-read">
                                 Mark All as Read
                             </a>
                         </div>
                         <hr>
-                        <div class="notification-content" {% if unread_count == 0 %} style="opacity: 0.85;" {% endif %}>
-                            {% if all_notifications.count > 0 %}
-                                {% for notification in all_notifications %}
-                                    <div class="notification-item {% if notification.is_read == False %}unread{% endif %}">
-                                        <p><strong>{{ notification.message }}</strong></p>
-                                        <span>{{ notification.timestamp|date:"F j, Y, g:i a" }}</span>
-                                    </div>
-                                    <hr />
-                                {% endfor %}
-                            {% else %}
-                                <p style="text-align: center;">No notifications</p>
-                            {% endif %}
+                        <div class="notification-content">
+                            <div class="notification-item">
+                                <p><strong>No notifications</strong></p>
+                            </div>
+                            <hr />
                         </div>
                     </div>
                 </div>
