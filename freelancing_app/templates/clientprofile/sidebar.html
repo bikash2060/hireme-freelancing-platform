@@ -5,7 +5,7 @@
     <div class="menu_content">
         <ul class="menu_items">
             <li class="item"> 
-                <a href="{% url 'client:profile' %}" class="nav_link {% if '/client/profile/' in request.path %}active{% endif %}">
+                <a href="{% url 'client:profile' %}" class="nav_link {% if '/client/my-profile/' in request.path %}active{% endif %}">
                     <span class="navlink_icon">
                         <i class="fa-solid fa-user"></i>
                     </span>
@@ -13,7 +13,7 @@
                 </a>
             </li>
             <li class="item">
-                <a href="{% url 'client:change-password' %}" class="nav_link {% if request.resolver_match.url_name == 'change-password' %}active{% endif %}">
+                <a href="{% url 'client:change-password' %}" class="nav_link {% if '/client/change-password/' in request.path %}active{% endif %}">
                     <span class="navlink_icon">
                         <i class="fa-solid fa-key"></i>
                     </span>

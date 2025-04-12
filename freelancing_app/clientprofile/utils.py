@@ -1,135 +1,223 @@
-from django.conf import settings
+from django.core.files.uploadedfile import UploadedFile
+from django.http import HttpRequest
 from accounts.models import User
+from typing import Optional, Tuple, Dict, Any
+from django.conf import settings
 from datetime import datetime
 import os
 import re
 
-def validate_user_data(profile_image, full_name, username, phone_number, city_id, country_id, bio, request=None):
-    try:
-        if profile_image:
-            valid_extensions = ['.png', '.jpg', '.jpeg']
-            file_extension = os.path.splitext(profile_image.name)[1].lower()
-            
-            if file_extension not in valid_extensions:
-                return False, "Only JPG, PNG, or JPEG file types are allowed."
-            
-            max_size = 10 * 1024 * 1024
-            if profile_image.size > max_size:
-                return False, "File size exceeds the 10MB limit."
+class Validator:
+    """Base validator class with common validation methods"""
+    
+    @classmethod
+    def validate_required(cls, value: Any, field_name: str) -> Tuple[bool, str]:
+        """Validate that a required field has a value"""
+        if not value:
+            return False, f"{field_name.replace('_', ' ').title()} is required."
+        return True, ""
+    
+    @classmethod
+    def validate_length(cls, value: str, min_len: int, max_len: int, field_name: str) -> Tuple[bool, str]:
+        """Validate string length constraints"""
+        if len(value) < min_len:
+            return False, f"{field_name.replace('_', ' ').title()} must be at least {min_len} characters."
+        if len(value) > max_len:
+            return False, f"{field_name.replace('_', ' ').title()} must not exceed {max_len} characters."
+        return True, ""
 
-            try:
-                from PIL import Image
-                Image.open(profile_image).verify()
-            except:
-                return False, "Invalid image file."
+class ProfileValidator(Validator):
+    """Handles validation of profile data"""
+    
+    MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10MB
+    VALID_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg']
+    NAME_REGEX = r'^[a-zA-Z\s\-\.\']+$'
+    USERNAME_REGEX = r'^[a-zA-Z0-9_\.]+$'
+    
+    @classmethod
+    def validate_profile_image(cls, image: Optional[UploadedFile]) -> Tuple[bool, str]:
+        """Validate profile image file"""
+        if not image:
+            return True, ""
+            
+        ext = os.path.splitext(image.name)[1].lower()
+        if ext not in cls.VALID_IMAGE_EXTENSIONS:
+            return False, "Only JPG, PNG, or JPEG file types are allowed."
+        
+        if image.size > cls.MAX_IMAGE_SIZE:
+            return False, "File size exceeds the 10MB limit."
+            
+        try:
+            from PIL import Image
+            Image.open(image).verify()
+        except ImportError:
+            return False, "Image processing library not available."
+        except Exception:
+            return False, "Invalid image file."
+            
+        return True, ""
 
-        if not full_name or str(full_name).strip().lower() == "none":
-            return False, "Full name is required."
+    @classmethod
+    def validate_full_name(cls, name: str) -> Tuple[bool, str]:
+        """Validate full name format"""
+        name = str(name).strip()
         
-        full_name = str(full_name).strip()
-        if len(full_name) < 3:
-            return False, "Full name must be at least 3 characters long."    
-        
-        if len(full_name) >50: 
-            return False, "Full name must not exceed 20 characters."
-        
-        if full_name.isdigit():
+        if not name or name.lower() == "none":
+            return False, "Full name is required"
+            
+        valid, message = cls.validate_length(name, 3, 50, "full name")
+        if not valid:
+            return valid, message
+            
+        if name.isdigit():
             return False, "Full name cannot be only numbers."
-        
-        if full_name[0].isdigit():
+            
+        if name[0].isdigit():
             return False, "Full name cannot start with a number."
-        
-        if not re.match(r'^[a-zA-Z\s\-\.\']+$', full_name):
+            
+        if not re.match(cls.NAME_REGEX, name):
             return False, "Full name contains invalid characters."
+            
+        return True, ""
 
-        if not username:
-            return False, "Username is required."
-        
+    @classmethod
+    def validate_username(cls, username: str, request: Optional[HttpRequest] = None) -> Tuple[bool, str]:
+        """Validate username format and uniqueness"""
         username = str(username).strip()
+        
+        valid, message = cls.validate_required(username, "username")
+        if not valid:
+            return valid, message
+            
         if " " in username:
             return False, "Username cannot contain spaces."
-
+            
         if username.isdigit():
             return False, "Username cannot be only numbers."
-        
+            
         if username[0].isdigit():
             return False, "Username cannot start with a number."
-        
-        if len(username) < 5:
-            return False, "Username must be at least 5 characters long."
-        
-        if len(username) > 50:
-            return False, "Username must not exceed 15 characters."
-        
-        if not re.match(r'^[a-zA-Z0-9_\.]+$', username):
+            
+        valid, message = cls.validate_length(username, 5, 50, "username")
+        if not valid:
+            return valid, message
+            
+        if not re.match(cls.USERNAME_REGEX, username):
             return False, "Username can only contain letters, numbers, underscores."
-        
+            
         if username.lower() in settings.RESERVED_USERNAMES:
             return False, "This username is reserved. Please choose another."
-        
-        if User.objects.filter(username__iexact=username).exclude(id=request.user.id if request else None).exists():
-            return False, "Username already taken. Please choose another."
-        
-        if not phone_number or str(phone_number).strip().lower() == "none":
-            return False, "Phone number is required."
-        
-        phone_number = str(phone_number).strip()
-        if not phone_number.isdigit() or len(phone_number) != 10:
-            return False, "Phone number must be exactly 10 digits."       
-        
-        if not phone_number.startswith(('98', '97', '99')):
-            return False, "Phone number must start with a valid prefix (e.g., 98, 97)."
-        
-        if User.objects.filter(phone_number=phone_number).exclude(id=request.user.id if request else None).exists():
-            return False, "This phone number is already registered."
-        
-        if not country_id:
-            return False, "Country is required."
+            
+        user_id = request.user.id if request and hasattr(request, 'user') else None
+        if User.objects.filter(username__iexact=username).exclude(id=user_id).exists():
+            return False, "Username already taken."
+            
+        return True, ""
 
-        if not city_id:
-            return False, "City is required."
+    @classmethod
+    def validate_phone_number(cls, phone: str, request: Optional[HttpRequest] = None) -> Tuple[bool, str]:
+        """Validate phone number format and uniqueness"""
+        phone = str(phone).strip()
         
-        if bio:
-            bio = str(bio).strip()
-            if len(bio) < 10:
-                return False, "Bio must be at least 10 characters."
-            if len(bio) > 500: 
-                return False, "Bio must not exceed 500 characters."
-        
-        return True, None
-    
-    except Exception as e:
-        return False, "Something went wrong. Please try again."
+        valid, message = cls.validate_required(phone, "phone number")
+        if not valid:
+            return valid, message
+            
+        if not phone.isdigit() or len(phone) != 10:
+            return False, "Phone number must be exactly 10 digits."
+            
+        if not phone.startswith(('98', '97', '99')):
+            return False, "Phone number must start with 98, 97 or 99."
+            
+        user_id = request.user.id if request and hasattr(request, 'user') else None
+        if User.objects.filter(phone_number=phone).exclude(id=user_id).exists():
+            return False, "Phone number already registered."
+            
+        return True, ""
 
+    @classmethod
+    def validate_bio(cls, bio: Optional[str]) -> Tuple[bool, str]:
+        """Validate bio text length"""
+        if not bio:
+            return True, ""
+            
+        bio = str(bio).strip()
+        return cls.validate_length(bio, 10, 500, "bio")
 
-def validate_change_password_form(oldpassword, newpassword, confirmpassword, request=None):
-    try:
+    @classmethod
+    def validate_location(cls, city_id: Optional[int], country_id: Optional[int]) -> Tuple[bool, str]:
+        """Validate location selection"""
+        if not city_id or not country_id:
+            return False, "City and country are required."
+        return True, ""
+
+    @classmethod
+    def validate_user_data(
+        cls, 
+        profile_image: Optional[UploadedFile],
+        full_name: str,
+        username: str,
+        phone_number: str,
+        bio: str,
+        city_id: Optional[int],
+        country_id: Optional[int],
+        request: HttpRequest
+    ) -> Tuple[bool, str]:
+        """Validate all user profile data"""
+        validators = [
+            (cls.validate_profile_image, (profile_image,)),
+            (cls.validate_full_name, (full_name,)),
+            (cls.validate_username, (username, request)),
+            (cls.validate_phone_number, (phone_number, request)),
+            (cls.validate_bio, (bio,)),
+            (cls.validate_location, (city_id, country_id)),
+        ]
         
-        if not oldpassword or not newpassword or not confirmpassword:
-            return False, 'All fields are required.'
-        
-        if not request.user.check_password(oldpassword):
-            return False, 'Your old password was entered incorrectly.'
-        
-        if ' ' in newpassword or ' ' in confirmpassword:
-            return False, 'Password should not contain spaces.'
-        
-        if newpassword != confirmpassword:
-            return False, 'Password do not match.'
+        for validator, args in validators:
+            valid, message = validator(*args)
+            if not valid:
+                return False, message
+                
+        return True, ""
+
+class PasswordValidator(Validator):
+    """Handles password validation"""
     
-        if len(newpassword) < 8:
-            return False, "Password must be at least 8 characters long."
-        
-        if not re.search(r'[A-Z]', newpassword):
-            return False, "Password must contain at least one uppercase letter."
-        
-        if not re.search(r'[0-9]', newpassword):
-            return False, "Password must contain at least one number."
-        
-        if not re.search(r'[@$!%*?&]', newpassword):
-            return False, "Password must contain at least one special character."
-        
-    except Exception as e:
-        return False, "Something went wrong. Please try again."
-    
-    return True, None
+    @classmethod
+    def validate_new_password(cls, password: str, confirm_password: str) -> Tuple[bool, str]:
+        """Validate password requirements"""
+        if ' ' in password or ' ' in confirm_password:
+            return False, "Password should not contain spaces."
+            
+        if password != confirm_password:
+            return False, "Passwords do not match."
+            
+        valid, message = cls.validate_length(password, 8, 128, "password")
+        if not valid:
+            return valid, message
+            
+        if not re.search(r'[A-Z]', password):
+            return False, "Password must contain an uppercase letter."
+            
+        if not re.search(r'[0-9]', password):
+            return False, "Password must contain a number."
+            
+        if not re.search(r'[@$!%*?&]', password):
+            return False, "Password must contain a special character (@$!%*?&)."
+            
+        return True, ""
+
+    @classmethod
+    def validate_change_password_form(
+        cls,
+        old_password: str,
+        new_password: str,
+        confirm_password: str,
+        request: HttpRequest
+    ) -> Tuple[bool, str]:
+        """Validate password change form"""
+        user = request.user
+        if not user.check_password(old_password):
+            return False, "Your old password was entered incorrectly."
+            
+        return cls.validate_new_password(new_password, confirm_password)
