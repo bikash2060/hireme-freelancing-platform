@@ -97,23 +97,41 @@
                 <div class="notification-main">
                     <div class="icon notification-icon">
                         <i class="fa-regular fa-bell">
-                            <span style="height: 22px; width: 22px ;">9</span>
+                            {% if unread_notifications_count > 0 %}
+                            <span class="notification-count" data-count="{{ unread_notifications_count }}"></span>
+                            {% else %}
+                            <span class="notification-count" style="display: none;"></span>
+                            {% endif %}
                         </i>
                     </div>
                     
                     <div class="notification-box">
                         <div class="notification-header">
-                            <span>Notifications</span>
-                            <a href="" class="mark-read">
-                                Mark All as Read
-                            </a>
+                            <h3>Notifications</h3>
+                            <a href="#" class="mark-read {% if not notifications or not unread_notifications_count %}disabled{% endif %}">Mark all as read</a>
                         </div>
-                        <hr>
                         <div class="notification-content">
-                            <div class="notification-item">
-                                <p><strong>No notifications</strong></p>
-                            </div>
-                            <hr />
+                            {% if notifications %}
+                                {% for notification in notifications %}
+                                    <div class="notification-item {% if not notification.is_read %}unread{% endif %}" data-notification-id="{{ notification.id }}">
+                                        <div class="notification-icon">
+                                            <i class="fa-solid fa-bullhorn"></i>
+                                        </div>
+                                        <div class="notification-details">
+                                            <p>{{ notification.message }}</p>
+                                            <small class="notification-time">{{ notification.created_at|date:"F j, Y \a\t g:i A" }}</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="notification-item empty-state">
+                                    <div class="empty-icon">
+                                        <i class="far fa-bell-slash"></i>
+                                    </div>
+                                    <p><strong>No notifications yet</strong></p>
+                                    <div class="empty-subtext">You're all caught up!</div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -396,6 +414,7 @@
 <script src="{% static 'js/common/form-handler.js' %}"></script>
 <script src="{% static 'js/common/mobile-menu.js' %}" defer></script>
 <script src="{% static 'js/common/confirmation-modal.js' %}"></script>
+<script src="{% static 'js/common/notification.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="{% static 'js/common/chat.js' %}"></script>
 </body>

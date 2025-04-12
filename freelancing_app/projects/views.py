@@ -1,12 +1,13 @@
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
 from django.shortcuts import render, redirect
+from notification.utils import NotificationManager
 from django.contrib import messages
+from django.conf import settings
 from django.views import View
 from .models import *
 from .utils import *
 import os
-from django.conf import settings
 
 class NewProjectView(CustomLoginRequiredMixin, View):
     new_project_template = 'projects/newproject.html'
@@ -120,7 +121,14 @@ class NewProjectView(CustomLoginRequiredMixin, View):
                         project=project,
                         file=filename.split('/')[-1] 
                     )
-                
+            
+            NotificationManager.send_notification(
+                user=request.user,
+                message=f"Your project {project.title} has been posted successfully!",
+                notification_type='project_posted',
+                related_id=project.id
+            )
+            
             messages.success(request, success_message)
             if status == 'posted':
                 return redirect(self.home_url)

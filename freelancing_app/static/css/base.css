@@ -229,33 +229,150 @@ html[lang="ne"] body {
     position: relative;
 }
 
-.navbar .notification-main .icon.notification-icon span{
+.navbar .notification-main .icon.notification-icon span {
     position: absolute;
-    top: -10px; 
-    right: -3px; 
+    top: -10px;
+    right: -3px;
     background-color: #1E88E5;
     color: white;
     border-radius: 50%;
-    padding: 5px 8px;
-    font-size: 12px; 
+    padding: 2px;
+    font-size: 12px;
     font-weight: bold;
-    min-width: 20px; 
-    height: 20px; 
+    min-width: 20px;
+    height: 20px;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
-.navbar .notification-main  .icon.notification-icon span:after {
-    content: attr(data-count); 
+.navbar .notification-main .icon.notification-icon span[data-count]::after {
+    content: attr(data-count);
 }
-  
-.navbar .notification-main  .icon.notification-icon span.large {
-    width: auto;
-    min-width: 30px; 
-    padding: 5px 10px; 
-    font-size: 10px; 
+
+/* For counts 1-9 */
+.navbar .notification-main .icon.notification-icon span[data-count="1"],
+.navbar .notification-main .icon.notification-icon span[data-count="2"],
+.navbar .notification-main .icon.notification-icon span[data-count="3"],
+.navbar .notification-main .icon.notification-icon span[data-count="4"],
+.navbar .notification-main .icon.notification-icon span[data-count="5"],
+.navbar .notification-main .icon.notification-icon span[data-count="6"],
+.navbar .notification-main .icon.notification-icon span[data-count="7"],
+.navbar .notification-main .icon.notification-icon span[data-count="8"],
+.navbar .notification-main .icon.notification-icon span[data-count="9"] {
+    min-width: 20px;
+    height: 20px;
+    padding: 2px;
+    border-radius: 50%;
+}
+
+/* For counts 10-99 */
+.navbar .notification-main .icon.notification-icon span[data-count="10"],
+.navbar .notification-main .icon.notification-icon span[data-count="11"],
+.navbar .notification-main .icon.notification-icon span[data-count="12"],
+.navbar .notification-main .icon.notification-icon span[data-count="13"],
+.navbar .notification-main .icon.notification-icon span[data-count="14"],
+.navbar .notification-main .icon.notification-icon span[data-count="15"],
+.navbar .notification-main .icon.notification-icon span[data-count="16"],
+.navbar .notification-main .icon.notification-icon span[data-count="17"],
+.navbar .notification-main .icon.notification-icon span[data-count="18"],
+.navbar .notification-main .icon.notification-icon span[data-count="19"],
+.navbar .notification-main .icon.notification-icon span[data-count="20"],
+.navbar .notification-main .icon.notification-icon span[data-count="21"],
+.navbar .notification-main .icon.notification-icon span[data-count="22"],
+.navbar .notification-main .icon.notification-icon span[data-count="23"],
+.navbar .notification-main .icon.notification-icon span[data-count="24"],
+.navbar .notification-main .icon.notification-icon span[data-count="25"],
+.navbar .notification-main .icon.notification-icon span[data-count="26"],
+.navbar .notification-main .icon.notification-icon span[data-count="27"],
+.navbar .notification-main .icon.notification-icon span[data-count="28"],
+.navbar .notification-main .icon.notification-icon span[data-count="29"],
+.navbar .notification-main .icon.notification-icon span[data-count="30"],
+.navbar .notification-main .icon.notification-icon span[data-count="31"],
+.navbar .notification-main .icon.notification-icon span[data-count="32"],
+.navbar .notification-main .icon.notification-icon span[data-count="33"],
+.navbar .notification-main .icon.notification-icon span[data-count="34"],
+.navbar .notification-main .icon.notification-icon span[data-count="35"],
+.navbar .notification-main .icon.notification-icon span[data-count="36"],
+.navbar .notification-main .icon.notification-icon span[data-count="37"],
+.navbar .notification-main .icon.notification-icon span[data-count="38"],
+.navbar .notification-main .icon.notification-icon span[data-count="39"],
+.navbar .notification-main .icon.notification-icon span[data-count="40"],
+.navbar .notification-main .icon.notification-icon span[data-count="41"],
+.navbar .notification-main .icon.notification-icon span[data-count="42"],
+.navbar .notification-main .icon.notification-icon span[data-count="43"],
+.navbar .notification-main .icon.notification-icon span[data-count="44"],
+.navbar .notification-main .icon.notification-icon span[data-count="45"],
+.navbar .notification-main .icon.notification-icon span[data-count="46"],
+.navbar .notification-main .icon.notification-icon span[data-count="47"],
+.navbar .notification-main .icon.notification-icon span[data-count="48"],
+.navbar .notification-main .icon.notification-icon span[data-count="49"],
+.navbar .notification-main .icon.notification-icon span[data-count="50"],
+.navbar .notification-main .icon.notification-icon span[data-count="51"],
+.navbar .notification-main .icon.notification-icon span[data-count="52"],
+.navbar .notification-main .icon.notification-icon span[data-count="53"],
+.navbar .notification-main .icon.notification-icon span[data-count="54"],
+.navbar .notification-main .icon.notification-icon span[data-count="55"],
+.navbar .notification-main .icon.notification-icon span[data-count="56"],
+.navbar .notification-main .icon.notification-icon span[data-count="57"],
+.navbar .notification-main .icon.notification-icon span[data-count="58"],
+.navbar .notification-main .icon.notification-icon span[data-count="59"],
+.navbar .notification-main .icon.notification-icon span[data-count="60"],
+.navbar .notification-main .icon.notification-icon span[data-count="61"],
+.navbar .notification-main .icon.notification-icon span[data-count="62"],
+.navbar .notification-main .icon.notification-icon span[data-count="63"],
+.navbar .notification-main .icon.notification-icon span[data-count="64"],
+.navbar .notification-main .icon.notification-icon span[data-count="65"],
+.navbar .notification-main .icon.notification-icon span[data-count="66"],
+.navbar .notification-main .icon.notification-icon span[data-count="67"],
+.navbar .notification-main .icon.notification-icon span[data-count="68"],
+.navbar .notification-main .icon.notification-icon span[data-count="69"],
+.navbar .notification-main .icon.notification-icon span[data-count="70"],
+.navbar .notification-main .icon.notification-icon span[data-count="71"],
+.navbar .notification-main .icon.notification-icon span[data-count="72"],
+.navbar .notification-main .icon.notification-icon span[data-count="73"],
+.navbar .notification-main .icon.notification-icon span[data-count="74"],
+.navbar .notification-main .icon.notification-icon span[data-count="75"],
+.navbar .notification-main .icon.notification-icon span[data-count="76"],
+.navbar .notification-main .icon.notification-icon span[data-count="77"],
+.navbar .notification-main .icon.notification-icon span[data-count="78"],
+.navbar .notification-main .icon.notification-icon span[data-count="79"],
+.navbar .notification-main .icon.notification-icon span[data-count="80"],
+.navbar .notification-main .icon.notification-icon span[data-count="81"],
+.navbar .notification-main .icon.notification-icon span[data-count="82"],
+.navbar .notification-main .icon.notification-icon span[data-count="83"],
+.navbar .notification-main .icon.notification-icon span[data-count="84"],
+.navbar .notification-main .icon.notification-icon span[data-count="85"],
+.navbar .notification-main .icon.notification-icon span[data-count="86"],
+.navbar .notification-main .icon.notification-icon span[data-count="87"],
+.navbar .notification-main .icon.notification-icon span[data-count="88"],
+.navbar .notification-main .icon.notification-icon span[data-count="89"],
+.navbar .notification-main .icon.notification-icon span[data-count="90"],
+.navbar .notification-main .icon.notification-icon span[data-count="91"],
+.navbar .notification-main .icon.notification-icon span[data-count="92"],
+.navbar .notification-main .icon.notification-icon span[data-count="93"],
+.navbar .notification-main .icon.notification-icon span[data-count="94"],
+.navbar .notification-main .icon.notification-icon span[data-count="95"],
+.navbar .notification-main .icon.notification-icon span[data-count="96"],
+.navbar .notification-main .icon.notification-icon span[data-count="97"],
+.navbar .notification-main .icon.notification-icon span[data-count="98"],
+.navbar .notification-main .icon.notification-icon span[data-count="99"] {
+    min-width: 24px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.navbar .notification-main .icon.notification-icon span[data-count="100"] {
+    min-width: 32px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.navbar .notification-main .icon.notification-icon span[data-count="100"]::after {
+    content: "99+";
 }
 
 .navbar .notification-box {
@@ -263,16 +380,12 @@ html[lang="ne"] body {
     position: absolute;
     top: 75px;
     right: 0;
-    width: 400px;
+    width: 430px;
     background-color: #ffffff;
-    padding: 15px;
     z-index: 1000;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    transform-origin: top right;
-    animation: fadeIn 0.2s ease-out;
     border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
@@ -287,36 +400,52 @@ html[lang="ne"] body {
     }
 }
 
-.navbar .notification-box hr{
-    border: none;
-    border-top: 2px solid #dbdada;
-    margin: 7px 0;
-}
 .navbar .notification-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 16px;
-    color: #212121;
-    margin-bottom: 10px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.navbar .notification-header h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 530;
+    color: #3e3e3e;
 }
 
 .navbar .notification-header .mark-read {
     font-size: 14px;
-    color: #1E88E5;
+    color: #666;
     text-decoration: none;
-    cursor: pointer;
-    transition: color 0.3s ease;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
 }
 
 .navbar .notification-header .mark-read:hover {
-    color: #0056b3;
+    color: #0d6efd;
+    text-decoration: underline;
+}
+
+.navbar .notification-header .mark-read.disabled {
+    color: #adb5bd;
+    cursor: not-allowed;
+    text-decoration: none;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.navbar .notification-header .mark-read.disabled:hover {
+    color: #adb5bd;
+    text-decoration: none;
 }
 
 .navbar .notification-content {
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
-    padding-right: 10px;
 }
 
 .navbar .notification-content::-webkit-scrollbar {
@@ -333,33 +462,132 @@ html[lang="ne"] body {
 }
 
 .navbar .notification-item {
-    padding: 10px;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    display: flex;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f1f1f1;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.navbar .notification-item:last-child {
+    border-bottom: none;
 }
 
 .navbar .notification-item:hover {
-    background-color: #f1f1f1;
-    transform: scale(1.02);
+    background-color: #f0f7ff;
 }
 
-.navbar .notification-item p {
+.navbar .notification-item.unread{
+    box-shadow: 2px 0 0 0 #1E88E5 inset;
+    transition: all 0.3s ease;
+}
+
+.navbar .notification-item.unread:hover {
+    background-color: #e1effd;
+    box-shadow: 2px 0 0 0 #1E88E5 inset;
+}
+
+.navbar .notification-item.unread:hover .notification-icon {
+    animation: bellShake 0.5s ease;
+}
+
+@keyframes bellShake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+.navbar .notification-item .notification-icon {
+    margin-right: 15px;
+    color: #9370DB;
+    font-size: 18px;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 2px;
+}
+
+.navbar .notification-item .notification-details {
+    flex: 1;
+}
+
+.navbar .notification-item .notification-details p {
+    margin: 0 0 5px 0;
     font-size: 14px;
-    color: #212121;
-    margin: 0;
-    line-height: 1.5;
+    color: #333;
+    line-height: 1.4;
+    font-weight: 500;
 }
 
-.navbar .notification-item span {
+.navbar .notification-item.unread .notification-details p {
+    font-weight: 500;
+}
+
+.navbar .notification-item .notification-details small {
     font-size: 12px;
-    color: #757575;
+    color: #888;
     display: block;
-    margin-top: 5px;
 }
 
-.navbar .notification-content hr {
-    border: none;
-    border-top: 2px solid #dbdada;
-    margin: 10px 0;
+.navbar .notification-item.empty-state {
+    padding: 50px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+    background-color: #f8fafc;
+    border-radius: 0 0 12px 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar .notification-item.empty-state::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(30, 136, 229, 0.05);
+    border-radius: 50%;
+}
+
+.navbar .notification-item.empty-state::after {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(30, 136, 229, 0.05);
+    border-radius: 50%;
+}
+
+.navbar .notification-item.empty-state p {
+    margin: 0;
+    font-size: 16px;
+    color: #64748b;
+    position: relative;
+    z-index: 1;
+}
+
+.navbar .notification-item.empty-state .empty-icon {
+    font-size: 48px;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+    animation: gentlePulse 3s infinite ease-in-out;
+}
+
+.navbar .notification-item.empty-state .empty-subtext {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 8px;
+    position: relative;
+    z-index: 1;
 }
 
 /* Language Box Section */
