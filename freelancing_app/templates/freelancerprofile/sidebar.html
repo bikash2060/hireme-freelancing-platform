@@ -5,7 +5,7 @@
     <div class="menu_content">
         <ul class="menu_items">
             <li class="item"> 
-                <a href="{% url 'freelancer:profile' %}" class="nav_link {% if '/my-profile/' in request.path %}active{% endif %}">
+                <a href="{% url 'freelancer:profile' %}" class="nav_link {% if '/freelancer/my-profile/' in request.path %}active{% endif %}">
                     <span class="navlink_icon">
                         <i class="fa-solid fa-user"></i>
                     </span>
@@ -13,7 +13,7 @@
                 </a>
             </li>
             <li class="item">
-                <a href="{% url 'freelancer:change-password' %}" class="nav_link {% if '/change-password/' in request.path %}active{% endif %}">
+                <a href="{% url 'freelancer:change-password' %}" class="nav_link {% if '/freelancer/change-password/' in request.path %}active{% endif %}">
                     <span class="navlink_icon">
                         <i class="fa-solid fa-key"></i>
                     </span>
