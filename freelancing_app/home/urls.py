@@ -9,5 +9,4 @@ urlpatterns = [
     path('freelancers/', FreelancerListView.as_view(), name='freelancers'),
     path('projects/', ProjectListView.as_view(), name='projects'),
     path('profile/', GetUserProfileView.as_view(), name='user-profile'),
-    path('mark_all_as_read/', MarkAllAsReadView.as_view(), name='mark_all_as_read'),
 ]
