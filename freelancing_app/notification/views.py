@@ -57,8 +57,8 @@ class GetNotificationsView(View):
         notifications_data = [{
             'id': notification.id,
             'message': notification.message,
-            'notification_type': notification.notification_type,
             'is_read': notification.is_read,
+            'redirect_url': notification.redirect_url,
             'created_at': notification.created_at.strftime('%Y-%m-%d %H:%M:%S')
         } for notification in notifications]
         

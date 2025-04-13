@@ -40,7 +40,6 @@ class NewProjectView(CustomLoginRequiredMixin, View):
             categories = ProjectCategory.objects.all().order_by('name')
             experience_levels = Project.ExpertiseLevel.choices
 
-            
             title = request.POST.get('title').strip()
             category_id = request.POST.get('category')
             experience_level = request.POST.get('experience_level')
@@ -91,12 +90,21 @@ class NewProjectView(CustomLoginRequiredMixin, View):
                 messages.error(request, error_message)
                 return render(request, self.new_project_template, context)
             
+            notification_message = None
+            redirect_url = None
+            project_status = None
+            
             if status == 'posted':
+                notification_message = f"Your project \"{title}\" has been published successfully! It's now visible to freelancers."
+                redirect_url = None
                 project_status = Project.Status.PUBLISHED
                 success_message = 'Project posted successfully!'
             else:
+                notification_message = f"Your project \"{title}\" has been saved as a draft. You can publish it later."
+                redirect_url = None
                 project_status = Project.Status.DRAFT
                 success_message = 'Draft saved successfully!'
+                
             project = Project.objects.create(
                 client=client,
                 title=title,
@@ -121,12 +129,11 @@ class NewProjectView(CustomLoginRequiredMixin, View):
                         project=project,
                         file=filename.split('/')[-1] 
                     )
-            
+                    
             NotificationManager.send_notification(
                 user=request.user,
-                message=f"Your project {project.title} has been posted successfully!",
-                notification_type='project_posted',
-                related_id=project.id
+                message=notification_message,
+                redirect_url=redirect_url
             )
             
             messages.success(request, success_message)

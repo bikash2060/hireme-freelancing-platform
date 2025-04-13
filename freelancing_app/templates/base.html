@@ -98,7 +98,7 @@
                     <div class="icon notification-icon">
                         <i class="fa-regular fa-bell">
                             {% if unread_notifications_count > 0 %}
-                            <span class="notification-count" data-count="{{ unread_notifications_count }}"></span>
+                            <span class="notification-count" data-count="{% if unread_notifications_count > 9 %}9+{% else %}{{ unread_notifications_count }}{% endif %}"></span>
                             {% else %}
                             <span class="notification-count" style="display: none;"></span>
                             {% endif %}
@@ -107,7 +107,12 @@
                     
                     <div class="notification-box">
                         <div class="notification-header">
-                            <h3>Notifications</h3>
+                            <h3>
+                                Notifications
+                                {% if unread_notifications_count > 0 %}
+                                    <span class="notification-count">{{ unread_notifications_count }}</span>
+                                {% endif %}
+                            </h3>
                             <a href="#" class="mark-read {% if not notifications or not unread_notifications_count %}disabled{% endif %}">Mark all as read</a>
                         </div>
                         <div class="notification-content">
@@ -125,11 +130,12 @@
                                 {% endfor %}
                             {% else %}
                                 <div class="notification-item empty-state">
+                                    <div class="pattern-overlay"></div>
                                     <div class="empty-icon">
                                         <i class="far fa-bell-slash"></i>
                                     </div>
-                                    <p><strong>No notifications yet</strong></p>
-                                    <div class="empty-subtext">You're all caught up!</div>
+                                    <p><strong>All caught up!</strong></p>
+                                    <div class="empty-subtext">No notifications to show right now</div>
                                 </div>
                             {% endif %}
                         </div>

@@ -21,9 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const countElement = document.querySelector('.notification-count');
         if (countElement) {
             if (count > 0) {
-                // For counts greater than 99, set data-count to "100" to trigger the 99+ display
-                if (count > 99) {
-                    countElement.setAttribute('data-count', '100');
+                // For counts greater than 9, show "9+"
+                if (count > 9) {
+                    countElement.setAttribute('data-count', '9+');
                 } else {
                     countElement.setAttribute('data-count', count.toString());
                 }
@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const notificationItem = document.createElement('div');
         notificationItem.className = 'notification-item unread';
         notificationItem.setAttribute('data-notification-id', notification.id);
+        
+        // Add redirect URL if available
+        if (notification.redirect_url) {
+            notificationItem.setAttribute('data-redirect-url', notification.redirect_url);
+        }
 
         // Format the date like "April 10, 2025 at 02:16 PM"
         const date = new Date(notification.created_at);
@@ -65,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         notificationItem.innerHTML = `
             <div class="notification-icon">
-                <i class="fas fa-phone"></i>
+                <i class="fas fa-bell"></i>
             </div>
             <div class="notification-details">
                 <p>${notification.message}</p>
@@ -73,9 +78,13 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Add click event to mark as read
+        // Add click event to handle notification click
         notificationItem.addEventListener('click', function() {
             markNotificationAsRead(notification.id);
+            // Redirect if URL is available
+            if (notification.redirect_url) {
+                window.location.href = notification.redirect_url;
+            }
         });
 
         // Insert at the top of the list
@@ -188,8 +197,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.notification-item').forEach(item => {
         item.addEventListener('click', function() {
             const notificationId = this.getAttribute('data-notification-id');
+            const redirectUrl = this.getAttribute('data-redirect-url');
             if (notificationId) {
                 markNotificationAsRead(notificationId);
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
             }
         });
     });
