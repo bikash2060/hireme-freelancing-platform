@@ -2,6 +2,8 @@ from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
 from django.shortcuts import render, redirect
 from notification.utils import NotificationManager
+from django.core.paginator import Paginator
+from django.db.models import Count, Q
 from django.contrib import messages
 from django.conf import settings
 from django.views import View
@@ -146,3 +148,16 @@ class NewProjectView(CustomLoginRequiredMixin, View):
             print(e)
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.new_project_url)
+        
+class ClientProjectsView(CustomLoginRequiredMixin, View):
+    template_name = 'projects/projects.html'
+    items_per_page = 10
+    
+    def get(self, request):
+        try:            
+            return render(request, self.template_name)
+            
+        except Exception as e:
+            print(e)
+            messages.error(request, 'Something went wrong while loading your projects.')
+            return redirect('home:home')

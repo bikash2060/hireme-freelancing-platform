@@ -15,7 +15,7 @@ body {
 }
 
 .container {
-    max-width: 1300px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 10px;
 }
@@ -626,20 +626,22 @@ html[lang="ne"] body {
 
 .navbar .message-main .icon span{
     position: absolute;
-    top: -10px; 
-    right: -3px; 
+    top: -10px;
+    right: -3px;
     background-color: #1E88E5;
     color: white;
     border-radius: 50%;
-    padding: 5px 8px;
-    font-size: 12px; 
+    padding: 2px;
+    font-size: 12px;
     font-weight: bold;
-    min-width: 20px; 
-    height: 20px; 
+    min-width: 20px;
+    height: 20px;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
 .navbar .message-main .icon span:after {

@@ -553,7 +553,7 @@ class ChatApp {
         
         if (count > 0) {
             unreadSpan.textContent = count;
-            unreadSpan.style.display = 'inline';
+            unreadSpan.style.display = 'flex';
         } else {
             unreadSpan.style.display = 'none';
         }

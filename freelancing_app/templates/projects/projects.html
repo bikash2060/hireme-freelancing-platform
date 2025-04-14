@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Projects - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/projects/projects.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="projects-dashboard-hero">
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    <line x1="12" y1="11" x2="12" y2="17"></line>
+                    <line x1="9" y1="14" x2="15" y2="14"></line>
+                </svg>
+            </div>
+            <h2 class="section-title">Your Project Dashboard</h2>
+            <p class="section-subtitle">Keep track of all your projects — filter, review proposals, and manage progress with ease.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Search Bar and Filter Section -->
+<div class="search-filter-section">
+    <div class="search-container">
+        <div class="search-filter-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search projects by keyword, skill or category..." class="search-input">
+            </div>
+            <div class="filters-container">
+                <div class="filters">
+                    <div class="filter-dropdown scrollable-dropdown">
+                        <button class="filter-btn">
+                            <span>Status</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <label class="dropdown-item"><input type="checkbox" value="all" checked> All</label>
+                                <label class="dropdown-item"><input type="checkbox" value="published"> Published</label>
+                                <label class="dropdown-item"><input type="checkbox" value="hiring"> Accepting Proposals</label>
+                            </div>
+                            <div class="dropdown-section">
+                                <label class="dropdown-item"><input type="checkbox" value="in_progress"> In Progress</label>
+                                <label class="dropdown-item"><input type="checkbox" value="completed"> Completed</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown scrollable-dropdown">
+                        <button class="filter-btn">
+                            <span>Category</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="category-search-container">
+                                <input type="text" placeholder="Search categories..." class="category-search-input">
+                            </div>
+                            <div class="category-items">
+                                <label class="dropdown-item"><input type="checkbox" value="all" checked> All Categories</label>
+                                <label class="dropdown-item"><input type="checkbox" value="web"> Web Development</label>
+                                <label class="dropdown-item"><input type="checkbox" value="mobile"> Mobile App</label>
+                                <label class="dropdown-item"><input type="checkbox" value="design"> UI/UX Design</label>
+                                <label class="dropdown-item"><input type="checkbox" value="marketing"> Digital Marketing</label>
+                                <label class="dropdown-item"><input type="checkbox" value="content"> Content Writing</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Budget</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <label class="dropdown-item"><input type="checkbox" value="all" checked> Any Budget</label>
+                            <label class="dropdown-item"><input type="checkbox" value="0-50000"> Rs. 0 - 50,000</label>
+                            <label class="dropdown-item"><input type="checkbox" value="50000-100000"> Rs. 50,000 - 1,00,000</label>
+                            <label class="dropdown-item"><input type="checkbox" value="100000-500000"> Rs. 1,00,000 - 5,00,000</label>
+                            <label class="dropdown-item"><input type="checkbox" value="500000+"> Rs. 5,00,000+</label>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Experience</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <label class="dropdown-item"><input type="checkbox" value="all" checked> Any Level</label>
+                            <label class="dropdown-item"><input type="checkbox" value="entry"> Entry Level</label>
+                            <label class="dropdown-item"><input type="checkbox" value="intermediate"> Intermediate</label>
+                            <label class="dropdown-item"><input type="checkbox" value="expert"> Expert</label>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <label class="dropdown-item"><input type="checkbox" value="all" checked> Any Duration</label>
+                            <label class="dropdown-item"><input type="checkbox" value="0-4"> Less than 4 weeks</label>
+                            <label class="dropdown-item"><input type="checkbox" value="4-12"> 1-3 months</label>
+                            <label class="dropdown-item"><input type="checkbox" value="12+"> 3+ months</label>
+                        </div>
+                    </div>
+                </div>
+                <button class="clear-filters-btn">
+                    <i class="fas fa-undo"></i> Reset Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Projects Section -->
+<div class="projects-section">
+    <div class="container">
+        
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/projects/project-filter.js' %}"></script>
+{% endblock %}
