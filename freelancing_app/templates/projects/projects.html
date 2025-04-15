@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+{% load project_filters %}
+{% load number_filters %}
 
 {% block title %}My Projects - HireMe{% endblock %}
 
@@ -32,7 +34,7 @@
         <div class="search-filter-bar">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search projects by keyword, skill or category..." class="search-input">
+                <input type="text" name="search" placeholder="Search projects..." value="{{ request.GET.search }}" class="search-input">
             </div>
             <div class="filters-container">
                 <div class="filters">
@@ -42,13 +44,13 @@
                         </button>
                         <div class="dropdown-content">
                             <div class="dropdown-section">
-                                <label class="dropdown-item"><input type="checkbox" value="all" checked> All</label>
-                                <label class="dropdown-item"><input type="checkbox" value="published"> Published</label>
-                                <label class="dropdown-item"><input type="checkbox" value="hiring"> Accepting Proposals</label>
-                            </div>
-                            <div class="dropdown-section">
-                                <label class="dropdown-item"><input type="checkbox" value="in_progress"> In Progress</label>
-                                <label class="dropdown-item"><input type="checkbox" value="completed"> Completed</label>
+                                {% for value, label in status_choices %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="status" value="{{ value }}"
+                                            {% if value in selected_statuses or 'all' in selected_statuses %}checked{% endif %}>
+                                        {{ label }}
+                                    </label>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -61,12 +63,13 @@
                                 <input type="text" placeholder="Search categories..." class="category-search-input">
                             </div>
                             <div class="category-items">
-                                <label class="dropdown-item"><input type="checkbox" value="all" checked> All Categories</label>
-                                <label class="dropdown-item"><input type="checkbox" value="web"> Web Development</label>
-                                <label class="dropdown-item"><input type="checkbox" value="mobile"> Mobile App</label>
-                                <label class="dropdown-item"><input type="checkbox" value="design"> UI/UX Design</label>
-                                <label class="dropdown-item"><input type="checkbox" value="marketing"> Digital Marketing</label>
-                                <label class="dropdown-item"><input type="checkbox" value="content"> Content Writing</label>
+                                {% for category in categories %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="category" value="{{ category.id }}"
+                                            {% if category.id|stringformat:"s" in selected_categories or 'all' in selected_categories %}checked{% endif %}>
+                                        {{ category.name }}
+                                    </label>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -75,11 +78,26 @@
                             <span>Budget</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
                         <div class="dropdown-content">
-                            <label class="dropdown-item"><input type="checkbox" value="all" checked> Any Budget</label>
-                            <label class="dropdown-item"><input type="checkbox" value="0-50000"> Rs. 0 - 50,000</label>
-                            <label class="dropdown-item"><input type="checkbox" value="50000-100000"> Rs. 50,000 - 1,00,000</label>
-                            <label class="dropdown-item"><input type="checkbox" value="100000-500000"> Rs. 1,00,000 - 5,00,000</label>
-                            <label class="dropdown-item"><input type="checkbox" value="500000+"> Rs. 5,00,000+</label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="0-50000"
+                                       {% if '0-50000' in selected_budgets %}checked{% endif %}>
+                                Rs. 0 - 50,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="50000-100000"
+                                       {% if '50000-100000' in selected_budgets %}checked{% endif %}>
+                                Rs. 50,000 - 1,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="100000-500000"
+                                       {% if '100000-500000' in selected_budgets %}checked{% endif %}>
+                                Rs. 1,00,000 - 5,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="500000+"
+                                       {% if '500000+' in selected_budgets %}checked{% endif %}>
+                                Rs. 5,00,000+
+                            </label>
                         </div>
                     </div>
                     <div class="filter-dropdown">
@@ -87,21 +105,35 @@
                             <span>Experience</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
                         <div class="dropdown-content">
-                            <label class="dropdown-item"><input type="checkbox" value="all" checked> Any Level</label>
-                            <label class="dropdown-item"><input type="checkbox" value="entry"> Entry Level</label>
-                            <label class="dropdown-item"><input type="checkbox" value="intermediate"> Intermediate</label>
-                            <label class="dropdown-item"><input type="checkbox" value="expert"> Expert</label>
+                            {% for value, label in expertise_levels %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="experience" value="{{ value }}"
+                                        {% if value in selected_experience or 'all' in selected_experience %}checked{% endif %}>
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="filter-dropdown">
                         <button class="filter-btn">
                             <span>Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
-                        <div class="dropdown-content">
-                            <label class="dropdown-item"><input type="checkbox" value="all" checked> Any Duration</label>
-                            <label class="dropdown-item"><input type="checkbox" value="0-4"> Less than 4 weeks</label>
-                            <label class="dropdown-item"><input type="checkbox" value="4-12"> 1-3 months</label>
-                            <label class="dropdown-item"><input type="checkbox" value="12+"> 3+ months</label>
+                        <div class="dropdown-content">  
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="0-4"
+                                       {% if '0-4' in selected_durations %}checked{% endif %}>
+                                Less than 4 weeks
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="4-12"
+                                       {% if '4-12' in selected_durations %}checked{% endif %}>
+                                1-3 months
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="12+"
+                                       {% if '12+' in selected_durations %}checked{% endif %}>
+                                3+ months
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -116,14 +148,183 @@
 <!-- Projects Section -->
 <div class="projects-section">
     <div class="container">
-        
+
+        <div class="projects-list-view" id="projects-container">
+            {% for project in projects %}
+                <div class="project-card">
+                    <div class="project-status-indicator {{ project.status }}"></div>
+                    <div class="project-card-header">
+                        <div class="project-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="project-meta">
+                            <div class="title-row">
+                                <h3 class="project-title">{{ project.title }}</h3>
+                                <span class="project-status {{ project.status }}">{{ project.get_status_display }}</span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="project-category">
+                                    <i class="fas fa-tag"></i> {{ project.category.name }}
+                                </span>
+                                <span class="project-posted"><i class="far fa-clock"></i> Posted {{ project.created_at|format_posted_time }}</span>
+                                <span class="project-proposals"><i class="fas fa-paper-plane"></i> {{ project.proposals.count|default:0 }} Proposals</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-progress">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span>
+                                {% if project.status == 'draft' %}Not started
+                                {% elif project.status == 'published' %}Awaiting freelancers
+                                {% elif project.status == 'hiring' %}Reviewing proposals
+                                {% elif project.status == 'in_progress' %}In progress
+                                {% elif project.status == 'completed' %}Completed
+                                {% elif project.status == 'cancelled' %}Cancelled
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" 
+                                style="width: {% if project.status == 'completed' %}100%
+                                            {% elif project.status == 'in_progress' %}50%
+                                            {% else %}0%{% endif %}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-details">
+                        <div class="detail-item">
+                            <i class="fas fa-user-tie"></i>
+                            <div>
+                                <span>Freelancer</span>
+                                <span class="detail-value">
+                                    {% if project.freelancer %}
+                                        {{ project.freelancer.user.get_full_name }}
+                                    {% else %}
+                                        Not assigned
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span>Duration</span>
+                                <span class="detail-value">{{ project.estimated_duration }} weeks</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-rupee-sign"></i>
+                            <div>
+                                <span>Budget</span>
+                                <span class="detail-value">
+                                    {% if project.is_fixed_price %}
+                                        Rs {{ project.fixed_budget|format_currency }}
+                                    {% else %}
+                                        Rs {{ project.budget_min|format_currency }} - Rs {{ project.budget_max|format_currency }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <span>Expertise</span>
+                                <span class="detail-value">{{ project.get_experience_level_display }}</span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="far fa-calendar"></i>
+                            <div>
+                                <span>Posted Date</span>
+                                <span class="detail-value">{{ project.created_at|date:"d M Y" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-footer">
+                        <button class="btn-action secondary-btn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn-action secondary-btn">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                        <button class="btn-action primary-btn">
+                            <i class="fas fa-eye"></i> View Proposals
+                        </button>
+                    </div>
+                </div>
+            {% empty %}
+            <div class="empty-projects">
+                <div class="empty-illustration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No matching projects found</h3>
+                <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
+            </div>
+            {% endfor %}
+        </div>
+
     </div>
+    
+    {% if projects.has_other_pages %}
+    <div class="pagination">
+        {% if projects.has_previous %}
+            <a href="?page={{ projects.previous_page_number }}" class="pagination-btn prev-next">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+        {% else %}
+            <button class="pagination-btn prev-next" disabled>
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+        {% endif %}
+        
+        <div class="page-numbers">
+            {% if projects.number > 3 %}
+                <a href="?page=1" class="page-number">1</a>
+                {% if projects.number > 4 %}  {# Only show ellipsis if there's a gap #}
+                    <span class="page-ellipsis">...</span>
+                {% endif %}
+            {% endif %}
+            
+            {% for i in projects.paginator.page_range %}
+                {% if i >= projects.number|add:"-2" and i <= projects.number|add:"2" %}
+                    {% if projects.number == i %}
+                        <button class="page-number active">{{ i }}</button>
+                    {% else %}
+                        <a href="?page={{ i }}" class="page-number">{{ i }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            {% if projects.number < projects.paginator.num_pages|add:"-2" %}
+                {% if projects.number < projects.paginator.num_pages|add:"-3" %}  {# Only show ellipsis if there's a gap #}
+                    <span class="page-ellipsis">...</span>
+                {% endif %}
+                <a href="?page={{ projects.paginator.num_pages }}" class="page-number">{{ projects.paginator.num_pages }}</a>
+            {% endif %}
+        </div>
+        
+        {% if projects.has_next %}
+            <a href="?page={{ projects.next_page_number }}" class="pagination-btn prev-next">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+        {% else %}
+            <button class="pagination-btn prev-next" disabled>
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        {% endif %}
+    </div>
+    {% endif %}
+    
 </div>
 
-
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
 
 {% block js_files %}
