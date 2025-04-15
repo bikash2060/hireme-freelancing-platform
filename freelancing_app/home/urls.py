@@ -9,4 +9,5 @@ urlpatterns = [
     path('freelancers/', FreelancerListView.as_view(), name='freelancers'),
     path('projects/', ProjectListView.as_view(), name='projects'),
     path('profile/', GetUserProfileView.as_view(), name='user-profile'),
+    path('user-specific-project-list/', UserSpecificProjectListView.as_view(), name='user-specific-project-list'),
 ]

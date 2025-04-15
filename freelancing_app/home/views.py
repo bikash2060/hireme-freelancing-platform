@@ -94,7 +94,24 @@ class ProjectListView(View):
     
     def get(self, request):
         return render(request, self.project_list_template, {})
-
+    
+class UserSpecificProjectListView(View):
+    client_project_list_url = 'project:client-projects'
+    home_url = 'home:home'
+    
+    def get(self, request):
+        try:
+            user_role = request.user.role
+            
+            if user_role.lower() == 'client':
+                return redirect(self.client_project_list_url)
+            else:
+                messages.error(request, 'Something went wrong. Please try again.')
+                return redirect(self.home_url)
+        except Exception:   
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)
+       
 def handling_404(request, exception):
     error_page_template = '404.html'
     return render(request, error_page_template, {})
