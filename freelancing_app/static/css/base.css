@@ -1470,8 +1470,6 @@ html[lang="ne"] body {
     flex-direction: column;
     gap: 14px;
     background-color: #f9fafb;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
 }
 
 .chat-container .messages-container::-webkit-scrollbar {
