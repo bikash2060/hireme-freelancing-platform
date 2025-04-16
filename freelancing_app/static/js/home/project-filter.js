@@ -60,6 +60,45 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Skill search functionality
+    const skillSearchInput = document.querySelector('.skill-search-input');
+    if (skillSearchInput) {
+        skillSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const skillItems = document.querySelectorAll('.skill-items .dropdown-item');
+            const skillItemsContainer = document.querySelector('.skill-items');
+            let hasMatches = false;
+            
+            skillItems.forEach(item => {
+                const skillName = item.textContent.trim().toLowerCase();
+                if (skillName.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    hasMatches = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Remove existing no-results message if it exists
+            const existingNoResults = skillItemsContainer.querySelector('.no-skills-found');
+            if (existingNoResults) {
+                existingNoResults.remove();
+            }
+
+            // Add no-results message if no matches found
+            if (!hasMatches) {
+                const noResultsMessage = document.createElement('div');
+                noResultsMessage.className = 'no-skills-found';
+                noResultsMessage.style.padding = '10px';
+                noResultsMessage.style.textAlign = 'center';
+                noResultsMessage.style.color = '#666';
+                noResultsMessage.style.fontSize = '14px';
+                noResultsMessage.textContent = 'No skills found';
+                skillItemsContainer.appendChild(noResultsMessage);
+            }
+        });
+    }
+
     function applyFilters() {
         const params = new URLSearchParams();
 
@@ -83,3 +122,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+function removeFilterParam(paramName) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete(paramName);
+    window.location.href = url.toString();
+}
+
+function removeMultiFilterParam(paramName, valueToRemove) {
+    const url = new URL(window.location.href);
+    let params = url.searchParams.getAll(paramName);
+    params = params.filter(val => val !== valueToRemove);
+    url.searchParams.delete(paramName);
+    params.forEach(val => url.searchParams.append(paramName, val));
+    window.location.href = url.toString();
+}

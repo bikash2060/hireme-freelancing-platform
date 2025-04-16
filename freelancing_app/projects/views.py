@@ -53,7 +53,7 @@ class ClientProjectsView(CustomLoginRequiredMixin, View):
                 
             # Filter by budget
             if selected_budgets and 'all' not in selected_budgets:
-                budget_q = models.Q()
+                budget_q = Q()
                 for b in selected_budgets:
                     if b == '500000+':
                         budget_q |= models.Q(fixed_budget__gte=500000) | models.Q(budget_max__gte=500000)

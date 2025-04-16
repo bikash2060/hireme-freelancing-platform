@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% load static%}
+{% load project_filters %}
+{% load number_filters %}
+{% load custom_filters %}
 
 {% block title %}Find Projects - HireMe{% endblock %}
 
@@ -8,10 +11,364 @@
 {% endblock %}
 
 {% block content %}
+<!-- Hero Section -->
+<div class="projects-list-hero">
+    <div class="container">
+        <div class="list-header">
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                    <path d="M2 20h20v-4H2v4zm2-4h16V8H4v8z"></path>
+                    <path d="M6 8V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path>
+                </svg>
+            </div>
+            <h2 class="section-title">Find Your Next Project</h2>
+            <p class="section-subtitle">Browse and filter projects that match your skills and expertise</p>
+        </div>
+    </div>
+</div>
 
+<!-- Search Bar and Filter Section -->
+<div class="search-filter-section">
+    <div class="search-container">
+        <div class="search-filter-bar">
+            {% if request.GET %}
+            <div class="applied-filters-container">
+                {% if request.GET.search %}
+                <div class="applied-filter-tag search-tag">
+                    Search: "{{ request.GET.search }}"
+                    <span class="remove-filter" onclick="removeFilterParam('search')">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </div>
+                {% endif %}
+                
+                {% for category in selected_categories %}
+                    {% with cat=categories_dict|get_item:category %}
+                    {% if cat %}
+                    <div class="applied-filter-tag">
+                        Category: {{ cat.name }}
+                        <span class="remove-filter" onclick="removeMultiFilterParam('category', '{{ category }}')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                {% endfor %}
+                
+                {% for skill in selected_skills %}
+                    {% with sk=skills_dict|get_item:skill %}
+                    {% if sk %}
+                    <div class="applied-filter-tag">
+                        Skill: {{ sk.name }}
+                        <span class="remove-filter" onclick="removeMultiFilterParam('skill', '{{ skill }}')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                {% endfor %}
+                
+                {% for budget in selected_budgets %}
+                    <div class="applied-filter-tag">
+                        Budget: 
+                        {% if budget == '500000+' %}
+                            Rs. 5,00,000+
+                        {% else %}
+                            Rs. {{ budget }}
+                        {% endif %}
+                        <span class="remove-filter" onclick="removeMultiFilterParam('budget', '{{ budget }}')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </div>
+                {% endfor %}
+                
+                {% for experience in selected_experience %}
+                    <div class="applied-filter-tag">
+                        Experience: {{ experience|title }}
+                        <span class="remove-filter" onclick="removeMultiFilterParam('experience', '{{ experience }}')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </div>
+                {% endfor %}
+                
+                {% for duration in selected_durations %}
+                    <div class="applied-filter-tag">
+                        Duration: 
+                        {% if duration == '12+' %}
+                            3+ months
+                        {% elif duration == '4-12' %}
+                            1-3 months
+                        {% else %}
+                            Less than 4 weeks
+                        {% endif %}
+                        <span class="remove-filter" onclick="removeMultiFilterParam('duration', '{{ duration }}')">
+                            <i class="fas fa-times"></i>
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="Search projects by title or keywords..." value="{{ request.GET.search }}" class="search-input">
+            </div>
+            <div class="filters-container">
+                <div class="filters">
+                    <div class="filter-dropdown scrollable-dropdown">
+                        <button class="filter-btn">
+                            <span>Category</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="category-search-container">
+                                <input type="text" placeholder="Search categories..." class="category-search-input">
+                            </div>
+                            <div class="category-items">
+                                {% for category in categories %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="category" value="{{ category.id }}"
+                                            {% if category.id|stringformat:"s" in selected_categories or 'all' in selected_categories %}checked{% endif %}>
+                                        {{ category.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Budget</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="0-50000"
+                                       {% if '0-50000' in selected_budgets %}checked{% endif %}>
+                                Rs. 0 - 50,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="50000-100000"
+                                       {% if '50000-100000' in selected_budgets %}checked{% endif %}>
+                                Rs. 50,000 - 1,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="100000-500000"
+                                       {% if '100000-500000' in selected_budgets %}checked{% endif %}>
+                                Rs. 1,00,000 - 5,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="500000+"
+                                       {% if '500000+' in selected_budgets %}checked{% endif %}>
+                                Rs. 5,00,000+
+                            </label>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Experience Level</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            {% for value, label in expertise_levels %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="experience" value="{{ value }}"
+                                        {% if value in selected_experience or 'all' in selected_experience %}checked{% endif %}>
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">  
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="0-4"
+                                       {% if '0-4' in selected_durations %}checked{% endif %}>
+                                Less than 4 weeks
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="4-12"
+                                       {% if '4-12' in selected_durations %}checked{% endif %}>
+                                1-3 months
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="12+"
+                                       {% if '12+' in selected_durations %}checked{% endif %}>
+                                3+ months
+                            </label>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown scrollable-dropdown large-above-dropdown">
+                        <button class="filter-btn">
+                            <span>Skills</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="category-search-container">
+                                <input type="text" placeholder="Search skills..." class="skill-search-input">
+                            </div>
+                            <div class="skill-items">
+                                {% for skill in skills %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="skill" value="{{ skill.id }}"
+                                            {% if skill.id|stringformat:"s" in selected_skills %}checked{% endif %}>
+                                        {{ skill.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="clear-filters-btn">
+                    <i class="fas fa-undo"></i> Reset Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Projects List Section -->
+<div class="project-list-section">
+    <div class="container">
+        <div class="card-grid">
+            {% for project in projects %}
+            <div class="project-card">
+                <div class="poster-info">
+                    {% if project.client.user.profile_image %}
+                        <img class="poster-profile" src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Profile Picture">
+                    {% else %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div class="poster-details">
+                        <p class="poster-name">{{ project.client.user.full_name|default:project.client.user.username }}</p>
+                        <p class="poster-posted-time">
+                            <i class="far fa-clock"></i> Posted {{ project.created_at|format_posted_time }}
+                        </p>
+                    </div>
+                    <div class="project-status status-active">Open</div>
+                </div>
+                <div class="project-info">
+                    <div class="project-meta-header">  
+                        <div class="project-category">
+                            <i class="fas fa-tag"></i> {{ project.category.name }}
+                        </div>
+                        <div class="project-budget">
+                            {% if project.is_fixed_price %}
+                                <span class="budget-type">Fixed</span>
+                                <span class="budget-amount">Rs. {{ project.fixed_budget|format_currency }}</span>
+                            {% else %}
+                                <span class="budget-type">Range</span>
+                                <span class="budget-range">Rs. {{ project.budget_min|format_currency }} - Rs. {{ project.budget_max|format_currency }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h4>{{ project.title }}</h4>
+                    <div class="project-meta">
+                        <span class="proposals-count" title="Proposals Received">
+                            <i class="fas fa-paper-plane"></i> 0 proposals
+                        </span>
+                        <span class="project-duration" title="Expected delivery timeframe">
+                            <i class="far fa-clock"></i> Delivery in {{ project.estimated_duration }} weeks
+                        </span>
+                        <span class="expertise-level {{ project.experience_level|lower }}" title="Required expertise level">
+                            <i class="fas fa-user-graduate"></i> {{ project.get_experience_level_display }}
+                        </span>
+                    </div>
+                    <div class="project-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Key Skills</span>
+                            <span class="skills-count">{{ project.skills_required.count }} skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                {% for skill in project.skills_required.all %}
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    {{ skill.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-buttons">
+                    <a href="#" class="send-proposal-btn">
+                        <i class="fas fa-paper-plane"></i> Send Proposal
+                    </a>
+                    <a href="" class="view-details-btn">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-projects">
+                <div class="empty-illustration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No matching projects found</h3>
+                <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
+            </div>
+            {% endfor %}     
+        </div>
+    </div>
+
+    {% if projects.has_other_pages %}
+    <div class="pagination">
+        {% if projects.has_previous %}
+            <a href="?page={{ projects.previous_page_number }}" class="pagination-btn prev-next">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+        {% else %}
+            <button class="pagination-btn prev-next" disabled>
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+        {% endif %}
+        
+        <div class="page-numbers">
+            {% if projects.number > 3 %}
+                <a href="?page=1" class="page-number">1</a>
+                {% if projects.number > 4 %}  {# Only show ellipsis if there's a gap #}
+                    <span class="page-ellipsis">...</span>
+                {% endif %}
+            {% endif %}
+            
+            {% for i in projects.paginator.page_range %}
+                {% if i >= projects.number|add:"-2" and i <= projects.number|add:"2" %}
+                    {% if projects.number == i %}
+                        <button class="page-number active">{{ i }}</button>
+                    {% else %}
+                        <a href="?page={{ i }}" class="page-number">{{ i }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            {% if projects.number < projects.paginator.num_pages|add:"-2" %}
+                {% if projects.number < projects.paginator.num_pages|add:"-3" %}  {# Only show ellipsis if there's a gap #}
+                    <span class="page-ellipsis">...</span>
+                {% endif %}
+                <a href="?page={{ projects.paginator.num_pages }}" class="page-number">{{ projects.paginator.num_pages }}</a>
+            {% endif %}
+        </div>
+        
+        {% if projects.has_next %}
+            <a href="?page={{ projects.next_page_number }}" class="pagination-btn prev-next">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+        {% else %}
+            <button class="pagination-btn prev-next" disabled>
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+ 
 {% endblock %}
 
-{% block footer %}{% endblock  %}
-
 {% block js_files %}
+<script src="{% static 'js/home/project-filter.js' %}"></script>
 {% endblock %}

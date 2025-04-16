@@ -52,7 +52,11 @@
                 <a href="#" class="nav-link">About Us</a>
             {% else %}
                 <a href="{% url 'home:home' %}" class="nav-link">Home</a>
-                <a href="{% url 'home:freelancers' %}" class="nav-link">Find Freelancers</a>
+                {% if request.user.role == 'client' %}
+                    <a href="{% url 'home:freelancers' %}" class="nav-link">Find Freelancers</a>
+                {% else %}
+                    <a href="{% url 'home:projects' %}" class="nav-link">Find Projects</a>
+                {% endif %}
                 
                 <div class="nav-dropdown">
                     <button class="nav-dropbtn">
