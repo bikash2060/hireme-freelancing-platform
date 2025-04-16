@@ -127,7 +127,7 @@ class ProjectListView(View):
             skills = Skill.objects.all()
             projects = Project.objects.filter(
                 status=Project.Status.PUBLISHED
-            ).distinct()
+            ).distinct().order_by('-created_at')
                         
             selected_categories = request.GET.getlist('category')
             selected_experience = request.GET.getlist('experience')
@@ -209,7 +209,35 @@ class ProjectListView(View):
         if not user.is_authenticated:
             return True
         return getattr(user, 'role', None) == 'freelancer' 
-       
+    
+class ProjectDetailView(View):
+    template_name = 'home/project-detail.html'
+    home_url = 'home:home'
+    
+    def get(self, request, project_id):
+        try:
+            project = Project.objects.get(id=project_id, status=Project.Status.PUBLISHED)
+            
+            if request.user.is_authenticated:
+                if request.user.role.lower() == 'client' and project.client.user != request.user:
+                    return redirect(self.home_url)
+            
+            context = {
+                'project': project,
+                'attachments': project.project_attachments.all(),
+                'skills': project.skills_required.all(),
+                'is_client': request.user.is_authenticated and request.user.role.lower() == 'client' and project.client.user == request.user,
+            }
+            return render(request, self.template_name, context)
+            
+        except Project.DoesNotExist:
+            messages.error(request, "Project not found or no longer available")
+            return redirect(self.home_url)
+        except Exception as e:
+            print(e)
+            messages.error(request, "Something went wrong. Please try again.")
+            return redirect(self.home_url)
+
 def handling_404(request, exception):
     error_page_template = '404.html'
     return render(request, error_page_template, {})

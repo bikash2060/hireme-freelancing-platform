@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load static %}
+{% load number_filters %}
+{% load custom_filters %}
+{% load project_filters %}
+
+{% block title %}{{ project.title }} - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/home/project-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="project-detail-container">
+    <div class="project-header">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="{% url 'home:home' %}">Home</a>
+                <span>/</span>
+                <a href="{% url 'home:projects' %}">Projects</a>
+                <span>/</span>
+                <span>{{ project.title|truncatechars:40 }}</span>
+            </div>
+            
+            <div class="project-title-section">
+                <h1>{{ project.title }}</h1>
+                <div class="project-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-tag"></i> {{ project.category.name }}
+                    </span>
+                    <span class="meta-item">
+                        <i class="far fa-clock"></i> Posted {{ project.created_at|format_posted_time }}
+                    </span>
+                    <span class="meta-item status-badge status-{{ project.status }}">
+                        Open
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="project-main-content">
+        <div class="container">
+            <div class="project-content-grid">
+                <div class="project-details">
+                    <section class="project-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-align-left"></i> Project Description
+                        </h2>
+                        <div class="section-content">
+                            {{ project.description|linebreaks }}
+                        </div>
+                    </section>
+
+                    <section class="project-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-tools"></i> Skills Required
+                        </h2>
+                        <div class="skills-container">
+                            {% for skill in skills %}
+                            <span class="skill-tag">
+                                <i class="fas fa-code"></i> {{ skill.name }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    {% if attachments %}
+                    <section class="project-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-paperclip"></i> Attachments
+                        </h2>
+                        <div class="attachments-container">
+                            {% for attachment in attachments %}
+                            <div class="attachment-item">
+                                <div class="attachment-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="attachment-info">
+                                    <a href="{{ attachment.file.url }}" target="_blank" class="attachment-name">
+                                        {{ attachment.file.name }}
+                                    </a>
+                                    <span class="attachment-size">
+                                        {{ attachment.file.size|filesizeformat }}
+                                    </span>
+                                </div>
+                                <a href="{{ attachment.file.url }}" download class="download-btn">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    {% endif %}
+                </div>
+
+                <div class="project-sidebar">
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">Project Overview</h3>
+                        <div class="overview-item">
+                            <span class="overview-label">
+                                <i class="fas fa-user-tie"></i> Expertise Level:
+                            </span>
+                            <span class="overview-value expertise-{{ project.experience_level }}">
+                                {{ project.get_experience_level_display }}
+                            </span>
+                        </div>
+                        <div class="overview-item">
+                            <span class="overview-label">
+                                <i class="fas fa-clock"></i> Duration:
+                            </span>
+                            <span class="overview-value">
+                                {{ project.estimated_duration }} weeks
+                            </span>
+                        </div>
+                        <div class="overview-item">
+                            <span class="overview-label">
+                                <i class="fas fa-calendar-alt"></i> Posted:
+                            </span>
+                            <span class="overview-value">
+                                {{ project.created_at|date:"M d, Y" }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Budget Information -->
+                    <div class="sidebar-card budget-card">
+                        <h3 class="sidebar-title">Budget</h3>
+                        {% if project.is_fixed_price %}
+                        <div class="budget-amount">
+                            <span class="budget-type">Fixed Price</span>
+                            <span class="amount">Rs. {{ project.fixed_budget|format_currency }}</span>
+                        </div>
+                        {% else %}
+                        <div class="budget-amount">
+                            <span class="budget-type">Range</span>
+                            <span class="amount">Rs. {{ project.budget_min|format_currency }} - Rs. {{ project.budget_max|format_currency }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Client Information -->
+                    <div class="sidebar-card client-card">
+                        <h3 class="sidebar-title">About the Client</h3>
+                        <div class="client-info">
+                            <div class="client-avatar">
+                                {% if project.client.user.profile_image %}
+                                    <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="{{ project.client.user.full_name }}">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="client-details">
+                                <h4 class="client-name">
+                                    {{ project.client.user.full_name|default:project.client.user.username }}
+                                    {% if project.client.user.is_verified %}
+                                    <span class="verified-badge" title="Verified Client">
+                                        <i class="fas fa-check-circle"></i>
+                                    </span>
+                                    {% endif %}
+                                </h4>
+                                <div class="client-meta">
+                                    <span class="meta-item">
+                                        <i class="fas fa-map-marker-alt"></i> 
+                                        {{ project.client.user.country|default:"Not specified" }}
+                                    </span>
+                                    <span class="meta-item">
+                                        <i class="fas fa-briefcase"></i> 
+                                        {{ project.client.completed_projects_count|default:"0" }} projects
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        {% if not is_client %}
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Proposal
+                        </a>
+                        {% else %}
+                        <a href="#" class="btn btn-secondary">
+                            <i class="fas fa-edit"></i> Edit Project
+                        </a>
+                        {% endif %}
+                        <a href="#" class="btn btn-outline">
+                            <i class="far fa-bookmark"></i> Save Project
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/home/project-detail.js' %}"></script>
+{% endblock %}
