@@ -252,24 +252,6 @@
     transform: translate(-50%, -50%);
 }
 
-.search-filter-section .scrollable-dropdown .dropdown-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.search-filter-section .scrollable-dropdown .dropdown-content::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 0 0.75rem 0.75rem 0;
-}
-
-.search-filter-section .scrollable-dropdown .dropdown-content::-webkit-scrollbar-thumb {
-    background: #c7d2fe;
-    border-radius: 4px;
-}
-
-.search-filter-section .scrollable-dropdown .dropdown-content::-webkit-scrollbar-thumb:hover {
-    background: #a5b4fc;
-}
-
 .search-filter-section .clear-filters-btn {
     background-color: #f1f5f9;
     border: 1px solid #e2e8f0;
@@ -350,21 +332,31 @@
     flex-grow: 1;
 }
 
-.search-filter-section .category-items::-webkit-scrollbar {
+.search-filter-section .skill-items {
+    max-height: calc(350px - 72px);
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.search-filter-section .category-items::-webkit-scrollbar,
+.search-filter-section .skill-items::-webkit-scrollbar {
     width: 8px;
 }
 
-.search-filter-section .category-items::-webkit-scrollbar-track {
+.search-filter-section .category-items::-webkit-scrollbar-track,
+.search-filter-section .skill-items::-webkit-scrollbar-track {
     background: #f1f5f9;
     border-radius: 0 0.75rem 0.75rem 0;
 }
 
-.search-filter-section .category-items::-webkit-scrollbar-thumb {
+.search-filter-section .category-items::-webkit-scrollbar-thumb,
+.search-filter-section .skill-items::-webkit-scrollbar-thumb {
     background: #c7d2fe;
     border-radius: 4px;
 }
 
-.search-filter-section .category-items::-webkit-scrollbar-thumb:hover {
+.search-filter-section .category-items::-webkit-scrollbar-thumb:hover,
+.search-filter-section .skill-items::-webkit-scrollbar-thumb:hover {
     background: #a5b4fc;
 }
 
@@ -570,9 +562,9 @@
 }
 
 .project-list-section .verified-badge {
-    color: #4f46e5;
     margin-left: 2px;
-    font-size: 0.9rem;
+    color: #10b981;
+    font-size: 0.85rem;
 }
 
 .project-list-section .poster-posted-time {

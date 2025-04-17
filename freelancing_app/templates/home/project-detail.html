@@ -15,25 +15,51 @@
     <div class="project-header">
         <div class="container">
             <div class="breadcrumb">
-                <a href="{% url 'home:home' %}">Home</a>
-                <span>/</span>
-                <a href="{% url 'home:projects' %}">Projects</a>
-                <span>/</span>
-                <span>{{ project.title|truncatechars:40 }}</span>
+                <a href="{% url 'home:home' %}" class="breadcrumb-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <span class="breadcrumb-divider">/</span>
+                <a href="{% url 'home:projects' %}" class="breadcrumb-link">
+                    <i class="fas fa-briefcase"></i> Projects
+                </a>
+                <span class="breadcrumb-divider">/</span>
+                <span class="breadcrumb-current">
+                    <i class="fas fa-file-alt"></i> {{ project.title|truncatechars:40 }}
+                </span>
             </div>
             
             <div class="project-title-section">
-                <h1>{{ project.title }}</h1>
-                <div class="project-meta">
-                    <span class="meta-item">
-                        <i class="fas fa-tag"></i> {{ project.category.name }}
-                    </span>
-                    <span class="meta-item">
-                        <i class="far fa-clock"></i> Posted {{ project.created_at|format_posted_time }}
-                    </span>
-                    <span class="meta-item status-badge status-{{ project.status }}">
-                        Open
-                    </span>
+                <div class="title-wrapper">
+                    <h1 class="project-title">
+                        <span class="title-text">{{ project.title }}</span>
+                        {% if project.is_featured %}
+                        <span class="featured-badge">
+                            <i class="fas fa-star"></i> Featured
+                        </span>
+                        {% endif %}
+                        <span class="project-status">
+                            <span class="status-dot"></span>
+                            <span>Open</span>
+                        </span>
+                    </h1>
+                    <div class="project-meta">
+                        <div class="meta-item category">
+                            <i class="fas fa-tag"></i> 
+                            <span>{{ project.category.name }}</span>
+                        </div>
+                        <div class="meta-item time">
+                            <i class="far fa-clock"></i> 
+                            <span>Posted {{ project.created_at|format_posted_time }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-actions">
+                    <button class="action-btn save-btn">
+                        <i class="far fa-bookmark"></i> Save
+                    </button>
+                    <button class="action-btn share-btn">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
                 </div>
             </div>
         </div>
@@ -43,152 +69,251 @@
         <div class="container">
             <div class="project-content-grid">
                 <div class="project-details">
-                    <section class="project-section">
-                        <h2 class="section-title">
-                            <i class="fas fa-align-left"></i> Project Description
-                        </h2>
-                        <div class="section-content">
-                            {{ project.description|linebreaks }}
-                        </div>
-                    </section>
+                    <div class="section">
 
-                    <section class="project-section">
-                        <h2 class="section-title">
-                            <i class="fas fa-tools"></i> Skills Required
-                        </h2>
-                        <div class="skills-container">
-                            {% for skill in skills %}
-                            <span class="skill-tag">
-                                <i class="fas fa-code"></i> {{ skill.name }}
-                            </span>
-                            {% endfor %}
-                        </div>
-                    </section>
-
-                    {% if attachments %}
-                    <section class="project-section">
-                        <h2 class="section-title">
-                            <i class="fas fa-paperclip"></i> Attachments
-                        </h2>
-                        <div class="attachments-container">
-                            {% for attachment in attachments %}
-                            <div class="attachment-item">
-                                <div class="attachment-icon">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                                <div class="attachment-info">
-                                    <a href="{{ attachment.file.url }}" target="_blank" class="attachment-name">
-                                        {{ attachment.file.name }}
-                                    </a>
-                                    <span class="attachment-size">
-                                        {{ attachment.file.size|filesizeformat }}
-                                    </span>
-                                </div>
-                                <a href="{{ attachment.file.url }}" download class="download-btn">
-                                    <i class="fas fa-download"></i>
-                                </a>
+                        <div class="description-section">
+                            <div class="section-header">
+                                <i class="fas fa-align-left icon"></i>
+                                <h3 class="section-title">Project Description</h3>
                             </div>
-                            {% endfor %}
+                            <div class="project-description">
+                                {{ project.description|linebreaks }}
+                            </div>
                         </div>
-                    </section>
-                    {% endif %}
-                </div>
 
-                <div class="project-sidebar">
-                    <div class="sidebar-card">
-                        <h3 class="sidebar-title">Project Overview</h3>
-                        <div class="overview-item">
-                            <span class="overview-label">
-                                <i class="fas fa-user-tie"></i> Expertise Level:
-                            </span>
-                            <span class="overview-value expertise-{{ project.experience_level }}">
-                                {{ project.get_experience_level_display }}
-                            </span>
+                        <div class="expected-outcomes">
+                            <div class="section-header">
+                                <i class="fas fa-clipboard-check icon"></i>
+                                <h3 class="section-title">Expected Outcomes</h3>
+                            </div>
+                            <div class="outcomes-list">
+                                <div class="outcome-item">
+                                    <i class="fas fa-check-circle outcome-icon"></i>
+                                    <span>Fully functional web application with responsive design</span>
+                                </div>
+                                <div class="outcome-item">
+                                    <i class="fas fa-check-circle outcome-icon"></i>
+                                    <span>User authentication and authorization system</span>
+                                </div>
+                                <div class="outcome-item">
+                                    <i class="fas fa-check-circle outcome-icon"></i>
+                                    <span>Database schema and API documentation</span>
+                                </div>
+                                <div class="outcome-item">
+                                    <i class="fas fa-check-circle outcome-icon"></i>
+                                    <span>Deployed application with hosting setup instructions</span>
+                                </div>
+                                <div class="outcome-item">
+                                    <i class="fas fa-check-circle outcome-icon"></i>
+                                    <span>Testing suite and quality assurance reports</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="overview-item">
-                            <span class="overview-label">
-                                <i class="fas fa-clock"></i> Duration:
-                            </span>
-                            <span class="overview-value">
-                                {{ project.estimated_duration }} weeks
-                            </span>
-                        </div>
-                        <div class="overview-item">
-                            <span class="overview-label">
-                                <i class="fas fa-calendar-alt"></i> Posted:
-                            </span>
-                            <span class="overview-value">
-                                {{ project.created_at|date:"M d, Y" }}
-                            </span>
-                        </div>
-                    </div>
 
-                    <!-- Budget Information -->
-                    <div class="sidebar-card budget-card">
-                        <h3 class="sidebar-title">Budget</h3>
-                        {% if project.is_fixed_price %}
-                        <div class="budget-amount">
-                            <span class="budget-type">Fixed Price</span>
-                            <span class="amount">Rs. {{ project.fixed_budget|format_currency }}</span>
+                        <div class="skills-requirements">
+                            <div class="section-header">
+                                <i class="fas fa-tools icon"></i>
+                                <h3 class="section-title">Skills Required</h3>
+                            </div>
+                            <div class="skills-list">
+                                {% for skill in project.skills_required.all %}
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    {{ skill.name }}
+                                </span>
+                                {% endfor %}
+                            </div>
                         </div>
-                        {% else %}
-                        <div class="budget-amount">
-                            <span class="budget-type">Range</span>
-                            <span class="amount">Rs. {{ project.budget_min|format_currency }} - Rs. {{ project.budget_max|format_currency }}</span>
-                        </div>
-                        {% endif %}
-                    </div>
 
-                    <!-- Client Information -->
-                    <div class="sidebar-card client-card">
-                        <h3 class="sidebar-title">About the Client</h3>
-                        <div class="client-info">
-                            <div class="client-avatar">
-                                {% if project.client.user.profile_image %}
-                                    <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="{{ project.client.user.full_name }}">
-                                {% else %}
-                                    <div class="avatar-placeholder">
-                                        <i class="fas fa-user"></i>
+                        <div class="project-extra-details-section">
+                            <div class="section-header">
+                                <i class="fas fa-info-circle icon"></i>
+                                <h3 class="section-title">Project Details</h3>
+                            </div>
+                            <div class="project-details-list">
+                                <div class="detail-item budget">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-wallet"></i>
                                     </div>
-                                {% endif %}
+                                    <div class="detail-info">
+                                        <span class="detail-label">Budget {% if project.is_fixed_price %}(Fixed Price){% else %}(Range){% endif %}</span>
+                                        <span class="detail-value amount">
+                                            {% if project.is_fixed_price %}
+                                                Rs. {{ project.fixed_budget|format_currency }}
+                                            {% else %}
+                                                Rs. {{ project.budget_min|format_currency }} - {{ project.budget_max|format_currency }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-item duration">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="detail-info">
+                                        <span class="detail-label">Estimated Duration</span>
+                                        <span class="detail-value">{{ project.estimated_duration }} weeks</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-item expertise">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-user-graduate"></i>
+                                    </div>
+                                    <div class="detail-info">
+                                        <span class="detail-label">Expertise Level</span>
+                                        <span class="detail-value expertise {{ project.experience_level|lower }}">
+                                            <i class="fas fa-circle"></i> {{ project.get_experience_level_display }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="detail-item proposals">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </div>
+                                    <div class="detail-info">
+                                        <span class="detail-label">Proposals</span>
+                                        <span class="detail-value proposals">0 received</span>
+                                    </div>
+                                </div>
+                                
                             </div>
-                            <div class="client-details">
-                                <h4 class="client-name">
-                                    {{ project.client.user.full_name|default:project.client.user.username }}
-                                    {% if project.client.user.is_verified %}
-                                    <span class="verified-badge" title="Verified Client">
-                                        <i class="fas fa-check-circle"></i>
-                                    </span>
+                        </div>
+
+                        <div class="project-files-section">
+                            <div class="section-header">
+                                <i class="fas fa-file-alt icon"></i>
+                                <h3 class="section-title">Project Files</h3>
+                            </div>
+                            <div class="file-attachments">
+                                <div class="attachment-list">
+                                {% if project.attachments.all %}
+                                    {% for attachment in project.attachments.all %}
+                                    <div class="attachment-item">
+                                        <div class="attachment-icon">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div class="attachment-info">
+                                            <div class="attachment-name">{{ attachment.file_name }}</div>
+                                            <div class="attachment-meta">{{ attachment.file_size|filesizeformat }} • {{ attachment.file_type }}</div>
+                                        </div>
+                                        <a href="{{ attachment.file.url }}" download class="attachment-download">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                <div class="no-attachments">
+                                    No attachments provided
+                                </div>
+                                {% endif %}
+    
+                                </div>
+                            </div>                            
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <div class="project-sidebar">
+                    <div class="client-card">
+                        <div class="client-header">
+                            <h3 class="client-title">
+                                <i class="fas fa-user"></i> About the Client
+                            </h3>
+                            <div class="client-profile">
+                                <div class="client-avatar">
+                                    {% if project.client.user.profile_image %}
+                                        <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Client Profile">
+                                    {% else %}
+                                        <i class="fas fa-user"></i>
                                     {% endif %}
-                                </h4>
-                                <div class="client-meta">
-                                    <span class="meta-item">
-                                        <i class="fas fa-map-marker-alt"></i> 
-                                        {{ project.client.user.country|default:"Not specified" }}
-                                    </span>
-                                    <span class="meta-item">
-                                        <i class="fas fa-briefcase"></i> 
-                                        {{ project.client.completed_projects_count|default:"0" }} projects
-                                    </span>
+                                </div>
+                                <div class="client-info">
+                                    <h4 class="client-name">
+                                        {{ project.client.user.full_name|default:project.client.user.username }}
+                                        {% if project.client.user.is_verified %}
+                                        <span class="verified-badge" title="Verified Client">
+                                            <i class="fas fa-check-circle"></i>
+                                        </span>
+                                        {% endif %}
+                                    </h4>
+                                    <div class="client-meta">
+                                        Member since {{ project.client.user.date_joined|date:"M Y" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-body">
+                            <div class="client-stats">
+                                <div class="client-stat-item">
+                                    <div class="stat-value">{{ project.client.projects.count }}</div>
+                                    <div class="stat-label">Projects Posted</div>
+                                </div>
+                                <div class="client-stat-item">
+                                    <div class="stat-value">
+                                        {% if project.client.user.review_received.all|length > 0 %}
+                                            {{ project.client.user.review_received.all|length }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </div>
+                                    <div class="stat-label">Reviews</div>
+                                </div>
+                                <div class="client-stat-item">
+                                    <div class="stat-value">100%</div>
+                                    <div class="stat-label">Payment Rate</div>
+                                </div>
+                                <div class="client-stat-item">
+                                    <div class="stat-value">{{ project.client.projects.filter.count }}</div>
+                                    <div class="stat-label">Completed</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        {% if not is_client %}
-                        <a href="#" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Send Proposal
-                        </a>
-                        {% else %}
-                        <a href="#" class="btn btn-secondary">
-                            <i class="fas fa-edit"></i> Edit Project
-                        </a>
-                        {% endif %}
-                        <a href="#" class="btn btn-outline">
-                            <i class="far fa-bookmark"></i> Save Project
-                        </a>
+                    
+                    <div class="project-action-card">
+                        <div class="action-card-header">
+                            <h3 class="action-card-title">
+                                <i class="fas fa-paper-plane"></i> Interested in this project?
+                            </h3>
+                            <p class="action-card-subtitle">Submit your proposal now and start working!</p>
+                        </div>
+                        <div class="action-card-body">
+                            <div class="action-card-info">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        Create a detailed proposal outlining your skills and approach
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        Set your pricing and timeline for completing the work
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="info-text">
+                                        Get hired and start working on the project
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="action-button primary-action">
+                                <i class="fas fa-paper-plane"></i> Submit a Proposal
+                            </a>
+                            <a href="{% url 'home:projects' %}" class="action-button alternative-action">
+                                <i class="fas fa-arrow-left"></i> Browse More Projects
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

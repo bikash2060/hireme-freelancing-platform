@@ -224,9 +224,6 @@ class ProjectDetailView(View):
             
             context = {
                 'project': project,
-                'attachments': project.project_attachments.all(),
-                'skills': project.skills_required.all(),
-                'is_client': request.user.is_authenticated and request.user.role.lower() == 'client' and project.client.user == request.user,
             }
             return render(request, self.template_name, context)
             
