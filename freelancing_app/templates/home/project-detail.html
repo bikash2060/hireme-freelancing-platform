@@ -307,7 +307,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="#" class="action-button primary-action">
+                            <a href="{% url 'proposals:submit-proposal' project.id %}" class="action-button primary-action">
                                 <i class="fas fa-paper-plane"></i> Submit a Proposal
                             </a>
                             <a href="{% url 'home:projects' %}" class="action-button alternative-action">

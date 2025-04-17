@@ -1,7 +1,7 @@
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
-from django.shortcuts import render, redirect
 from notification.utils import NotificationManager
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.conf import settings

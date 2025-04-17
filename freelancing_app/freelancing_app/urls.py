@@ -17,6 +17,7 @@ urlpatterns += i18n_patterns(
     path('client/', include('clientprofile.urls', namespace='client-profile')),
     path('freelancer/', include('freelancerprofile.urls', namespace='freelancer-profile')),
     path('project/', include('projects.urls', namespace='project')),
+    path('proposals/', include('proposals.urls', namespace='proposals')),
     path('chat/', include('chat.urls', namespace='chat')),
     path('notification/', include('notification.urls')),
     prefix_default_language=True,

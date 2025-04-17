@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Apply for {{ project.title }} - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/proposals/newproposal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="edit-profile-container">
+        <div class="profile-card">
+            <div class="card-header">
+                <div class="header-content">
+                    <div class="icon-circle">
+                        <i class="fas fa-paper-plane profile-icon"></i>
+                    </div>
+                    <div>
+                        <h2>Submit Proposal for "{{ project.title }}"</h2>
+                        <p class="subtitle">Create a compelling proposal to win this project</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{% url 'home:project-detail' project.id %}" class="back-to-profile-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Project
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <form id="proposal-form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-info-circle"></i> Project Summary
+                            </h3>
+                            <div class="project-summary">
+                                <div class="summary-item">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-label">Budget</div>
+                                        <div class="summary-value">
+                                            {% if project.is_fixed_price %}
+                                                Rs. {{ project.fixed_budget|floatformat:2 }}
+                                            {% else %}
+                                                Rs. {{ project.budget_min|floatformat:2 }} - {{ project.budget_max|floatformat:2 }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-label">Duration</div>
+                                        <div class="summary-value">{{ project.estimated_duration }} weeks</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-user-tie"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-label">Expertise Level</div>
+                                        <div class="summary-value">{{ project.get_experience_level_display }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="summary-item">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-tag"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-label">Category</div>
+                                        <div class="summary-value">{{ project.category.name }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-file-alt"></i> Proposal Details
+                            </h3>
+                            <div class="form-group">
+                                <label for="cover_letter">
+                                    <i class="fas fa-align-left"></i> Cover Letter
+                                </label>
+                                <textarea id="cover_letter" name="cover_letter" class="form-control" 
+                                    placeholder="Explain why you're the best fit for this project" 
+                                    rows="6" maxlength="2000" required></textarea>
+                                <div class="textarea-footer">
+                                    <div class="char-counter">
+                                        <span id="cover-letter-char-count">0</span>/2000 characters
+                                    </div>
+                                    <div class="bio-tips">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Tip: Highlight relevant experience and your approach</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-money-bill-wave"></i> Pricing & Timeline
+                            </h3>
+                            
+                            <div class="duration-grid">
+                                <div class="form-group">
+                                    <label for="proposed_amount">
+                                        <i class="fas fa-hand-holding-usd"></i> Proposed Amount (NPR)
+                                    </label>
+                                    <div class="input-with-symbol">
+                                        <span class="input-symbol">Rs</span>
+                                        <input type="number" id="proposed_amount" name="proposed_amount" 
+                                            class="form-control" min="1000" step="500" required>
+                                    </div>
+                                    <div class="input-hint">Amount you're proposing for this project</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="estimated_duration">
+                                        <i class="fas fa-clock"></i> Estimated Duration (weeks)
+                                    </label>
+                                    <input type="number" id="estimated_duration" name="estimated_duration" 
+                                        class="form-control" min="1" max="104" required>
+                                    <div class="input-hint">How long will this project take?</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width attachment-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-paperclip"></i> Supporting Documents (Optional)
+                            </h3>
+                            <div class="form-group">
+                                <div class="file-upload-container">
+                                    <label for="attachment" class="file-upload-label">
+                                        <div class="upload-area">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <h4>Drag & drop files here or click to browse</h4>
+                                            <p class="file-types">Supports: PDF, DOC, JPG, PNG (Max 5MB each)</p>
+                                        </div>
+                                        <input type="file" id="attachment" name="attachment[]" class="file-upload-input" multiple>
+                                    </label>
+                                    
+                                    <div class="file-preview-container" id="file-preview">
+                                        <!-- File previews will appear here -->
+                                    </div>
+                                    
+                                    <div class="upload-status">
+                                        <div class="progress-bar" id="upload-progress" style="display: none;">
+                                            <div class="progress-fill"></div>
+                                        </div>
+                                        <span class="status-text" id="status-text"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="save-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Proposal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/projects/description-handler.js' %}"></script>
+<script src="{% static 'js/projects/attachments-handler.js' %}"></script>
+<script>
+    // Character counter for cover letter
+    document.getElementById('cover_letter').addEventListener('input', function() {
+        const charCount = this.value.length;
+        document.getElementById('cover-letter-char-count').textContent = charCount;
+    });
+</script>
+{% endblock %}

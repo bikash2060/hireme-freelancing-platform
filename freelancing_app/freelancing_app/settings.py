@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'django.contrib.humanize',
+    "channels",
 
     # Third-party apps
     'allauth',
@@ -36,15 +37,15 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     
     # Custom apps
-    "home",
     "accounts",
-    "dashboard",
-    "clientprofile",
-    "freelancerprofile",
-    "projects",
-    "channels",
     "chat",
+    "clientprofile",
+    "dashboard",
+    "freelancerprofile",
+    "home",
     "notification",
+    "projects",
+    "proposals",
 ]
 
 # Middleware stack for request/response processing
