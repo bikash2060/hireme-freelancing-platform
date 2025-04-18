@@ -9,17 +9,29 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
+    # Admin
     path('admin/', admin.site.urls),
-    path("", include("home.urls", namespace="home")),
+    
+    # Authentication
     path('accounts/', include('allauth.urls')),
+    
+    # App-specific routes
+    path('', include("home.urls", namespace="home")),
     path('account/', include('accounts.urls', namespace='account')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    
+    # Profile routes
     path('client/', include('clientprofile.urls', namespace='client-profile')),
     path('freelancer/', include('freelancerprofile.urls', namespace='freelancer-profile')),
+    
+    # Project-related routes
     path('project/', include('projects.urls', namespace='project')),
     path('proposals/', include('proposals.urls', namespace='proposals')),
+    
+    # Communication
     path('chat/', include('chat.urls', namespace='chat')),
     path('notification/', include('notification.urls')),
+    
     prefix_default_language=True,
 )
 

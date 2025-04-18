@@ -1,89 +1,204 @@
+from projects.models import ProjectCategory, Skill, Project
 from accounts.mixins import CustomLoginRequiredMixin
 from freelancerprofile.models import Freelancer
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from clientprofile.models import Client
 from django.contrib.auth import logout
-from django.utils.timezone import now
 from django.contrib import messages
-from django.views import View
-from django.core.paginator import Paginator
-from projects.models import ProjectCategory, Skill, Project
 from django.db.models import Q
+from django.views import View
 
+# ------------------------------------------------------
+# ✅ [TESTED]
+# View Name: HomeView
+# Description: Handles routing for authenticated and unauthenticated users
+# Tested On: 2025-04-18
+# Status: Working as expected
+# ------------------------------------------------------
 class HomeView(View):
-    freelancer_dashboard_url = 'dashboard:freelancer'
-    client_dashboard_url = 'dashboard:client'
-    home_template = 'home/index.html'
+    """
+    - Redirecting authenticated users to appropriate dashboards based on their role
+    - Handling cases where user profiles are missing
+    - Displaying the homepage for unauthenticated users
+    - Managing error cases and logout scenarios
+    """
+    
+    # URL constants for redirection
+    FREELANCER_DASHBOARD_URL = 'dashboard:freelancer'
+    CLIENT_DASHBOARD_URL = 'dashboard:client'
+    TEMPLATE_NAME = 'home/index.html'  
     
     def get(self, request):
-        try:
-            if request.user.is_authenticated:
-                user_role = request.user.role.lower()  
-                
-                if user_role == 'client':
-                    try:
-                        client = Client.objects.get(user=request.user)
-                        return redirect(self.client_dashboard_url)
-                    except Client.DoesNotExist:
-                        messages.error(request, 'No client profile found for this account.')
-                        logout(request)
-                        return render(request, self.home_template)
-                
-                elif user_role == 'freelancer':
-                    try:
-                        freelancer = Freelancer.objects.get(user=request.user)
-                        return redirect(self.freelancer_dashboard_url)
-                    except Freelancer.DoesNotExist:
-                        messages.error(request, 'No freelancer profile found for this account.')
-                        logout(request)
-                        return render(request, self.home_template)
-                
-                else:
-                    messages.error(request, 'Invalid user role. Please try again.')
-                    logout(request)
-                    return render(request, self.home_template)
+        """
+        Main entry point for GET requests.
+        Routes authenticated users to appropriate handlers or renders homepage.
+        """
+        if request.user.is_authenticated:
+            return self._handle_authenticated_user(request)
+        return self._render_home_page(request)
+
+    def _handle_authenticated_user(self, request):
+        """
+        Handles routing for authenticated users based on their role.
+        Uses dictionary dispatch pattern for role-based handling.
+        """
+        user_role = request.user.role.lower()
         
-            freelancer_count = Freelancer.objects.count() or 0
-            
+        role_handlers = {
+            'client': self._handle_client,
+            'freelancer': self._handle_freelancer,
+        }
+        
+        handler = role_handlers.get(user_role, self._handle_invalid_role)
+        return handler(request)
+
+    def _handle_client(self, request):
+        """
+        Handles client users:
+        - Verifies client profile exists
+        - Redirects to client dashboard if profile exists
+        - Handles missing profile case
+        """
+        try:
+            Client.objects.get(user=request.user)
+            return redirect(self.CLIENT_DASHBOARD_URL)
+        except Client.DoesNotExist:
+            return self._handle_missing_profile(request, 'client')
+
+    def _handle_freelancer(self, request):
+        """
+        Handles freelancer users:
+        - Verifies freelancer profile exists
+        - Redirects to freelancer dashboard if profile exists
+        - Handles missing profile case
+        """
+        try:
+            Freelancer.objects.get(user=request.user)
+            return redirect(self.FREELANCER_DASHBOARD_URL)
+        except Freelancer.DoesNotExist:
+            return self._handle_missing_profile(request, 'freelancer')
+
+    def _handle_invalid_role(self, request):
+        """
+        Handles cases where user has an unrecognized role.
+        Logs out user and shows error message.
+        """
+        messages.error(request, 'Invalid user role. Please try again.')
+        return self._logout_and_render(request)
+
+    def _handle_missing_profile(self, request, profile_type):
+        """
+        Handles cases where user role exists but profile is missing.
+        Logs out user and shows appropriate error message.
+        """
+        messages.error(request, f'No {profile_type} profile found for this account.')
+        return self._logout_and_render(request)
+
+    def _logout_and_render(self, request):
+        """
+        Utility method to logout user and render homepage.
+        Used for error cases that require logout.
+        """
+        logout(request)
+        return render(request, self.TEMPLATE_NAME)
+
+    def _render_home_page(self, request):
+        """
+        Renders the homepage template for unauthenticated users.
+        Includes basic error handling for template rendering.
+        """
+        try:
+            return render(request, self.TEMPLATE_NAME, {})
         except Exception as e:
             messages.error(request, 'Something went wrong. Please try again.')
-            logout(request)
-            return render(request, self.home_template)
+            return self._logout_and_render(request)
         
-        current_year = now().year
-        context = {
-            'freelancer_count': freelancer_count,
-            'project_count': 0,
-            'projects': 0,
-            'completed_projects': 0,  
-            'positive_reviews': 0,  
-            'current_year': current_year,
-        }
-        return render(request, self.home_template, context)
-
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: GetUserProfileView
+# Description: Redirects user to role-specific profile page
+# Tested On: 
+# Status:
+# ------------------------------------------------------
 class GetUserProfileView(CustomLoginRequiredMixin, View):
-    home_template = 'home/index.html'
-    freelancer_profile_url = 'freelancer:profile'
-    client_profile_url = 'client:profile'
-    home_url = 'home:home'
+    """
+    - View for handling user profile redirection based on user role.
+    - This view ensures authenticated users are redirected to their appropriate
+    profile pages, with proper error handling for invalid roles or exceptions.
+    """
+    
+    # Template and URL constants
+    TEMPLATE_NAME = 'home/index.html'
+    FREELANCER_PROFILE_URL = 'freelancer:profile'
+    CLIENT_PROFILE_URL = 'client:profile'
+    HOME_URL = 'home:home'
     
     def get(self, request):
+        """
+        Handles GET requests for profile redirection:
+        - Routes clients to client profile
+        - Routes freelancers to freelancer profile
+        - Handles invalid roles and exceptions
+        """
         try:
-            user_role = request.user.role 
-            
-            if user_role.lower() == 'client':
-                return redirect(self.client_profile_url)
-            elif user_role.lower() == 'freelancer':
-                return redirect(self.freelancer_profile_url)
-            else:
-                messages.error(request, 'Something went wrong. Please try again.')
-                logout(request)
-                return render(request, self.home_template)
-        
+            return self._redirect_based_on_role(request)
         except Exception:
-            messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.home_url)
+            return self._handle_error(request)
+
+    def _redirect_based_on_role(self, request):
+        """
+        Determines the appropriate redirection based on user role.
+        """
+        user_role = request.user.role.lower()
         
+        role_redirects = {
+            'client': self._redirect_to_client_profile,
+            'freelancer': self._redirect_to_freelancer_profile,
+        }
+        
+        redirect_handler = role_redirects.get(user_role, self._handle_invalid_role)
+        return redirect_handler(request)
+
+    def _redirect_to_client_profile(self, request):
+        """Redirects client users to their profile page"""
+        return redirect(self.CLIENT_PROFILE_URL)
+
+    def _redirect_to_freelancer_profile(self, request):
+        """Redirects freelancer users to their profile page"""
+        return redirect(self.FREELANCER_PROFILE_URL)
+
+    def _handle_invalid_role(self, request):
+        """
+        Handles cases where user has an unrecognized role.
+        Logs out user and shows error message.
+        """
+        messages.error(request, 'Invalid user role. Please try again.')
+        return self._logout_and_render(request)
+
+    def _handle_error(self, request):
+        """
+        Handles unexpected exceptions by redirecting to home
+        with an error message.
+        """
+        messages.error(request, 'Something went wrong. Please try again.')
+        return redirect(self.HOME_URL)
+
+    def _logout_and_render(self, request):
+        """
+        Utility method to logout user and render homepage.
+        Used for error cases that require logout.
+        """
+        logout(request)
+        return render(request, self.TEMPLATE_NAME)
+   
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: UserSpecificProjectListView
+# Description: Redirects client users to their specific project list
+# Tested On:
+# Status:
+# ------------------------------------------------------   
 class UserSpecificProjectListView(View):
     client_project_list_url = 'project:client-projects'
     home_url = 'home:home'
@@ -100,7 +215,14 @@ class UserSpecificProjectListView(View):
         except Exception:   
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.home_url)
-
+        
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: FreelancerListView
+# Description: Displays list of freelancers for clients or unauthenticated users
+# Tested On:
+# Status:
+# ------------------------------------------------------    
 class FreelancerListView(View):
     freelancer_list_template = 'home/freelancerslist.html'
     home_url = 'home:home' 
@@ -116,6 +238,13 @@ class FreelancerListView(View):
             return True
         return getattr(user, 'role', None) == 'client' 
     
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: ProjectListView
+# Description: Filters and paginates available projects with advanced options
+# Tested On:
+# Status:
+# ------------------------------------------------------
 class ProjectListView(View):
     project_list_template = 'home/projectlist.html'
     home_url = 'home:home' 
@@ -210,6 +339,13 @@ class ProjectListView(View):
             return True
         return getattr(user, 'role', None) == 'freelancer' 
     
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: ProjectDetailView
+# Description: Displays individual project detail page with role-based restriction
+# Tested On:
+# Status:
+# ------------------------------------------------------
 class ProjectDetailView(View):
     template_name = 'home/project-detail.html'
     home_url = 'home:home'
@@ -235,6 +371,13 @@ class ProjectDetailView(View):
             messages.error(request, "Something went wrong. Please try again.")
             return redirect(self.home_url)
 
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: handling_404
+# Description: Renders custom 404 page template
+# Tested On:
+# Status:
+# ------------------------------------------------------
 def handling_404(request, exception):
     error_page_template = '404.html'
     return render(request, error_page_template, {})
