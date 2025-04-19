@@ -11,18 +11,17 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+<!-- Hero Section - Dynamic Content -->
 <div class="hero-section">
     <div class="container">
         <div class="hero-section-container">
             <div class="left-section">
                 <div class="tagline">Nepal's Premier Freelance Network</div>
-                
-                <h1 class="title">Connect with Top Nepali Talent On Demand</h1>
-                
-                <p class="subtitle">Access a curated network of skilled professionals for your design, development, content, and business needs — all backed by our satisfaction guarantee.</p>
+                <h1 class="title">Nepal’s Brightest Minds, One Click Away</h1>
+                <p class="subtitle">Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee.</p>
                 
                 <div class="benefits">
+
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-user-check"></i></div>
                         <span>Verified Experts</span>
@@ -39,19 +38,24 @@
                         <div class="check-icon"><i class="fas fa-headset"></i></div>
                         <span>24/7 Support</span>
                     </div>
+
                 </div>
             
                 <div class="social-proof">
+
                     <div class="stat">
                         <div class="stat-number">1,200</div>
                         <div class="stat-label">Verified Freelancers</div>
                     </div>
+
                     <div class="stat-divider"></div>
                     <div class="stat">
                         <div class="stat-number">8,500+</div>
                         <div class="stat-label">Completed Projects</div>
                     </div>
+
                     <div class="stat-divider"></div>
+
                     <div class="stat">
                         <div class="stat-number">4.9/5</div>
                         <div class="stat-label">Client Satisfaction</div>
@@ -59,23 +63,25 @@
                 </div>
                 
                 <div class="cta-section">
+
                     <div class="cta-buttons">
                         <a href="{% url 'account:login' %}" class="hire-button">
                             <span>Get Started</span>
-                            <div class="button-shine"></div>
                         </a>
                         <a href="#how-it-works" class="learn-more">
                             See How It Works
                             <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
                         </a>
                     </div>
+
                 </div>
             </div>
         
             <div class="right-section">
                 <div class="floating-images">
-                    <img src="{% static 'images/defaultimages/freelancing-work-1.jpg' %}" alt="Freelancer working" class="floating-image ">
-                    <img src="{% static 'images/defaultimages/freelancing-work-2.jpg' %}" alt="Client meeting" class="floating-image">
+                    <img src="{% static 'images/defaultimages/hero/freelancing-work-1.jpg' %}" alt="Freelancer working" class="floating-image ">
+                    <img src="{% static 'images/defaultimages/hero/freelancing-work-2.jpg' %}" alt="Client meeting" class="floating-image">
+                    <img src="{% static 'images/defaultimages/hero/freelancing-work-3.jpg' %}" alt="Client meeting" class="floating-image">
                 </div>
                 <div class="floating-dots"></div>
             </div>
@@ -83,40 +89,1143 @@
     </div>
 </div>
 
-<!-- How It Works Section -->
+<!-- How It Works Section - Static Content -->
+<div class="how-it-works" id="how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">How HireMe Works</h2>
+            <p class="section-subtitle">Find the perfect freelancer in just 4 simple steps with our seamless hiring process</p>
+        </div>
 
+        <div class="steps-container">
 
+            <div class="step-card">
+                <div class="step-number-container">
+                    <div class="step-number">1</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3>Post Your Project</h3>
+                    <p>Describe your needs, timeline, and budget in a simple form. It only takes a few minutes to post your project.</p>
+                    <ul class="step-features">
+                        <li><i class="fas fa-check-circle"></i> Quick & free posting</li>
+                        <li><i class="fas fa-check-circle"></i> Define skills and scope</li>
+                        <li><i class="fas fa-check-circle"></i> Set your budget</li>
+                    </ul>
+                </div>
+                <div class="step-connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+            </div>
 
+            <div class="step-card">
+                <div class="step-number-container">
+                    <div class="step-number">2</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Receive Proposals</h3>
+                    <p>Skilled freelancers will review your project and submit personalized proposals with their price and timeline.</p>
+                    <ul class="step-features">
+                        <li><i class="fas fa-check-circle"></i> Multiple competitive bids</li>
+                        <li><i class="fas fa-check-circle"></i> Fast response time</li>
+                        <li><i class="fas fa-check-circle"></i> View freelancer profiles</li>
+                    </ul>
+                </div>
+                <div class="step-connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+            </div>
 
+            <div class="step-card">
+                <div class="step-number-container">
+                    <div class="step-number">3</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Compare & Select</h3>
+                    <p>Evaluate proposals, check ratings, reviews, and portfolios to choose the best freelancer for your project.</p>
+                    <ul class="step-features">
+                        <li><i class="fas fa-check-circle"></i> View detailed proposals</li>
+                        <li><i class="fas fa-check-circle"></i> Check freelancer profiles</li>
+                        <li><i class="fas fa-check-circle"></i> Ask questions before hiring</li>
+                    </ul>
+                </div>
+                <div class="step-connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+            </div>
 
+            <div class="step-card">
+                <div class="step-number-container">
+                    <div class="step-number">4</div>
+                </div>
+                <div class="step-content">
+                    <div class="step-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Hire & Collaborate</h3>
+                    <p>Choose your freelancer and start working securely using our built-in messaging, milestones, and payment.</p>
+                    <ul class="step-features">
+                        <li><i class="fas fa-check-circle"></i> Easy project tracking</li>
+                        <li><i class="fas fa-check-circle"></i> Secure payments</li>
+                        <li><i class="fas fa-check-circle"></i> Ongoing support & messaging</li>
+                    </ul>
+                </div>
+            </div>
 
+        </div>
+        
+        <div class="illustration-guarantee-row">
+            <div class="process-illustration">
+                <div class="illustration-container">
+                    <div class="illustration-item active">
+                        <img src="{% static 'images/defaultimages/how-it-works/step-1.png' %}" alt="Post your project">
+                    </div>
+                    <div class="illustration-item">
+                        <img src="{% static 'images/defaultimages/how-it-works/step-2.png' %}" alt="Get matched with freelancers">
+                    </div>
+                    <div class="illustration-item">
+                        <img src="{% static 'images/defaultimages/how-it-works/step-3.png' %}" alt="Select your freelancer">
+                    </div>
+                    <div class="illustration-item">
+                        <img src="{% static 'images/defaultimages/how-it-works/step-4.png' %}" alt="Start collaborating">
+                    </div>
+                </div>
+                <div class="illustration-controls">
+                    <button class="control-dot active" data-step="1"></button>
+                    <button class="control-dot" data-step="2"></button>
+                    <button class="control-dot" data-step="3"></button>
+                    <button class="control-dot" data-step="4"></button>
+                </div>
+            </div>
+        
+            <div class="satisfaction-guarantee-wrapper">
+                <div class="satisfaction-guarantee">
+                    <div class="guarantee-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="guarantee-content">
+                        <h3>100% Satisfaction Guarantee</h3>
+                        <p>Not happy with the results? Our HireMe Protection Program ensures you only pay for work you approve.</p>
+                    </div>
+                </div>
+                <div class="cta-container">
+                    <a href="{% url 'account:login' %}" class="cta-button">
+                        Get Started Now <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <p class="cta-subtext">Join 10,000+ businesses who've found top talent on HireMe</p>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
 
+<!-- Popular Freelance Services - Dynamic Content -->
+<div class="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Popular Freelance Services</h2>
+            <p class="section-subtitle">Browse top talent across our most in-demand categories</p>
+        </div>
 
+        <div class="categories-grid">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3 class="category-title">Web & Mobile Development</h3>
+                <p class="category-description">Custom websites, mobile apps, and web applications built to your specifications.</p>
+                <ul class="category-skills">
+                    <li>React/Node Developers</li>
+                    <li>Flutter Experts</li>
+                    <li>PHP Specialists</li>
+                    <li>Python/Django</li>
+                </ul>
+                <div class="freelancer-count">
+                    <i class="fas fa-users"></i>
+                    420+ Available Freelancers
+                </div>
+            </div>
 
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3 class="category-title">Design & Creative</h3>
+                <p class="category-description">Stunning visuals, branding, and creative assets for your business.</p>
+                <ul class="category-skills">
+                    <li>Logo Design</li>
+                    <li>UI/UX Design</li>
+                    <li>Illustration</li>
+                    <li>Brand Identity</li>
+                </ul>
+                <div class="freelancer-count">
+                    <i class="fas fa-users"></i>
+                    380+ Available Freelancers
+                </div>
+            </div>
 
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-pen-fancy"></i>
+                </div>
+                <h3 class="category-title">Writing & Translation</h3>
+                <p class="category-description">Compelling content and accurate translations for global audiences.</p>
+                <ul class="category-skills">
+                    <li>Content Writing</li>
+                    <li>Copywriting</li>
+                    <li>Technical Writing</li>
+                    <li>Nepali Translation</li>
+                </ul>
+                <div class="freelancer-count">
+                    <i class="fas fa-users"></i>
+                    290+ Available Freelancers
+                </div>
+            </div>
 
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h3 class="category-title">Digital Marketing</h3>
+                <p class="category-description">Grow your online presence and reach your target audience effectively.</p>
+                <ul class="category-skills">
+                    <li>SEO Services</li>
+                    <li>Social Media Marketing</li>
+                    <li>PPC Advertising</li>
+                    <li>Email Marketing</li>
+                </ul>
+                <div class="freelancer-count">
+                    <i class="fas fa-users"></i>
+                    250+ Available Freelancers
+                </div>
+            </div>
 
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="category-title">Business Services</h3>
+                <p class="category-description">Professional support for your business operations and growth.</p>
+                <ul class="category-skills">
+                    <li>Virtual Assistants</li>
+                    <li>Market Research</li>
+                    <li>Business Plans</li>
+                    <li>Financial Consulting</li>
+                </ul>
+                <div class="freelancer-count">
+                    <i class="fas fa-users"></i>
+                    180+ Available Freelancers
+                </div>
+            </div>
 
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h3 class="category-title">Video & Animation</h3>
+                <p class="category-description">Engaging video content and animations to tell your story.</p>
+                <ul class="category-skills">
+                    <li>Video Editing</li>
+                    <li>2D/3D Animation</li>
+                    <li>Explainer Videos</li>
+                    <li>Motion Graphics</li>
+                </ul>
+                <div class="freelancer-count">
+                    <i class="fas fa-users"></i>
+                    150+ Available Freelancers
+                </div>
+            </div>
+        </div>
 
+        <div class="view-all-container">
+            <a href="#" class="view-all-button">
+                View All Categories
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
 
+<!-- Featured Freelancers Section - Dynamic Content -->
+<div class="featured-freelancers-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Featured Freelancers</h2>
+            <p class="section-subtitle">Meet some of our top-rated professionals ready to work on your project</p>
+        </div>
 
+        <div class="freelancers-grid">
+            <div class="freelancer-card">
+                <div class="card-decoration"></div>
+                <div class="freelancer-header">
+                    <div class="freelancer-avatar">
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="freelancer-badge">
+                        <i class="fas fa-star"></i>
+                        Top Rated
+                    </div>
+                </div>
+                <div class="freelancer-info">
+                    <h3 class="freelancer-name">Bikash Thapa</h3>
+                    <p class="freelancer-title">Senior Web Developer</p>
+                    <div class="freelancer-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>4.8 (42 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="freelancer-skills">
+                        <span>React</span>
+                        <span>Node.js</span>
+                        <span>MongoDB</span>
+                    </div>
+                </div>
+                <div class="freelancer-footer">
+                    <div class="freelancer-stats">
+                        <div class="stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>98% Job Success</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-briefcase"></i>
+                            <span>85 Projects</span>
+                        </div>
+                    </div>
+                    <a href="" class="hire-button">View Profile</a>
+                </div>
+            </div>
 
+            <div class="freelancer-card">
+                <div class="card-decoration"></div>
+                <div class="freelancer-header">
+                    <div class="freelancer-avatar">
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="freelancer-badge pro-badge">
+                        <i class="fas fa-bolt"></i>
+                        Pro Verified
+                    </div>
+                </div>
+                <div class="freelancer-info">
+                    <h3 class="freelancer-name">Anita Maharjan</h3>
+                    <p class="freelancer-title">UI/UX Designer</p>
+                    <div class="freelancer-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (36 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="freelancer-skills">
+                        <span>Figma</span>
+                        <span>Adobe XD</span>
+                        <span>Prototyping</span>
+                    </div>
+                </div>
+                <div class="freelancer-footer">
+                    <div class="freelancer-stats">
+                        <div class="stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>100% Job Success</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-briefcase"></i>
+                            <span>62 Projects</span>
+                        </div>
+                    </div>
+                    <a href="" class="hire-button">View Profile</a>
+                </div>
+            </div>
 
+            <div class="freelancer-card">
+                <div class="card-decoration"></div>
+                <div class="freelancer-header">
+                    <div class="freelancer-avatar">
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="freelancer-badge rising-badge">
+                        <i class="fas fa-medal"></i>
+                        Rising Talent
+                    </div>
+                </div>
+                <div class="freelancer-info">
+                    <h3 class="freelancer-name">Kiran Shrestha</h3>
+                    <p class="freelancer-title">Digital Marketer</p>
+                    <div class="freelancer-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>5.0 (18 reviews)</span>
+                        </div>
+                    </div>
+                    <div class="freelancer-skills">
+                        <span>SEO</span>
+                        <span>Social Media</span>
+                        <span>Google Ads</span>
+                    </div>
+                </div>
+                <div class="freelancer-footer">
+                    <div class="freelancer-stats">
+                        <div class="stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>100% Job Success</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-briefcase"></i>
+                            <span>24 Projects</span>
+                        </div>
+                    </div>
+                    <a href="" class="hire-button">View Profile</a>
+                </div>
+            </div>
+        </div>
 
-<!-- Categories / Services Offered -->
-<!-- Why Choose Us / Platform Benefits -->
-<!-- Featured Freelancers or Projects -->
-<!-- Client & Freelancer Testimonials -->
-<!-- Platform Statistics (Social Proof) -->
-<!-- Call to Action -->
-<!-- FQA Section -->
-<!-- Newsletter Signup or Contact Section -->
+        <div class="view-all-container">
+            <a href="" class="view-all-button">
+                Browse All Freelancers
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
 
+<!-- Testimonials Section - Dynamic Content -->
+<div class="testimonials-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Success Stories</h2>
+            <p class="section-subtitle">Hear what clients and freelancers are saying about their experience with HireMe</p>
+        </div>
+
+        <div class="testimonial-tabs">
+            <div class="tab-navigation">
+                <button class="tab-button active" data-tab="clients">Client Stories</button>
+                <button class="tab-button" data-tab="freelancers">Freelancer Success</button>
+            </div>
+
+            <div class="testimonial-content">
+
+                <div class="testimonial-tab active" id="clients-tab">
+                    <div class="testimonials-slider">
+                        <div class="testimonials-grid">
+                            <div class="testimonial-item">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                    <div class="testimonial-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p class="testimonial-text">"Finding skilled developers in Nepal used to be a challenge until we discovered HireMe. Their vetting process is thorough, ensuring we only work with top talent. Our mobile app was delivered on time and within budget."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        {% comment %} <img src="{% static 'images/defaultimages/profile_images/profile-1.jpg' %}" alt="Profile Picture"> {% endcomment %}
+                                        <div class="profile-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Priya Adhikari</h4>
+                                        <p class="author-company">Kathamandu, Nepal</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-item">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                    <div class="testimonial-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p class="testimonial-text">"As a startup, we needed quality work without the premium price tag. HireMe connected us with an exceptional graphic designer who created our brand identity and marketing materials that truly stand out."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        {% comment %} <img src="{% static 'images/defaultimages/profile_images/profile-1.jpg' %}" alt="Profile Picture"> {% endcomment %}
+                                        <div class="profile-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Suraj Poudel</h4>
+                                        <p class="author-company">Kathamandu, Nepal</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-item">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                    <div class="testimonial-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                                <p class="testimonial-text">"We needed content written in both English and Nepali for our tourism website. The freelancer we hired through HireMe delivered exceptional copy that resonated with both local and international audiences."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        {% comment %} <img src="{% static 'images/defaultimages/profile_images/profile-1.jpg' %}" alt="Profile Picture"> {% endcomment %}
+                                        <div class="profile-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Maya Gurung</h4>
+                                        <p class="author-company">Kathamandu, Nepal</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-feature">
+                            <div class="feature-image">
+                                <img src="{% static 'images/defaultimages/testimonial/client-success.jpg' %}" alt="Client Success">
+                                <div class="success-badge">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Client Success</span>
+                                </div>
+                            </div>
+                            <div class="feature-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">92%</div>
+                                    <div class="stat-label">Clients rehire freelancers</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">4.8/5</div>
+                                    <div class="stat-label">Average project rating</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">85%</div>
+                                    <div class="stat-label">Projects completed ahead of schedule</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-tab" id="freelancers-tab">
+                    <div class="testimonials-slider">
+                        <div class="testimonials-grid">
+                            <div class="testimonial-item">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                    <div class="testimonial-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p class="testimonial-text">"HireMe has transformed my freelance career. The platform connects me with quality clients who value my web development skills. I've been able to grow my portfolio and increase my rates thanks to the consistent work."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        {% comment %} <img src="/api/placeholder/60/60" alt="Freelancer"> {% endcomment %}
+                                        <div class="profile-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Bikash Thapa</h4>
+                                        <p class="author-company">Top-rated Developer</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-item">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                    <div class="testimonial-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <p class="testimonial-text">"As a graphic designer, I appreciate how HireMe handles payments securely and on time. The platform's support team is incredibly responsive, helping me resolve any issues quickly so I can focus on creating great designs."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        {% comment %} <img src="/api/placeholder/60/60" alt="Freelancer"> {% endcomment %}
+                                        <div class="profile-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Anita Maharjan</h4>
+                                        <p class="author-company">Senior Designer</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="testimonial-item">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-icon">
+                                        <i class="fas fa-quote-right"></i>
+                                    </div>
+                                    <div class="testimonial-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                                <p class="testimonial-text">"Before HireMe, finding consistent digital marketing projects was challenging. Now I've built a stable client base and increased my monthly income by 70%. The platform's rating system helps quality freelancers stand out."</p>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        {% comment %} <img src="/api/placeholder/60/60" alt="Freelancer"> {% endcomment %}
+                                        <div class="profile-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Kiran Shrestha</h4>
+                                        <p class="author-company">Marketing Specialist</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="testimonial-feature">
+                            <div class="feature-image">
+                                <img src="{% static 'images/defaultimages/testimonial/freelancer-success.jpg' %}" alt="Freelancer Success">
+                                <div class="success-badge freelancer">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Freelancer Success</span>
+                                </div>
+                            </div>
+                            <div class="feature-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">65%</div>
+                                    <div class="stat-label">Increased monthly income</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">40%</div>
+                                    <div class="stat-label">More client connections</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">78%</div>
+                                    <div class="stat-label">Freelancers report job satisfaction</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="testimonial-action">
+            <div class="action-info">
+                <h3>Ready to start your journey?</h3>
+                <p>Join thousands of clients and freelancers already collaborating on HireMe</p>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'account:login' %}" class="hire-button">Hire Talent</a>
+                <a href="{% url 'account:login' %}" class="work-button">Find Work</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Why Choose Us Section - Dynamic Content -->
+<div class="why-choose-us-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Why Choose HireMe</h2>
+            <p class="section-subtitle">Discover the advantages that make us Nepal's leading freelance platform for clients and professionals</p>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                 <h3 class="benefit-title">Vetted Freelancers</h3>
+                <p class="benefit-description">
+                    Every freelancer goes through a verification process to ensure quality, professionalism, and proven expertise — so you hire with confidence.
+                </p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3 class="benefit-title">Flexible Pricing</h3>
+                <p class="benefit-description">
+                    Whether you're bootstrapped or scaling, find talent that fits your budget — with no hidden fees or surprises.
+                </p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="benefit-title">HireMe Protection</h3>
+                <p class="benefit-description">
+                    Your payments are safe. Funds are held in escrow and only released when you're 100% satisfied with the delivered work.
+                </p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="benefit-title">Built-in Messaging</h3>
+                <p class="benefit-description">
+                    Communicate clearly and stay in sync with freelancers using our real-time messaging and file-sharing tools.
+                </p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-stopwatch"></i>
+                </div>
+                <h3 class="benefit-title">Quick Turnarounds</h3>
+                <p class="benefit-description">
+                    Receive proposals fast and get work delivered on time — every time. Our freelancers are committed to deadlines.
+                </p>
+            </div>
+
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-globe-asia"></i>
+                </div>
+                <h3 class="benefit-title">Local Insight, Global Standard</h3>
+                <p class="benefit-description">
+                    Tap into a pool of Nepali talent that understands your market and delivers work that meets global standards.
+                </p>
+            </div>
+        </div>
+
+        <div class="testimonial-preview">
+            <div class="testimonial-card">
+                <div class="testimonial-quote">
+                    <i class="fas fa-quote-left"></i>
+                </div>
+                <p class="testimonial-text">
+                    "HireMe has transformed how we source talent. The quality of freelancers and ease of use makes it our go-to platform for all project needs. The local expertise combined with professional standards is unmatched."
+                </p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        {% comment %} <img src="{% static 'images/defaultimages/profile_images/profile-1.jpg' %}" alt="Profile Picture"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="author-info">
+                        <h4 class="author-name">Rajendra Sharma</h4>
+                        <div class="author-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-cta">
+                <h3 class="cta-headline">Ready to experience the difference?</h3>
+                <p class="cta-subheadline">Join thousands of satisfied clients who've found the perfect freelance talent</p>
+                <a href="{% url 'account:login' %}" class="get-started-button">Find Your Freelancer <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Platform Statistics Section - Dynamic Content -->
+<div class="platform-stats-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">HireMe By The Numbers</h2>
+            <p class="section-subtitle">Join Nepal's fastest growing freelance community that's transforming how work gets done</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-count="12500">12,500</div>
+                    <div class="stat-label">Active Freelancers</div>
+                    <div class="stat-description">Skilled professionals across 50+ categories</div>
+                </div>
+                <div class="stat-badge">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>35% growth</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-count="9800">9,800</div>
+                    <div class="stat-label">Completed Projects</div>
+                    <div class="stat-description">With an average rating of 4.8/5 stars</div>
+                </div>
+                <div class="stat-badge success">
+                    <i class="fas fa-check"></i>
+                    <span>92% success rate</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-count="3500000">$3.5M</div>
+                    <div class="stat-label">Earned by Freelancers</div>
+                    <div class="stat-description">Helping grow Nepal's digital economy</div>
+                </div>
+                <div class="stat-badge">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>60% YoY growth</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" data-count="48">48</div>
+                    <div class="stat-label">Average Hours Saved</div>
+                    <div class="stat-description">Per project compared to traditional hiring</div>
+                </div>
+                <div class="stat-badge">
+                    <i class="fas fa-bolt"></i>
+                    <span>Fast results</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-comparison">
+            <div class="comparison-chart">
+                <div class="chart-header">
+                    <h3>Why Businesses Choose HireMe</h3>
+                    <p>Key advantages over traditional hiring methods</p>
+                </div>
+                <div class="chart-bars">
+                    <div class="chart-item">
+                        <div class="chart-label">Cost Efficiency</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar hireme" style="width: 85%">
+                                <span>85% savings</span>
+                            </div>
+                            <div class="chart-bar traditional" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    <div class="chart-item">
+                        <div class="chart-label">Time to Hire</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar hireme" style="width: 90%">
+                                <span>3 days avg.</span>
+                            </div>
+                            <div class="chart-bar traditional" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="chart-item">
+                        <div class="chart-label">Project Success Rate</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar hireme" style="width: 92%"></div>
+                            <div class="chart-bar traditional" style="width: 8%"></div>
+                        </div>
+                    </div>
+                    <div class="chart-item">
+                        <div class="chart-label">Client Satisfaction</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar hireme" style="width: 94%"></div>
+                            <div class="chart-bar traditional" style="width: 6%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color hireme"></div>
+                        <span>HireMe Platform</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color traditional"></div>
+                        <span>Traditional Hiring</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-testimonial">
+                <div class="testimonial-quote">
+                    <i class="fas fa-quote-left"></i>
+                </div>
+                <p>"As a small business owner, HireMe has been transformative. We've saved over $50,000 in staffing costs while completing projects 60% faster than with full-time hires."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">
+                        {% comment %} <img src="/api/placeholder/60/60" alt="Client"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="author-info">
+                        <h4>Sunita Gurung</h4>
+                        <p>Founder, Himalayan Crafts</p>
+                        <div class="author-stats">
+                            <div class="stat">
+                                <i class="fas fa-check-circle"></i>
+                                <span>18 projects completed</span>
+                            </div>
+                            <div class="stat">
+                                <i class="fas fa-star"></i>
+                                <span>4.9 avg. rating</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action Section - Static Content -->
+<div class="call-to-action-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Ready to Get Started?</h2>
+            <p>Join thousands of professionals already collaborating on HireMe</p>
+            
+            <div class="cta-buttons">
+                <a href="{% url 'account:login' %}" class="btn-primary">
+                    Hire Talent <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="{% url 'account:login' %}" class="btn-secondary">
+                    Find Work <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="benefits">
+                <div class="benefit">
+                    <i class="fas fa-check-circle"></i>
+                    <span>No upfront costs</span>
+                </div>
+                <div class="benefit">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Risk-free hiring</span>
+                </div>
+                <div class="benefit">
+                    <i class="fas fa-check-circle"></i>
+                    <span>24/7 support</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section - Static Content -->
+<div class="faq-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Everything you need to know before getting started with HireMe</p>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>What is HireMe and how does it work?</h3>
+                    <div class="faq-icon">
+                        <span class="plus">+</span>
+                        <span class="minus">×</span>
+                    </div>
+                </div>
+                <div class="faq-answer">
+                    <p>HireMe is Nepal's premier freelancing platform that connects clients with verified Nepali freelancers for various projects. Clients can post jobs and receive proposals, while freelancers can browse projects and submit bids.</p>
+                </div>
+            </div>
+          
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>Is HireMe free to use?</h3>
+                    <div class="faq-icon">
+                        <span class="plus">+</span>
+                        <span class="minus">×</span>
+                    </div>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! Clients can post projects for free, and freelancers can sign up and apply to jobs without any upfront cost. We also offer premium features for enhanced visibility and support.</p>
+                </div>
+            </div>
+          
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>How do I post a project?</h3>
+                    <div class="faq-icon">
+                        <span class="plus">+</span>
+                        <span class="minus">×</span>
+                    </div>
+                </div>
+                <div class="faq-answer">
+                    <p>To post a project, simply log in to your client account, go to the “Post Project” page, fill out the required details like description, budget, and timeline, and publish it. Freelancers will start submitting proposals shortly.</p>
+                </div>
+            </div>
+          
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <h3>How do freelancers get paid?</h3>
+                    <div class="faq-icon">
+                        <span class="plus">+</span>
+                        <span class="minus">×</span>
+                    </div>
+                </div>
+                <div class="faq-answer">
+                    <p>Freelancers are paid through HireMe’s secure escrow system. Clients deposit funds, which are released once the work is completed and approved.</p>
+                </div>
+            </div>
+          
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <h3>What if I’m not satisfied with the work?</h3>
+                <div class="faq-icon">
+                  <span class="plus">+</span>
+                  <span class="minus">×</span>
+                </div>
+              </div>
+              <div class="faq-answer">
+                <p>If you're not satisfied, you can request revisions, pause the project, or initiate dispute resolution. We ensure that your payments are only released for approved work.</p>
+              </div>
+            </div>
+          
+            <div class="hidden-faqs" style="display: none;">
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h3>Can I work with international clients or freelancers?</h3>
+                        <div class="faq-icon">
+                            <span class="plus">+</span>
+                            <span class="minus">×</span>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes. While we focus on the Nepali freelance market, we support both local and international collaborations, especially for remote projects.</p>
+                    </div>
+                </div>
+          
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h3>Are freelancers on HireMe verified?</h3>
+                        <div class="faq-icon">
+                            <span class="plus">+</span>
+                            <span class="minus">×</span>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, all freelancers undergo a verification process based on skills, experience, and identity before getting access to apply for projects.</p>
+                    </div>
+                </div>
+          
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h3>How do I communicate with freelancers/clients?</h3>
+                        <div class="faq-icon">
+                            <span class="plus">+</span>
+                            <span class="minus">×</span>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can use our in-platform real-time messaging system to chat, share files, and discuss project milestones securely.</p>
+                    </div>
+                </div>
+          
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h3>Is my personal and payment information secure?</h3>
+                        <div class="faq-icon">
+                            <span class="plus">+</span>
+                            <span class="minus">×</span>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely. We use advanced encryption and secure protocols to protect all user data, including payment and personal details.</p>
+                    </div>
+                </div>
+          
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h3>Can I cancel a project after hiring a freelancer?</h3>
+                        <div class="faq-icon">
+                            <span class="plus">+</span>
+                            <span class="minus">×</span>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, you can cancel a project at any time. If funds are already in escrow, the cancellation will initiate a refund or dispute process based on the situation.</p>
+                    </div>
+                </div>
+            </div>
+          
+            <div class="show-more-container">
+              <button id="show-more-btn" onclick="toggleShowMore()">Show More</button>
+            </div>
+        </div>
+          
+    </div>
+</div>
 {% endblock %}
-
-{% block footer %}{% endblock %}
 
 {% block js_files %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
 <script src="{% static 'js/home/hero-animations.js' %}"></script>
+<script src="{% static 'js/home/how-it-works-illustration.js' %}"></script>
+<script src="{% static 'js/home/customer-testimonials.js' %}"></script>
+<script src="{% static 'js/home/stats-counter.js' %}"></script>
+<script src="{% static 'js/home/faq.js' %}"></script>
 {% endblock %}

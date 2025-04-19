@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.views import View
 
 # ------------------------------------------------------
-# ✅ [TESTED]
+# ⏳ [PENDING TEST]
 # View Name: HomeView
 # Description: Handles routing for authenticated and unauthenticated users
 # Tested On: 2025-04-18
