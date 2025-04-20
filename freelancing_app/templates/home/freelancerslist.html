@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static%}
 
-{% block title %}Find Freelancers - HireMe{% endblock %}
+{% block title %}Discover Top Freelancers for Your Project – HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/home/freelancerslist.css' %}">
@@ -9,10 +9,51 @@
 
 {% block content %}
 <!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="title">Hire Top-Tier Talent for Your Critical Projects</h1>
+                <p class="subtitle">Access our curated network of vetted professionals across design, development, marketing, and more. Streamline your hiring process with our talent matching platform.</p>
+
+                <div class="search-container">
+                    <div class="search-input-group">
+                        <div class="search-field">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="freelancer-search" placeholder="Try 'UI Designer' or 'React Developer'..." autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="social-proof">
+                    <div class="trust-badge">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Trusted by Fortune 500 companies</span>
+                    </div>
+                    <div class="trust-badge">
+                        <i class="fas fa-handshake"></i>
+                        <span>No hiring fees until you hire</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <div class="image-container">
+                    <video autoplay muted loop playsinline class="hero-video">
+                        <source src="{% static 'videos/hero/video-1.mp4' %}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="image-overlay"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
 {% block footer %}{% endblock %}
 
 {% block js_files %}
+<script src="{% static 'js/freelancers/search.js' %}"></script>
 {% endblock %}
