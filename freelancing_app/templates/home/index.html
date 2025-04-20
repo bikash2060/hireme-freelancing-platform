@@ -17,7 +17,7 @@
         <div class="hero-section-container">
             <div class="left-section">
                 <div class="tagline">Nepal's Premier Freelance Network</div>
-                <h1 class="title">Nepal’s Brightest Minds, One Click Away</h1>
+                <h1 class="title">Nepal's Brightest Minds, One Click Away</h1>
                 <p class="subtitle">Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee.</p>
                 
                 <div class="benefits">
@@ -42,22 +42,21 @@
                 </div>
             
                 <div class="social-proof">
-
                     <div class="stat">
-                        <div class="stat-number">1,200</div>
+                        <div class="stat-number" data-count="{{ verified_freelancers|default:0 }}">{{ verified_freelancers|default:0 }}</div>
                         <div class="stat-label">Verified Freelancers</div>
                     </div>
-
+                
                     <div class="stat-divider"></div>
                     <div class="stat">
-                        <div class="stat-number">8,500+</div>
+                        <div class="stat-number" data-count="{{ completed_projects|default:0 }}">{{ completed_projects|default:0 }}</div>
                         <div class="stat-label">Completed Projects</div>
                     </div>
-
+                
                     <div class="stat-divider"></div>
-
+                
                     <div class="stat">
-                        <div class="stat-number">4.9/5</div>
+                        <div class="stat-number" data-count="{{ client_satisfaction|default:0.0|floatformat:1 }}">{{ client_satisfaction|default:0.0|floatformat:1 }}</div>
                         <div class="stat-label">Client Satisfaction</div>
                     </div>
                 </div>
@@ -239,126 +238,60 @@
             <p class="section-subtitle">Browse top talent across our most in-demand categories</p>
         </div>
 
-        <div class="categories-grid">
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-code"></i>
-                </div>
-                <h3 class="category-title">Web & Mobile Development</h3>
-                <p class="category-description">Custom websites, mobile apps, and web applications built to your specifications.</p>
-                <ul class="category-skills">
-                    <li>React/Node Developers</li>
-                    <li>Flutter Experts</li>
-                    <li>PHP Specialists</li>
-                    <li>Python/Django</li>
-                </ul>
-                <div class="freelancer-count">
-                    <i class="fas fa-users"></i>
-                    420+ Available Freelancers
-                </div>
+        {% if popular_categories %}
+            <div class="categories-grid">
+                {% for category in popular_categories %}
+                    <div class="category-card">
+                        <div class="category-icon">
+                            <i class="{{ category.icon_class|default:'fas fa-tasks' }}"></i>
+                        </div>
+                        <h3 class="category-title">{{ category.name }}</h3>
+                        <p class="category-description">{{ category.description|default:"Professional services in this category" }}</p>
+                        
+                        <ul class="category-skills">
+                            {% for skill in category.top_skills %}
+                                <li>{{ skill.name }}</li>
+                            {% endfor %}
+                        </ul>
+
+                        <div class="freelancer-count">
+                            <i class="fas fa-users"></i>
+                            {{ category.freelancer_count|default:"0" }} Available Freelancers
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
 
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-paint-brush"></i>
-                </div>
-                <h3 class="category-title">Design & Creative</h3>
-                <p class="category-description">Stunning visuals, branding, and creative assets for your business.</p>
-                <ul class="category-skills">
-                    <li>Logo Design</li>
-                    <li>UI/UX Design</li>
-                    <li>Illustration</li>
-                    <li>Brand Identity</li>
-                </ul>
-                <div class="freelancer-count">
-                    <i class="fas fa-users"></i>
-                    380+ Available Freelancers
+            <div class="view-all-container">
+                <a href="#" class="view-all-button">
+                    View All Categories
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        {% else %}
+            <div class="empty-categories-container">
+                <div class="empty-category-card">
+                    <div class="empty-illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <h3 class="empty-title">No Popular Categories Found</h3>
+                    <p class="empty-message">We couldn't find any popular freelance service categories at the moment. Check back later as more freelancers join the platform.</p>
+                    <div class="empty-actions">
+                        <a href="" class="btn-primary">
+                            <i class="fas fa-search"></i> Browse All Categories
+                        </a>
+                    </div>
                 </div>
             </div>
-
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-pen-fancy"></i>
-                </div>
-                <h3 class="category-title">Writing & Translation</h3>
-                <p class="category-description">Compelling content and accurate translations for global audiences.</p>
-                <ul class="category-skills">
-                    <li>Content Writing</li>
-                    <li>Copywriting</li>
-                    <li>Technical Writing</li>
-                    <li>Nepali Translation</li>
-                </ul>
-                <div class="freelancer-count">
-                    <i class="fas fa-users"></i>
-                    290+ Available Freelancers
-                </div>
-            </div>
-
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-bullhorn"></i>
-                </div>
-                <h3 class="category-title">Digital Marketing</h3>
-                <p class="category-description">Grow your online presence and reach your target audience effectively.</p>
-                <ul class="category-skills">
-                    <li>SEO Services</li>
-                    <li>Social Media Marketing</li>
-                    <li>PPC Advertising</li>
-                    <li>Email Marketing</li>
-                </ul>
-                <div class="freelancer-count">
-                    <i class="fas fa-users"></i>
-                    250+ Available Freelancers
-                </div>
-            </div>
-
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h3 class="category-title">Business Services</h3>
-                <p class="category-description">Professional support for your business operations and growth.</p>
-                <ul class="category-skills">
-                    <li>Virtual Assistants</li>
-                    <li>Market Research</li>
-                    <li>Business Plans</li>
-                    <li>Financial Consulting</li>
-                </ul>
-                <div class="freelancer-count">
-                    <i class="fas fa-users"></i>
-                    180+ Available Freelancers
-                </div>
-            </div>
-
-            <div class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-video"></i>
-                </div>
-                <h3 class="category-title">Video & Animation</h3>
-                <p class="category-description">Engaging video content and animations to tell your story.</p>
-                <ul class="category-skills">
-                    <li>Video Editing</li>
-                    <li>2D/3D Animation</li>
-                    <li>Explainer Videos</li>
-                    <li>Motion Graphics</li>
-                </ul>
-                <div class="freelancer-count">
-                    <i class="fas fa-users"></i>
-                    150+ Available Freelancers
-                </div>
-            </div>
-        </div>
-
-        <div class="view-all-container">
-            <a href="#" class="view-all-button">
-                View All Categories
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
+        {% endif %}
     </div>
 </div>
 
-<!-- Featured Freelancers Section - Dynamic Content -->
+<!-- Featured Freelancers Section - Enhanced UI -->
 <div class="featured-freelancers-section">
     <div class="container">
         <div class="section-header">
@@ -366,155 +299,80 @@
             <p class="section-subtitle">Meet some of our top-rated professionals ready to work on your project</p>
         </div>
 
-        <div class="freelancers-grid">
-            <div class="freelancer-card">
-                <div class="card-decoration"></div>
-                <div class="freelancer-header">
-                    <div class="freelancer-avatar">
-                        <div class="profile-icon">
-                            <i class="fas fa-user"></i>
+        {% if featured_freelancers %}
+            <div class="freelancers-grid">
+                {% for freelancer in featured_freelancers %}
+                    <div class="freelancer-card">
+                        <div class="freelancer-header">
+                            <div class="freelancer-avatar">
+                                <img src="{{ freelancer.user.profile_image.url }}" alt="{{ freelancer.user.full_name }}">
+                            </div>
+                            <div class="freelancer-badge {% if freelancer.badge == 'pro_verified' %}pro-badge{% elif freelancer.badge == 'rising_talent' %}rising-badge{% endif %}">
+                                {% if freelancer.badge == 'top_rated' %}
+                                    <i class="fas fa-star"></i> Top Rated
+                                {% elif freelancer.badge == 'pro_verified' %}
+                                    <i class="fas fa-bolt"></i> Pro Verified
+                                {% elif freelancer.badge == 'rising_talent' %}
+                                    <i class="fas fa-medal"></i> Rising Talent
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="freelancer-info">
+                            <h3 class="freelancer-name">{{ freelancer.user.full_name }}</h3>
+                            <p class="freelancer-title">{{ freelancer.professional_title }}</p>
+                            <div class="freelancer-skills">
+                                <div class="skills-header">
+                                    <i class="fas fa-tools"></i>
+                                    <span class="sub-title">Skills</span>
+                                    <span class="skills-count">{{ freelancer.skills_count }} skills</span>
+                                </div>
+                                <div class="skills-list">
+                                    {% for skill in freelancer.display_skills %}
+                                        <span class="skill-tag">
+                                            <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                            {{ skill.name }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="freelancer-footer">
+                            <div class="action-buttons">
+                                <a href="" class="hire-button">Hire Now</a>
+                                <a href="" class="profile-button">View Profile</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="freelancer-badge">
-                        <i class="fas fa-star"></i>
-                        Top Rated
+                {% endfor %}
+
+            </div>
+        
+            <div class="view-all-container">
+                <a href="#" class="view-all-button">
+                    Browse All Freelancers
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        {% else %}
+            <div class="empty-freelancers-container">
+                <div class="empty-freelancer-card">
+                    <div class="empty-illustration">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
                     </div>
-                </div>
-                <div class="freelancer-info">
-                    <h3 class="freelancer-name">Bikash Thapa</h3>
-                    <p class="freelancer-title">Senior Web Developer</p>
-                    <div class="freelancer-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>4.8 (42 reviews)</span>
-                        </div>
+                    <h3 class="empty-title">No Featured Freelancers Found</h3>
+                    <p class="empty-message">We couldn't find any featured freelancers at the moment. Check back later as more freelancers join the platform.</p>
+                    <div class="empty-actions">
+                        <a href="" class="btn-primary">
+                            <i class="fas fa-search"></i> Browse All Freelancers
+                        </a>
                     </div>
-                    <div class="freelancer-skills">
-                        <span>React</span>
-                        <span>Node.js</span>
-                        <span>MongoDB</span>
-                    </div>
-                </div>
-                <div class="freelancer-footer">
-                    <div class="freelancer-stats">
-                        <div class="stat">
-                            <i class="fas fa-check-circle"></i>
-                            <span>98% Job Success</span>
-                        </div>
-                        <div class="stat">
-                            <i class="fas fa-briefcase"></i>
-                            <span>85 Projects</span>
-                        </div>
-                    </div>
-                    <a href="" class="hire-button">View Profile</a>
                 </div>
             </div>
-
-            <div class="freelancer-card">
-                <div class="card-decoration"></div>
-                <div class="freelancer-header">
-                    <div class="freelancer-avatar">
-                        <div class="profile-icon">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    </div>
-                    <div class="freelancer-badge pro-badge">
-                        <i class="fas fa-bolt"></i>
-                        Pro Verified
-                    </div>
-                </div>
-                <div class="freelancer-info">
-                    <h3 class="freelancer-name">Anita Maharjan</h3>
-                    <p class="freelancer-title">UI/UX Designer</p>
-                    <div class="freelancer-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>5.0 (36 reviews)</span>
-                        </div>
-                    </div>
-                    <div class="freelancer-skills">
-                        <span>Figma</span>
-                        <span>Adobe XD</span>
-                        <span>Prototyping</span>
-                    </div>
-                </div>
-                <div class="freelancer-footer">
-                    <div class="freelancer-stats">
-                        <div class="stat">
-                            <i class="fas fa-check-circle"></i>
-                            <span>100% Job Success</span>
-                        </div>
-                        <div class="stat">
-                            <i class="fas fa-briefcase"></i>
-                            <span>62 Projects</span>
-                        </div>
-                    </div>
-                    <a href="" class="hire-button">View Profile</a>
-                </div>
-            </div>
-
-            <div class="freelancer-card">
-                <div class="card-decoration"></div>
-                <div class="freelancer-header">
-                    <div class="freelancer-avatar">
-                        <div class="profile-icon">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    </div>
-                    <div class="freelancer-badge rising-badge">
-                        <i class="fas fa-medal"></i>
-                        Rising Talent
-                    </div>
-                </div>
-                <div class="freelancer-info">
-                    <h3 class="freelancer-name">Kiran Shrestha</h3>
-                    <p class="freelancer-title">Digital Marketer</p>
-                    <div class="freelancer-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>5.0 (18 reviews)</span>
-                        </div>
-                    </div>
-                    <div class="freelancer-skills">
-                        <span>SEO</span>
-                        <span>Social Media</span>
-                        <span>Google Ads</span>
-                    </div>
-                </div>
-                <div class="freelancer-footer">
-                    <div class="freelancer-stats">
-                        <div class="stat">
-                            <i class="fas fa-check-circle"></i>
-                            <span>100% Job Success</span>
-                        </div>
-                        <div class="stat">
-                            <i class="fas fa-briefcase"></i>
-                            <span>24 Projects</span>
-                        </div>
-                    </div>
-                    <a href="" class="hire-button">View Profile</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="view-all-container">
-            <a href="" class="view-all-button">
-                Browse All Freelancers
-                <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -1114,7 +972,7 @@
                     </div>
                 </div>
                 <div class="faq-answer">
-                    <p>To post a project, simply log in to your client account, go to the “Post Project” page, fill out the required details like description, budget, and timeline, and publish it. Freelancers will start submitting proposals shortly.</p>
+                    <p>To post a project, simply log in to your client account, go to the "Post Project" page, fill out the required details like description, budget, and timeline, and publish it. Freelancers will start submitting proposals shortly.</p>
                 </div>
             </div>
           
@@ -1127,13 +985,13 @@
                     </div>
                 </div>
                 <div class="faq-answer">
-                    <p>Freelancers are paid through HireMe’s secure escrow system. Clients deposit funds, which are released once the work is completed and approved.</p>
+                    <p>Freelancers are paid through HireMe's secure escrow system. Clients deposit funds, which are released once the work is completed and approved.</p>
                 </div>
             </div>
           
             <div class="faq-item">
               <div class="faq-question" onclick="toggleFaq(this)">
-                <h3>What if I’m not satisfied with the work?</h3>
+                <h3>What if I'm not satisfied with the work?</h3>
                 <div class="faq-icon">
                   <span class="plus">+</span>
                   <span class="minus">×</span>
@@ -1219,6 +1077,60 @@
           
     </div>
 </div>
+
+<!-- Trusted By Section - Static Content -->
+<div class="trusted-by-section">
+        <div class="section-header">
+            <h2 class="section-title">Trusted By Leading Companies</h2>
+            <p class="section-subtitle">Join thousands of businesses who trust HireMe for their freelance needs</p>
+        </div>
+        
+        <div class="logo-carousel">
+            <div class="logo-track">
+                <div class="logo-item">
+                    <i class="fab fa-google fa-3x"></i>
+                    <span class="sr-only">Google</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-microsoft fa-3x"></i>
+                    <span class="sr-only">Microsoft</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-apple fa-3x"></i>
+                    <span class="sr-only">Apple</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-amazon fa-3x"></i>
+                    <span class="sr-only">Amazon</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-facebook fa-3x"></i>
+                    <span class="sr-only">Facebook</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-slack fa-3x"></i>
+                    <span class="sr-only">Slack</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-spotify fa-3x"></i>
+                    <span class="sr-only">Spotify</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-airbnb fa-3x"></i>
+                    <span class="sr-only">Airbnb</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-uber fa-3x"></i>
+                    <span class="sr-only">Uber</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-github fa-3x"></i>
+                    <span class="sr-only">GitHub</span>
+                </div>
+            </div>
+        </div>
+</div>
+
 {% endblock %}
 
 {% block js_files %}

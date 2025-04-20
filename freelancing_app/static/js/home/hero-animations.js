@@ -1,34 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const statNumbers = document.querySelectorAll('.stat-number');
-    
-    statNumbers.forEach(stat => {
-        const target = parseInt(stat.getAttribute('data-count'));
-        const suffix = stat.textContent.includes('%') ? '%' : '';
-        const duration = 2000; 
-        const startTime = Date.now();
-        
-        const animateCount = () => {
-            const now = Date.now();
-            const progress = Math.min(1, (now - startTime) / duration);
-            const value = Math.floor(progress * target);
-            
-            stat.textContent = value + suffix;
-            
-            if (progress < 1) {
-                requestAnimationFrame(animateCount);
-            }
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                animateCount();
-                observer.unobserve(stat);
-            }
-        });
-        
-        observer.observe(stat);
-    });
-    
+document.addEventListener('DOMContentLoaded', function() {   
     const floatingImages = document.querySelectorAll('.floating-image');
     
     floatingImages.forEach((img, index) => {

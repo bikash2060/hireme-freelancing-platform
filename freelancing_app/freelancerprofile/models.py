@@ -15,6 +15,20 @@ class Language(models.Model):
         verbose_name = "Language"
         verbose_name_plural = "Languages"
 
+class FreelanceServiceCategory(models.Model):
+    """
+    Represents popular skill-based service categories for homepage.
+    """
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(null=True, blank=True)
+    icon_class = models.CharField(max_length=100, null=True, blank=True)  
+    skills = models.ManyToManyField(Skill, related_name='service_categories')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "freelance_service_category"
 
 class Freelancer(models.Model):
     """Main profile model for freelancers with professional information"""
@@ -38,6 +52,11 @@ class Freelancer(models.Model):
         EMAIL = 'email', 'Email'
         PHONE = 'phone', 'Phone'
         CHAT = 'chat', 'Chat'
+        
+    class BadgeChoices(models.TextChoices):
+        TOP_RATED = 'top_rated', 'Top Rated'
+        PRO_VERIFIED = 'pro_verified', 'Pro Verified'
+        RISING_TALENT = 'rising_talent', 'Rising Talent'
 
     user = models.OneToOneField(
         User, 
@@ -100,6 +119,14 @@ class Freelancer(models.Model):
         blank=True,
         related_name='freelancers',
         help_text="Skills possessed by the freelancer"
+    )
+    is_featured = models.BooleanField(default=False, help_text="Manually mark a freelancer as featured")
+    
+    badge = models.CharField(
+        max_length=20,
+        choices=BadgeChoices.choices,
+        blank=True,
+        help_text="Badge earned by the freelancer"
     )
 
     def __str__(self):

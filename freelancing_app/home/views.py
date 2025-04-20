@@ -1,27 +1,30 @@
+from freelancerprofile.models import FreelanceServiceCategory
 from projects.models import ProjectCategory, Skill, Project
 from accounts.mixins import CustomLoginRequiredMixin
 from freelancerprofile.models import Freelancer
+from django.db.models import Q, Count, Prefetch
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from clientprofile.models import Client
 from django.contrib.auth import logout
 from django.contrib import messages
-from django.db.models import Q
 from django.views import View
+import random
 
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
 # View Name: HomeView
 # Description: Handles routing for authenticated and unauthenticated users
-# Tested On: 2025-04-18
-# Status: Working as expected
+# Tested On: 
+# Status:
+# Code Refractor Status: In Progress
 # ------------------------------------------------------
 class HomeView(View):
     """
     - Redirecting authenticated users to appropriate dashboards based on their role
     - Handling cases where user profiles are missing
     - Displaying the homepage for unauthenticated users
-    - Managing error cases and logout scenarios
+    - Managing error cases and logout scenario
     """
     
     # URL constants for redirection
@@ -103,13 +106,99 @@ class HomeView(View):
         logout(request)
         return render(request, self.TEMPLATE_NAME)
 
+    def _get_verified_freelancers(self):
+        """
+        Returns count of verified freelancers with fallback to 0
+        """
+        try:
+            return Freelancer.objects.filter(
+                user__is_verified=True
+            ).count() or 0
+        except Exception:
+            return 0
+
+    def _get_completed_projects(self):
+        """
+        Returns count of completed projects with fallback to 0
+        """
+        try:
+            return Project.objects.filter(
+                status=Project.Status.COMPLETED
+            ).count() or 0
+        except Exception:
+            return 0
+        
+    def _get_client_satisfaction(self):
+        """
+        Calculates average client satisfaction rating (as percentage)
+        Returns float with 1 decimal place, defaulting to 4.3 if no reviews
+        """
+        try:
+            "Code will be added later"
+            return 0.0
+        except Exception:
+            return 0.0
+        
+    def _get_popular_categories(self):
+        """
+        Returns top 6 popular categories with freelancer counts and top 4 related skills.
+        Freelancer count is based on the number of freelancers who have skills in that category.
+        """
+        try:
+            categories = FreelanceServiceCategory.objects.prefetch_related(
+                Prefetch('skills', queryset=Skill.objects.prefetch_related('freelancers'))
+            )
+
+            enriched_categories = []
+
+            for category in categories:
+                freelancer_ids = Freelancer.objects.filter(
+                    skills__in=category.skills.all(),
+                    user__is_verified=True
+                ).distinct().values_list('id', flat=True)
+
+                category.freelancer_count = len(freelancer_ids)
+                skills = list(category.skills.all())
+                category.top_skills = random.sample(skills, min(len(skills), 4))
+                enriched_categories.append(category)
+
+            return sorted(enriched_categories, key=lambda c: c.freelancer_count, reverse=True)[:6]
+        except Exception as e:
+            return []
+        
+    def _get_featured_freelancers(self, limit=6):
+        """
+        Returns a list of featured freelancers, including badge, skills, and limited details.
+        """
+        try:
+            freelancers = Freelancer.objects.filter(
+                is_featured=True,
+                user__is_verified=True
+            ).select_related('user').prefetch_related('skills')[:limit]
+
+            for freelancer in freelancers:
+                all_skills = list(freelancer.skills.all())
+                freelancer.display_skills = all_skills[:8]
+                freelancer.skills_count = len(all_skills)
+            
+            return freelancers
+        except Exception as e:
+            return []
+
     def _render_home_page(self, request):
         """
         Renders the homepage template for unauthenticated users.
         Includes basic error handling for template rendering.
         """
         try:
-            return render(request, self.TEMPLATE_NAME, {})
+            context = {
+                'verified_freelancers': self._get_verified_freelancers(),
+                'completed_projects': self._get_completed_projects(),
+                'client_satisfaction': self._get_client_satisfaction(),
+                'popular_categories': self._get_popular_categories(),
+                'featured_freelancers': self._get_featured_freelancers(),
+            }
+            return render(request, self.TEMPLATE_NAME, context)
         except Exception as e:
             messages.error(request, 'Something went wrong. Please try again.')
             return self._logout_and_render(request)
@@ -120,6 +209,7 @@ class HomeView(View):
 # Description: Redirects user to role-specific profile page
 # Tested On: 
 # Status:
+# Code Refractor Status: In Progress
 # ------------------------------------------------------
 class GetUserProfileView(CustomLoginRequiredMixin, View):
     """
@@ -198,6 +288,7 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
 # Description: Redirects client users to their specific project list
 # Tested On:
 # Status:
+# Code Refractor Status: Not Started
 # ------------------------------------------------------   
 class UserSpecificProjectListView(View):
     client_project_list_url = 'project:client-projects'
@@ -222,21 +313,66 @@ class UserSpecificProjectListView(View):
 # Description: Displays list of freelancers for clients or unauthenticated users
 # Tested On:
 # Status:
+# Code Refractor Status: In Progress
 # ------------------------------------------------------    
 class FreelancerListView(View):
-    freelancer_list_template = 'home/freelancerslist.html'
-    home_url = 'home:home' 
-
-    def get(self, request):
-        if self.has_access(request.user):
-            return render(request, self.freelancer_list_template, {})
-        return redirect(self.home_url)
+    """
+    - Displays list of freelancers for clients or unauthenticated users
+    - Implements strict access control (only clients or unauthenticated users)
+    - Handles error cases and unauthorized access attempts
+    """
     
-    def has_access(self, user):
-        """Strict access: Only unauthenticated or clients can view."""
+    # Template and URL constants
+    FREELANCER_LIST_TEMPLATE = 'home/freelancerslist.html'
+    HOME_URL = 'home:home'
+    
+    def get(self, request):
+        """
+        Main entry point for GET requests.
+        Verifies access rights before rendering freelancer list.
+        """
+        try:
+            if self._has_access(request.user):
+                return self._render_freelancer_list(request)
+            return self._handle_unauthorized_access(request)
+        except Exception:
+            return self._handle_error(request)
+
+    def _has_access(self, user):
+        """
+        Determines if user has access to view freelancer list.
+        Only unauthenticated users or clients are allowed.
+        """
         if not user.is_authenticated:
             return True
-        return getattr(user, 'role', None) == 'client' 
+        return getattr(user, 'role', '').lower() == 'client'
+
+    def _render_freelancer_list(self, request):
+        """
+        Renders the freelancer list template.
+        Includes basic error handling for template rendering.
+        """
+        try:
+            return render(request, self.FREELANCER_LIST_TEMPLATE, {})
+        except Exception:
+            messages.error(request, 'Error loading freelancer list. Please try again.')
+            return redirect(self.HOME_URL)
+
+    def _handle_unauthorized_access(self, request):
+        """
+        Handles cases where user doesn't have access rights.
+        Redirects to home with appropriate message.
+        """
+        messages.error(request, 'You do not have permission to view this page.')
+        return redirect(self.HOME_URL)
+
+    def _handle_error(self, request):
+        """
+        Handles unexpected exceptions by redirecting to home
+        with an error message.
+        """
+        messages.error(request, 'Something went wrong. Please try again.')
+        return redirect(self.HOME_URL) 
     
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
@@ -244,100 +380,176 @@ class FreelancerListView(View):
 # Description: Filters and paginates available projects with advanced options
 # Tested On:
 # Status:
+# Code Refractor Status: In Progress
 # ------------------------------------------------------
 class ProjectListView(View):
-    project_list_template = 'home/projectlist.html'
-    home_url = 'home:home' 
-    items_per_page = 10
-
-    def get(self, request):
-        if self.has_access(request.user):
-            categories = ProjectCategory.objects.all()
-            skills = Skill.objects.all()
-            projects = Project.objects.filter(
-                status=Project.Status.PUBLISHED
-            ).distinct().order_by('-created_at')
-                        
-            selected_categories = request.GET.getlist('category')
-            selected_experience = request.GET.getlist('experience')
-            selected_budgets = request.GET.getlist('budget')
-            selected_durations = request.GET.getlist('duration')
-            selected_skills = request.GET.getlist('skill')
-            
-            keyword = request.GET.get('search')
-            
-            if keyword:
-                projects = projects.filter(
-                    Q(title__icontains=keyword) |
-                    Q(description__icontains=keyword) |
-                    Q(category__name__icontains=keyword) |
-                    Q(skills_required__name__icontains=keyword)
-                ).distinct()
-            
-            if selected_categories and 'all' not in selected_categories:
-                projects = projects.filter(category_id__in=selected_categories)
-                
-            if selected_experience and 'all' not in selected_experience:
-                projects = projects.filter(experience_level__in=selected_experience)
-                
-            if selected_budgets and 'all' not in selected_budgets:
-                budget_q = Q()
-                for b in selected_budgets:
-                    if b == '500000+':
-                        budget_q |= Q(fixed_budget__gte=500000) | Q(budget_max__gte=500000)
-                    else:
-                        parts = b.split('-')
-                        if len(parts) == 2:
-                            min_val, max_val = map(int, parts)
-                            budget_q |= (
-                                Q(fixed_budget__gte=min_val, fixed_budget__lte=max_val) |
-                                Q(budget_min__gte=min_val, budget_max__lte=max_val)
-                            )
-                projects = projects.filter(budget_q)
-                
-            if selected_durations and 'all' not in selected_durations:
-                duration_q = Q()
-                for d in selected_durations:
-                    if d == '12+':
-                        duration_q |= Q(estimated_duration__gte=12)
-                    else:
-                        min_d, max_d = map(int, d.split('-'))
-                        duration_q |= Q(estimated_duration__gte=min_d, estimated_duration__lte=max_d)
-                projects = projects.filter(duration_q)
-                
-            if selected_skills and 'all' not in selected_skills:
-                projects = projects.filter(skills_required__id__in=selected_skills).distinct()
-                
-            paginator = Paginator(projects, self.items_per_page)
-            page_number = request.GET.get('page')
-            page_obj = paginator.get_page(page_number)
-            
-            categories_dict = {str(c.id): c for c in categories}
-            skills_dict = {str(s.id): s for s in skills}
-            
-            context = {
-                'projects': page_obj,
-                'categories': categories,
-                'skills': skills,
-                'expertise_levels': Project.ExpertiseLevel.choices,
-                'selected_categories': selected_categories,
-                'selected_experience': selected_experience,
-                'selected_budgets': selected_budgets,
-                'selected_durations': selected_durations,
-                'selected_skills': selected_skills,  
-                'search_keyword': keyword,
-                'categories_dict': categories_dict,
-                'skills_dict': skills_dict,
-            }
-            
-            return render(request, self.project_list_template, context)
-        return redirect(self.home_url)
+    """
+    - Displays filtered and paginated list of published projects
+    - Supports advanced filtering by category, skills, budget, duration, etc.
+    - Implements strict access control (only freelancers or unauthenticated users)
+    - Handles error cases and unauthorized access attempts
+    """
     
-    def has_access(self, user):
-        """Strict access: Only unauthenticated or freelancers can view."""
+    # Constants
+    PROJECT_LIST_TEMPLATE = 'home/projectlist.html'
+    HOME_URL = 'home:home'
+    ITEMS_PER_PAGE = 10
+    
+    def get(self, request):
+        """
+        Main entry point for GET requests.
+        Handles filtering, pagination and template rendering.
+        """
+        try:
+            if not self._has_access(request.user):
+                return self._handle_unauthorized_access(request)
+                
+            projects = self._get_base_queryset()
+            projects = self._apply_filters(request, projects)
+            page_obj = self._paginate_results(request, projects)
+            
+            context = self._build_context(request, page_obj)
+            return self._render_project_list(request, context)
+            
+        except Exception as e:
+            return self._handle_error(request, str(e))
+
+    def _has_access(self, user):
+        """
+        Determines if user has access to view project list.
+        Only unauthenticated users or freelancers are allowed.
+        """
         if not user.is_authenticated:
             return True
-        return getattr(user, 'role', None) == 'freelancer' 
+        return getattr(user, 'role', '').lower() == 'freelancer'
+
+    def _get_base_queryset(self):
+        """Returns base queryset of published projects"""
+        return Project.objects.filter(
+            status=Project.Status.PUBLISHED
+        ).distinct().order_by('-created_at')
+
+    def _apply_filters(self, request, projects):
+        """Applies all filters from request parameters"""
+        projects = self._apply_search_filter(request, projects)
+        projects = self._apply_category_filter(request, projects)
+        projects = self._apply_experience_filter(request, projects)
+        projects = self._apply_budget_filter(request, projects)
+        projects = self._apply_duration_filter(request, projects)
+        projects = self._apply_skills_filter(request, projects)
+        return projects
+
+    def _apply_search_filter(self, request, projects):
+        """Applies keyword search filter"""
+        keyword = request.GET.get('search')
+        if not keyword:
+            return projects
+            
+        return projects.filter(
+            Q(title__icontains=keyword) |
+            Q(description__icontains=keyword) |
+            Q(category__name__icontains=keyword) |
+            Q(skills_required__name__icontains=keyword)
+        ).distinct()
+
+    def _apply_category_filter(self, request, projects):
+        """Filters by selected categories"""
+        selected_categories = request.GET.getlist('category')
+        if not selected_categories or 'all' in selected_categories:
+            return projects
+        return projects.filter(category_id__in=selected_categories)
+
+    def _apply_experience_filter(self, request, projects):
+        """Filters by experience level"""
+        selected_experience = request.GET.getlist('experience')
+        if not selected_experience or 'all' in selected_experience:
+            return projects
+        return projects.filter(experience_level__in=selected_experience)
+
+    def _apply_budget_filter(self, request, projects):
+        """Filters by budget range"""
+        selected_budgets = request.GET.getlist('budget')
+        if not selected_budgets or 'all' in selected_budgets:
+            return projects
+            
+        budget_q = Q()
+        for b in selected_budgets:
+            if b == '500000+':
+                budget_q |= Q(fixed_budget__gte=500000) | Q(budget_max__gte=500000)
+            else:
+                parts = b.split('-')
+                if len(parts) == 2:
+                    min_val, max_val = map(int, parts)
+                    budget_q |= (
+                        Q(fixed_budget__gte=min_val, fixed_budget__lte=max_val) |
+                        Q(budget_min__gte=min_val, budget_max__lte=max_val)
+                    )
+        return projects.filter(budget_q)
+
+    def _apply_duration_filter(self, request, projects):
+        """Filters by project duration"""
+        selected_durations = request.GET.getlist('duration')
+        if not selected_durations or 'all' in selected_durations:
+            return projects
+            
+        duration_q = Q()
+        for d in selected_durations:
+            if d == '12+':
+                duration_q |= Q(estimated_duration__gte=12)
+            else:
+                min_d, max_d = map(int, d.split('-'))
+                duration_q |= Q(estimated_duration__gte=min_d, estimated_duration__lte=max_d)
+        return projects.filter(duration_q)
+
+    def _apply_skills_filter(self, request, projects):
+        """Filters by required skills"""
+        selected_skills = request.GET.getlist('skill')
+        if not selected_skills or 'all' in selected_skills:
+            return projects
+        return projects.filter(skills_required__id__in=selected_skills).distinct()
+
+    def _paginate_results(self, request, projects):
+        """Paginates the filtered results"""
+        paginator = Paginator(projects, self.ITEMS_PER_PAGE)
+        page_number = request.GET.get('page')
+        return paginator.get_page(page_number)
+
+    def _build_context(self, request, page_obj):
+        """Builds template context with all required data"""
+        categories = ProjectCategory.objects.all()
+        skills = Skill.objects.all()
+        
+        return {
+            'projects': page_obj,
+            'categories': categories,
+            'skills': skills,
+            'expertise_levels': Project.ExpertiseLevel.choices,
+            'selected_categories': request.GET.getlist('category'),
+            'selected_experience': request.GET.getlist('experience'),
+            'selected_budgets': request.GET.getlist('budget'),
+            'selected_durations': request.GET.getlist('duration'),
+            'selected_skills': request.GET.getlist('skill'),
+            'search_keyword': request.GET.get('search'),
+            'categories_dict': {str(c.id): c for c in categories},
+            'skills_dict': {str(s.id): s for s in skills},
+        }
+
+    def _render_project_list(self, request, context):
+        """Renders the project list template"""
+        try:
+            return render(request, self.PROJECT_LIST_TEMPLATE, context)
+        except Exception as e:
+            raise Exception(f"Template rendering failed: {str(e)}")
+
+    def _handle_unauthorized_access(self, request):
+        """Handles unauthorized access attempts"""
+        messages.error(request, 'You do not have permission to view this page.')
+        return redirect(self.HOME_URL)
+
+    def _handle_error(self, request, error_message):
+        """Handles unexpected exceptions"""
+        messages.error(request, f'Something went wrong. {error_message}')
+        return redirect(self.HOME_URL) 
     
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
@@ -345,6 +557,7 @@ class ProjectListView(View):
 # Description: Displays individual project detail page with role-based restriction
 # Tested On:
 # Status:
+# Code Refractor Status: Not Started
 # ------------------------------------------------------
 class ProjectDetailView(View):
     template_name = 'home/project-detail.html'
@@ -377,6 +590,7 @@ class ProjectDetailView(View):
 # Description: Renders custom 404 page template
 # Tested On:
 # Status:
+# Code Refractor Status: Not Started
 # ------------------------------------------------------
 def handling_404(request, exception):
     error_page_template = '404.html'
