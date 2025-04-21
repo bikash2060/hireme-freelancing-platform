@@ -481,7 +481,37 @@ class FreelancerListView(View):
         """
         messages.error(request, 'Something went wrong. Please try again.')
         return redirect(self.HOME_URL) 
+     
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: FreelancerDetailView   
+# Description: Displays detailed information about a freelancer
+# Tested On:
+# Status:
+# Code Refractor Status: Not Started
+# ------------------------------------------------------
+class FreelancerDetailView(View):
+    template_name = 'home/freelancer-detail.html'
+    home_url = 'home:home'
     
+    def get(self, request, freelancer_id):
+        try:
+            # freelancer = Freelancer.objects.get(id=freelancer_id, user__is_verified=True)
+            
+            # context = {
+            #     'freelancer': freelancer,
+            # }   
+            return render(request, self.template_name)
+        except Freelancer.DoesNotExist:
+            messages.error(request, "Freelancer not found or no longer available")
+            return redirect(self.home_url)
+        except Exception as e:
+            print(e)
+            messages.error(request, "Something went wrong. Please try again.")
+            return redirect(self.home_url)
+
+
+
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
 # View Name: ProjectListView

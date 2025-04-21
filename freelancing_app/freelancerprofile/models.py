@@ -29,6 +29,29 @@ class FreelanceServiceCategory(models.Model):
 
     class Meta:
         db_table = "freelance_service_category"
+        
+class FreelancerSkill(models.Model):
+    class SkillLevel(models.TextChoices):
+        INTERMEDIATE = 'intermediate', 'Intermediate'
+        ADVANCED = 'advanced', 'Advanced'
+        EXPERT = 'expert', 'Expert'
+
+    freelancer = models.ForeignKey('Freelancer', on_delete=models.CASCADE)
+    skill = models.ForeignKey('projects.Skill', on_delete=models.CASCADE)
+    level = models.CharField(
+        max_length=20,
+        choices=SkillLevel.choices,
+        default=SkillLevel.INTERMEDIATE,
+        help_text="Proficiency level for this skill"
+    )
+
+    def __str__(self):
+        return f"{self.freelancer.user.username} - {self.skill.name} ({self.get_level_display()})"
+
+    class Meta:
+        unique_together = ('freelancer', 'skill')
+        db_table = 'freelancer_skill'
+
 
 class Freelancer(models.Model):
     """Main profile model for freelancers with professional information"""
@@ -64,7 +87,6 @@ class Freelancer(models.Model):
         related_name='freelancer_profile'
     )
     
-    # Professional Information
     years_of_experience = models.PositiveIntegerField(
         default=0,
         help_text="Total years of professional experience"
@@ -99,7 +121,6 @@ class Freelancer(models.Model):
         help_text="Preferred communication method"
     )
 
-    # Portfolio Links
     portfolio_link = models.URLField(
         blank=True,
         help_text="Link to portfolio website"
@@ -113,13 +134,13 @@ class Freelancer(models.Model):
         help_text="Link to LinkedIn profile"
     )
 
-    # Relationships
     skills = models.ManyToManyField(
         Skill,
-        blank=True,
+        through='FreelancerSkill',
         related_name='freelancers',
-        help_text="Skills possessed by the freelancer"
+        blank=True
     )
+    
     is_featured = models.BooleanField(default=False, help_text="Manually mark a freelancer as featured")
     
     badge = models.CharField(
@@ -136,6 +157,20 @@ class Freelancer(models.Model):
         db_table = "freelancer"
         verbose_name = "Freelancer Profile"
         verbose_name_plural = "Freelancer Profiles"
+        
+        
+class FreelancerService(models.Model):
+    freelancer = models.ForeignKey('Freelancer', on_delete=models.CASCADE, related_name='services')
+    category = models.ForeignKey('FreelanceServiceCategory', on_delete=models.SET_NULL, null=True, blank=True, related_name='freelancer_services')
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    icon_class = models.CharField(max_length=100, help_text="Font Awesome icon class (e.g., fas fa-laptop-code)")
+
+    def __str__(self):
+        return f"{self.freelancer.user.username} - {self.title}"
+
+    class Meta:
+        db_table = "freelancer_service"
 
 
 class FreelancerLanguage(models.Model):
