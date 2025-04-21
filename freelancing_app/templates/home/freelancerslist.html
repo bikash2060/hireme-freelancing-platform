@@ -13,18 +13,15 @@
 <div class="hero-section">
     <div class="container">
         <div class="hero-content">
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                    <path d="M2 20h20v-4H2v4zm2-4h16V8H4v8z"></path>
+                    <path d="M6 8V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path>
+                </svg>
+            </div>
             <div class="hero-text">
                 <h1 class="title">Hire Top-Tier Talent for Your Critical Projects</h1>
                 <p class="subtitle">Access our curated network of vetted professionals across design, development, marketing, and more. Streamline your hiring process with our talent matching platform.</p>
-
-                <div class="search-container">
-                    <div class="search-input-group">
-                        <div class="search-field">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" id="freelancer-search" placeholder="Try 'UI Designer' or 'React Developer'..." autocomplete="off">
-                        </div>
-                    </div>
-                </div>
 
                 <div class="social-proof">
                     <div class="trust-badge">
@@ -37,29 +34,1265 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="hero-image">
-                <div class="image-container">
-                    <video autoplay muted loop playsinline class="hero-video">
-                        <source src="{% static 'videos/hero/video-1.mp4' %}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="image-overlay"></div>
+<!-- Search Bar and Filter Section -->
+<div class="search-filter-section">
+    <div class="search-container">
+        <div class="search-filter-bar">
+            {% if request.GET %}
+                <div class="applied-filters-container">
+                    {% if request.GET.search %}
+                        <div class="applied-filter-tag search-tag">
+                            Search: "{{ request.GET.search }}"
+                            <span class="remove-filter" onclick="removeFilterParam('search')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endif %}
+                    
+                    {% for category in selected_categories %}
+                        {% with cat=categories_dict|get_item:category %}
+                        {% if cat %}
+                            <div class="applied-filter-tag category-tag">
+                                Category: {{ cat.name }}
+                                <span class="remove-filter" onclick="removeMultiFilterParam('category', '{{ category }}')">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            </div>
+                        {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                    
+                    {% for skill in selected_skills %}
+                        {% with sk=skills_dict|get_item:skill %}
+                        {% if sk %}
+                            <div class="applied-filter-tag skill-tag">
+                                Skill: {{ sk.name }}
+                                <span class="remove-filter" onclick="removeMultiFilterParam('skill', '{{ skill }}')">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            </div>
+                        {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                    
+                    {% for experience in selected_experience %}
+                        <div class="applied-filter-tag experience-tag">
+                            Experience: {{ experience|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('experience', '{{ experience }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+                    
+                    {% for availability in selected_availabilities %}
+                        <div class="applied-filter-tag availability-tag">
+                            Availability: {{ availability|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('availability', '{{ availability }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+                    
+                    {% for duration in selected_durations %}
+                        <div class="applied-filter-tag duration-tag">
+                            Duration: 
+                            {% if duration == 'long' %}
+                                3+ months
+                            {% elif duration == 'medium' %}
+                                1-3 months
+                            {% else %}
+                                Less than 1 month
+                            {% endif %}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('duration', '{{ duration }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+                    
+                    {% for badge in selected_badges %}
+                        <div class="applied-filter-tag badge-tag">
+                            Badge: {{ badge|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('badge', '{{ badge }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
                 </div>
+            {% endif %}
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="Search freelancers by name, title or skills..." value="{{ request.GET.search }}" class="search-input">
+            </div>
+            <div class="filters-container">
+                <div class="filters">
+                    <div class="filter-dropdown scrollable-dropdown">
+                        <button class="filter-btn">
+                            <span>Category</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="category-search-container">
+                                <input type="text" placeholder="Search categories..." class="category-search-input">
+                            </div>
+                            <div class="category-items">
+                                {% for category in categories %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="category" value="{{ category.id }}"
+                                            {% if category.id|stringformat:"s" in selected_categories or 'all' in selected_categories %}checked{% endif %}>
+                                        {{ category.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-dropdown scrollable-dropdown large-above-dropdown">
+                        <button class="filter-btn">
+                            <span>Skills</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="category-search-container">
+                                <input type="text" placeholder="Search skills..." class="skill-search-input">
+                            </div>
+                            <div class="skill-items">
+                                {% for skill in skills %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="skill" value="{{ skill.id }}"
+                                            {% if skill.id|stringformat:"s" in selected_skills %}checked{% endif %}>
+                                        {{ skill.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Experience Level</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            {% for value, label in expertise_levels %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="experience" value="{{ value }}"
+                                        {% if value in selected_experience or 'all' in selected_experience %}checked{% endif %}>
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Availability</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            {% for value, label in availability_options %}
+                                {% if value != 'not-available' %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="availability" value="{{ value }}"
+                                            {% if value in selected_availabilities or 'all' in selected_availabilities %}checked{% endif %}>
+                                        {{ label }}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Project Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">  
+                            {% for value, label in duration_options %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="duration" value="{{ value }}"
+                                        {% if value in selected_durations or 'all' in selected_durations %}checked{% endif %}>
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="filter-dropdown badge-dropdown">
+                        <button class="filter-btn">
+                            <span>Badges</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            {% for value, label in badge_options %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="badge" value="{{ value }}"
+                                        {% if value in selected_badges or 'all' in selected_badges %}checked{% endif %}>
+                                    
+                                    {% if value == 'pro_verified' %}
+                                        <i class="fas fa-check-circle badge-icon" style="color: #3b82f6;"></i>
+                                    {% elif value == 'top_rated' %}
+                                        <i class="fas fa-star badge-icon" style="color: #f59e0b;"></i>
+                                    {% elif value == 'rising_talent' %}
+                                        <i class="fas fa-seedling badge-icon" style="color: #10b981;"></i>
+                                    {% endif %}
+                                    
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                </div>
+                <button class="clear-filters-btn">
+                    <i class="fas fa-undo"></i> Reset Filters
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Filter Section -->
-
 <!-- Freelancers List Section -->
-    
+<div class="freelancer-list-section">
+    <div class="container">
+        <div class="card-grid">
 
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        {% comment %} <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="freelancer-badge rising-talent" title="Rising Talent">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">John Doe</h2>
+                                <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img">
+                        {% comment %} <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div> {% endcomment %}
+                        <div class="freelancer-badge top-rated" title="Top Rated">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">Bikash Bhattarai</h2>
+                                {% comment %} <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span> {% endcomment %}
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">20 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        {% comment %} <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="freelancer-badge rising-talent" title="Rising Talent">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">John Doe</h2>
+                                <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        {% comment %} <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="freelancer-badge rising-talent" title="Rising Talent">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">John Doe</h2>
+                                <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        {% comment %} <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="freelancer-badge rising-talent" title="Rising Talent">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">John Doe</h2>
+                                <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        {% comment %} <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="freelancer-badge rising-talent" title="Rising Talent">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">John Doe</h2>
+                                <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        {% comment %} <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="freelancer-badge rising-talent" title="Rising Talent">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">John Doe</h2>
+                                <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="freelancer-card">
+                <div class="freelancer-info">
+                    <div class="freelancer-profile">
+                        {% comment %} <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe" class="freelancer-profile-img"> {% endcomment %}
+                        <div class="profile-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="freelancer-badge rising-talent" title="Rising Talent">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="freelancer-details">
+                        <div class="freelancer-header">
+                            <div class="name-and-badge">
+                                <h2 class="freelancer-name">John Doe</h2>
+                                <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <a href="#" class="invite-button">Invite to Job</a>
+                        </div>
+                        
+                        <div class="freelancer-title">Senior Full-Stack Developer</div>
+                        
+                        <div class="freelancer-meta">
+                            <span class="location"><i class="fas fa-map-marker-alt"></i> New York, USA</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i> 4.9
+                                <span class="review-count">(128 reviews)</span>
+                            </span>
+                            <span class="availability"><i class="fas fa-clock"></i> Full-time</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="freelancer-details-info">
+                    <div class="freelancer-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <div>
+                                <span class="stat-value">87</span>
+                                <span class="stat-label">Projects Completed</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span class="stat-value">5+</span>
+                                <span class="stat-label">Years of Experience</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <span class="stat-value">Expert</span>  
+                                <span class="stat-label">Expertise Level</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span class="stat-value">98%</span>
+                                <span class="stat-label">Delivery On Time</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="freelancer-skills">
+                        <div class="skills-header">
+                            <i class="fas fa-tools"></i>
+                            <span class="sub-title">Skills</span>
+                            <span class="skills-count">8 skills</span>
+                        </div>
+                        <div class="skills-list-container">
+                            <div class="skills-list">
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    HTML/CSS
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    JavaScript
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    React
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Node.js
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    UI/UX Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    Responsive Design
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    REST APIs
+                                </span>
+                                <span class="skill-tag">
+                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
+                                    MongoDB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-stats">
+                        <div class="footer-stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Identity Verified</span>
+                        </div>
+                    </div>
+                    <div class="footer-actions">
+                        <a href="#" class="action-button profile-button">
+                            <i class="fas fa-user"></i> View Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="pagination">
+        <button class="pagination-btn" disabled>
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <div class="page-numbers">
+            <button class="page-number active">1</button>
+            <button class="page-number">2</button>
+            <button class="page-number">3</button>
+            <span class="page-ellipsis">...</span>
+            <button class="page-number">12</button>
+        </div>
+        <button class="pagination-btn">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+    
+</div>
 {% endblock %}
 
-{% block footer %}{% endblock %}
-
 {% block js_files %}
-<script src="{% static 'js/freelancers/search.js' %}"></script>
+<script src="{% static 'js/home/freelancer-filter.js' %}"></script>
 {% endblock %}

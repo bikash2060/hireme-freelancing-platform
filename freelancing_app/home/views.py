@@ -325,6 +325,7 @@ class FreelancerListView(View):
     # Template and URL constants
     FREELANCER_LIST_TEMPLATE = 'home/freelancerslist.html'
     HOME_URL = 'home:home'
+    ITEMS_PER_PAGE = 10
     
     def get(self, request):
         """
@@ -332,10 +333,17 @@ class FreelancerListView(View):
         Verifies access rights before rendering freelancer list.
         """
         try:
-            if self._has_access(request.user):
-                return self._render_freelancer_list(request)
-            return self._handle_unauthorized_access(request)
-        except Exception:
+            if not self._has_access(request.user):
+                return self._handle_unauthorized_access(request)
+                
+            freelancers = self._get_base_queryset()
+            freelancers = self._apply_filters(request, freelancers)
+            page_obj = self._paginate_results(request, freelancers)
+            
+            context = self._build_context(request, page_obj)
+            return self._render_freelancer_list(request, context)
+        except Exception as e:
+            print(e)
             return self._handle_error(request)
 
     def _has_access(self, user):
@@ -346,17 +354,117 @@ class FreelancerListView(View):
         if not user.is_authenticated:
             return True
         return getattr(user, 'role', '').lower() == 'client'
+    
+    def _get_base_queryset(self):
+        """Returns base queryset of active freelancers"""
+        return Freelancer.objects.filter(
+            user__is_verified=True
+        ).select_related('user').prefetch_related('skills').distinct().order_by('-user__date_joined')
 
-    def _render_freelancer_list(self, request):
-        """
-        Renders the freelancer list template.
-        Includes basic error handling for template rendering.
-        """
+    def _apply_filters(self, request, freelancers):
+        """Applies all filters from request parameters"""
+        freelancers = self._apply_search_filter(request, freelancers)
+        freelancers = self._apply_category_filter(request, freelancers)
+        freelancers = self._apply_skills_filter(request, freelancers)
+        freelancers = self._apply_experience_filter(request, freelancers)
+        freelancers = self._apply_availability_filter(request, freelancers)
+        freelancers = self._apply_duration_filter(request, freelancers)
+        freelancers = self._apply_badge_filter(request, freelancers)
+        return freelancers
+    
+    def _apply_search_filter(self, request, freelancers):
+        """Applies keyword search filter"""
+        keyword = request.GET.get('search')
+        if not keyword:
+            return freelancers
+            
+        return freelancers.filter(
+            Q(user__username__icontains=keyword) |
+            Q(user__full_name__icontains=keyword) |
+            Q(professional_title__icontains=keyword) |
+            Q(skills__name__icontains=keyword)
+        ).distinct()
+        
+    def _apply_category_filter(self, request, freelancers):
+        """Filters by selected categories"""
+        selected_categories = request.GET.getlist('category')
+        if not selected_categories or 'all' in selected_categories:
+            return freelancers
+        return freelancers.filter(
+            skills__service_categories__id__in=selected_categories
+        ).distinct()
+        
+    def _apply_experience_filter(self, request, freelancers):
+        """Filters by experience level"""
+        selected_experience = request.GET.getlist('experience')
+        if not selected_experience or 'all' in selected_experience:
+            return freelancers
+        return freelancers.filter(expertise_level__in=selected_experience)
+    
+    def _apply_availability_filter(self, request, freelancers):
+        """Filters by availability status"""
+        selected_availabilities = request.GET.getlist('availability')
+        if not selected_availabilities or 'all' in selected_availabilities:
+            return freelancers
+        return freelancers.filter(availability__in=selected_availabilities)
+    
+    def _apply_duration_filter(self, request, freelancers):
+        """Filters by preferred project duration"""
+        selected_durations = request.GET.getlist('duration')
+        if not selected_durations or 'all' in selected_durations:
+            return freelancers
+        return freelancers.filter(preferred_project_duration__in=selected_durations)
+    
+    def _apply_badge_filter(self, request, freelancers):
+        """Filters by badge type"""
+        selected_badges = request.GET.getlist('badge')
+        if not selected_badges or 'all' in selected_badges:
+            return freelancers
+        return freelancers.filter(badge__in=selected_badges)
+    
+    def _apply_skills_filter(self, request, freelancers):
+        """Filters by skills"""
+        selected_skills = request.GET.getlist('skill')
+        if not selected_skills or 'all' in selected_skills:
+            return freelancers
+        return freelancers.filter(skills__id__in=selected_skills).distinct()
+    
+    def _paginate_results(self, request, freelancers):
+        """Paginates the filtered results"""
+        paginator = Paginator(freelancers, self.ITEMS_PER_PAGE)
+        page_number = request.GET.get('page')
+        return paginator.get_page(page_number)
+    
+    def _build_context(self, request, page_obj):
+        """Builds template context with all required data"""
+        categories = FreelanceServiceCategory.objects.all()
+        skills = Skill.objects.all()
+        
+        return {
+            'freelancers': page_obj,
+            'categories': categories,
+            'skills': skills,
+            'expertise_levels': Freelancer.ExpertiseLevel.choices,
+            'availability_options': Freelancer.Availability.choices,
+            'duration_options': Freelancer.ProjectDuration.choices,
+            'badge_options': Freelancer.BadgeChoices.choices,
+            'selected_categories': request.GET.getlist('category'),
+            'selected_experience': request.GET.getlist('experience'),
+            'selected_availabilities': request.GET.getlist('availability'),
+            'selected_durations': request.GET.getlist('duration'),
+            'selected_badges': request.GET.getlist('badge'),
+            'selected_skills': request.GET.getlist('skill'),
+            'search_keyword': request.GET.get('search'),
+            'categories_dict': {str(c.id): c for c in categories},
+            'skills_dict': {str(s.id): s for s in skills},
+        }
+
+    def _render_freelancer_list(self, request, context):
+        """Renders the freelancer list template"""
         try:
-            return render(request, self.FREELANCER_LIST_TEMPLATE, {})
-        except Exception:
-            messages.error(request, 'Error loading freelancer list. Please try again.')
-            return redirect(self.HOME_URL)
+            return render(request, self.FREELANCER_LIST_TEMPLATE, context)
+        except Exception as e:
+            raise Exception(f"Template rendering failed: {str(e)}")
 
     def _handle_unauthorized_access(self, request):
         """
