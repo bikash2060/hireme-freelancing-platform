@@ -1,51 +1,132 @@
 /* Hero Section */
-.projects-list-hero {
-    background: linear-gradient(to right, #f8fafc, #f1f5f9);
-    padding: 25px 0;
-    border-bottom: 1px solid #e2e8f0;
+.hero-section {
     margin-top: 100px;
+    padding: 40px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e9ecef;
+    position: relative;
+    overflow: hidden;
 }
 
-.projects-list-hero .list-header {
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+    animation: pulse 8s infinite ease-in-out;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: rgba(76, 211, 194, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+    animation: pulse 10s infinite ease-in-out;
+}
+
+.hero-section .hero-content {
     text-align: center;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 2;
 }
 
-.projects-list-hero .header-icon {
+.hero-section .header-icon {
     background: linear-gradient(135deg, #4f46e5, #8b5cf6);
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.2);
+    transition: transform 0.3s ease;
 }
 
-.projects-list-hero .header-icon .icon {
-    width: 32px;
-    height: 32px;
+.hero-section .header-icon:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.hero-section .header-icon .icon {
+    width: 36px;
+    height: 36px;
     color: white;
 }
 
-.projects-list-hero .section-title {
-    line-height: 1;
-    font-size: 2rem;
-    color: #2c3e50;
-    font-weight: 550;
-    margin-bottom: 10px;
-    position: relative;
-    display: inline-block;
+.hero-section .hero-text .title {
+    font-size: 52px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, #1e293b 0%, #3b82f6 70%, #4f46e5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.projects-list-hero .section-subtitle {
-    font-size: 1rem;
-    color: #718096;
-    margin: 0;
+.hero-section .hero-text .subtitle {
+    font-size: 20px;
+    color: #475569;
+    margin-bottom: 32px;
+    line-height: 1.6;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-section .social-proof {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hero-section .trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: #64748b;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 50px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.hero-section .trust-badge i {
+    color: #4f46e5;
+    font-size: 16px;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
 }
 
 /* Search Bar and Filter Section */
@@ -402,31 +483,31 @@
     border: 1px solid rgba(25, 118, 210, 0.2);
 }
 
-.search-filter-section .applied-filter-tag[onclick*="category"] {
+.search-filter-section .applied-filter-tag.category-filter {
     background-color: #f3e5f5;
     color: #7b1fa2;
     border: 1px solid rgba(123, 31, 162, 0.2);
 }
 
-.search-filter-section .applied-filter-tag[onclick*="skill"] {
+.search-filter-section .applied-filter-tag.skill-filter {
     background-color: #e0f7fa;
     color: #00838f;
     border: 1px solid rgba(0, 131, 143, 0.2);
 }
 
-.search-filter-section .applied-filter-tag[onclick*="budget"] {
+.search-filter-section .applied-filter-tag.budget-filter {
     background-color: #fff8e1;
     color: #ff8f00;
     border: 1px solid rgba(255, 143, 0, 0.2);
 }
 
-.search-filter-section .applied-filter-tag[onclick*="experience"] {
+.search-filter-section .applied-filter-tag.experience-filter {
     background-color: #ffebee;
     color: #c62828;
     border: 1px solid rgba(198, 40, 40, 0.2);
 }
 
-.search-filter-section .applied-filter-tag[onclick*="duration"] {
+.search-filter-section .applied-filter-tag.duration-filter {
     background-color: #e8eaf6;
     color: #3949ab;
     border: 1px solid rgba(57, 73, 171, 0.2);

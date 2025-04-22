@@ -4,315 +4,636 @@
 {% load custom_filters %}
 {% load project_filters %}
 
-{% block title %}{{ project.title }} - HireMe{% endblock %}
+{% block title %}Project Detail - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/home/project-detail.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="project-detail-container">
-    <div class="project-header">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="{% url 'home:home' %}" class="breadcrumb-link">
-                    <i class="fas fa-home"></i> Home
-                </a>
-                <span class="breadcrumb-divider">/</span>
-                <a href="{% url 'home:projects' %}" class="breadcrumb-link">
-                    <i class="fas fa-briefcase"></i> Projects
-                </a>
-                <span class="breadcrumb-divider">/</span>
-                <span class="breadcrumb-current">
-                    <i class="fas fa-file-alt"></i> {{ project.title|truncatechars:40 }}
-                </span>
-            </div>
-            
-            <div class="project-title-section">
-                <div class="title-wrapper">
-                    <h1 class="project-title">
-                        <span class="title-text">{{ project.title }}</span>
-                        {% if project.is_featured %}
-                        <span class="featured-badge">
-                            <i class="fas fa-star"></i> Featured
-                        </span>
-                        {% endif %}
-                        <span class="project-status">
-                            <span class="status-dot"></span>
-                            <span>Open</span>
-                        </span>
-                    </h1>
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">            
+            <div class="project-header">
+                <div class="project-info">
                     <div class="project-meta">
-                        <div class="meta-item category">
-                            <i class="fas fa-tag"></i> 
-                            <span>{{ project.category.name }}</span>
+                        <span class="project-category">
+                            <i class="fas fa-code"></i> Web Development
+                        </span>
+                        <span class="project-status published">
+                            <i class="fas fa-circle"></i> Open
+                        </span>
+                    </div>
+                      
+                    <h1 class="project-title">E-commerce Platform Development</h1>
+                    
+                    <div class="project-client">
+                        <div class="client-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
                         </div>
-                        <div class="meta-item time">
-                            <i class="far fa-clock"></i> 
-                            <span>Posted {{ project.created_at|format_posted_time }}</span>
+                        <div class="client-info">
+                            <span class="client-name">Sarah Johnson</span>
+                            <span class="client-location">
+                                <i class="fas fa-map-marker-alt"></i> New York, USA
+                            </span>
                         </div>
                     </div>
-                </div>
-                <div class="project-actions">
-                    <button class="action-btn save-btn">
-                        <i class="far fa-bookmark"></i> Save
-                    </button>
-                    <button class="action-btn share-btn">
-                        <i class="fas fa-share-alt"></i> Share
-                    </button>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Expert Level</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>12 weeks</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="currency-symbol">रु</span>
+                            <span>5,000 - 7,500</span>
+                        </div>                        
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit Proposal
+                        </a>
+                        <a href="" class="btn btn-secondary">
+                            <i class="fas fa-bookmark"></i> Save Project
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="project-main-content">
-        <div class="container">
-            <div class="project-content-grid">
-                <div class="project-details">
-                    <div class="section">
+<!-- Project Overview Section -->
+<div class="overview-section">
+    <div class="container">
+        <div class="overview-grid">
 
-                        <div class="description-section">
-                            <div class="section-header">
-                                <i class="fas fa-align-left icon"></i>
-                                <h3 class="section-title">Project Description</h3>
-                            </div>
-                            <div class="project-description">
-                                {{ project.description|linebreaks }}
-                            </div>
-                        </div>
+            <div class="overview-main">
 
-                        <div class="expected-outcomes">
-                            <div class="section-header">
-                                <i class="fas fa-clipboard-check icon"></i>
-                                <h3 class="section-title">Expected Outcomes</h3>
-                            </div>
-                            <div class="outcomes-list">
-                                <div class="outcome-item">
-                                    <i class="fas fa-check-circle outcome-icon"></i>
-                                    <span>Fully functional web application with responsive design</span>
-                                </div>
-                                <div class="outcome-item">
-                                    <i class="fas fa-check-circle outcome-icon"></i>
-                                    <span>User authentication and authorization system</span>
-                                </div>
-                                <div class="outcome-item">
-                                    <i class="fas fa-check-circle outcome-icon"></i>
-                                    <span>Database schema and API documentation</span>
-                                </div>
-                                <div class="outcome-item">
-                                    <i class="fas fa-check-circle outcome-icon"></i>
-                                    <span>Deployed application with hosting setup instructions</span>
-                                </div>
-                                <div class="outcome-item">
-                                    <i class="fas fa-check-circle outcome-icon"></i>
-                                    <span>Testing suite and quality assurance reports</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="skills-requirements">
-                            <div class="section-header">
-                                <i class="fas fa-tools icon"></i>
-                                <h3 class="section-title">Skills Required</h3>
-                            </div>
-                            <div class="skills-list">
-                                {% for skill in project.skills_required.all %}
-                                <span class="skill-tag">
-                                    <span class="skill-icon"><i class="fas fa-code"></i></span>
-                                    {{ skill.name }}
-                                </span>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="project-extra-details-section">
-                            <div class="section-header">
-                                <i class="fas fa-info-circle icon"></i>
-                                <h3 class="section-title">Project Details</h3>
-                            </div>
-                            <div class="project-details-list">
-                                <div class="detail-item budget">
-                                    <div class="detail-icon">
-                                        <i class="fas fa-wallet"></i>
-                                    </div>
-                                    <div class="detail-info">
-                                        <span class="detail-label">Budget {% if project.is_fixed_price %}(Fixed Price){% else %}(Range){% endif %}</span>
-                                        <span class="detail-value amount">
-                                            {% if project.is_fixed_price %}
-                                                Rs. {{ project.fixed_budget|format_currency }}
-                                            {% else %}
-                                                Rs. {{ project.budget_min|format_currency }} - {{ project.budget_max|format_currency }}
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                </div>
-                                
-                                <div class="detail-item duration">
-                                    <div class="detail-icon">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                    <div class="detail-info">
-                                        <span class="detail-label">Estimated Duration</span>
-                                        <span class="detail-value">{{ project.estimated_duration }} weeks</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="detail-item expertise">
-                                    <div class="detail-icon">
-                                        <i class="fas fa-user-graduate"></i>
-                                    </div>
-                                    <div class="detail-info">
-                                        <span class="detail-label">Expertise Level</span>
-                                        <span class="detail-value expertise {{ project.experience_level|lower }}">
-                                            <i class="fas fa-circle"></i> {{ project.get_experience_level_display }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="detail-item proposals">
-                                    <div class="detail-icon">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </div>
-                                    <div class="detail-info">
-                                        <span class="detail-label">Proposals</span>
-                                        <span class="detail-value proposals">0 received</span>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <div class="project-files-section">
-                            <div class="section-header">
-                                <i class="fas fa-file-alt icon"></i>
-                                <h3 class="section-title">Project Files</h3>
-                            </div>
-                            <div class="file-attachments">
-                                <div class="attachment-list">
-                                {% if project.attachments.all %}
-                                    {% for attachment in project.attachments.all %}
-                                    <div class="attachment-item">
-                                        <div class="attachment-icon">
-                                            <i class="fas fa-file-alt"></i>
-                                        </div>
-                                        <div class="attachment-info">
-                                            <div class="attachment-name">{{ attachment.file_name }}</div>
-                                            <div class="attachment-meta">{{ attachment.file_size|filesizeformat }} • {{ attachment.file_type }}</div>
-                                        </div>
-                                        <a href="{{ attachment.file.url }}" download class="attachment-download">
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                    </div>
-                                    {% endfor %}
-                                {% else %}
-                                <div class="no-attachments">
-                                    No attachments provided
-                                </div>
-                                {% endif %}
-    
-                                </div>
-                            </div>                            
-                        </div>
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-align-left"></i> Project Description
+                    </h3>
+                    <div class="project-description">
+                        <p>We are looking for an experienced full-stack developer to build a custom e-commerce platform for our boutique fashion brand. The platform should support product listings, shopping cart functionality, secure checkout, user accounts, and basic inventory management.</p>
                         
+                        <h4>Key Requirements:</h4>
+                        <ul>
+                            <li>Responsive design that works on all devices</li>
+                            <li>Integration with Stripe or PayPal for payments</li>
+                            <li>User registration and login system</li>
+                            <li>Product search and filtering</li>
+                            <li>Admin dashboard for managing products and orders</li>
+                            <li>Basic analytics to track sales and visitor behavior</li>
+                        </ul>
+                        
+                        <h4>Additional Information:</h4>
+                        <p>We already have a logo and brand colors established. The design should be clean, modern, and focus on showcasing our products effectively. We expect the developer to provide guidance on best practices for e-commerce UX.</p>
+                        
+                        <p>The project should be completed within 12 weeks. We're open to suggestions on technology stack but prefer solutions that are maintainable and scalable.</p>
                     </div>
                 </div>
-                
-                <div class="project-sidebar">
-                    <div class="client-card">
-                        <div class="client-header">
-                            <h3 class="client-title">
-                                <i class="fas fa-user"></i> About the Client
-                            </h3>
-                            <div class="client-profile">
-                                <div class="client-avatar">
-                                    {% if project.client.user.profile_image %}
-                                        <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Client Profile">
-                                    {% else %}
-                                        <i class="fas fa-user"></i>
-                                    {% endif %}
-                                </div>
-                                <div class="client-info">
-                                    <h4 class="client-name">
-                                        {{ project.client.user.full_name|default:project.client.user.username }}
-                                        {% if project.client.user.is_verified %}
-                                        <span class="verified-badge" title="Verified Client">
-                                            <i class="fas fa-check-circle"></i>
-                                        </span>
-                                        {% endif %}
-                                    </h4>
-                                    <div class="client-meta">
-                                        Member since {{ project.client.user.date_joined|date:"M Y" }}
-                                    </div>
+
+                <div class="section-card skills-card">
+                    <div class="skills-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-code"></i> Professional Skills
+                        </h3>
+                        <div class="skills-counter">
+                            <span class="counter-number">12</span>
+                            <span class="counter-text">Skills</span>
+                        </div>
+                    </div>
+                    <div class="skills-list">
+                        <div class="skill-tag" data-skill-level="expert">
+                            <i class="fas fa-code"></i> Python
+                            <span class="skill-level-badge">Expert</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="expert">
+                            <i class="fas fa-code"></i> JavaScript
+                            <span class="skill-level-badge">Expert</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="advanced">
+                            <i class="fas fa-code"></i> React
+                            <span class="skill-level-badge">Advanced</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="advanced">
+                            <i class="fas fa-code"></i> Node.js
+                            <span class="skill-level-badge">Advanced</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="advanced">
+                            <i class="fas fa-code"></i> PostgreSQL
+                            <span class="skill-level-badge">Advanced</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="intermediate">
+                            <i class="fas fa-code"></i> AWS
+                            <span class="skill-level-badge">Intermediate</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="intermediate">
+                            <i class="fas fa-code"></i> Docker
+                            <span class="skill-level-badge">Intermediate</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="expert">
+                            <i class="fas fa-code"></i> Django
+                            <span class="skill-level-badge">Expert</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="advanced">
+                            <i class="fas fa-code"></i> RESTful APIs
+                            <span class="skill-level-badge">Advanced</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="advanced">
+                            <i class="fas fa-code"></i> Git
+                            <span class="skill-level-badge">Advanced</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="expert">
+                            <i class="fas fa-code"></i> Responsive Design
+                            <span class="skill-level-badge">Expert</span>
+                        </div>
+                        <div class="skill-tag" data-skill-level="advanced">
+                            <i class="fas fa-code"></i> Performance Optimization
+                            <span class="skill-level-badge">Advanced</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-paperclip"></i> Attachments
+                    </h3>
+                    <div class="attachments-list">
+                        <div class="attachment-item">
+                            <div class="attachment-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="attachment-content">
+                                <h4 class="attachment-title">Project Brief.pdf</h4>
+                                <div class="attachment-meta">
+                                    <span class="attachment-size">2.4 MB</span>
+                                    <span class="attachment-date">Uploaded 3 days ago</span>
                                 </div>
                             </div>
+                            <a href="#" class="attachment-download">
+                                <i class="fas fa-download"></i>
+                            </a>
                         </div>
-                        <div class="client-body">
-                            <div class="client-stats">
-                                <div class="client-stat-item">
-                                    <div class="stat-value">{{ project.client.projects.count }}</div>
-                                    <div class="stat-label">Projects Posted</div>
+                        <div class="attachment-item">
+                            <div class="attachment-icon">
+                                <i class="fas fa-file-image"></i>
+                            </div>
+                            <div class="attachment-content">
+                                <h4 class="attachment-title">Brand Guidelines.zip</h4>
+                                <div class="attachment-meta">
+                                    <span class="attachment-size">5.1 MB</span>
+                                    <span class="attachment-date">Uploaded 1 week ago</span>
                                 </div>
-                                <div class="client-stat-item">
-                                    <div class="stat-value">
-                                        {% if project.client.user.review_received.all|length > 0 %}
-                                            {{ project.client.user.review_received.all|length }}
-                                        {% else %}
-                                            0
-                                        {% endif %}
+                            </div>
+                            <a href="#" class="attachment-download">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                        <div class="attachment-item">
+                            <div class="attachment-icon">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <div class="attachment-content">
+                                <h4 class="attachment-title">Product Inventory.xlsx</h4>
+                                <div class="attachment-meta">
+                                    <span class="attachment-size">1.2 MB</span>
+                                    <span class="attachment-date">Uploaded 5 days ago</span>
+                                </div>
+                            </div>
+                            <a href="#" class="attachment-download">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-comments"></i> Client Reviews (12)
+                    </h3>
+                    <div class="reviews-list">
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">
+                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe">
                                     </div>
-                                    <div class="stat-label">Reviews</div>
+                                    <div class="reviewer-meta">
+                                        <div class="reviewer-name">John Doe</div>
+                                        <div class="reviewer-project">Mobile App Development</div>
+                                    </div>
                                 </div>
-                                <div class="client-stat-item">
-                                    <div class="stat-value">100%</div>
-                                    <div class="stat-label">Payment Rate</div>
+                                <div class="review-rating">
+                                    <div class="review-stars">★★★★★</div>
+                                    <div class="review-date">2 months ago</div>
                                 </div>
-                                <div class="client-stat-item">
-                                    <div class="stat-value">{{ project.client.projects.filter.count }}</div>
-                                    <div class="stat-label">Completed</div>
+                            </div>
+                            <div class="review-comment">
+                                <p>Sarah was a great client to work with. She provided clear requirements and was responsive throughout the project. Payments were made on time and she provided valuable feedback that improved the final product.</p>
+                            </div>
+                        </div>
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">
+                                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Emily Chen">
+                                    </div>
+                                    <div class="reviewer-meta">
+                                        <div class="reviewer-name">Emily Chen</div>
+                                        <div class="reviewer-project">Website Redesign</div>
+                                    </div>
                                 </div>
+                                <div class="review-rating">
+                                    <div class="review-stars">★★★★☆</div>
+                                    <div class="review-date">5 months ago</div>
+                                </div>
+                            </div>
+                            <div class="review-comment">
+                                <p>Sarah has a good eye for design and knows what she wants. The project scope changed a couple times but she was fair about adjusting the budget accordingly. Would work with her again.</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="project-action-card">
-                        <div class="action-card-header">
-                            <h3 class="action-card-title">
-                                <i class="fas fa-paper-plane"></i> Interested in this project?
-                            </h3>
-                            <p class="action-card-subtitle">Submit your proposal now and start working!</p>
+                    <div class="review-pagination">
+                        <div class="pagination-item">
+                            <i class="fas fa-chevron-left"></i>
                         </div>
-                        <div class="action-card-body">
-                            <div class="action-card-info">
-                                <div class="info-item">
-                                    <div class="info-icon">
-                                        <i class="fas fa-check-circle"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        Create a detailed proposal outlining your skills and approach
-                                    </div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-icon">
-                                        <i class="fas fa-check-circle"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        Set your pricing and timeline for completing the work
-                                    </div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-icon">
-                                        <i class="fas fa-check-circle"></i>
-                                    </div>
-                                    <div class="info-text">
-                                        Get hired and start working on the project
-                                    </div>
+                        <div class="pagination-item active">1</div>
+                        <div class="pagination-item">2</div>
+                        <div class="pagination-item">3</div>
+                        <div class="pagination-item">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overview-sidebar">
+                
+                <div class="sidebar-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-line"></i> Project Stats
+                    </h3>
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Proposals Received</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Shortlisted Freelancers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Weeks Duration</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">रु 7,500</div>
+                            <div class="stat-label">Avg. Bid</div>
+                        </div>
+                    </div>
+                </div>                
+
+                <div class="sidebar-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-info-circle"></i> Project Details
+                    </h3>
+                    <div class="project-info-list">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Posted</div>
+                                <div class="info-value">3 days ago</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Duration</div>
+                                <div class="info-value">12 weeks</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Experience Level</div>
+                                <div class="info-value">Expert</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Budget</div>
+                                <div class="info-value">$5,000 - $7,500</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Project Type</div>
+                                <div class="info-value">Fixed Price</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Location</div>
+                                <div class="info-value">Remote</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-tie"></i> About the Client
+                    </h3>
+                    <div class="client-info-card">
+                        <div class="client-header">
+                            <div class="client-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
+                            </div>
+                            <div class="client-details">
+                                <h4 class="client-name">Sarah Johnson</h4>
+                                <div class="client-location">
+                                    <i class="fas fa-map-marker-alt"></i> New York, USA
                                 </div>
                             </div>
-                            <a href="{% url 'proposals:submit-proposal' project.id %}" class="action-button primary-action">
-                                <i class="fas fa-paper-plane"></i> Submit a Proposal
-                            </a>
-                            <a href="{% url 'home:projects' %}" class="action-button alternative-action">
-                                <i class="fas fa-arrow-left"></i> Browse More Projects
-                            </a>
+                        </div>
+                        <div class="client-stats">
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="stat-details">
+                                    <div class="stat-value">12</div>
+                                    <div class="stat-label">Projects Posted</div>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-details">
+                                    <div class="stat-value">8</div>
+                                    <div class="stat-label">Projects Completed</div>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="stat-details">
+                                    <div class="stat-value">4.8</div>
+                                    <div class="stat-label">Average Rating</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-description">
+                            <p>Fashion entrepreneur with 10+ years in the industry. Founder of a boutique fashion brand looking to expand online presence.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-card share-project-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-share-alt"></i> Share Project
+                    </h3>
+                    <p class="share-text">Share this project with your network to help find the right talent or collaborators.</p>
+                    <div class="share-options">
+                        <div class="share-option facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="share-option twitter">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <div class="share-option linkedin">
+                            <i class="fab fa-linkedin-in"></i>
+                        </div>
+                        <div class="share-option whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="share-option email">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+                    <div class="share-link-container">
+                        <input type="text" class="share-link-input" value="https://hireme.com/projects/e-commerce-platform-development" readonly>
+                        <button class="copy-btn">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add this section after the overview-section -->
+<div class="similar-projects-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Similar Projects</h2>
+            <a href="#" class="view-all-link">
+                View All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        <div class="projects-grid">
+            <!-- Project Card 1 -->
+            <div class="project-card">
+                <span class="project-status-tag published">
+                    <i class="fas fa-circle"></i> Open
+                </span>
+                <div class="project-header">
+                    <div class="project-bg">
+                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="project-category">
+                        <i class="fas fa-code"></i> Web Development
+                    </div>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">
+                        <a href="#">Mobile E-commerce App Development</a>
+                    </h3>
+                    <div class="project-client">
+                        <div class="client-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="David Wilson">
+                        </div>
+                        <div class="client-info">
+                            <span class="client-name">David Wilson</span>
+                            <span class="client-location">
+                                <i class="fas fa-map-marker-alt"></i> Chicago, USA
+                            </span>
+                        </div>
+                    </div>
+                    <div class="project-excerpt">
+                        <p>Looking for an experienced developer to create a mobile e-commerce application for our electronics store. The app should include product browsing, user accounts, shopping cart, and secure checkout.</p>
+                    </div>
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>10 weeks</span>
+                        </div>
+                        <div class="meta-item project-price">
+                            <span class="currency-symbol">रु</span>
+                            <span>4,500 - 6,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Card 2 -->
+            <div class="project-card">
+                <span class="project-status-tag hiring">
+                    <i class="fas fa-circle"></i> Hiring
+                </span>
+                <div class="project-header">
+                    <div class="project-bg">
+                        <i class="fas fa-store"></i>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="project-category">
+                        <i class="fas fa-code"></i> Full Stack
+                    </div>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">
+                        <a href="#">Multi-vendor Marketplace Development</a>
+                    </h3>
+                    <div class="project-client">
+                        <div class="client-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Michelle Park">
+                        </div>
+                        <div class="client-info">
+                            <span class="client-name">Michelle Park</span>
+                            <span class="client-location">
+                                <i class="fas fa-map-marker-alt"></i> Toronto, Canada
+                            </span>
+                        </div>
+                    </div>
+                    <div class="project-excerpt">
+                        <p>We need a skilled developer to build a multi-vendor marketplace platform with vendor accounts, product listings, order management, and commission tracking features.</p>
+                    </div>
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>16 weeks</span>
+                        </div>
+                        <div class="meta-item project-price">
+                            <span class="currency-symbol">रु</span>
+                            <span>8,000 - 10,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Card 3 -->
+            <div class="project-card">
+                <span class="project-status-tag in_progress">
+                    <i class="fas fa-circle"></i> In Progress
+                </span>
+                <div class="project-header">
+                    <div class="project-bg">
+                        <i class="fas fa-shopping-bag"></i>
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="project-category">
+                        <i class="fas fa-code"></i> E-commerce
+                    </div>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">
+                        <a href="#">Payment Gateway Integration for Online Store</a>
+                    </h3>
+                    <div class="project-client">
+                        <div class="client-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/78.jpg" alt="Robert Chen">
+                        </div>
+                        <div class="client-info">
+                            <span class="client-name">Robert Chen</span>
+                            <span class="client-location">
+                                <i class="fas fa-map-marker-alt"></i> Singapore
+                            </span>
+                        </div>
+                    </div>
+                    <div class="project-excerpt">
+                        <p>Seeking a developer to integrate multiple payment gateways into our existing Shopify store, including Stripe, PayPal, and local payment methods with comprehensive reporting.</p>
+                    </div>
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>4 weeks</span>
+                        </div>
+                        <div class="meta-item project-price">
+                            <span class="currency-symbol">रु</span>
+                            <span>2,500 - 3,500</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Card 4 -->
+            <div class="project-card">
+                <span class="project-status-tag published">
+                    <i class="fas fa-circle"></i> Open
+                </span>
+                <div class="project-header">
+                    <div class="project-bg">
+                        <i class="fas fa-tshirt"></i>
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="project-category">
+                        <i class="fas fa-code"></i> Web Development
+                    </div>
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">
+                        <a href="#">Fashion E-commerce Website with AR Try-On</a>
+                    </h3>
+                    <div class="project-client">
+                        <div class="client-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/52.jpg" alt="Lisa Wong">
+                        </div>
+                        <div class="client-info">
+                            <span class="client-name">Lisa Wong</span>
+                            <span class="client-location">
+                                <i class="fas fa-map-marker-alt"></i> Hong Kong
+                            </span>
+                        </div>
+                    </div>
+                    <div class="project-excerpt">
+                        <p>Looking for an expert developer to build a fashion e-commerce website with innovative AR try-on features, allowing customers to virtually try clothes before purchasing.</p>
+                    </div>
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>14 weeks</span>
+                        </div>
+                        <div class="meta-item project-price">
+                            <span class="currency-symbol">रु</span>
+                            <span>7,000 - 9,000</span>
                         </div>
                     </div>
                 </div>

@@ -11,6 +11,27 @@ class Skill(models.Model):
 
     class Meta:
         db_table = "skill"
+        
+class ProjectSkill(models.Model):
+    class SkillLevel(models.TextChoices):
+        INTERMEDIATE = 'intermediate', 'Intermediate'
+        ADVANCED = 'advanced', 'Advanced'
+        EXPERT = 'expert', 'Expert'
+
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='project_skills')
+    skill = models.ForeignKey('Skill', on_delete=models.CASCADE, related_name='project_skills')
+    level = models.CharField(
+        max_length=20,
+        choices=SkillLevel.choices,
+        default=SkillLevel.INTERMEDIATE
+    )
+
+    class Meta:
+        unique_together = ('project', 'skill')
+        db_table = 'project_skill'
+
+    def __str__(self):
+        return f"{self.project.title} - {self.skill.name} ({self.get_level_display()})"
 
 class ProjectCategory(models.Model):
     id = models.AutoField(primary_key=True)
@@ -41,7 +62,19 @@ class Project(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='projects')
     title = models.CharField(max_length=200)
     description = models.TextField()
-    skills_required = models.ManyToManyField(Skill, related_name='projects')
+    key_requirements = models.TextField(
+        blank=True,
+        help_text="List of key requirements, one per line"
+    )
+    additional_info = models.TextField(
+        blank=True,
+        help_text="Any extra information or project guidelines"
+    )
+    skills_required = models.ManyToManyField(
+        Skill,
+        through='ProjectSkill',
+        related_name='projects'
+    )
     category = models.ForeignKey(ProjectCategory, on_delete=models.CASCADE, related_name='projects')
     
     is_fixed_price = models.BooleanField(default=True, verbose_name="Fixed Price Project")

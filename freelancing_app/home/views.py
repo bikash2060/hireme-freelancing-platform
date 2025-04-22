@@ -511,7 +511,6 @@ class FreelancerDetailView(View):
             return redirect(self.home_url)
 
 
-
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
 # View Name: ProjectListView
@@ -703,16 +702,16 @@ class ProjectDetailView(View):
     
     def get(self, request, project_id):
         try:
-            project = Project.objects.get(id=project_id, status=Project.Status.PUBLISHED)
+            # project = Project.objects.get(id=project_id, status=Project.Status.PUBLISHED)
             
-            if request.user.is_authenticated:
-                if request.user.role.lower() == 'client' and project.client.user != request.user:
-                    return redirect(self.home_url)
+            # if request.user.is_authenticated:
+            #     if request.user.role.lower() == 'client' and project.client.user != request.user:
+            #         return redirect(self.home_url)
             
-            context = {
-                'project': project,
-            }
-            return render(request, self.template_name, context)
+            # context = {
+            #     'project': project,
+            # }
+            return render(request, self.template_name)
             
         except Project.DoesNotExist:
             messages.error(request, "Project not found or no longer available")
