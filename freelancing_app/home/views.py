@@ -8,9 +8,10 @@ from django.core.paginator import Paginator
 from clientprofile.models import Client
 from django.contrib.auth import logout
 from django.contrib import messages
+from home.utils import ContactEmailService
 from django.views import View
 import random
-
+from freelancing_app import settings
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
 # View Name: HomeView
@@ -510,7 +511,6 @@ class FreelancerDetailView(View):
             messages.error(request, "Something went wrong. Please try again.")
             return redirect(self.home_url)
 
-
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
 # View Name: ProjectListView
@@ -732,3 +732,140 @@ class ProjectDetailView(View):
 def handling_404(request, exception):
     error_page_template = '404.html'
     return render(request, error_page_template, {})
+
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: AboutUsView
+# Description: Renders the About Us page
+# Tested On:
+# Status:
+# Code Refractor Status: Not Started
+# ------------------------------------------------------
+class AboutUsView(View):
+    """
+    - Displays the About Us page with company information
+    - Shows key statistics and achievements
+    - Accessible to all users (authenticated and unauthenticated)
+    """
+    
+    template_name = 'home/about-us.html'
+    home_url = 'home:home'
+    
+    def get(self, request):
+        """
+        Renders the About Us page with relevant statistics and information
+        """
+        try:
+            context = {
+                'verified_freelancers': self._get_verified_freelancers(),
+                'completed_projects': self._get_completed_projects(),
+                'client_satisfaction': self._get_client_satisfaction(),
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.home_url)
+
+    def _get_verified_freelancers(self):
+        """Returns count of verified freelancers"""
+        try:
+            return Freelancer.objects.filter(
+                user__is_verified=True
+            ).count() or 0
+        except Exception:
+            return 0
+
+    def _get_completed_projects(self):
+        """Returns count of completed projects"""
+        try:
+            return Project.objects.filter(
+                status=Project.Status.COMPLETED
+            ).count() or 0
+        except Exception:
+            return 0
+        
+    def _get_client_satisfaction(self):
+        """Returns client satisfaction rating"""
+        try:
+            # Placeholder for actual calculation
+            return 4.3
+        except Exception:
+            return 0.0
+
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: ContactUsView
+# Description: Renders the Contact Us page and handles contact form submissions
+# Tested On: 2025-04-22
+# Status: Working as expected
+# Code Refactor Status: Completed
+# ------------------------------------------------------
+class ContactUsView(View):
+    """
+    - Displays the Contact Us page with contact form
+    - Handles form submissions
+    - Provides contact information and support details
+    - Accessible to all users
+    """
+    
+    TEMPLATE_NAME = 'home/contact-us.html'
+    CONTACT_US_URL = 'home:contact-us'
+    HOME_URL = 'home:home'
+
+    def get(self, request):
+        """
+        Renders the Contact Us page with contact form
+        """
+        try:
+            context = {
+                'contact_info': self._get_contact_info(),
+            }
+            return render(request, self.TEMPLATE_NAME, context)
+        except Exception as e:
+            print(e)
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.HOME_URL)
+
+    def post(self, request):
+        """
+        Handles contact form submissions
+        """
+        try:
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            phone = request.POST.get('phone', 'Not provided')
+            subject_type = request.POST.get('subject')
+            message = request.POST.get('message')
+            
+            ContactEmailService.send_user_confirmation_email(
+                name=name,
+                email_address=email,
+                subject_type=subject_type,
+                message=message
+            )
+            
+            ContactEmailService.send_admin_notification_email(
+                name=name,
+                email_address=email,
+                phone=phone,
+                subject_type=subject_type,
+                message=message
+            )
+            
+            messages.success(request, 'Thank you for contacting us. We will get back to you soon.')
+            return redirect(self.CONTACT_US_URL)
+        except Exception as e:
+            print(f"Contact form submission error: {e}")
+            messages.error(request, 'Something went wrong. Please try again.')
+            return redirect(self.CONTACT_US_URL)
+
+    def _get_contact_info(self):
+        """Returns contact information"""
+        return {
+            'company_name': settings.COMPANY_NAME,
+            'location': settings.LOCATION,
+            'contact_email': settings.CONTACT_EMAIL,
+            'support_email': settings.SUPPORT_EMAIL,
+            'contact_phone': settings.CONTACT_PHONE,
+            'contact_phone_2': settings.CONTACT_PHONE_2,
+        }

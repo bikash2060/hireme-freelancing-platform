@@ -60,8 +60,8 @@
                 <a href="{% url 'home:home' %}" class="nav-link">Home</a>
                 <a href="{% url 'home:freelancers' %}" class="nav-link">Find Freelancers</a>
                 <a href="{% url 'home:projects' %}" class="nav-link">Find Projects</a>
-                <a href="#" class="nav-link">Help</a>
-                <a href="#" class="nav-link">About Us</a>
+                <a href="{% url 'home:about-us' %}" class="nav-link">About Us</a>
+                <a href="{% url 'home:contact-us' %}" class="nav-link">Contact Us</a>
             {% else %}
                 <a href="{% url 'home:home' %}" class="nav-link">Home</a>                
                 <a href="#" class="nav-link">Help</a>
@@ -377,8 +377,9 @@
                 <a href="https://www.linkedin.com/in/bikashbhattarai/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </div>
+        
+        {% if not user.is_authenticated %}
         <div class="link-boxes">
-
             <ul class="box">
                 <li class="link_name">Company</li>
                 <li><a href="#">About HireMe</a></li>
@@ -418,9 +419,55 @@
                 <li><a href="#">Privacy Policy</a></li>
                 <li><a href="#">Categories</a></li>
             </ul>
-            
         </div>
+        
+        {% else %}
+        <!-- Footer for logged in users - role based -->
+        <div class="link-boxes">
+            <ul class="box">
+                <li class="link_name">Company</li>
+                <li><a href="#">About HireMe</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+            
+            {% if user.role == 'freelancer' or user.role == 'FREELANCER' %}
+            <ul class="box">
+                <li class="link_name">Freelancer</li>
+                <li><a href="#">My Projects</a></li>
+                <li><a href="#">Find Work</a></li>
+                <li><a href="#">My Proposals</a></li>
+                <li><a href="#">Freelancer Dashboard</a></li>
+            </ul>
+            {% endif %}
+            
+            {% if user.role == 'client' or user.role == 'CLIENT' %}
+            <ul class="box">
+                <li class="link_name">Client</li>
+                <li><a href="#">My Jobs</a></li>
+                <li><a href="#">Post a Job</a></li>
+                <li><a href="#">Find Freelancers</a></li>
+                <li><a href="#">Client Dashboard</a></li>
+            </ul>
+            {% endif %}
+            
+            <ul class="box">
+                <li class="link_name">Account</li>
+                <li><a href="{% url 'account:profile' %}">My Profile</a></li>
+                <li><a href="{% url 'account:settings' %}">Settings</a></li>
+                <li><a href="{% url 'account:logout' %}">Logout</a></li>
+            </ul>
+
+            <ul class="box">
+                <li class="link_name">Support</li>
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Contact Support</a></li>
+            </ul>
+        </div>
+        {% endif %}
     </div>
+    
     <div class="bottom-details">
         <div class="bottom_text">
             <span class="copyright_text">Copyright © {{ current_year }} <a href="{% url 'home:home' %}">HireMe.</a> All rights reserved</span>
@@ -430,7 +477,6 @@
             </span>
         </div>
     </div>
-    
 </footer>  
 {% endblock %}
 

@@ -1,0 +1,212 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We've Received Your Message</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+        }
+        
+        .email-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #4f3dff 0%, #7655ff 100%);
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .email-header img {
+            max-width: 180px;
+            margin-bottom: 10px;
+        }
+        
+        .email-header h1 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .email-body {
+            padding: 30px;
+            color: #4e5562;
+        }
+        
+        .greeting {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .message-summary {
+            background: #f8f9fa;
+            border-left: 4px solid #4f3dff;
+            padding: 15px;
+            margin: 25px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .message-summary p {
+            margin: 5px 0;
+        }
+        
+        .message-summary strong {
+            color: #333;
+        }
+        
+        .next-steps {
+            margin: 25px 0;
+        }
+        
+        .contact-box {
+            background: #f0f5ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        
+        .contact-box h3 {
+            margin-top: 0;
+            color: #4f3dff;
+            font-size: 16px;
+        }
+        
+        .contact-item {
+            margin: 8px 0;
+        }
+        
+        .contact-item i {
+            color: #4f3dff;
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+        }
+        
+        .email-footer {
+            background: #f7f9fc;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #7f8593;
+        }
+        
+        .social-links {
+            margin: 15px 0;
+        }
+        
+        .social-icon {
+            display: inline-block;
+            margin: 0 5px;
+            width: 32px;
+            height: 32px;
+            background: #4f3dff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+        }
+        
+        .social-icon img {
+            width: 16px;
+            vertical-align: middle;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #4f3dff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            margin: 15px 0;
+            transition: background 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: #3c2ecc;
+        }
+        
+        @media screen and (max-width: 600px) {
+            .email-container {
+                width: 100%;
+                border-radius: 0;
+            }
+            
+            .email-header, .email-body, .email-footer {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>We've Received Your Message</h1>
+        </div>
+        
+        <div class="email-body">
+            <div class="greeting">
+                Hello {{ name }},
+            </div>
+            
+            <p>Thank you for reaching out to us! This email confirms that we've received your message and our team will get back to you shortly.</p>
+            
+            <div class="message-summary">
+                <p><strong>Inquiry Type:</strong> {{ subject_type }}</p>
+                <p><strong>Your Message:</strong> {{ message }}</p>
+            </div>
+            
+            <div class="next-steps">
+                <p>What happens next?</p>
+                <ul>
+                    <li>One of our specialists will review your message</li>
+                    <li>We'll respond to your inquiry within 24-48 business hours</li>
+                    <li>If additional information is needed, we'll let you know</li>
+                </ul>
+            </div>
+
+            <div class="contact-box">
+                <h3>Need Immediate Support?</h3>
+                <div class="contact-item">
+                    <i>📧</i> Email: {{ company_email }}
+                </div>
+                <div class="contact-item">
+                    <i>📞</i> Phone: {{ company_phone }}
+                </div>
+                <div class="contact-item">
+                    <i>⏰</i> Working Hours: Monday - Friday, 9:00 AM - 6:00 PM
+                </div>
+            </div>
+            
+            <p>Thank you for choosing HireMe!</p>
+            
+            <p>Best Regards,<br>
+            <strong>HireMe Support Team</strong></p>
+            
+        </div>
+        
+        <div class="email-footer">            
+            <p>© 2025 HireMe. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

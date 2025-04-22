@@ -10,5 +10,7 @@ urlpatterns = [
     path('projects/', ProjectListView.as_view(), name='projects'),
     path('user-specific-project-list/', UserSpecificProjectListView.as_view(), name='user-specific-project-list'),
     path('project/<int:project_id>/detail/', ProjectDetailView.as_view(), name='project-detail'),
-    path('profile/', GetUserProfileView.as_view(), name='user-profile'), 
+    path('profile/', GetUserProfileView.as_view(), name='user-profile'),
+    path('about-us/', AboutUsView.as_view(), name='about-us'),
+    path('contact-us/', ContactUsView.as_view(), name='contact-us'),
 ]

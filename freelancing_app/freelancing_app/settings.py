@@ -205,6 +205,16 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'bishalbhattarai472@gmail.com'
 EMAIL_HOST_PASSWORD = 'auqv lisg jxjh sjis'
 
+# Contact details
+COMPANY_NAME = 'HireMe Nepal Pvt. Ltd.'
+LOCATION = 'Baneshwor, Kathmandu, Nepal'
+CONTACT_EMAIL = 'bishalbhattarai472@gmail.com'
+SUPPORT_EMAIL = 'support@hiremeapp.com'
+CONTACT_PHONE = '+977 9860000000'
+CONTACT_PHONE_2 = '+977 9860000001'
+ADMIN_EMAIL = 'bishalbhattarai472@gmail.com'
+
+
 # Reserved usernames that users can't register with
 RESERVED_USERNAMES = {
     "admin", "administrator", "root", "superuser", "sysadmin", 
@@ -213,65 +223,3 @@ RESERVED_USERNAMES = {
     "staff", "team", "developer", "dev", "test",
     "system", "operator", "security", "bot", "official"
 }
-
-PROJECT_CATEGORIES = [
-    "Web Development",
-    "Mobile App Development",
-    "Software Development",
-    "Data Science & AI",
-    "Game Development",
-    "Blockchain & Cryptocurrency",
-    "E-Commerce Development",
-    "Chatbot Development",
-    "Desktop Applications",
-    "Product Management",
-    "UX/UI Design",
-    "Graphic Design",
-    "Logo & Brand Identity",
-    "Illustration",
-    "3D Modeling & CAD",
-    "Video Editing",
-    "Animation",
-    "Photography",
-    "Virtual Reality",
-    "Augmented Reality",
-    "Digital Marketing",
-    "SEO",
-    "Social Media Marketing",
-    "Content Marketing",
-    "Email Marketing",
-    "Copywriting",
-    "Technical Writing",
-    "Content Writing",
-    "Blog & Article Writing",
-    "Proofreading & Editing",
-    "Translation",
-    "Voice Over",
-    "Business Consulting",
-    "Financial Consulting",
-    "Legal Consulting",
-    "Career Counseling",
-    "Life Coaching",
-    "Data Entry",
-    "Excel & Google Sheets",
-    "PowerPoint Presentations",
-    "Virtual Assistant",
-    "Customer Service",
-    "Market Research",
-    "Architecture & Interior Design",
-    "Engineering & CAD",
-    "Electrical Engineering",
-    "Mechanical Engineering",
-    "Civil Engineering",
-    "Accounting & Bookkeeping",
-    "Tax Preparation",
-    "ERP Consulting",
-    "HR Consulting",
-    "Recruiting",
-    "Education & Tutoring",
-    "Music & Audio Production",
-    "Fitness & Nutrition",
-    "Event Planning",
-    "Fashion & Jewelry Design",
-    "Other"
-]
