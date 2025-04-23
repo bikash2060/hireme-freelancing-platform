@@ -4,37 +4,79 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelBtn = document.getElementById('cancel-remove');
     const messageEl = document.getElementById('confirmation-message');
     
-    let deleteUrl = '';
+    let deleteUrl = '#';
+    
+    function showModal() {
+        modal.style.display = 'block';
+        void modal.offsetWidth;
+        modal.classList.add('show');
+        
+        setTimeout(() => {
+            cancelBtn.focus();
+        }, 100);
+    }
+    
+    function hideModal() {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 250); 
+    }
     
     document.querySelectorAll('.delete-action').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             
             const itemType = this.dataset.itemType || 'item';
-            deleteUrl = this.getAttribute('href');
-            console.log('Delete URL:', deleteUrl);
-            messageEl.textContent = `Are you sure you want to delete this ${itemType}?`;
+            deleteUrl = this.getAttribute('href') || '#';
+            messageEl.textContent = `Are you sure you want to delete this ${itemType}? This action cannot be undone.`;
             
-            modal.style.display = 'block';
+            showModal();
         });
     });
     
     confirmBtn.addEventListener('click', function() {
         if (deleteUrl) {
-            window.location.href = deleteUrl;
+            this.innerHTML = '<span class="spinner"></span>Removing...';
+            this.disabled = true;
+            
+            setTimeout(() => {
+                if (deleteUrl === '#') {
+                    hideModal();
+                    setTimeout(() => {
+                        alert('Item successfully removed');
+                        confirmBtn.innerHTML = 'Remove';
+                        confirmBtn.disabled = false;
+                    }, 300);
+                } else {
+                    window.location.href = deleteUrl;
+                }
+            }, 1000);
         }
-        modal.style.display = 'none';
     });
     
     cancelBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
+        hideModal();
         deleteUrl = '';
     });
     
     window.addEventListener('click', function(e) {
         if (e.target === modal) {
-            modal.style.display = 'none';
+            hideModal();
             deleteUrl = '';
+        }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (modal.classList.contains('show')) {
+            if (e.key === 'Escape') {
+                hideModal();
+                deleteUrl = '';
+            } else if (e.key === 'Enter') {
+                if (document.activeElement === confirmBtn) {
+                    confirmBtn.click();
+                }
+            }
         }
     });
 });

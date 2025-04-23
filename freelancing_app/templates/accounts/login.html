@@ -42,7 +42,7 @@
             <label for="email">Email</label>
             <div class="input_container">
               <i class="far fa-envelope input_icon"></i>
-              <input type="email" id="email" name="emailaddress" placeholder="Enter your email" value="{{ form_data.email|default:'' }}">
+              <input type="email" id="email" name="emailaddress" placeholder="Enter your email" value="{{ form_data.email|default:'' }}" required/>
             </div>
           </div>
           
@@ -53,7 +53,7 @@
             </div>
             <div class="input_container password_container">
               <i class="fas fa-lock input_icon"></i>
-              <input type="password" id="password" name="password" placeholder="Enter your password" />
+              <input type="password" id="password" name="password" placeholder="Enter your password" required/>
               <button type="button" class="far fa-eye toggle_icon" id="togglePassword" aria-label="Toggle password visibility"></button>
             </div>
           </div>

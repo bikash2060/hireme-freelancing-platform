@@ -29,14 +29,14 @@ import os
 # ------------------------------------------------------
 class BaseAuthView(View):
     """Base view for authentication-related views with common properties"""
-    login_url = 'account:login'
-    home_url = 'home:home'
-    signup_url = 'account:signup'
+    LOGIN_URL = 'account:login'
+    HOME_URL = 'home:home'
+    SIGNUP_URL = 'account:signup'
     
     def dispatch(self, request, *args, **kwargs):
         """Check if user is already authenticated"""
         if request.user.is_authenticated:
-            return redirect(self.home_url)
+            return redirect(self.HOME_URL)
         return super().dispatch(request, *args, **kwargs)
     
 # ------------------------------------------------------

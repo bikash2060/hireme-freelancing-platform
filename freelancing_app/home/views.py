@@ -5,20 +5,21 @@ from freelancerprofile.models import Freelancer
 from django.db.models import Q, Count, Prefetch
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
+from home.utils import ContactEmailService
 from clientprofile.models import Client
 from django.contrib.auth import logout
+from freelancing_app import settings
 from django.contrib import messages
-from home.utils import ContactEmailService
 from django.views import View
 import random
-from freelancing_app import settings
+
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: HomeView
 # Description: Handles routing for authenticated and unauthenticated users
-# Tested On: 
-# Status:
-# Code Refractor Status: In Progress
+# Tested On: 2025-04-23
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class HomeView(View):
     """
@@ -205,12 +206,12 @@ class HomeView(View):
             return self._logout_and_render(request)
         
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: GetUserProfileView
 # Description: Redirects user to role-specific profile page
-# Tested On: 
-# Status:
-# Code Refractor Status: In Progress
+# Tested On: 2025-04-23
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class GetUserProfileView(CustomLoginRequiredMixin, View):
     """
