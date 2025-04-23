@@ -16,27 +16,27 @@
     <div class="container">
         <div class="hero-section-container">
             <div class="left-section">
-                <div class="tagline">Nepal's Premier Freelance Network</div>
-                <h1 class="title">Nepal's Brightest Minds, One Click Away</h1>
-                <p class="subtitle">Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee.</p>
+                <div class="tagline">{% trans "Nepal's Premier Freelance Network" %}</div>
+                <h1 class="title">{% trans "Nepal's Brightest Minds, One Click Away" %}</h1>
+                <p class="subtitle">{% trans "Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee." %}</p>
                 
                 <div class="benefits">
 
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-user-check"></i></div>
-                        <span>Verified Experts</span>
+                        <span>{% trans "Verified Experts" %}</span>
                     </div>
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-shield-alt"></i></div>
-                        <span>Secure Payments</span>
+                        <span>{% trans "Secure Payments" %}</span>
                     </div>
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-clock"></i></div>
-                        <span>Fast Delivery</span>
+                        <span>{% trans "Fast Delivery" %}</span>
                     </div>
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-headset"></i></div>
-                        <span>24/7 Support</span>
+                        <span>{% trans "24/7 Support" %}</span>
                     </div>
 
                 </div>
@@ -44,20 +44,20 @@
                 <div class="social-proof">
                     <div class="stat">
                         <div class="stat-number" data-count="{{ verified_freelancers|default:0 }}">{{ verified_freelancers|default:0 }}</div>
-                        <div class="stat-label">Verified Freelancers</div>
+                        <div class="stat-label">{% trans "Verified Freelancers" %}</div>
                     </div>
                 
                     <div class="stat-divider"></div>
                     <div class="stat">
                         <div class="stat-number" data-count="{{ completed_projects|default:0 }}">{{ completed_projects|default:0 }}</div>
-                        <div class="stat-label">Completed Projects</div>
+                        <div class="stat-label">{% trans "Completed Projects" %}</div>
                     </div>
                 
                     <div class="stat-divider"></div>
                 
                     <div class="stat">
                         <div class="stat-number" data-count="{{ client_satisfaction|default:0.0|floatformat:1 }}">{{ client_satisfaction|default:0.0|floatformat:1 }}</div>
-                        <div class="stat-label">Client Satisfaction</div>
+                        <div class="stat-label">{% trans "Client Satisfaction" %}</div>
                     </div>
                 </div>
                 
@@ -65,10 +65,10 @@
 
                     <div class="cta-buttons">
                         <a href="{% url 'account:login' %}" class="hire-button">
-                            <span>Get Started</span>
+                            <span>{% trans "Get Started" %}</span>
                         </a>
                         <a href="#how-it-works" class="learn-more">
-                            See How It Works
+                            {% trans "See How It Works" %}
                             <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
                         </a>
                     </div>
@@ -92,8 +92,8 @@
 <div class="how-it-works" id="how-it-works">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">How HireMe Works</h2>
-            <p class="section-subtitle">Find the perfect freelancer in just 4 simple steps with our seamless hiring process</p>
+            <h2 class="section-title">{% trans "How HireMe Works" %}</h2>
+            <p class="section-subtitle">{% trans "Find the perfect freelancer in just 4 simple steps with our seamless hiring process" %}</p>
         </div>
 
         <div class="steps-container">
@@ -106,12 +106,12 @@
                     <div class="step-icon">
                         <i class="fas fa-edit"></i>
                     </div>
-                    <h3>Post Your Project</h3>
-                    <p>Describe your needs, timeline, and budget in a simple form. It only takes a few minutes to post your project.</p>
+                    <h3>{% trans "Post Your Project" %}</h3>
+                    <p>{% trans "Describe your needs, timeline, and budget in a simple form. It only takes a few minutes to post your project." %}</p>
                     <ul class="step-features">
-                        <li><i class="fas fa-check-circle"></i> Quick & free posting</li>
-                        <li><i class="fas fa-check-circle"></i> Define skills and scope</li>
-                        <li><i class="fas fa-check-circle"></i> Set your budget</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Quick & free posting" %}</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Define skills and scope" %}</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Set your budget" %}</li>
                     </ul>
                 </div>
                 <div class="step-connector">
@@ -128,11 +128,11 @@
                     <div class="step-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3>Receive Proposals</h3>
-                    <p>Skilled freelancers will review your project and submit personalized proposals with their price and timeline.</p>
+                    <h3>{% trans "Receive Proposals" %}</h3>
+                    <p>{% trans "Skilled freelancers will review your project and submit personalized proposals with their price and timeline." %}</p>
                     <ul class="step-features">
-                        <li><i class="fas fa-check-circle"></i> Multiple competitive bids</li>
-                        <li><i class="fas fa-check-circle"></i> Fast response time</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Multiple competitive bids" %}</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Fast response time" %}</li>
                         <li><i class="fas fa-check-circle"></i> View freelancer profiles</li>
                     </ul>
                 </div>
@@ -150,12 +150,12 @@
                     <div class="step-icon">
                         <i class="fas fa-search"></i>
                     </div>
-                    <h3>Compare & Select</h3>
-                    <p>Evaluate proposals, check ratings, reviews, and portfolios to choose the best freelancer for your project.</p>
+                    <h3>{% trans "Compare & Select" %}</h3>
+                    <p>{% trans "Evaluate proposals, check ratings, reviews, and portfolios to choose the best freelancer for your project." %}</p>
                     <ul class="step-features">
-                        <li><i class="fas fa-check-circle"></i> View detailed proposals</li>
-                        <li><i class="fas fa-check-circle"></i> Check freelancer profiles</li>
-                        <li><i class="fas fa-check-circle"></i> Ask questions before hiring</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "View detailed proposals" %}</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Check freelancer profiles" %}</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Ask questions before hiring" %}</li>
                     </ul>
                 </div>
                 <div class="step-connector">
@@ -172,11 +172,11 @@
                     <div class="step-icon">
                         <i class="fas fa-handshake"></i>
                     </div>
-                    <h3>Hire & Collaborate</h3>
-                    <p>Choose your freelancer and start working securely using our built-in messaging, milestones, and payment.</p>
+                    <h3>{% trans "Hire & Collaborate" %}</h3>
+                    <p>{% trans "Choose your freelancer and start working securely using our built-in messaging, milestones, and payment." %}</p>
                     <ul class="step-features">
-                        <li><i class="fas fa-check-circle"></i> Easy project tracking</li>
-                        <li><i class="fas fa-check-circle"></i> Secure payments</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Easy project tracking" %}</li>
+                        <li><i class="fas fa-check-circle"></i> {% trans "Secure payments" %}</li>
                         <li><i class="fas fa-check-circle"></i> Ongoing support & messaging</li>
                     </ul>
                 </div>
@@ -214,15 +214,15 @@
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="guarantee-content">
-                        <h3>100% Satisfaction Guarantee</h3>
-                        <p>Not happy with the results? Our HireMe Protection Program ensures you only pay for work you approve.</p>
+                        <h3>{% trans "100% Satisfaction Guarantee" %}</h3>
+                        <p>{% trans "Not happy with the results? Our HireMe Protection Program ensures you only pay for work you approve." %}</p>
                     </div>
                 </div>
                 <div class="cta-container">
                     <a href="{% url 'account:login' %}" class="cta-button">
                         Get Started Now <i class="fas fa-arrow-right"></i>
                     </a>
-                    <p class="cta-subtext">Join 10,000+ businesses who've found top talent on HireMe</p>
+                    <p class="cta-subtext">{% trans "Join 10,000+ businesses who've found top talent on HireMe" %}</p>
                 </div>
             </div>
         </div>
@@ -234,8 +234,8 @@
 <div class="categories-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Popular Freelance Services</h2>
-            <p class="section-subtitle">Browse top talent across our most in-demand categories</p>
+            <h2 class="section-title">{% trans "Popular Freelance Services" %}</h2>
+            <p class="section-subtitle">{% trans "Browse top talent across our most in-demand categories" %}</p>
         </div>
 
         {% if popular_categories %}
@@ -278,11 +278,11 @@
                             <line x1="12" y1="17" x2="12.01" y2="17"></line>
                         </svg>
                     </div>
-                    <h3 class="empty-title">No Popular Categories Found</h3>
-                    <p class="empty-message">We couldn't find any popular freelance service categories at the moment. Check back later as more freelancers join the platform.</p>
+                    <h3 class="empty-title">{% trans "No Popular Categories Found" %}</h3>
+                    <p class="empty-message">{% trans "We couldn't find any popular freelance service categories at the moment. Check back later as more freelancers join the platform." %}</p>
                     <div class="empty-actions">
                         <a href="" class="btn-primary">
-                            <i class="fas fa-search"></i> Browse All Categories
+                            <i class="fas fa-search"></i> {% trans "Browse All Categories" %}
                         </a>
                     </div>
                 </div>
@@ -295,8 +295,8 @@
 <div class="featured-freelancers-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Featured Freelancers</h2>
-            <p class="section-subtitle">Meet some of our top-rated professionals ready to work on your project</p>
+            <h2 class="section-title">{% trans "Featured Freelancers" %}</h2>
+            <p class="section-subtitle">{% trans "Meet some of our top-rated professionals ready to work on your project" %}</p>
         </div>
 
         {% if featured_freelancers %}
@@ -363,11 +363,11 @@
                             <line x1="12" y1="17" x2="12.01" y2="17"></line>
                         </svg>
                     </div>
-                    <h3 class="empty-title">No Featured Freelancers Found</h3>
-                    <p class="empty-message">We couldn't find any featured freelancers at the moment. Check back later as more freelancers join the platform.</p>
+                    <h3 class="empty-title">{% trans "No Featured Freelancers Found" %}</h3>
+                    <p class="empty-message">{% trans "We couldn't find any featured freelancers at the moment. Check back later as more freelancers join the platform." %}</p>
                     <div class="empty-actions">
                         <a href="" class="btn-primary">
-                            <i class="fas fa-search"></i> Browse All Freelancers
+                            <i class="fas fa-search"></i> {% trans "Browse All Freelancers" %}
                         </a>
                     </div>
                 </div>
@@ -380,8 +380,8 @@
 <div class="testimonials-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Success Stories</h2>
-            <p class="section-subtitle">Hear what clients and freelancers are saying about their experience with HireMe</p>
+            <h2 class="section-title">{% trans "Success Stories" %}</h2>
+            <p class="section-subtitle">{% trans "Hear what clients and freelancers are saying about their experience with HireMe" %}</p>
         </div>
 
         <div class="testimonial-tabs">
@@ -624,12 +624,12 @@
 
         <div class="testimonial-action">
             <div class="action-info">
-                <h3>Ready to start your journey?</h3>
-                <p>Join thousands of clients and freelancers already collaborating on HireMe</p>
+                <h3>{% trans "Ready to start your journey?" %}</h3>
+                <p>{% trans "Join thousands of clients and freelancers already collaborating on HireMe" %}</p>
             </div>
             <div class="action-buttons">
-                <a href="{% url 'account:login' %}" class="hire-button">Hire Talent</a>
-                <a href="{% url 'account:login' %}" class="work-button">Find Work</a>
+                <a href="{% url 'account:login' %}" class="hire-button">{% trans "Hire Talent" %}</a>
+                <a href="{% url 'account:login' %}" class="work-button">{% trans "Find Work" %}</a>
             </div>
         </div>
     </div>
@@ -639,8 +639,8 @@
 <div class="why-choose-us-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Why Choose HireMe</h2>
-            <p class="section-subtitle">Discover the advantages that make us Nepal's leading freelance platform for clients and professionals</p>
+            <h2 class="section-title">{% trans "Why Choose HireMe" %}</h2>
+            <p class="section-subtitle">{% trans "Discover the advantages that make us Nepal's leading freelance platform for clients and professionals" %}</p>
         </div>
 
         <div class="benefits-grid">
@@ -648,9 +648,9 @@
                 <div class="benefit-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                 <h3 class="benefit-title">Vetted Freelancers</h3>
+                 <h3 class="benefit-title">{% trans "Vetted Freelancers" %}</h3>
                 <p class="benefit-description">
-                    Every freelancer goes through a verification process to ensure quality, professionalism, and proven expertise — so you hire with confidence.
+                    {% trans "Every freelancer goes through a verification process to ensure quality, professionalism, and proven expertise — so you hire with confidence." %}
                 </p>
             </div>
 
@@ -658,9 +658,9 @@
                 <div class="benefit-icon">
                     <i class="fas fa-money-bill-wave"></i>
                 </div>
-                <h3 class="benefit-title">Flexible Pricing</h3>
+                <h3 class="benefit-title">{% trans "Flexible Pricing" %}</h3>
                 <p class="benefit-description">
-                    Whether you're bootstrapped or scaling, find talent that fits your budget — with no hidden fees or surprises.
+                    {% trans "Whether you're bootstrapped or scaling, find talent that fits your budget — with no hidden fees or surprises." %}
                 </p>
             </div>
 
@@ -668,9 +668,9 @@
                 <div class="benefit-icon">
                     <i class="fas fa-shield-alt"></i>
                 </div>
-                <h3 class="benefit-title">HireMe Protection</h3>
+                <h3 class="benefit-title">{% trans "HireMe Protection" %}</h3>
                 <p class="benefit-description">
-                    Your payments are safe. Funds are held in escrow and only released when you're 100% satisfied with the delivered work.
+                    {% trans "Your payments are safe. Funds are held in escrow and only released when you're 100% satisfied with the delivered work." %}
                 </p>
             </div>
 
@@ -678,9 +678,9 @@
                 <div class="benefit-icon">
                     <i class="fas fa-comments"></i>
                 </div>
-                <h3 class="benefit-title">Built-in Messaging</h3>
+                <h3 class="benefit-title">{% trans "Built-in Messaging" %}</h3>
                 <p class="benefit-description">
-                    Communicate clearly and stay in sync with freelancers using our real-time messaging and file-sharing tools.
+                    {% trans "Communicate clearly and stay in sync with freelancers using our real-time messaging and file-sharing tools." %}
                 </p>
             </div>
 
@@ -688,9 +688,9 @@
                 <div class="benefit-icon">
                     <i class="fas fa-stopwatch"></i>
                 </div>
-                <h3 class="benefit-title">Quick Turnarounds</h3>
+                <h3 class="benefit-title">{% trans "Quick Turnarounds" %}</h3>
                 <p class="benefit-description">
-                    Receive proposals fast and get work delivered on time — every time. Our freelancers are committed to deadlines.
+                    {% trans "Receive proposals fast and get work delivered on time — every time. Our freelancers are committed to deadlines." %}
                 </p>
             </div>
 
@@ -698,9 +698,9 @@
                 <div class="benefit-icon">
                     <i class="fas fa-globe-asia"></i>
                 </div>
-                <h3 class="benefit-title">Local Insight, Global Standard</h3>
+                <h3 class="benefit-title">{% trans "Local Insight, Global Standard" %}</h3>
                 <p class="benefit-description">
-                    Tap into a pool of Nepali talent that understands your market and delivers work that meets global standards.
+                    {% trans "Tap into a pool of Nepali talent that understands your market and delivers work that meets global standards." %}
                 </p>
             </div>
         </div>
@@ -745,8 +745,8 @@
 <div class="platform-stats-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">HireMe By The Numbers</h2>
-            <p class="section-subtitle">Join Nepal's fastest growing freelance community that's transforming how work gets done</p>
+            <h2 class="section-title">{% trans "HireMe By The Numbers" %}</h2>
+            <p class="section-subtitle">{% trans "Join Nepal's fastest growing freelance community that's transforming how work gets done" %}</p>
         </div>
 
         <div class="stats-grid">
@@ -756,8 +756,8 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" data-count="12500">12,500</div>
-                    <div class="stat-label">Active Freelancers</div>
-                    <div class="stat-description">Skilled professionals across 50+ categories</div>
+                    <div class="stat-label">{% trans "Active Freelancers" %}</div>
+                    <div class="stat-description">{% trans "Skilled professionals across 50+ categories" %}</div>
                 </div>
                 <div class="stat-badge">
                     <i class="fas fa-arrow-up"></i>
@@ -771,12 +771,12 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" data-count="9800">9,800</div>
-                    <div class="stat-label">Completed Projects</div>
-                    <div class="stat-description">With an average rating of 4.8/5 stars</div>
+                    <div class="stat-label">{% trans "Completed Projects" %}</div>
+                    <div class="stat-description">{% trans "With an average rating of 4.8/5 stars" %}</div>
                 </div>
                 <div class="stat-badge success">
                     <i class="fas fa-check"></i>
-                    <span>92% success rate</span>
+                    <span>92% {% trans "success rate" %}</span>
                 </div>
             </div>
 
@@ -786,12 +786,12 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" data-count="3500000">$3.5M</div>
-                    <div class="stat-label">Earned by Freelancers</div>
-                    <div class="stat-description">Helping grow Nepal's digital economy</div>
+                    <div class="stat-label">{% trans "Earned by Freelancers" %}</div>
+                    <div class="stat-description">{% trans "Helping grow Nepal's digital economy" %}</div>
                 </div>
                 <div class="stat-badge">
                     <i class="fas fa-arrow-up"></i>
-                    <span>60% YoY growth</span>
+                    <span>60% {% trans "YoY growth" %}</span>
                 </div>
             </div>
 
@@ -801,12 +801,12 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-number" data-count="48">48</div>
-                    <div class="stat-label">Average Hours Saved</div>
-                    <div class="stat-description">Per project compared to traditional hiring</div>
+                    <div class="stat-label">{% trans "Average Hours Saved" %}</div>
+                    <div class="stat-description">{% trans "Per project compared to traditional hiring" %}</div>
                 </div>
                 <div class="stat-badge">
                     <i class="fas fa-bolt"></i>
-                    <span>Fast results</span>
+                    <span>{% trans "Fast results" %}</span>
                 </div>
             </div>
         </div>
@@ -814,21 +814,21 @@
         <div class="stats-comparison">
             <div class="comparison-chart">
                 <div class="chart-header">
-                    <h3>Why Businesses Choose HireMe</h3>
-                    <p>Key advantages over traditional hiring methods</p>
+                    <h3>{% trans "Why Businesses Choose HireMe" %}</h3>
+                    <p>{% trans "Key advantages over traditional hiring methods" %}</p>
                 </div>
                 <div class="chart-bars">
                     <div class="chart-item">
-                        <div class="chart-label">Cost Efficiency</div>
+                        <div class="chart-label">{% trans "Cost Efficiency" %}</div>
                         <div class="chart-bar-container">
                             <div class="chart-bar hireme" style="width: 85%">
-                                <span>85% savings</span>
+                                <span>85% {% trans "savings" %}</span>
                             </div>
                             <div class="chart-bar traditional" style="width: 15%"></div>
                         </div>
                     </div>
                     <div class="chart-item">
-                        <div class="chart-label">Time to Hire</div>
+                        <div class="chart-label">{% trans "Time to Hire" %}</div>
                         <div class="chart-bar-container">
                             <div class="chart-bar hireme" style="width: 90%">
                                 <span>3 days avg.</span>
@@ -837,14 +837,14 @@
                         </div>
                     </div>
                     <div class="chart-item">
-                        <div class="chart-label">Project Success Rate</div>
+                        <div class="chart-label">{% trans "Project Success Rate" %}</div>
                         <div class="chart-bar-container">
                             <div class="chart-bar hireme" style="width: 92%"></div>
                             <div class="chart-bar traditional" style="width: 8%"></div>
                         </div>
                     </div>
                     <div class="chart-item">
-                        <div class="chart-label">Client Satisfaction</div>
+                        <div class="chart-label">{% trans "Client Satisfaction" %}</div>
                         <div class="chart-bar-container">
                             <div class="chart-bar hireme" style="width: 94%"></div>
                             <div class="chart-bar traditional" style="width: 6%"></div>
@@ -854,11 +854,11 @@
                 <div class="chart-legend">
                     <div class="legend-item">
                         <div class="legend-color hireme"></div>
-                        <span>HireMe Platform</span>
+                        <span>{% trans "HireMe Platform" %}</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-color traditional"></div>
-                        <span>Traditional Hiring</span>
+                        <span>{% trans "Traditional Hiring" %}</span>
                     </div>
                 </div>
             </div>
@@ -867,7 +867,7 @@
                 <div class="testimonial-quote">
                     <i class="fas fa-quote-left"></i>
                 </div>
-                <p>"As a small business owner, HireMe has been transformative. We've saved over $50,000 in staffing costs while completing projects 60% faster than with full-time hires."</p>
+                <p>{% trans "As a small business owner, HireMe has been transformative. We've saved over $50,000 in staffing costs while completing projects 60% faster than with full-time hires." %}</p>
                 <div class="testimonial-author">
                     <div class="author-avatar">
                         {% comment %} <img src="/api/placeholder/60/60" alt="Client"> {% endcomment %}
@@ -877,15 +877,15 @@
                     </div>
                     <div class="author-info">
                         <h4>Sunita Gurung</h4>
-                        <p>Founder, Himalayan Crafts</p>
+                        <p>{% trans "Founder, Himalayan Crafts" %}</p>
                         <div class="author-stats">
                             <div class="stat">
                                 <i class="fas fa-check-circle"></i>
-                                <span>18 projects completed</span>
+                                <span>18 {% trans "projects completed" %}</span>
                             </div>
                             <div class="stat">
                                 <i class="fas fa-star"></i>
-                                <span>4.9 avg. rating</span>
+                                <span>4.9 {% trans "avg. rating" %}</span>
                             </div>
                         </div>
                     </div>
@@ -899,30 +899,30 @@
 <div class="call-to-action-section">
     <div class="container">
         <div class="cta-content">
-            <h2>Ready to Get Started?</h2>
-            <p>Join thousands of professionals already collaborating on HireMe</p>
+            <h2>{% trans "Ready to Get Started?" %}</h2>
+            <p>{% trans "Join thousands of professionals already collaborating on HireMe" %}</p>
             
             <div class="cta-buttons">
                 <a href="{% url 'account:login' %}" class="btn-primary">
-                    Hire Talent <i class="fas fa-arrow-right"></i>
+                    {% trans "Hire Talent" %} <i class="fas fa-arrow-right"></i>
                 </a>
                 <a href="{% url 'account:login' %}" class="btn-secondary">
-                    Find Work <i class="fas fa-arrow-right"></i>
+                    {% trans "Find Work" %} <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
             
             <div class="benefits">
                 <div class="benefit">
                     <i class="fas fa-check-circle"></i>
-                    <span>No upfront costs</span>
+                    <span>{% trans "No upfront costs" %}</span>
                 </div>
                 <div class="benefit">
                     <i class="fas fa-check-circle"></i>
-                    <span>Risk-free hiring</span>
+                    <span>{% trans "Risk-free hiring" %}</span>
                 </div>
                 <div class="benefit">
                     <i class="fas fa-check-circle"></i>
-                    <span>24/7 support</span>
+                    <span>{% trans "24/7 support" %}</span>
                 </div>
             </div>
         </div>
@@ -933,72 +933,72 @@
 <div class="faq-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="section-subtitle">Everything you need to know before getting started with HireMe</p>
+            <h2 class="section-title">{% trans "Frequently Asked Questions" %}</h2>
+            <p class="section-subtitle">{% trans "Everything you need to know before getting started with HireMe" %}</p>
         </div>
         <div class="faq-list">
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFaq(this)">
-                    <h3>What is HireMe and how does it work?</h3>
+                    <h3>{% trans "What is HireMe and how does it work?" %}</h3>
                     <div class="faq-icon">
                         <span class="plus">+</span>
                         <span class="minus">×</span>
                     </div>
                 </div>
                 <div class="faq-answer">
-                    <p>HireMe is Nepal's premier freelancing platform that connects clients with verified Nepali freelancers for various projects. Clients can post jobs and receive proposals, while freelancers can browse projects and submit bids.</p>
+                    <p>{% trans "HireMe is Nepal's premier freelancing platform that connects clients with verified Nepali freelancers for various projects. Clients can post jobs and receive proposals, while freelancers can browse projects and submit bids." %}</p>
                 </div>
             </div>
           
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFaq(this)">
-                    <h3>Is HireMe free to use?</h3>
+                    <h3>{% trans "Is HireMe free to use?" %}</h3>
                     <div class="faq-icon">
                         <span class="plus">+</span>
                         <span class="minus">×</span>
                     </div>
                 </div>
                 <div class="faq-answer">
-                    <p>Yes! Clients can post projects for free, and freelancers can sign up and apply to jobs without any upfront cost. We also offer premium features for enhanced visibility and support.</p>
+                    <p>{% trans "Yes! Clients can post projects for free, and freelancers can sign up and apply to jobs without any upfront cost. We also offer premium features for enhanced visibility and support." %}</p>
                 </div>
             </div>
           
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFaq(this)">
-                    <h3>How do I post a project?</h3>
+                    <h3>{% trans "How do I post a project?" %}</h3>
                     <div class="faq-icon">
                         <span class="plus">+</span>
                         <span class="minus">×</span>
                     </div>
                 </div>
                 <div class="faq-answer">
-                    <p>To post a project, simply log in to your client account, go to the "Post Project" page, fill out the required details like description, budget, and timeline, and publish it. Freelancers will start submitting proposals shortly.</p>
+                    <p>{% trans "To post a project, simply log in to your client account, go to the Post Project page, fill out the required details like description, budget, and timeline, and publish it. Freelancers will start submitting proposals shortly." %}</p>
                 </div>
             </div>
           
             <div class="faq-item">
                 <div class="faq-question" onclick="toggleFaq(this)">
-                    <h3>How do freelancers get paid?</h3>
+                    <h3>{% trans "How do freelancers get paid?" %}</h3>
                     <div class="faq-icon">
                         <span class="plus">+</span>
                         <span class="minus">×</span>
                     </div>
                 </div>
                 <div class="faq-answer">
-                    <p>Freelancers are paid through HireMe's secure escrow system. Clients deposit funds, which are released once the work is completed and approved.</p>
+                    <p>{% trans "Freelancers are paid through HireMe's secure escrow system. Clients deposit funds, which are released once the work is completed and approved." %}</p>
                 </div>
             </div>
           
             <div class="faq-item">
               <div class="faq-question" onclick="toggleFaq(this)">
-                <h3>What if I'm not satisfied with the work?</h3>
+                <h3>{% trans "What if I'm not satisfied with the work?" %}</h3>
                 <div class="faq-icon">
                   <span class="plus">+</span>
                   <span class="minus">×</span>
                 </div>
               </div>
               <div class="faq-answer">
-                <p>If you're not satisfied, you can request revisions, pause the project, or initiate dispute resolution. We ensure that your payments are only released for approved work.</p>
+                <p>{% trans "If you're not satisfied, you can request revisions, pause the project, or initiate dispute resolution. We ensure that your payments are only released for approved work." %}</p>
               </div>
             </div>
           
@@ -1006,66 +1006,66 @@
 
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <h3>Can I work with international clients or freelancers?</h3>
+                        <h3>{% trans "Can I work with international clients or freelancers?" %}</h3>
                         <div class="faq-icon">
                             <span class="plus">+</span>
                             <span class="minus">×</span>
                         </div>
                     </div>
                     <div class="faq-answer">
-                        <p>Yes. While we focus on the Nepali freelance market, we support both local and international collaborations, especially for remote projects.</p>
+                        <p>{% trans "Yes. While we focus on the Nepali freelance market, we support both local and international collaborations, especially for remote projects." %}</p>
                     </div>
                 </div>
           
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <h3>Are freelancers on HireMe verified?</h3>
+                        <h3>{% trans "Are freelancers on HireMe verified?" %}</h3>
                         <div class="faq-icon">
                             <span class="plus">+</span>
                             <span class="minus">×</span>
                         </div>
                     </div>
                     <div class="faq-answer">
-                        <p>Yes, all freelancers undergo a verification process based on skills, experience, and identity before getting access to apply for projects.</p>
+                        <p>{% trans "Yes, all freelancers undergo a verification process based on skills, experience, and identity before getting access to apply for projects." %}</p>
                     </div>
                 </div>
           
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <h3>How do I communicate with freelancers/clients?</h3>
+                        <h3>{% trans "How do I communicate with freelancers/clients?" %}</h3>
                         <div class="faq-icon">
                             <span class="plus">+</span>
                             <span class="minus">×</span>
                         </div>
                     </div>
                     <div class="faq-answer">
-                        <p>You can use our in-platform real-time messaging system to chat, share files, and discuss project milestones securely.</p>
+                        <p>{% trans "You can use our in-platform real-time messaging system to chat, share files, and discuss project milestones securely." %}</p>
                     </div>
                 </div>
           
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <h3>Is my personal and payment information secure?</h3>
+                        <h3>{% trans "Is my personal and payment information secure?" %}</h3>
                         <div class="faq-icon">
                             <span class="plus">+</span>
                             <span class="minus">×</span>
                         </div>
                     </div>
                     <div class="faq-answer">
-                        <p>Absolutely. We use advanced encryption and secure protocols to protect all user data, including payment and personal details.</p>
+                        <p>{% trans "Absolutely. We use advanced encryption and secure protocols to protect all user data, including payment and personal details." %}</p>
                     </div>
                 </div>
           
                 <div class="faq-item">
                     <div class="faq-question" onclick="toggleFaq(this)">
-                        <h3>Can I cancel a project after hiring a freelancer?</h3>
+                        <h3>{% trans "Can I cancel a project after hiring a freelancer?" %}</h3>
                         <div class="faq-icon">
                             <span class="plus">+</span>
                             <span class="minus">×</span>
                         </div>
                     </div>
                     <div class="faq-answer">
-                        <p>Yes, you can cancel a project at any time. If funds are already in escrow, the cancellation will initiate a refund or dispute process based on the situation.</p>
+                        <p>{% trans "Yes, you can cancel a project at any time. If funds are already in escrow, the cancellation will initiate a refund or dispute process based on the situation." %}</p>
                     </div>
                 </div>
             </div>
