@@ -1,13 +1,474 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block title %}HireMe | About Us{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/home/about-us.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 {% endblock %}
 
 {% block content %}
+
+<!-- Hero Section -->
+<div class="about-hero-section">
+    <div class="container">
+        <div class="about-hero-content">
+            <div class="hero-text-content">
+                <h1 class="hero-title">Empowering Nepal's <span class="highlight">Digital Workforce</span></h1>
+                <p class="subtitle">We bridge the gap between Nepal's exceptional tech talent and global opportunities, creating meaningful partnerships that drive innovation and growth.</p>
+                
+                <div class="hero-cta">
+                    <a href="#our-mission" class="btn btn-primary">
+                        Explore Our Story
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="{% url 'home:contact-us' %}" class="btn btn-outline">
+                        Partner With Us
+                    </a>
+                </div>
+            </div>
+            <a href="#our-mission" class="scroll-down">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Our Mission Section -->
+<div class="our-mission">
+    <div class="container" id="our-mission">
+        <div class="section-header" >
+            <h2 class="section-title">Bridging Talent & Opportunity <span class="text-gradient">Across Borders</span></h2>
+            <p class="section-subtitle">We're redefining Nepal's place in the global digital economy through meaningful connections</p>
+        </div>
+        
+        <div class="mission-content">
+            <div class="mission-text">
+                <div class="mission-point">
+                    <div class="point-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <div class="point-content">
+                        <h3>Empowering Nepali Talent</h3>
+                        <p>We provide Nepali professionals with access to international opportunities, fair compensation, and the tools to build sustainable freelance careers without borders.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-point">
+                    <div class="point-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <div class="point-content">
+                        <h3>Delivering Exceptional Value</h3>
+                        <p>Global clients gain access to Nepal's top-tier digital talent at competitive rates, with rigorous quality assurance and cultural alignment built into every partnership.</p>
+                    </div>
+                </div>
+                
+                <div class="mission-point">
+                    <div class="point-icon">
+                        <i class="fas fa-globe-asia"></i>
+                    </div>
+                    <div class="point-content">
+                        <h3>Shaping the Future of Work</h3>
+                        <p>We're building an ecosystem that demonstrates how distributed teams can achieve remarkable results through trust, technology, and shared success.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mission-image">
+                <div class="image-wrapper">
+                    <img src="{% static 'images/defaultimages/about/image-1.jpg' %}" alt="Our Mission" class="main-image">
+                    <div class="image-highlight"></div>
+                </div>
+                <div class="mission-quote">
+                    <div class="quote-icon">"</div>
+                    <p class="quote-text">Our vision is a world where geography doesn't limit opportunity, and Nepali professionals are first choice for global digital projects.</p>
+                    <div class="quote-author">— HireMe Leadership Team</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Our Story Section -->
+<div class="our-story">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Our Story</h2>
+            <p class="section-subtitle">From humble beginnings to Nepal's leading freelance platform</p>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">
+                    <span class="year">2018</span>
+                    <div class="timeline-connector"></div>
+                </div>
+                <div class="timeline-content">
+                    <h3>Founded in Kathmandu</h3>
+                    <p>Started by a team of developers and entrepreneurs who saw the potential of Nepal's growing tech talent but lacked a dedicated platform to connect with quality clients.</p>
+                    <div class="milestone-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">
+                    <span class="year">2019</span>
+                    <div class="timeline-connector"></div>
+                </div>
+                <div class="timeline-content">
+                    <h3>First 100 Freelancers</h3>
+                    <p>Onboarded our first 100 verified freelancers across web development, design, and content creation categories.</p>
+                    <div class="milestone-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">
+                    <span class="year">2020</span>
+                    <div class="timeline-connector"></div>
+                </div>
+                <div class="timeline-content">
+                    <h3>Pandemic Growth</h3>
+                    <p>As remote work surged globally, we helped 500+ Nepali professionals transition to freelance work during challenging times.</p>
+                    <div class="milestone-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">
+                    <span class="year">2022</span>
+                    <div class="timeline-connector"></div>
+                </div>
+                <div class="timeline-content">
+                    <h3>NPR 1 Million Milestone</h3>
+                    <p>Our community collectively earned over NPR 1 million through the platform, proving the viability of freelance careers in Nepal.</p>
+                    <div class="milestone-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">
+                    <span class="year">Today</span>
+                    <div class="timeline-connector"></div>
+                </div>
+                <div class="timeline-content highlight">
+                    <h3>Leading Platform</h3>
+                    <p>Trusted by thousands of freelancers and clients worldwide with projects completed across 50+ categories.</p>
+                    <div class="milestone-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- What We Offer Section -->
+<div class="what-we-offer">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">What We Offer</h2>
+            <p class="section-subtitle">The HireMe difference for freelancers and clients</p>
+        </div>
+        
+        <div class="offerings-grid">
+            <div class="offering-card">
+                <div class="offering-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <polyline points="17 11 19 13 23 9"></polyline>
+                    </svg>
+                </div>
+                <h3>Verified Talent</h3>
+                <p>Every freelancer undergoes a rigorous verification process including skills assessment and identity confirmation.</p>
+                <div class="card-accent"></div>
+            </div>
+            
+            <div class="offering-card">
+                <div class="offering-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <h3>Secure Payments</h3>
+                <p>Our escrow system ensures freelancers get paid and clients only release funds when satisfied with the work.</p>
+                <div class="card-accent"></div>
+            </div>
+            
+            <div class="offering-card">
+                <div class="offering-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <h3>Built-in Collaboration</h3>
+                <p>Messaging, file sharing, and project tracking tools make working together seamless from start to finish.</p>
+                <div class="card-accent"></div>
+            </div>
+            
+            <div class="offering-card">
+                <div class="offering-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                </div>
+                <h3>Fair Pricing</h3>
+                <p>Competitive rates that reflect Nepali market standards while ensuring freelancers earn what they deserve.</p>
+                <div class="card-accent"></div>
+            </div>
+            
+            <div class="offering-card">
+                <div class="offering-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Our dedicated support team is always available to help resolve any issues that may arise.</p>
+                <div class="card-accent"></div>
+            </div>
+            
+            <div class="offering-card">
+                <div class="offering-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                </div>
+                <h3>Growth Tools</h3>
+                <p>Resources, courses, and community to help freelancers develop their skills and businesses.</p>
+                <div class="card-accent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Values Section -->
+<div class="our-values">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Our Core Values</h2>
+            <p class="section-subtitle">The principles that guide everything we do</p>
+        </div>
+        
+        <div class="values-container">
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <div class="value-number">01</div>
+                <h3>Trust</h3>
+                <p>We build transparency into every interaction and verify all participants to create a safe environment.</p>
+                <div class="value-indicator"></div>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <div class="value-number">02</div>
+                <h3>Quality</h3>
+                <p>We maintain high standards for the work delivered through our platform and the talent we onboard.</p>
+                <div class="value-indicator"></div>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                    </svg>
+                </div>
+                <div class="value-number">03</div>
+                <h3>Empowerment</h3>
+                <p>We believe in creating opportunities that help people build independent, fulfilling careers.</p>
+                <div class="value-indicator"></div>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <div class="value-number">04</div>
+                <h3>Innovation</h3>
+                <p>We continuously improve our platform to better serve the evolving needs of our community.</p>
+                <div class="value-indicator"></div>
+            </div>
+            
+            <div class="value-card">
+                <div class="value-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="value-number">05</div>
+                <h3>Community</h3>
+                <p>We foster connections and mutual support among Nepal's freelance professionals.</p>
+                <div class="value-indicator"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leadership Team Section -->
+<div class="leadership-team">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Meet Our Team</h2>
+            <p class="section-subtitle">The passionate individuals driving HireMe's mission forward</p>
+        </div>
+        
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="{% static 'images/defaultimages/about/team-1.jpg' %}" alt="Team Member">
+                    <div class="photo-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <h3>Rahul Sharma</h3>
+                    <p class="position">Chief Executive Officer</p>
+                    <p class="bio">Former software engineer with 10+ years experience building tech solutions across Asia. Passionate about creating opportunities for Nepal's digital workforce.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="{% static 'images/defaultimages/about/team-2.jpg' %}" alt="Team Member">
+                    <div class="photo-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <h3>Priya Patel</h3>
+                    <p class="position">Chief Operations Officer</p>
+                    <p class="bio">MBA graduate with expertise in scaling marketplace platforms. Oversees all platform operations and is dedicated to optimizing the experience for both clients and freelancers.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="{% static 'images/defaultimages/about/team-3.jpg' %}" alt="Team Member">
+                    <div class="photo-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <h3>Anil Thapa</h3>
+                    <p class="position">Head of Technology</p>
+                    <p class="bio">Full-stack developer and system architect who previously worked at global tech companies. Leads our engineering team and ensures platform reliability and innovation.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="team-member">
+                <div class="member-photo">
+                    <img src="{% static 'images/defaultimages/about/team-4.jpg' %}" alt="Team Member">
+                    <div class="photo-overlay"></div>
+                </div>
+                <div class="member-info">
+                    <h3>Sita Gurung</h3>
+                    <p class="position">Talent Acquisition Lead</p>
+                    <p class="bio">HR professional with a background in recruiting for tech companies. Passionate about connecting talented Nepali professionals with meaningful work opportunities.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Awards & Recognition Section -->
+<div class="awards-recognition">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Awards & Recognition</h2>
+            <p class="section-subtitle">Our commitment to excellence has been recognized by industry leaders</p>
+        </div>
+        
+        <div class="awards-grid">
+            <div class="award-card">
+                <div class="award-icon">
+                    <img src="{% static 'images/defaultimages/about/award-1.png' %}" alt="Award Icon">
+                </div>
+                <div class="award-content">
+                    <h3>Best Emerging Tech Platform</h3>
+                    <p class="award-source">Nepal IT Awards 2023</p>
+                    <p class="award-description">Recognized for our innovative approach to connecting Nepali talent with global opportunities.</p>
+                </div>
+            </div>
+            
+            <div class="award-card">
+                <div class="award-icon">
+                    <img src="{% static 'images/defaultimages/about/award-2.png' %}" alt="Award Icon">
+                </div>
+                <div class="award-content">
+                    <h3>Top 10 Startups in Nepal</h3>
+                    <p class="award-source">Tech Kathmandu 2022</p>
+                    <p class="award-description">Selected among hundreds of tech startups for our growth potential and impact on the digital economy.</p>
+                </div>
+            </div>
+            
+            <div class="award-card">
+                <div class="award-icon">
+                    <img src="{% static 'images/defaultimages/about/award-3.png' %}" alt="Award Icon">
+                </div>
+                <div class="award-content">
+                    <h3>Impact Entrepreneur Award</h3>
+                    <p class="award-source">South Asian Business Forum</p>
+                    <p class="award-description">Honored for creating sustainable income opportunities for digital professionals in Nepal.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="featured-in">
+            <h3 class="featured-title">As Featured In</h3>
+            <div class="featured-logos">
+                <div class="logo-item">
+                    <img src="{% static 'images/defaultimages/about/media-1.png' %}" alt="Media Logo">
+                </div>
+                <div class="logo-item" data-aos="fade-up" data-aos-delay="50">
+                    <img src="{% static 'images/defaultimages/about/media-2.png' %}" alt="Media Logo">
+                </div>
+                <div class="logo-item" data-aos="fade-up" data-aos-delay="100">
+                    <img src="{% static 'images/defaultimages/about/media-3.png' %}" alt="Media Logo">
+                </div>
+                <div class="logo-item" data-aos="fade-up" data-aos-delay="150">
+                    <img src="{% static 'images/defaultimages/about/media-4.png' %}" alt="Media Logo">
+                </div>
+                <div class="logo-item" data-aos="fade-up" data-aos-delay="200">
+                    <img src="{% static 'images/defaultimages/about/media-5.png' %}" alt="Media Logo">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 

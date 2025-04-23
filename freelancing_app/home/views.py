@@ -734,12 +734,12 @@ def handling_404(request, exception):
     return render(request, error_page_template, {})
 
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: AboutUsView
 # Description: Renders the About Us page
-# Tested On:
-# Status:
-# Code Refractor Status: Not Started
+# Tested On: 2025-04-23
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class AboutUsView(View):
     """
@@ -748,49 +748,18 @@ class AboutUsView(View):
     - Accessible to all users (authenticated and unauthenticated)
     """
     
-    template_name = 'home/about-us.html'
-    home_url = 'home:home'
+    TEMPLATE_NAME = 'home/about-us.html'
+    HOME_URL = 'home:home'
     
     def get(self, request):
         """
         Renders the About Us page with relevant statistics and information
         """
         try:
-            context = {
-                'verified_freelancers': self._get_verified_freelancers(),
-                'completed_projects': self._get_completed_projects(),
-                'client_satisfaction': self._get_client_satisfaction(),
-            }
-            return render(request, self.template_name, context)
+            return render(request, self.TEMPLATE_NAME)
         except Exception as e:
             messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.home_url)
-
-    def _get_verified_freelancers(self):
-        """Returns count of verified freelancers"""
-        try:
-            return Freelancer.objects.filter(
-                user__is_verified=True
-            ).count() or 0
-        except Exception:
-            return 0
-
-    def _get_completed_projects(self):
-        """Returns count of completed projects"""
-        try:
-            return Project.objects.filter(
-                status=Project.Status.COMPLETED
-            ).count() or 0
-        except Exception:
-            return 0
-        
-    def _get_client_satisfaction(self):
-        """Returns client satisfaction rating"""
-        try:
-            # Placeholder for actual calculation
-            return 4.3
-        except Exception:
-            return 0.0
+            return redirect(self.HOME_URL)
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
