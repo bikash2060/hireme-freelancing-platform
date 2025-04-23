@@ -2,7 +2,7 @@
 {% load static%}
 {% load socialaccount %}
 
-{% block title %}SignUp - HireMe{% endblock %}
+{% block title %}Sign Up – Get Started with HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/signup.css' %}">
@@ -16,7 +16,6 @@
     <div class="signup_wrapper">
       <div class="signup_illustration">
         <object type="image/svg+xml" data="{% static 'images/illustrations/signup-illustration.svg' %}" width="280" height="220">
-          <!-- Fallback if SVG not supported -->
           <img src="{% static 'images/logo/Logo.png' %}" alt="Signup" width="100">
         </object>
         <h2>Create Account</h2>
@@ -28,15 +27,9 @@
           {% csrf_token %}
           <div class="signup-options">
             <div class="signup-option">
-              <a href="">
+              <a href="{% provider_login_url 'google' %}">
                 <img src="{% static 'images/logo/Google.png'%}" alt="Google" />
                 <span>Google</span>
-              </a>
-            </div>
-            <div class="signup-option">
-              <a href="#">
-                <img src="{% static 'images/logo/Github.png'%}" alt="Github" />
-                <span>GitHub</span>
               </a>
             </div>
           </div>
@@ -47,21 +40,21 @@
             <label for="signup-email">Email</label>
             <div class="input-container">
               <i class="far fa-envelope input-icon"></i>
-              <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}" required/>
+              <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}"/>
             </div>
           </div>
           <div class="signup-input-box">
             <label for="signup-username">Username</label>
             <div class="input-container">
               <i class="far fa-user input-icon"></i>
-              <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}" required/>
+              <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}"/>
             </div>
           </div>
           <div class="signup-input-box">
             <label for="signup-password">Password</label>
             <div class="input-container password-container">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="signup-password" placeholder="Enter your password" name="password" required/>
+              <input type="password" id="signup-password" placeholder="Enter your password" name="password"/>
               <button type="button" class="far fa-eye toggle-icon" id="toggleSignupPassword" aria-label="Toggle password visibility"></button>
             </div>
           </div>
@@ -69,7 +62,7 @@
             <label for="signup-confirm-password">Confirm Password</label>
             <div class="input-container password-container">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword" required/>
+              <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword"/>
               <button type="button" class="far fa-eye toggle-icon" id="toggleSignupConfirmPassword" aria-label="Toggle password visibility"></button>
             </div>
           </div>

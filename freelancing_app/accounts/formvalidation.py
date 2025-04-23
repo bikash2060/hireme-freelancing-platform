@@ -30,33 +30,33 @@ class FormValidator:
         try:
             # Field presence validation
             if not all([email, username, password, confirm_password]):
-                return False, "All fields are required."
+                return False, "Please complete all required fields."
 
             # Email validation
             if " " in email:
-                return False, "Email should not contain spaces."
+                return False, "Email address should not contain spaces."
             if not re.match(cls.EMAIL_REGEX, email):
-                return False, "Enter a valid email address."
+                return False, "Please enter a valid email address."
 
             # Username validation
             if " " in username:
-                return False, "Username should not contain spaces."
+                return False, "Username cannot contain spaces."
             if username.isdigit():
-                return False, "Username cannot be only numbers."
+                return False, "Username must include letters and cannot be purely numeric."
             if username[0].isdigit():
-                return False, "Username cannot start with a number."
+                return False, "Username cannot begin with a number."
             if not cls.MIN_USERNAME_LENGTH <= len(username) <= cls.MAX_USERNAME_LENGTH:
                 return False, f"Username must be between {cls.MIN_USERNAME_LENGTH} and {cls.MAX_USERNAME_LENGTH} characters."
             if username.lower() in settings.RESERVED_USERNAMES:
-                return False, "This username is reserved. Please choose another."
+                return False, "This username is not available. Please choose another one."
             if User.objects.filter(username__iexact=username).exists():
-                return False, "Username is already taken."
+                return False, "This username is already in use. Please try a different one."
 
             # Password validation
             if " " in password or " " in confirm_password:
-                return False, "Password should not contain spaces."
+                return False, "Passwords must not contain spaces."
             if password != confirm_password:
-                return False, "Passwords do not match."
+                return False, "Passwords do not match. Please re-enter them."
             
             password_errors = cls._validate_password_strength(password)
             if password_errors:
@@ -66,7 +66,7 @@ class FormValidator:
 
         except Exception as e:
             # Log the actual error in production
-            return False, "Something went wrong. Please try again later."
+            return False, "An unexpected error occurred. Please try again later."
 
     @classmethod
     def validate_login(cls, email: str, password: str) -> tuple:
@@ -81,7 +81,7 @@ class FormValidator:
             Tuple of (is_valid: bool, error_message: str)
         """
         if not email or not password:
-            return False, 'All fields are required.'
+            return False, 'Please provide both email and password.'
         return True, None
 
     @classmethod
@@ -97,11 +97,11 @@ class FormValidator:
             Tuple of (is_valid: bool, error_message: str)
         """
         if not password or not confirm_password:
-            return False, 'All fields are required.'
+            return False, 'Both password fields are required.'
         if ' ' in password or ' ' in confirm_password:
-            return False, 'Password should not contain spaces.'
+            return False, 'Passwords must not contain spaces.'
         if password != confirm_password:
-            return False, 'Passwords do not match.'
+            return False, 'Passwords do not match. Please confirm correctly.'
             
         password_errors = cls._validate_password_strength(password)
         if password_errors:
@@ -123,9 +123,9 @@ class FormValidator:
         if len(password) < cls.MIN_PASSWORD_LENGTH:
             return f"Password must be at least {cls.MIN_PASSWORD_LENGTH} characters long."
         if not re.search(r'[A-Z]', password):
-            return "Password must contain at least one uppercase letter."
+            return "Password must include at least one uppercase letter."
         if not re.search(r'[0-9]', password):
-            return "Password must contain at least one number."
+            return "Password must include at least one number."
         if not re.search(r'[@$!%*?&]', password):
-            return "Password must contain at least one special character (@$!%*?&)."
+            return "Password must include at least one special character (@$!%*?&)."
         return ""

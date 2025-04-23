@@ -2,7 +2,7 @@
 {% load static %}
 {% load socialaccount %}
 
-{% block title %}Login - HireMe{% endblock %}
+{% block title %}Welcome Back – Sign In to HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/login.css' %}">
@@ -31,12 +31,6 @@
               <a href="{% provider_login_url 'google' %}">
                 <img src="{% static 'images/logo/Google.png'%}" alt="Google" />
                 <span>Google</span>
-              </a>
-            </div>
-            <div class="option">
-              <a href="#">
-                <img src="{% static 'images/logo/Github.png' %}" alt="Github" />
-                <span>GitHub</span>
               </a>
             </div>
           </div>

@@ -8,7 +8,6 @@ from django.utils import timezone
 from django.urls import reverse
 from .models import User
 
-
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     """
     Custom adapter for social account authentication that:
@@ -88,7 +87,6 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         raise ImmediateHttpResponse(
             redirect(reverse('account:oauth_role_selection'))
         )
-
 
 class CustomAccountAdapter(DefaultAccountAdapter):
     """
