@@ -229,14 +229,20 @@
                             </div>
                             <div class="info-value">
                                 <div class="skills-container">
-                                    {% for skill in freelancer.skills.all %}
-                                        <span class="skill-tag">{{ skill.name }}</span>
+                                    {% for freelancer_skill in freelancer.freelancerskill_set.all %}
+                                        <div class="skill-tag" data-skill-level="{{ freelancer_skill.level }}">
+                                            <i class="fas fa-code"></i> {{ freelancer_skill.skill.name }}
+                                            <span class="skill-level-badge">
+                                                {{ freelancer_skill.get_level_display }}
+                                            </span>
+                                        </div>
                                     {% empty %}
                                         <span class="skill-tag empty-skills">No skills added yet</span>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

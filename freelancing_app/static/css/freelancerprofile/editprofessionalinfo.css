@@ -331,7 +331,7 @@
     margin: 0;
 }
 
-.content-wrapper .skill-option label {
+.content-wrapper .skill-option span {
     display: flex;
     width: 100%;
     height: 100%;
@@ -352,6 +352,10 @@
     margin: 0;
     cursor: pointer;
     z-index: 1;
+}
+
+.content-wrapper .skill-option input[type="checkbox"]:checked {
+    width: calc(100% - 120px); 
 }
 
 .content-wrapper .skill-option .custom-checkbox {
@@ -455,6 +459,29 @@
     outline: none;
     border-color: #4361ee;
     box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.content-wrapper .skill-level-badge {
+    background-color: #4361ee;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+.content-wrapper .skill-level-selector {
+    transition: all 0.3s ease;
+}
+
+.content-wrapper .skill-level-selector select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    border: 1px solid #cbd5e0;
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .content-wrapper .profile-card .tags-hint {

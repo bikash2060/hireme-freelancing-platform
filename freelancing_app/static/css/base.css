@@ -2063,7 +2063,7 @@ footer .bottom-details .bottom_text {
 }
 
 /* Focus styles for accessibility */
-button:focus {
+.modal button:focus {
     outline: 3px solid rgba(66, 153, 225, 0.5);
 }
 @media (max-width: 576px) {

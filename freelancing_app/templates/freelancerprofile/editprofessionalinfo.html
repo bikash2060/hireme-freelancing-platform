@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load extra_filters %}
 {% block title %}Update Professional Information - HireMe{% endblock %}
 
 {% block css_files %}
@@ -48,6 +48,7 @@
                                 <input type="number" id="years_of_experience" name="years_of_experience" 
                                     value="{{ years_of_experience|default:freelancer.years_of_experience|default:'' }}" 
                                     class="form-control" min="0" max="50"
+                                    required
                                 >
                                 <div class="input-hint">Total years of professional experience</div>
                             </div>
@@ -123,6 +124,7 @@
                                     value="{{ professional_title|default:freelancer.professional_title|default:'' }}"
                                     placeholder="e.g. Senior Web Developer, UX Designer"
                                     maxlength="100"
+                                    required
                                 >
                                 <div class="input-hint">Your professional job title (what you want to be called)</div>
                             </div>
@@ -190,7 +192,18 @@
                                             value="{{ skill.id }}"
                                             {% if skill.id in skills_select %}checked{% endif %}>
                                         <span class="custom-checkbox"></span>
-                                        <label for="skill_{{ skill.id }}">{{ skill.name }}</label>
+                                        <span class="skill-name">{{ skill.name }}</span>
+                                
+                                        <div class="skill-level-selector" style="margin-left: auto; display: none;">
+                                            <select name="skill_level_{{ skill.id }}" class="form-control" style="width: 150px; padding: 5px;">
+                                                {% for value, label in freelancer_skill_levels %}
+                                                    <option value="{{ value }}"
+                                                        {% if skill_levels_map|dict_get:skill.id == value %}selected{% endif %}>
+                                                        {{ label }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
                                     </div>
                                     {% empty %}
                                     <div class="no-skills-available">No skills available</div>
@@ -200,7 +213,7 @@
                                 <div class="selected-skills-container" id="selected-skills">
                                     <h4>Selected Skills:</h4>
                                     <div class="selected-skills-list">
-                                        
+                                        <!-- Selected skills with levels will appear here -->
                                     </div>
                                 </div>
                                 

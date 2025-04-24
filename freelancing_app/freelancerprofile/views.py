@@ -285,6 +285,12 @@ class ProfessionalInfoView(BaseFreelancerView):
             all_skills = Skill.objects.all().order_by('name')
             selected_skills = freelancer.skills.values_list('id', flat=True)
             all_languages = Language.objects.all()
+            
+            # Skill-level mapping
+            selected_skill_levels = {
+                fs.skill_id: fs.level
+                for fs in FreelancerSkill.objects.filter(freelancer=freelancer)
+            }
 
             # Load language proficiencies
             language_proficiencies = []
@@ -304,12 +310,14 @@ class ProfessionalInfoView(BaseFreelancerView):
                 'freelancer': freelancer,
                 'skills': all_skills,
                 'skills_select': selected_skills,
+                'skill_levels_map': selected_skill_levels,
                 'all_languages': all_languages,
                 'language_proficiencies_list': language_proficiencies,
                 'expertise_levels': Freelancer.ExpertiseLevel.choices,
                 'availability_options': Freelancer.Availability.choices,
                 'project_durations': Freelancer.ProjectDuration.choices,
                 'communication_preferences': Freelancer.CommunicationPreference.choices,
+                'freelancer_skill_levels': FreelancerSkill.SkillLevel.choices,
             })
 
         except Exception as e:
@@ -331,6 +339,11 @@ class ProfessionalInfoView(BaseFreelancerView):
             communication_pref = request.POST.get('communication_preference')
             professional_title = request.POST.get('professional_title', '').strip()
             selected_skill_ids = [int(sid) for sid in request.POST.getlist('skills')]
+            
+            skill_levels_map = {
+                int(skill_id): request.POST.get(f'skill_level_{skill_id}', FreelancerSkill.SkillLevel.INTERMEDIATE)
+                for skill_id in selected_skill_ids
+            }
 
             # Parse language proficiencies
             language_proficiencies = {}
@@ -352,6 +365,7 @@ class ProfessionalInfoView(BaseFreelancerView):
                 'freelancer': freelancer,
                 'skills': all_skills,
                 'skills_select': selected_skill_ids,
+                'skill_levels_map': skill_levels_map,
                 'all_languages': all_languages,
                 'language_proficiencies_list': language_proficiencies_list,
                 'years_of_experience': years_of_experience,
@@ -364,6 +378,7 @@ class ProfessionalInfoView(BaseFreelancerView):
                 'availability_options': Freelancer.Availability.choices,
                 'project_durations': Freelancer.ProjectDuration.choices,
                 'communication_preferences': Freelancer.CommunicationPreference.choices,
+                'freelancer_skill_levels': FreelancerSkill.SkillLevel.choices,
             }
 
             # Validate input
@@ -393,7 +408,14 @@ class ProfessionalInfoView(BaseFreelancerView):
 
             # Update skills
             freelancer.skills.clear()
-            freelancer.skills.add(*Skill.objects.filter(id__in=selected_skill_ids))
+            for skill_id in selected_skill_ids:
+                skill = Skill.objects.get(id=skill_id)
+                level = request.POST.get(f'skill_level_{skill_id}', FreelancerSkill.SkillLevel.INTERMEDIATE)
+                FreelancerSkill.objects.create(
+                    freelancer=freelancer,
+                    skill=skill,
+                    level=level
+                )
 
             # Update language proficiencies
             FreelancerLanguage.objects.filter(freelancer=freelancer).delete()
@@ -415,7 +437,6 @@ class ProfessionalInfoView(BaseFreelancerView):
             print(f"[ProfessionalInfoView POST Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.EDIT_URL)
-
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
