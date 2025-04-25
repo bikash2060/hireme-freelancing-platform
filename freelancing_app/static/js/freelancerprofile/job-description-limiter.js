@@ -8,7 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const length = jobDescriptionTextarea.value.length;
             descCharCount.textContent = length;
 
-            descCharCount.style.color = length > maxChars * 0.9 ? '#e74c3c' : '#2ecc71';
+            if (length >= maxChars) {
+                descCharCount.style.color = '#e74c3c'; 
+            } else if (length > maxChars * 0.9) {
+                descCharCount.style.color = '#f39c12'; 
+            } else {
+                descCharCount.style.color = '#2ecc71';
+            }
         };
 
         updateDescCount();

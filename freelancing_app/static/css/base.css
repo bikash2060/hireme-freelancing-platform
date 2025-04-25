@@ -2352,7 +2352,7 @@ footer .bottom-details .bottom_text {
 /* Back to Top Button Styles */
 .back-to-top {
     position: fixed;
-    bottom: 30px;
+    bottom: 20px;
     right: 30px;
     width: 60px;
     height: 60px;

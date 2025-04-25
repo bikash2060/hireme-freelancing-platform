@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Add Experience - HireMe{% endblock %}
+{% block title %}Add Work Experience | Enhance Your Freelance Profile - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/freelancerprofile/addexperience.css' %}">
@@ -148,7 +148,7 @@
                                 <textarea id="job_description" name="job_description" class="form-control" rows="5" placeholder="Describe your role, responsibilities, and key achievements...">{{ job_description|default:'' }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="desc-char-count">0</span>/100 characters
+                                        <span id="desc-char-count">0</span>/500 characters
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +171,7 @@
                                             id="skill_{{ skill.id }}" 
                                             name="skills" 
                                             value="{{ skill.id }}"
-                                            {% if skill.id in skills_select %}checked{% endif %}>
+                                            {% if skill.id in selected_skill_ids %}checked{% endif %}>
                                         <span class="custom-checkbox"></span>
                                         <label for="skill_{{ skill.id }}">{{ skill.name }}</label>
                                     </div>
@@ -209,6 +209,6 @@
 {% block js_files %}
 <script src="{% static 'js/freelancerprofile/job-description-limiter.js' %}"></script>
 <script src="{% static 'js/freelancerprofile/toggle-enddate.js' %}"></script>
-<script src="{% static 'js/freelancerprofile/dynamic-skills-filter.js' %}"></script>
+<script src="{% static 'js/freelancerprofile/work-experience/search-skills.js' %}"></script>
 <script src="{% static 'js/freelancerprofile/dynamic-cities-filter.js' %}"></script>
 {% endblock %}

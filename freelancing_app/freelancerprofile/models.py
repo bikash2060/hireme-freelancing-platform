@@ -157,20 +157,6 @@ class Freelancer(models.Model):
         db_table = "freelancer"
         verbose_name = "Freelancer Profile"
         verbose_name_plural = "Freelancer Profiles"
-        
-        
-class FreelancerService(models.Model):
-    freelancer = models.ForeignKey('Freelancer', on_delete=models.CASCADE, related_name='services')
-    category = models.ForeignKey('FreelanceServiceCategory', on_delete=models.SET_NULL, null=True, blank=True, related_name='freelancer_services')
-    title = models.CharField(max_length=100)
-    description = models.TextField()
-    icon_class = models.CharField(max_length=100, help_text="Font Awesome icon class (e.g., fas fa-laptop-code)")
-
-    def __str__(self):
-        return f"{self.freelancer.user.username} - {self.title}"
-
-    class Meta:
-        db_table = "freelancer_service"
 
 
 class FreelancerLanguage(models.Model):

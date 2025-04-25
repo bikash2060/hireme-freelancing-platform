@@ -1,8 +1,8 @@
 # utils.py
 from django.core.files.uploadedfile import UploadedFile
+from typing import Optional, Tuple, Dict, Any
 from django.http import HttpRequest
 from accounts.models import User
-from typing import Optional, Tuple, Dict, Any
 from django.conf import settings
 from datetime import datetime
 import os
@@ -363,6 +363,7 @@ class EmploymentValidator(Validator):
         end_date: Optional[str],
         country_id: Optional[int],
         city_id: Optional[int],
+        job_description: str,
         selected_skill_ids: list
     ) -> Tuple[bool, str]:
         """Validate all employment data"""

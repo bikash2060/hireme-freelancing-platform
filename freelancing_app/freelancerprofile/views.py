@@ -8,8 +8,8 @@ from django.contrib import messages
 from projects.models import Skill
 from django.conf import settings
 from django.urls import reverse
-from django.views import View
 from datetime import datetime
+from django.views import View
 from itertools import chain
 from .models import *
 from .utils import *
@@ -458,7 +458,6 @@ class ExperienceBaseView(BaseFreelancerView):
             'employment_types': WorkExperience.EmploymentType.choices
         }
 
-
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: AddExperienceView
@@ -538,7 +537,6 @@ class AddExperienceView(ExperienceBaseView):
             description=data['job_description'],
         )
 
-
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: EditExperienceView
@@ -607,7 +605,6 @@ class EditExperienceView(ExperienceBaseView):
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(reverse(self.EDIT_URL, kwargs={'experience_id': experience_id}))
 
-
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: DeleteExperienceView
@@ -634,7 +631,6 @@ class DeleteExperienceView(BaseFreelancerView):
             print(f"[DeleteExperienceView Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.PROFILE_URL)
-
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -664,7 +660,6 @@ class EducationBaseView(BaseFreelancerView):
                 'end_date': education.end_date.strftime('%Y-%m') if education.end_date else None,
             })
         return context
-
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -734,7 +729,6 @@ class AddEducationView(EducationBaseView):
             currently_studying=data['currently_studying'],
         )
 
-
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: EditEducationView
@@ -798,7 +792,6 @@ class EditEducationView(EducationBaseView):
         education.currently_studying = data['currently_studying']
         education.save()
 
-
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: DeleteEducationView
@@ -824,7 +817,6 @@ class DeleteEducationView(BaseFreelancerView):
             print(f"[DeleteEducationView Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.PROFILE_URL)
-
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -888,7 +880,6 @@ class EditLinksView(BaseFreelancerView):
             print(f"[EditLinksView POST Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.EDIT_URL)
-
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
