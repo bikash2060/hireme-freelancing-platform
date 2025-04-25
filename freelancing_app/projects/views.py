@@ -51,8 +51,8 @@ class BaseProjectView(CustomLoginRequiredMixin, View):
 # View Name: NewProjectView
 # Description: Handles creation of new projects (both draft and published)
 # Tested On: 2025-04-25
-# Status: 
-# Code Refractor Status: 
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class NewProjectView(BaseProjectView):
     """
@@ -236,12 +236,12 @@ class NewProjectView(BaseProjectView):
             return redirect(self.NEW_PROJECT_URL)
 
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: ClientProjectsView
 # Description: Displays and filters client's projects
-# Tested On: 
-# Status: 
-# Code Refractor Status: 
+# Tested On: 2025-04-25
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class ClientProjectsView(BaseProjectView):
     """
@@ -331,6 +331,7 @@ class ClientProjectsView(BaseProjectView):
                 'selected_budgets': selected_budgets,
                 'selected_durations': selected_durations,
                 'search_keyword': keyword,
+                'categories_dict': {str(c.id): c for c in categories},
             }
             return render(request, self.TEMPLATE_NAME, context)
             

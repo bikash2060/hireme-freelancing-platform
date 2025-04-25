@@ -1,9 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Reset filters on page load by removing URL parameters
-    if (window.location.search) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
     const filters = document.querySelectorAll('input[type="checkbox"], .search-input');
 
     filters.forEach(input => {
@@ -83,3 +78,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+function removeFilterParam(paramName) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete(paramName);
+    window.location.href = url.toString();
+}
+
+function removeMultiFilterParam(paramName, valueToRemove) {
+    const url = new URL(window.location.href);
+    let params = url.searchParams.getAll(paramName);
+    params = params.filter(val => val !== valueToRemove);
+    url.searchParams.delete(paramName);
+    params.forEach(val => url.searchParams.append(paramName, val));
+    window.location.href = url.toString();
+}

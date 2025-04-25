@@ -8,7 +8,7 @@ class ProjectValidator:
     """Utility class for validating project data."""
     
     MIN_TITLE_LENGTH = 10
-    MAX_TITLE_LENGTH = 50
+    MAX_TITLE_LENGTH = 100
     MIN_DURATION = 1
     MAX_DURATION = 104
     MIN_BUDGET = 1000
