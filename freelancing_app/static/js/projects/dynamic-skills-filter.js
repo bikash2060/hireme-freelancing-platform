@@ -1,22 +1,49 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const skillsSearch = document.getElementById('skills_search');
     const skillsOptions = document.getElementById('skills-options');
     const selectedSkillsList = document.querySelector('.selected-skills-list');
-    const skillCheckboxes = document.querySelectorAll('input[name="skills_required"]'); // Fixed this line
-    
+
     const noResultsMsg = document.createElement('div');
     noResultsMsg.className = 'no-results-msg';
     noResultsMsg.textContent = 'No matching skills found';
     noResultsMsg.style.display = 'none';
     skillsOptions.parentNode.insertBefore(noResultsMsg, skillsOptions.nextSibling);
-    
-    skillsSearch.addEventListener('input', function() {
+
+    // Handle checkbox change using event delegation
+    skillsOptions.addEventListener('change', function (e) {
+        if (e.target && e.target.name === 'skills') {
+            const skillOption = e.target.closest('.skill-option');
+            const levelSelector = skillOption.querySelector('.skill-level-selector');
+
+            if (e.target.checked) {
+                levelSelector.style.display = 'block';
+            } else {
+                levelSelector.style.display = 'none';
+                levelSelector.querySelector('select').value = 'intermediate';
+            }
+
+            updateSelectedSkills();
+            moveSelectedSkillsToTop();
+        }
+    });
+
+    // Prevent skill level dropdown from toggling the checkbox
+    document.querySelectorAll('.skill-level-selector select').forEach(select => {
+        select.addEventListener('click', e => e.stopPropagation());
+        select.addEventListener('change', () => {
+            updateSelectedSkills();
+            moveSelectedSkillsToTop();
+        });
+    });
+
+    // Real-time search
+    skillsSearch.addEventListener('input', function () {
         const searchTerm = this.value.toLowerCase().trim();
         const skillOptions = skillsOptions.querySelectorAll('.skill-option');
         let hasMatches = false;
-        
+
         skillOptions.forEach(option => {
-            const skillName = option.querySelector('label').textContent.toLowerCase();
+            const skillName = option.querySelector('.skill-name').textContent.toLowerCase();
             if (searchTerm === '' || skillName.includes(searchTerm)) {
                 option.style.display = 'flex';
                 hasMatches = true;
@@ -24,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.style.display = 'none';
             }
         });
-        
+
         if (searchTerm !== '' && !hasMatches) {
             noResultsMsg.style.display = 'block';
             skillsOptions.style.display = 'none';
@@ -32,47 +59,79 @@ document.addEventListener('DOMContentLoaded', function() {
             noResultsMsg.style.display = 'none';
             skillsOptions.style.display = 'block';
         }
+
+        updateSelectedSkills();
+        moveSelectedSkillsToTop();
     });
-    
-    skillCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            updateSelectedSkills();
-        });
+
+    // Show level selectors for already-checked skills on page load
+    document.querySelectorAll('input[name="skills"]:checked').forEach(checkbox => {
+        const skillOption = checkbox.closest('.skill-option');
+        const levelSelector = skillOption.querySelector('.skill-level-selector');
+        levelSelector.style.display = 'block';
     });
-    
+
     function updateSelectedSkills() {
         selectedSkillsList.innerHTML = '';
-        
-        const checkedSkills = document.querySelectorAll('input[name="skills_required"]:checked'); // Fixed this line
-        
+        const checkedSkills = document.querySelectorAll('input[name="skills"]:checked');
+
         checkedSkills.forEach(checkbox => {
             const skillId = checkbox.id;
-            const skillName = checkbox.nextElementSibling.nextElementSibling.textContent; 
-            
+            const skillName = checkbox.closest('.skill-option').querySelector('.skill-name').textContent;
+            const levelSelector = checkbox.closest('.skill-option').querySelector('.skill-level-selector select');
+            const selectedLevel = levelSelector ? levelSelector.value : 'intermediate';
+            const levelText = levelSelector ? levelSelector.options[levelSelector.selectedIndex].text : 'Intermediate';
+
             const skillElement = document.createElement('div');
             skillElement.className = 'selected-skill';
             skillElement.innerHTML = `
-                ${skillName}
+                ${skillName} <span class="skill-level-badge">${levelText}</span>
                 <span class="remove-skill" data-skill-id="${skillId}">
                     <i class="fas fa-times"></i>
                 </span>
             `;
-            
+
             selectedSkillsList.appendChild(skillElement);
         });
-        
+
+        // Remove skill event
         document.querySelectorAll('.remove-skill').forEach(removeBtn => {
-            removeBtn.addEventListener('click', function(e) {
+            removeBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 const skillId = this.getAttribute('data-skill-id');
                 const checkbox = document.getElementById(skillId);
                 if (checkbox) {
                     checkbox.checked = false;
+                    const skillOption = checkbox.closest('.skill-option');
+                    const levelSelector = skillOption.querySelector('.skill-level-selector');
+                    levelSelector.style.display = 'none';
                     updateSelectedSkills();
+                    moveSelectedSkillsToTop();
                 }
             });
         });
     }
-    
-    updateSelectedSkills();
+
+    function moveSelectedSkillsToTop() {
+        const allSkillOptions = Array.from(skillsOptions.querySelectorAll('.skill-option'));
+        const selected = [];
+        const unselected = [];
+
+        allSkillOptions.forEach(option => {
+            const checkbox = option.querySelector('input[name="skills"]');
+            if (checkbox && checkbox.checked) {
+                selected.push(option);
+            } else {
+                unselected.push(option);
+            }
+        });
+
+        skillsOptions.innerHTML = '';
+        [...selected, ...unselected].forEach(option => {
+            skillsOptions.appendChild(option);
+        });
+    }
+
+    updateSelectedSkills(); // Initialize preview
+    moveSelectedSkillsToTop(); // Reorder on load
 });

@@ -70,10 +70,10 @@
                         Projects <i class="fas fa-chevron-down dropdown-icon"></i>
                     </button>
                     <div class="nav-dropdown-content">
-                        <a href="" class="dropdown-item">
+                        <a href="{% url 'project:new-project' %}" class="dropdown-item">
                             <i class="fas fa-plus-circle"></i> Post New Project
                         </a>
-                        <a href="" class="dropdown-item">
+                        <a href="{% url 'project:client-projects' %}" class="dropdown-item">
                             <i class="fas fa-briefcase"></i> My Projects
                         </a>
                         <div class="dropdown-content-divider"></div>

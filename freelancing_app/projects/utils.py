@@ -29,6 +29,8 @@ class ProjectValidator:
         budget_min: Optional[Union[float, str]],
         budget_max: Optional[Union[float, str]],
         description: str,
+        key_requirements: str,
+        additional_info: str,
         selected_skills: List[int],
         attachments: Optional[List[UploadedFile]],
         request: Optional[HttpRequest] = None
@@ -41,6 +43,8 @@ class ProjectValidator:
             cls._validate_duration,
             cls._validate_budget,
             cls._validate_description,
+            cls._validate_key_requirements,
+            cls._validate_additional_info,
             cls._validate_skills,
             cls._validate_attachments,
         ]
@@ -56,6 +60,8 @@ class ProjectValidator:
                 budget_min=budget_min,
                 budget_max=budget_max,
                 description=description,
+                key_requirements=key_requirements,
+                additional_info=additional_info,
                 selected_skills=selected_skills,
                 attachments=attachments,
             )
@@ -165,6 +171,28 @@ class ProjectValidator:
             return False, f"Description must be at least {cls.MIN_DESCRIPTION_LENGTH} characters."
         if len(description) > cls.MAX_DESCRIPTION_LENGTH:
             return False, f"Description must not exceed {cls.MAX_DESCRIPTION_LENGTH} characters."
+        return True, None
+    
+    @classmethod
+    def _validate_key_requirements(cls, key_requirements: str, **kwargs) -> Tuple[bool, Optional[str]]:
+        """Validate key requirements."""
+        if not key_requirements or str(key_requirements).strip().lower() == "none":
+            return True, None  # This field is optional
+        
+        key_requirements = str(key_requirements).strip()
+        if len(key_requirements) > 500:
+            return False, "Key requirements must not exceed 500 characters."
+        return True, None
+
+    @classmethod
+    def _validate_additional_info(cls, additional_info: str, **kwargs) -> Tuple[bool, Optional[str]]:
+        """Validate additional info."""
+        if not additional_info or str(additional_info).strip().lower() == "none":
+            return True, None  # This field is optional
+        
+        additional_info = str(additional_info).strip()
+        if len(additional_info) > 500:
+            return False, "Additional information must not exceed 500 characters."
         return True, None
 
     @classmethod

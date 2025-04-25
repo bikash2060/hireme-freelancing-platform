@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load extra_filters %}
 
 {% block title %}New Project - HireMe{% endblock %}
 
@@ -178,10 +179,66 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-list-check"></i> Key Requirements
+                            </h3>
+                            <div class="form-group">
+                                <div id="requirements-editor" class="requirements-container">
+                                    <div class="requirements-controls" style="padding: 10px 20px; text-align: right;">
+                                        <button type="button" id="clear-requirements" class="control-btn danger" title="Clear all">
+                                            <i class="fas fa-trash-alt"></i> Clear
+                                        </button>
+                                    </div>
+                                    <div class="requirements-body">
+                                        <ul id="requirements-list">
+                                            <li class="requirement-item empty-state">
+                                                <i class="fas fa-inbox"></i>
+                                                <span>No requirements added yet</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="requirements-footer">
+                                        <button type="button" id="add-requirement" class="btn btn-primary">
+                                            <i class="fas fa-plus-circle"></i> Add New Requirement
+                                        </button>
+                                        <div class="bio-tips">
+                                            <i class="fas fa-lightbulb"></i>
+                                            <span>Tip: Use clear and specific points to describe your needs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="key_requirements" name="key_requirements" value="">
+                            </div>
+                        </div>
                         
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-code"></i> Required Skills
+                                <i class="fas fa-info-circle"></i> Additional Information
+                            </h3>
+                            <div class="form-group">
+                                <label for="additional_info">
+                                    <i class="fas fa-align-left"></i> Extra Details
+                                </label>
+                                <textarea id="additional_info" name="additional_info" class="form-control" 
+                                    placeholder="Any other information freelancers should know about this project"
+                                    rows="4">{{ additional_info }}</textarea>
+                                <div class="textarea-footer">
+                                    <div class="char-counter">
+                                        <span id="additional-info-char-count">0</span>/500 characters
+                                    </div>
+                                    <div class="bio-tips">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Tip: Include any additional information that will help freelancers understand your project</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section full-width">
+                            <h3 class="section-title">
+                                <i class="fas fa-code"></i> Skills
                             </h3>
                             <div class="form-group">
                                 <label for="skills_search">
@@ -194,11 +251,22 @@
                                     <div class="skill-option">
                                         <input type="checkbox" 
                                             id="skill_{{ skill.id }}" 
-                                            name="skills_required" 
+                                            name="skills" 
                                             value="{{ skill.id }}"
-                                            {% if skill.id in selected_skills %}checked{% endif %}>
+                                            {% if skill.id in skills_select %}checked{% endif %}>
                                         <span class="custom-checkbox"></span>
-                                        <label for="skill_{{ skill.id }}">{{ skill.name }}</label>
+                                        <span class="skill-name">{{ skill.name }}</span>
+                                
+                                        <div class="skill-level-selector" style="margin-left: auto; display: none;">
+                                            <select name="skill_level_{{ skill.id }}" class="form-control" style="width: 150px; padding: 5px;">
+                                                {% for value, label in project_skills_levels %}
+                                                    <option value="{{ value }}"
+                                                        {% if skill_levels_map|dict_get:skill.id == value %}selected{% endif %}>
+                                                        {{ label }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
                                     </div>
                                     {% empty %}
                                     <div class="no-skills-available">No skills available</div>
@@ -207,10 +275,12 @@
                                 
                                 <div class="selected-skills-container" id="selected-skills">
                                     <h4>Selected Skills:</h4>
-                                    <div class="selected-skills-list"></div>
+                                    <div class="selected-skills-list">
+                                        <!-- Selected skills with levels will appear here -->
+                                    </div>
                                 </div>
                                 
-                                <div class="tags-hint">Add relevant skills to help us match you with qualified freelancers</div>
+                                <div class="tags-hint">Add at least 5 skills to increase your visibility</div>
                             </div>
                         </div>
                         
@@ -266,4 +336,5 @@
 <script src="{% static 'js/projects/attachments-handler.js' %}"></script>
 <script src="{% static 'js/projects/dynamic-skills-filter.js' %}"></script>
 <script src="{% static 'js/projects/project-form.js' %}"></script>
+<script src="{% static 'js/projects/auto-bullet-textarea.js' %}"></script>
 {% endblock %}

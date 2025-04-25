@@ -36,6 +36,10 @@ class BaseFreelancerView(CustomLoginRequiredMixin, View):
         """
         Ensure the user has freelancer role before proceeding.
         """
+        
+        if not request.user.is_authenticated:
+            return redirect(settings.LOGIN_URL)
+        
         if not hasattr(request.user, 'role') or request.user.role != 'freelancer':
             messages.error(request, "Access denied. You must be a freelancer to view this page.")
             return redirect(self.HOME_URL)

@@ -32,6 +32,10 @@ class BaseClientView(CustomLoginRequiredMixin, View):
         """
         Ensure the user has client role before proceeding.
         """
+        
+        if not request.user.is_authenticated:
+            return redirect(settings.LOGIN_URL)
+        
         if not hasattr(request.user, 'role') or request.user.role != 'client':
             messages.error(request, "Access denied. You must be a client to view this page.")
             return redirect(self.HOME_URL)

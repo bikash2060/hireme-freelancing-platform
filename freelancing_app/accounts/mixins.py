@@ -1,24 +1,17 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 
 class CustomLoginRequiredMixin(LoginRequiredMixin):
     """
-    Custom authentication mixin that extends Django's LoginRequiredMixin.
-    
-    This mixin:
-    - Requires users to be authenticated to access the view
-    - Removes the 'next' parameter from redirect URLs by setting redirect_field_name to None
-    - Can be easily extended with additional custom authentication logic
-    
-    Usage:
-        class MyView(CustomLoginRequiredMixin, View):
-            # Your view implementation
+    Custom authentication mixin that:
+    - Forces login
+    - Disables the 'next' parameter
+    - Can be extended with additional logic
     """
-    
-    redirect_field_name = None  # Disables the 'next' parameter in redirect URLs
-    
+    login_url = settings.LOGIN_URL  
+    redirect_field_name = None     
+
     def dispatch(self, request, *args, **kwargs):
-        """
-        Override dispatch to add custom pre-authentication logic if needed
-        """
-        # Add any custom pre-authentication logic here if required
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
