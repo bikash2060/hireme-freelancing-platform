@@ -423,16 +423,22 @@ class ChatApp {
         
         const userIconContainer = document.createElement('div');
         userIconContainer.className = 'user-icon-container';
+        userIconContainer.style.position = 'relative';
+        userIconContainer.style.marginRight = '12px';
+        userIconContainer.style.width = '40px';
+        userIconContainer.style.height = '40px';
         
         if (chat.other_user.profile_image) {
             const img = document.createElement('img');
             img.src = chat.other_user.profile_image;
             img.alt = chat.other_user.full_name;
+            img.className = 'user-avatar';  // Apply standard class
             userIconContainer.appendChild(img);
         } else {
             const userIcon = document.createElement('div');
             userIcon.className = 'user-icon';
             userIcon.textContent = chat.other_user.full_name.charAt(0).toUpperCase();
+            userIcon.style.backgroundColor = '#4A90E2'; // More subtle blue
             userIconContainer.appendChild(userIcon);
         }
         
@@ -440,8 +446,20 @@ class ChatApp {
         if (chat.other_user.is_online) {
             const statusIndicator = document.createElement('span');
             statusIndicator.className = 'status-indicator';
+            statusIndicator.style.position = 'absolute';
+            statusIndicator.style.bottom = '0';
+            statusIndicator.style.right = '0';
+            statusIndicator.style.width = '12px';
+            statusIndicator.style.height = '12px';
+            statusIndicator.style.borderRadius = '50%';
+            statusIndicator.style.backgroundColor = '#4caf50';
+            statusIndicator.style.border = '2px solid white';
+            statusIndicator.style.transform = 'translate(2px, 2px)';
             userIconContainer.appendChild(statusIndicator);
         }
+        
+        userIconContainer.style.position = 'relative';
+        userIconContainer.style.marginRight = '12px';
         
         const chatDetails = document.createElement('div');
         chatDetails.className = 'chat-details';
@@ -688,43 +706,42 @@ class ChatApp {
 
     filterChatList(searchTerm) {
         if (!this.chatList) return;
-        
+    
         searchTerm = searchTerm.toLowerCase().trim();
         console.log('Filtering chat list with search term:', searchTerm);
-        
-        // If search is cleared (empty search term), reload the full chat list
-        if (searchTerm === '') {
-            console.log('Search cleared, reloading chat list');
+    
+        // Reload full list if no rows exist (due to prior no-results)
+        const chatRows = this.chatList.querySelectorAll('.chat-row');
+        if (chatRows.length === 0) {
+            // If chat list is empty, reload it
+            console.log('Chat list is empty. Reloading...');
             this.loadChatList();
             return;
         }
-        
-        // Check unread toggle state
+    
         const unreadToggle = document.getElementById('unread-toggle');
         const showOnlyUnread = unreadToggle && unreadToggle.checked;
-        
-        const chatRows = this.chatList.querySelectorAll('.chat-row');
+    
         let visibleCount = 0;
-        
         chatRows.forEach(row => {
             const userName = row.querySelector('.chat-name')?.textContent?.toLowerCase() || '';
             const lastMessage = row.querySelector('.message')?.textContent?.toLowerCase() || '';
             const isUnread = row.classList.contains('unread');
-            
-            // Hide all rows initially
-            row.style.display = 'none';
-            
-            // Show row if it matches search and unread filter
-            if ((userName.includes(searchTerm) || lastMessage.includes(searchTerm)) &&
-                (!showOnlyUnread || isUnread)) {
+    
+            const matchesSearch = userName.includes(searchTerm) || lastMessage.includes(searchTerm);
+            const matchesUnread = !showOnlyUnread || isUnread;
+    
+            if (matchesSearch && matchesUnread) {
                 row.style.display = 'flex';
                 visibleCount++;
+            } else {
+                row.style.display = 'none';
             }
         });
-        
-        // Update no results message if needed
+    
         this.updateNoResultsMessage(visibleCount, searchTerm);
     }
+    
 
     activateTab(activeTab, inactiveTab) {
         if (!activeTab || !inactiveTab) return;

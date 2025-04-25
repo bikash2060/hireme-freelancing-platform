@@ -987,51 +987,27 @@ html[lang="ne"] .navbar .links .nav-link {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.navbar .message-main .chat-list .chat-row.unread::before {
-    content: '';
-    position: absolute;
-    left: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: #3b82f6;
-}
-
-.navbar .message-main .chat-row .user-icon {
-    margin-right: 14px;
-    font-size: 18px;
-    color: #4a5568;
-    text-decoration: none;
-    width: 48px; 
-    height: 48px; 
-    border-radius: 50%;
-    background-color: #edf2f7; 
-    flex-shrink: 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    border: 2px solid #fff;
-    transition: all 0.2s ease;
-}
-
-.navbar .message-main .chat-row:hover .user-icon {
-    transform: scale(1.05);
-}
-
+.navbar .message-main .chat-row .user-icon,
 .navbar .message-main .chat-row img {
-    margin-right: 14px;
-    height: 48px; 
-    width: 48px; 
-    border-radius: 50%; 
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
     object-fit: cover;
-    flex-shrink: 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
     border: 2px solid #fff;
-    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: #ffffff;
 }
 
+.navbar .message-main .chat-row:hover .user-icon,
 .navbar .message-main .chat-row:hover img {
-    transform: scale(1.05);
+    transform: scale(1.08);
     border-color: #e2e8f0;
 }
 
@@ -2329,24 +2305,6 @@ footer .bottom-details .bottom_text {
     .navbar .profile-main .user-box .logout a {
         font-size: 14px;
     }
-}
-
-/* Status indicator styling for online users */
-.navbar .user-icon-container {
-    position: relative;
-    padding-left: 10px;
-}
-
-.navbar .user-icon-container .status-indicator {
-    position: absolute;
-    bottom: 0;
-    right: 10px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #2ecc71;
-    border: 2px solid #ffffff;
-    z-index: 2;
 }
 
 /* Back to Top Button Styles */

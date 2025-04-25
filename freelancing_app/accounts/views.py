@@ -626,7 +626,7 @@ class UserRoleRedirectView(BaseAuthView):
             return render(request, self.TEMPLATE_NAME)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.home_url)
+            return redirect(self.HOME_URL)
 
     def _create_user_with_role(self, request):
         try:
@@ -714,8 +714,7 @@ class UserLogoutView(View):
             print(f"[Logout Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again later.')
             return redirect(self.LOGIN_URL)
-
-        
+      
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: OAuthRoleSelectionView
@@ -743,25 +742,25 @@ class OAuthRoleSelectionView(BaseAuthView):
         try:
             if not request.session.get('sociallogin'):
                 messages.error(request, 'Invalid request.')
-                return redirect(self.login_url)
+                return redirect(self.LOGIN_URL)
 
             email = request.session.get('sociallogin_email')
             if not email:
                 messages.error(request, 'Email information missing.')
-                return redirect(self.login_url)
+                return redirect(self.LOGIN_URL)
 
             return render(request, self.TEMPLATE_NAME, {'email': email})
         except Exception as e:
             print(f"[OAuth GET Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.login_url)
+            return redirect(self.LOGIN_URL)
 
     def _process_role_selection(self, request):
         try:
             serialized_sociallogin = request.session.get('sociallogin')
             if not serialized_sociallogin:
                 messages.error(request, 'Invalid request.')
-                return redirect(self.login_url)
+                return redirect(self.LOGIN_URL)
 
             role = request.POST.get('role', '').strip().lower()
             if role not in ['client', 'freelancer']:
@@ -810,12 +809,12 @@ class OAuthRoleSelectionView(BaseAuthView):
             self._clear_oauth_session(request)
 
             messages.success(request, 'You have successfully logged in.')
-            return redirect(self.home_url)
+            return redirect(self.HOME_URL)
 
         except Exception as e:
             print(f"[OAuth POST Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.login_url)
+            return redirect(self.LOGIN_URL)
 
     def _get_high_res_picture(self, sociallogin):
         """Return higher resolution profile picture if available (Google specific)"""
