@@ -57,15 +57,125 @@
         <!-- Navigation Links Section -->
         <div class="links">
             {% if not request.user.is_authenticated %}
-                <a href="{% url 'home:home' %}" class="nav-link">Home</a>
-                <a href="{% url 'home:freelancers' %}" class="nav-link">Find Freelancers</a>
-                <a href="{% url 'home:projects' %}" class="nav-link">Find Projects</a>
-                <a href="{% url 'home:about-us' %}" class="nav-link">About Us</a>
-                <a href="{% url 'home:contact-us' %}" class="nav-link">Contact Us</a>
-            {% else %}
-                <a href="{% url 'home:home' %}" class="nav-link">Home</a>                
-                <a href="#" class="nav-link">Help</a>
-                <a href="#" class="nav-link">About Us</a>
+                <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+                <a href="{% url 'home:freelancers' %}" class="nav-link {% if request.resolver_match.url_name == 'freelancers' %}active{% endif %}">Find Freelancers</a>
+                <a href="{% url 'home:projects' %}" class="nav-link {% if request.resolver_match.url_name == 'projects' %}active{% endif %}">Find Projects</a>
+                <a href="{% url 'home:about-us' %}" class="nav-link {% if request.resolver_match.url_name == 'about-us' %}active{% endif %}">About Us</a>
+                <a href="{% url 'home:contact-us' %}" class="nav-link {% if request.resolver_match.url_name == 'contact-us' %}active{% endif %}">Contact Us</a>
+            {% elif request.user.role == 'client' or request.user.role == 'CLIENT' %}
+                <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+
+                <div class="nav-dropdown">
+                    <button class="nav-dropbtn">
+                        Projects <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="nav-dropdown-content">
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-plus-circle"></i> Post New Project
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-briefcase"></i> My Projects
+                        </a>
+                        <div class="dropdown-content-divider"></div>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-file"></i> Draft Projects
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-search"></i> Browse All Projects
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <button class="nav-dropbtn">
+                        Freelancers <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="nav-dropdown-content">
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-search"></i> Find Freelancers
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-bookmark"></i> Saved Freelancers
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-dropdown">
+                    <button class="nav-dropbtn">
+                        Contracts <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="nav-dropdown-content">
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-file-signature"></i> Active Contracts
+                        </a>
+                        <div class="dropdown-content-divider"></div>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-check-circle"></i> Completed Work
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-credit-card"></i> Payments
+                        </a>
+                    </div>
+                </div>
+            {% elif request.user.role == 'freelancer' or request.user.role == 'FREELANCER' %}
+                <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+
+                <div class="nav-dropdown">
+                    <button class="nav-dropbtn">
+                        Find Work <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="nav-dropdown-content">
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-search"></i> Browse Projects
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-bookmark"></i> Saved Projects
+                        </a>
+                        <div class="dropdown-content-divider"></div>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-paper-plane"></i> My Proposals
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <button class="nav-dropbtn">
+                        My Work <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="nav-dropdown-content">
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-tasks"></i> Active Contracts
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-check-circle"></i> Completed Work
+                        </a>
+                        <div class="dropdown-content-divider"></div>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-money-bill-wave"></i> Earnings
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <button class="nav-dropbtn">
+                        My Profile <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </button>
+                    <div class="nav-dropdown-content">
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-user"></i> View Public Profile
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </a>
+                        <div class="dropdown-content-divider"></div>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-briefcase"></i> Portfolio
+                        </a>
+                        <a href="" class="dropdown-item">
+                            <i class="fas fa-tools"></i> Skills & Services
+                        </a>
+                    </div>
+                </div>
             {% endif %}
         </div>
 
@@ -371,117 +481,103 @@
 
 <!-- Footer Section -->
 {% block footer %}
-<footer>
-    <div class="content">
-        <div class="top">
-            <div class="logo-details">
-                <img src="{% static 'images/logo/Logo.png' %}" alt="company-logo">
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <img src="{% static 'images/logo/Logo.png' %}" alt="HireMe Logo" class="footer-logo">
+                <p class="footer-tagline">Connecting talent with opportunity worldwide</p>
             </div>
-            <div class="media-icons">
-                <a href="https://www.facebook.com/bishal.bhattarai.984786" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://x.com/bhattarai_bsal2" target="_blank"><i class="fab fa-twitter"></i></a>
-                <a href="https://www.instagram.com/its_bshal21/" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.linkedin.com/in/bikashbhattarai/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <div class="footer-newsletter">
+                <h3>Stay Updated</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit" class="subscribe-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/bishal.bhattarai.984786" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com/bhattarai_bsal2" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/its_bshal21/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/bikashbhattarai/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
             </div>
         </div>
         
-        {% if not user.is_authenticated %}
-        <div class="link-boxes">
-            <ul class="box">
-                <li class="link_name">Company</li>
-                <li><a href="#">About HireMe</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">Careers</a></li>
-                <li><a href="#">Blog</a></li>
-            </ul>
-            
-            <ul class="box">
-                <li class="link_name">Freelancer Services</li>
-                <li><a href="#">Become a Freelancer</a></li>
-                <li><a href="#">Explore Jobs</a></li>
-                <li><a href="#">How to Get Started</a></li>
-                <li><a href="#">Freelancer Tips</a></li>
-            </ul>
+        <div class="footer-middle">
+            <div class="footer-links">
+                <div class="link-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="{% url 'home:about-us' %}">About HireMe</a></li>
+                        <li><a href="{% url 'home:contact-us' %}">Contact Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                
+                <div class="link-column">
+                    <h4>Freelancers</h4>
+                    <ul>
+                        <li><a href="#">Become a Freelancer</a></li>
+                        <li><a href="{% url 'home:projects' %}">Explore Jobs</a></li>
+                        <li><a href="#">Freelancer Dashboard</a></li>
+                        <li><a href="#">How to Get Started</a></li>
+                        <li><a href="#">Freelancer Tips</a></li>
+                    </ul>
+                </div>
 
-            <ul class="box">
-                <li class="link_name">Client Services</li>
-                <li><a href="#">Post a Job</a></li>
-                <li><a href="#">Hire Freelancers</a></li>
-                <li><a href="#">Payment Methods</a></li>
-                <li><a href="#">Client Supports</a></li>
-            </ul>
+                <div class="link-column">
+                    <h4>Clients</h4>
+                    <ul>
+                        <li><a href="#">Post a Job</a></li>
+                        <li><a href="#">Hire Freelancers</a></li>
+                        <li><a href="#">Client Dashboard</a></li>
+                        <li><a href="#">Payment Methods</a></li>
+                        <li><a href="#">Client Supports</a></li>
+                    </ul>
+                </div>
 
-            <ul class="box">
-                <li class="link_name">Support</li>
-                <li><a href="#">Help Center</a></li>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Contact Support</a></li>
-                <li><a href="#">Community Guidelines</a></li>
-            </ul>
+                <div class="link-column">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                        <li><a href="#">Community Guidelines</a></li>
+                        <li><a href="#">Trust & Safety</a></li>
+                    </ul>
+                </div>
 
-            <ul class="box">
-                <li class="link_name">Quick Links</li>
-                <li><a href="{% url 'account:login' %}">Login</a></li>
-                <li><a href="#">Terms &amp; Conditions</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Categories</a></li>
-            </ul>
+                <div class="link-column">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="{% url 'account:login' %}">Login</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Categories</a></li>
+                        <li><a href="#">Pricing</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         
-        {% else %}
-        <!-- Footer for logged in users - role based -->
-        <div class="link-boxes">
-            <ul class="box">
-                <li class="link_name">Company</li>
-                <li><a href="#">About HireMe</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">Blog</a></li>
-            </ul>
-            
-            {% if user.role == 'freelancer' or user.role == 'FREELANCER' %}
-            <ul class="box">
-                <li class="link_name">Freelancer</li>
-                <li><a href="#">My Projects</a></li>
-                <li><a href="#">Find Work</a></li>
-                <li><a href="#">My Proposals</a></li>
-                <li><a href="#">Freelancer Dashboard</a></li>
-            </ul>
-            {% endif %}
-            
-            {% if user.role == 'client' or user.role == 'CLIENT' %}
-            <ul class="box">
-                <li class="link_name">Client</li>
-                <li><a href="#">My Jobs</a></li>
-                <li><a href="#">Post a Job</a></li>
-                <li><a href="#">Find Freelancers</a></li>
-                <li><a href="#">Client Dashboard</a></li>
-            </ul>
-            {% endif %}
-            
-            <ul class="box">
-                <li class="link_name">Account</li>
-                <li><a href="">My Profile</a></li>
-                <li><a href="">Settings</a></li>
-                <li><a href="">Logout</a></li>
-            </ul>
-
-            <ul class="box">
-                <li class="link_name">Support</li>
-                <li><a href="#">Help Center</a></li>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Contact Support</a></li>
-            </ul>
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="bottom-details">
-        <div class="bottom_text">
-            <span class="copyright_text">Copyright © {{ current_year }} <a href="{% url 'home:home' %}">HireMe.</a> All rights reserved</span>
-            <span class="policy_terms">
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; {{ current_year }} <a href="{% url 'home:home' %}">HireMe</a>. All rights reserved</p>
+            </div>
+            <div class="footer-legal">
                 <a href="#">Privacy Policy</a>
-                <a href="#">Terms &amp; Conditions</a>
-            </span>
+                <span class="separator">|</span>
+                <a href="#">Terms & Conditions</a>
+                <span class="separator">|</span>
+                <a href="#">Cookie Policy</a>
+            </div>
         </div>
     </div>
 </footer>  
