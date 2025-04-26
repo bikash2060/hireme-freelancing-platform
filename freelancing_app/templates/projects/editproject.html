@@ -2,10 +2,10 @@
 {% load static %}
 {% load extra_filters %}
 
-{% block title %}New Project - HireMe{% endblock %}
+{% block title %}Edit Project - HireMe{% endblock %}
 
 {% block css_files %}
-<link rel="stylesheet" href="{% static 'css/projects/addproject.css' %}">
+<link rel="stylesheet" href="{% static 'css/projects/editproject.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -18,19 +18,19 @@
                         <i class="fas fa-project-diagram profile-icon"></i>
                     </div>
                     <div>
-                        <h2>Post a New Project</h2>
-                        <p class="subtitle">Provide details about your project to find the right freelancers</p>
+                        <h2>Edit Project</h2>
+                        <p class="subtitle">Update your project details</p>
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <a href="{% url 'home:home' %}" id="close-experience-form" class="back-to-profile-btn">
-                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    <a href="{% url 'project:client-project-detail' project.id %}" id="close-experience-form" class="back-to-profile-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Project
                     </a>
                 </div>
             </div>
             
             <div class="card-body">
-                <form id="project-form" method="POST" action="{% url 'project:new-project' %}" enctype="multipart/form-data">
+                <form id="project-form" method="POST" action="{% url 'project:edit-project' project.id %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     
                     <div class="form-grid">
@@ -42,7 +42,7 @@
                                 <label for="title">
                                     <i class="fas fa-heading"></i> Project Title
                                 </label>
-                                <input type="text" id="title" name="title" class="form-control" value="{{ title }}" 
+                                <input type="text" id="title" name="title" class="form-control" value="{{ title|default:project.title }}" 
                                     placeholder="e.g. Build a responsive website">
                                 <div class="input-hint">Clear, descriptive titles attract better proposals</div>
                             </div>
@@ -54,7 +54,14 @@
                                 <select id="category" name="category" class="form-control">
                                     <option value="" selected disabled>Select a category</option>
                                     {% for category in categories %}
-                                    <option value="{{ category.id }}" {% if category.id == category_id %}selected{% endif %}>{{ category.name }}</option>
+                                        <option value="{{ category.id }}" 
+                                            {% if category_id and category.id == category_id %}
+                                                selected
+                                            {% elif not category_id and category.id == project.category.id %}
+                                                selected
+                                            {% endif %}>
+                                            {{ category.name }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                                 <div class="input-hint">Select the most relevant category for your project</div>
@@ -73,7 +80,11 @@
                                     <option value="" selected disabled>Select experience level</option>
                                     {% for value, label in experience_levels %}
                                         <option value="{{ value }}" 
-                                            {% if experience_level == value %}selected{% endif %}>
+                                            {% if experience_level and value == experience_level %}
+                                                selected
+                                            {% elif not experience_level and value == project.experience_level %}
+                                                selected
+                                            {% endif %}>
                                             {{ label }}
                                         </option>
                                     {% endfor %}
@@ -86,7 +97,7 @@
                                     <i class="fas fa-calendar-alt"></i> Estimated Duration (weeks)
                                 </label>
                                 <input type="number" id="estimated_duration" name="estimated_duration" 
-                                    class="form-control" min="1" max="104" value="{{ estimated_duration }}" >
+                                    class="form-control" min="1" max="104" value="{{ estimated_duration|default:project.estimated_duration }}" >
                                 <div class="input-hint">How long do you expect this project to take?</div>
                             </div>
                         </div>
@@ -98,7 +109,9 @@
                             
                             <div class="budget-toggle-container">
                                 <div class="budget-option">
-                                    <input type="radio" id="fixed_budget_option" name="budget_type" value="fixed" {% if not is_price_range %}checked{% endif %}>
+                                    <input type="radio" id="fixed_budget_option" name="budget_type" value="fixed" 
+                                        {% if not is_price_range and is_price_range != None %}checked
+                                        {% elif is_price_range == None and project.is_fixed_price %}checked{% endif %}>
                                     <label for="fixed_budget_option" class="option-content">
                                         <i class="fas fa-tag"></i>
                                         <div class="option-title">Fixed Price</div>
@@ -107,7 +120,9 @@
                                 </div>
                                 
                                 <div class="budget-option">
-                                    <input type="radio" id="range_budget_option" name="budget_type" value="range" {% if is_price_range %}checked{% endif %}>
+                                    <input type="radio" id="range_budget_option" name="budget_type" value="range"
+                                        {% if is_price_range %}checked
+                                        {% elif is_price_range == None and not project.is_fixed_price %}checked{% endif %}>
                                     <label for="range_budget_option" class="option-content">
                                         <i class="fas fa-sliders-h"></i>
                                         <div class="option-title">Price Range</div>
@@ -116,7 +131,7 @@
                                 </div>
                             </div>
                             
-                            <div id="fixed-budget-fields" class="budget-fields {% if is_price_range %}hidden{% endif %}">
+                            <div id="fixed-budget-fields" class="budget-fields {% if is_price_range or is_price_range == None and not project.is_fixed_price %}hidden{% endif %}">
                                 <div class="budget-input-group">
                                     <label for="fixed_budget">
                                         Fixed Budget (NPR)
@@ -124,13 +139,13 @@
                                     <div class="input-with-symbol">
                                         <span class="input-symbol">Rs</span>
                                         <input type="number" id="fixed_budget" name="fixed_budget" 
-                                            class="form-control" min="1000" value="{{ fixed_budget }}">
+                                            class="form-control" min="1000" value="{{ fixed_budget|default:project.fixed_budget }}">
                                     </div>
                                     <div class="budget-hint">Total amount you're willing to pay for this project</div>
                                 </div>
                             </div>
                             
-                            <div id="range-budget-fields" class="budget-fields {% if not is_price_range %}hidden{% endif %}">
+                            <div id="range-budget-fields" class="budget-fields {% if project.is_fixed_price %}hidden{% endif %}">
                                 <div class="duration-grid">
                                     <div class="budget-input-group">
                                         <label for="budget_min">
@@ -139,7 +154,7 @@
                                         <div class="input-with-symbol">
                                             <span class="input-symbol">Rs</span>
                                             <input type="number" id="budget_min" name="budget_min" 
-                                                class="form-control" min="1000" value="{{ budget_min }}">
+                                                class="form-control" min="1000" value="{{ budget_min|default:project.budget_min }}">
                                         </div>
                                     </div>
                                     
@@ -150,7 +165,7 @@
                                         <div class="input-with-symbol">
                                             <span class="input-symbol">Rs</span>
                                             <input type="number" id="budget_max" name="budget_max" 
-                                                class="form-control" min="2000" value="{{ budget_max }}">
+                                                class="form-control" min="2000" value="{{ budget_max|default:project.budget_max }}">
                                         </div>
                                     </div>
                                 </div>
@@ -167,7 +182,7 @@
                                     <i class="fas fa-pen"></i> Detailed Description
                                 </label>
                                 <textarea id="description" name="description" class="form-control" placeholder="Explain your project in detail"
-                                    rows="6" maxlength="500">{{ description }}</textarea>
+                                    rows="6" maxlength="500">{{ description|default:project.description }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
                                         <span id="desc-char-count">0</span>/500 characters
@@ -209,7 +224,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" id="key_requirements" name="key_requirements" value="">
+                                <input type="hidden" id="key_requirements" name="key_requirements" 
+                                    value="{{ key_requirements|default_if_none:''|escapejs }}">
                             </div>
                         </div>
                         
@@ -223,7 +239,7 @@
                                 </label>
                                 <textarea id="additional_info" name="additional_info" class="form-control" 
                                     placeholder="Any other information freelancers should know about this project"
-                                    rows="4">{{ additional_info }}</textarea>
+                                    rows="4">{{ project.additional_info }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
                                         <span id="additional-info-char-count">0</span>/500 characters
@@ -297,12 +313,15 @@
                                             <p class="file-types">Supports: PDF, DOC, JPG, PNG (Max 5MB each)</p>
                                         </div>
                                         <input type="file" id="attachment" name="attachment[]" class="file-upload-input" multiple
-                                            {% if attachments %}value="{{ attachments }}"{% endif %}>
+                                            {% if existing_attachments_json %}value="{{ existing_attachments_json }}"{% endif %}>
                                     </label>
                                     
                                     <div class="file-preview-container" id="file-preview">
-                                        
                                     </div>
+                                    
+                                    <script type="application/json" id="existing-attachments-data">
+                                        {{ existing_attachments_json|safe }}
+                                    </script>
                                     
                                     <div class="upload-status">
                                         <div class="progress-bar" id="upload-progress" style="display: none;">
@@ -333,7 +352,7 @@
 {% block js_files %}
 <script src="{% static 'js/projects/budget-toggle.js' %}"></script>
 <script src="{% static 'js/projects/description-handler.js' %}"></script>
-<script src="{% static 'js/projects/project-attachments.js' %}"></script>
+<script src="{% static 'js/projects/attachments-handler.js' %}"></script>
 <script src="{% static 'js/projects/dynamic-skills-filter.js' %}"></script>
 <script src="{% static 'js/projects/project-form.js' %}"></script>
 <script src="{% static 'js/projects/auto-bullet-textarea.js' %}"></script>

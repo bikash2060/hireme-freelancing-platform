@@ -324,16 +324,13 @@
                         
                         <div class="project-footer">
                             {% if project.status == 'draft' %}
-                                <a href="" class="btn-action secondary-btn">
+                                <a href="{% url 'project:edit-project' project.id %}" class="btn-action secondary-btn">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                                 <a href="{% url 'project:publish-project' project.id %}" class="btn-action primary-btn">
                                     <i class="fas fa-paper-plane"></i> Publish
                                 </a>
                             {% elif project.status == 'published' %}
-                                <a href="" class="btn-action secondary-btn">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
                                 <a href="" class="btn-action primary-btn">
                                     <i class="fas fa-users"></i> View Proposals ({{ project.proposals.count|default:0 }})
                                 </a>

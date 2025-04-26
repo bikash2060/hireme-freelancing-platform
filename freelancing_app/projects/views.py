@@ -11,6 +11,7 @@ from django.views import View
 from .models import *
 from .utils import *
 import os
+import json
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -220,6 +221,20 @@ class NewProjectView(BaseProjectView):
                         project=project,
                         file=os.path.basename(filename)  
                     )
+                    
+            # Handle deleted attachments
+            deleted_attachments = request.POST.get('deleted_attachments', '').split(',')
+            if deleted_attachments and deleted_attachments[0]:  # Check if there are any deleted attachments
+                for attachment_id in deleted_attachments:
+                    try:
+                        attachment = ProjectAttachment.objects.get(id=attachment_id, project=project)
+                        # Delete the file from storage
+                        if os.path.exists(attachment.file.path):
+                            os.remove(attachment.file.path)
+                        attachment.delete()
+                    except (ProjectAttachment.DoesNotExist, Exception) as e:
+                        print(f"[Delete Attachment Error]: {e}")
+                        continue
                     
             # Send notification
             project_detail_url = reverse(self.PROJECT_URL, kwargs={'project_id': project.id})
@@ -460,3 +475,270 @@ class PublishProjectView(BaseProjectView):
             print(f"[PublishProjectView Error]: {e}")
             messages.error(request, 'Something went wrong while publishing your project.')
             return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project_id}))
+        
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: EditProjectView
+# Description: Handles editing of existing projects
+# Tested On: 2025-04-26
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class EditProjectView(BaseProjectView):
+    """
+    - Handles editing of existing projects
+    - Uses similar logic to NewProjectView but with existing project data
+    - Prevents editing of non-draft projects
+    """
+    TEMPLATE_NAME = 'projects/editproject.html'
+    PROJECT_URL = 'project:client-project-detail'
+    CLIENT_PROJECTS_URL = 'project:client-projects'
+
+    def get(self, request, project_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.prefetch_related(
+                'project_skills__skill',
+                'project_attachments'
+            ).get(id=project_id, client=client)
+
+            # Don't allow editing of non-draft projects
+            if project.status != Project.Status.DRAFT:
+                messages.error(request, 'Only draft projects can be edited.')
+                return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project.id}))
+
+            skills = Skill.objects.all().order_by('name')
+            categories = ProjectCategory.objects.all().order_by('name')
+            experience_levels = Project.ExpertiseLevel.choices
+            project_skills_levels = ProjectSkill.SkillLevel.choices
+
+            # Get existing project skills and levels
+            skill_levels_map = {
+                ps.skill.id: ps.level 
+                for ps in project.project_skills.all()
+            }
+
+            # Format key requirements for display
+            key_requirements = []
+            if project.key_requirements:
+                key_requirements = [req.strip() for req in project.key_requirements.split('\n') if req.strip()]
+                key_requirements = [req.replace('\n', ' ').strip() for req in key_requirements]
+            key_requirements = '\n'.join(key_requirements)
+
+            # Prepare existing attachments
+            existing_attachments = []
+            if project.project_attachments.all():
+                for attachment in project.project_attachments.all():
+                    try:
+                        # Get the file path relative to MEDIA_ROOT
+                        file_path = os.path.join(settings.MEDIA_ROOT, str(attachment.file))
+                        if os.path.exists(file_path):
+                            attachment_data = {
+                                'id': attachment.id,
+                                'name': os.path.basename(attachment.file.name),
+                                'url': attachment.file.url,
+                                'size': os.path.getsize(file_path),
+                                'uploaded_at': attachment.uploaded_at.isoformat() if attachment.uploaded_at else None
+                            }
+                            existing_attachments.append(attachment_data)
+                        else:
+                            print(f"[Attachment Warning]: File not found at {file_path}")
+                    except Exception as e:
+                        print(f"[Attachment Error]: {e}")
+                        continue
+            
+            context = {
+                'project': project,
+                'skills': skills,
+                'skills_select': list(skill_levels_map.keys()),
+                'skill_levels_map': skill_levels_map,
+                'categories': categories,
+                'experience_levels': experience_levels,
+                'project_skills_levels': project_skills_levels,
+                'key_requirements': key_requirements,
+                'existing_attachments_json': json.dumps(existing_attachments),
+            }
+            
+            return render(request, self.TEMPLATE_NAME, context)
+            
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found or you do not have permission to edit it.')
+            return redirect(self.CLIENT_PROJECTS_URL)
+        except Exception as e:
+            print(f"[EditProjectView GET Error]: {e}")
+            messages.error(request, 'Something went wrong while loading the project for editing.')
+            return redirect(self.CLIENT_PROJECTS_URL)
+
+    def post(self, request, project_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.get(id=project_id, client=client)
+
+            # Don't allow editing of non-draft projects
+            if project.status != Project.Status.DRAFT:
+                messages.error(request, 'Only draft projects can be edited.')
+                return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project.id}))
+
+            skills = Skill.objects.all().order_by('name')
+            categories = ProjectCategory.objects.all().order_by('name')
+            experience_levels = Project.ExpertiseLevel.choices
+            project_skills_levels = ProjectSkill.SkillLevel.choices
+
+            # Get form data (same as NewProjectView)
+            title = request.POST.get('title', '').strip()
+            category_id = request.POST.get('category')
+            experience_level = request.POST.get('experience_level')
+            estimated_duration = request.POST.get('estimated_duration')
+            budget_type = request.POST.get('budget_type')
+            is_price_range = (budget_type == 'range')
+            selected_skill_ids = [int(sid) for sid in request.POST.getlist('skills')]
+            
+            skill_levels_map = {
+                int(skill_id): request.POST.get(f'skill_level_{skill_id}', ProjectSkill.SkillLevel.INTERMEDIATE)
+                for skill_id in selected_skill_ids
+            }
+            
+            # Handle budget fields
+            fixed_budget = None
+            budget_min = None
+            budget_max = None
+            if is_price_range:
+                budget_min = request.POST.get('budget_min')
+                budget_max = request.POST.get('budget_max')
+            else:
+                fixed_budget = request.POST.get('fixed_budget')
+                
+            description = request.POST.get('description', '').strip()
+            
+            # Handle key requirements as a list
+            key_requirements = request.POST.get('key_requirements', '').strip()
+            if key_requirements:
+                key_requirements = '\n'.join([req.strip() for req in key_requirements.split('\n') if req.strip()])
+                                
+            additional_info = request.POST.get('additional_info', '').strip()
+            attachments = request.FILES.getlist('attachment[]')
+            status = request.POST.get('status', 'draft')
+            
+            # Prepare context for form re-rendering
+            context = {
+                'project': project,
+                'skills': skills,
+                'skills_select': selected_skill_ids,
+                'skill_levels_map': skill_levels_map,
+                'title': title,
+                'category_id': int(category_id) if category_id else None,
+                'experience_level': experience_level,
+                'estimated_duration': int(estimated_duration) if estimated_duration else None,
+                'is_price_range': is_price_range,
+                'fixed_budget': float(fixed_budget) if fixed_budget else None,
+                'budget_min': float(budget_min) if budget_min else None,
+                'budget_max': float(budget_max) if budget_max else None,
+                'description': description,
+                'key_requirements': key_requirements,
+                'additional_info': additional_info,
+                'attachments': attachments,
+                'client': client,
+                'categories': categories,
+                'experience_levels': experience_levels,
+                'project_skills_levels': project_skills_levels
+            }
+            
+            # Validate project data
+            is_valid, error_message = ProjectValidator.validate_project_data(
+                title=title,
+                category_id=category_id,
+                experience_level=experience_level,
+                estimated_duration=estimated_duration,
+                is_price_range=is_price_range,
+                fixed_budget=fixed_budget,
+                budget_min=budget_min,
+                budget_max=budget_max,
+                description=description,
+                key_requirements=key_requirements,
+                additional_info=additional_info,
+                selected_skills=selected_skill_ids,
+                attachments=attachments,
+                request=request
+            )
+            
+            if not is_valid:
+                messages.error(request, error_message)
+                return render(request, self.TEMPLATE_NAME, context)
+            
+            # Update project
+            project.title = title
+            project.description = description
+            project.key_requirements = key_requirements
+            project.additional_info = additional_info
+            project.category_id = category_id
+            project.experience_level = experience_level
+            project.estimated_duration = estimated_duration
+            project.is_fixed_price = not is_price_range
+            project.fixed_budget = fixed_budget
+            project.budget_min = budget_min
+            project.budget_max = budget_max
+            
+            # Only update status if posting (not saving as draft)
+            if status == 'posted':
+                project.status = Project.Status.PUBLISHED
+                notification_message = f"Your project {title} has been successfully published and is now visible to freelancers."
+                success_message = 'Your project has been successfully published and is now live.'
+            else:
+                notification_message = f"Your project {title} has been updated and saved as a draft."
+                success_message = 'Your project has been updated and saved as a draft.'
+            
+            project.save()
+            
+            # Update skills - first remove old ones
+            ProjectSkill.objects.filter(project=project).delete()
+            for skill_id in selected_skill_ids:
+                skill = Skill.objects.get(id=skill_id)
+                level = request.POST.get(f'skill_level_{skill_id}', ProjectSkill.SkillLevel.INTERMEDIATE)
+                ProjectSkill.objects.create(
+                    project=project,
+                    skill=skill,
+                    level=level
+                )
+            
+            # Handle new attachments
+            if attachments:
+                fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'project_attachments'))
+                for attachment in attachments:
+                    filename = fs.save(attachment.name, attachment)
+                    ProjectAttachment.objects.create(
+                        project=project,
+                        file=os.path.basename(filename)  
+                    )
+
+            # Handle deleted attachments
+            deleted_attachments = request.POST.get('deleted_attachments', '').split(',')
+            if deleted_attachments and deleted_attachments[0]:  # Check if there are any deleted attachments
+                for attachment_id in deleted_attachments:
+                    try:
+                        attachment = ProjectAttachment.objects.get(id=attachment_id, project=project)
+                        # Delete the file from storage
+                        if os.path.exists(attachment.file.path):
+                            os.remove(attachment.file.path)
+                        attachment.delete()
+                    except (ProjectAttachment.DoesNotExist, Exception) as e:
+                        print(f"[Delete Attachment Error]: {e}")
+                        continue
+                    
+            # Send notification
+            project_detail_url = reverse(self.PROJECT_URL, kwargs={'project_id': project.id})
+            NotificationManager.send_notification(
+                user=request.user,
+                message=notification_message,
+                redirect_url=project_detail_url
+            )
+            
+            messages.success(request, success_message)
+            return redirect(project_detail_url)
+            
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found or you do not have permission to edit it.')
+            return redirect(self.CLIENT_PROJECTS_URL)
+        except Exception as e:
+            print(f"[EditProjectView POST Error]: {e}")
+            messages.error(request, 'Something went wrong while updating your project.')
+            return redirect(reverse('project:edit-project', kwargs={'project_id': project_id}))

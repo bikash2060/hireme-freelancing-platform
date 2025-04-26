@@ -4,18 +4,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearRequirementsBtn = document.getElementById('clear-requirements');
     const hiddenInput = document.getElementById('key_requirements');
 
-    if (!hiddenInput.value) {
-        updateEmptyState();
-    }
-    updateHiddenInput();
-
-    if (hiddenInput.value) {
-        const existingReqs = hiddenInput.value.split('\n').filter(req => req.trim());
-        if (existingReqs.length > 0) {
-            requirementsList.innerHTML = '';
-            existingReqs.forEach(req => addRequirementItem(req));
+    function initializeRequirements() {
+        if (hiddenInput && hiddenInput.value) {
+            // Decode the string and split by actual newlines
+            const decodedValue = hiddenInput.value.replace(/\\u000A/g, '\n');
+            const existingReqs = decodedValue.split('\n').filter(req => req.trim());
+            if (existingReqs.length > 0) {
+                requirementsList.innerHTML = '';
+                existingReqs.forEach(req => {
+                    // Clean the requirement text
+                    const cleanReq = req.trim().replace(/\\u000A/g, '');
+                    if (cleanReq) {
+                        addRequirementItem(cleanReq);
+                    }
+                });
+            } else {
+                updateEmptyState();
+            }
+        } else {
+            updateEmptyState();
         }
     }
+
+    initializeRequirements();
+
+    updateHiddenInput();
 
     addRequirementBtn.addEventListener('click', () => {
         addRequirementItem();
@@ -54,13 +67,17 @@ document.addEventListener('DOMContentLoaded', function () {
             </button>
         `;
         requirementsList.appendChild(li);
-        li.querySelector('.requirement-input').focus();
+        if (!value) {
+            li.querySelector('.requirement-input').focus();
+        }
         updateHiddenInput();
     }
 
     function updateHiddenInput() {
         const items = requirementsList.querySelectorAll('.requirement-item:not(.empty-state)');
-        const requirements = Array.from(items).map(item => item.querySelector('.requirement-input').value.trim()).filter(val => val);
+        const requirements = Array.from(items)
+            .map(item => item.querySelector('.requirement-input').value.trim())
+            .filter(val => val);
         hiddenInput.value = requirements.join('\n');
     }
 

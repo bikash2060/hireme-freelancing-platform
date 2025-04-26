@@ -66,16 +66,13 @@
                     
                     <div class="action-buttons">
                         {% if project.status == 'draft' %}
-                            <a href="" class="btn btn-secondary">
+                            <a href="{% url 'project:edit-project' project.id %}" class="btn btn-secondary">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                             <a href="{% url 'project:publish-project' project.id %}" class="btn btn-primary">
                                 <i class="fas fa-paper-plane"></i> Publish
                             </a>
                         {% elif project.status == 'published' %}
-                            <a href="" class="btn btn-secondary">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
                             <a href="" class="btn btn-primary">
                                 <i class="fas fa-users"></i> View Proposals ({{ project.proposals.count|default:0 }})
                             </a>
@@ -286,7 +283,7 @@
                                 {% if project.is_fixed_price %}
                                     <div class="info-value">Fixed Price</div>
                                 {% else %}
-                                    <div class="info-value">Hourly Rate</div>
+                                    <div class="info-value">Price Range</div>
                                 {% endif %}
                             </div>
                         </div>
