@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
+{% load number_filters %}
+{% load custom_filters %}
+{% load project_filters %}
 
 {% block title %}Apply for {{ project.title }} - HireMe{% endblock %}
 
@@ -8,6 +11,80 @@
 {% endblock %}
 
 {% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">     
+            <div class="breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-list">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home:project-detail' project.id %}">{{ project.title|truncatechars:30 }}</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Submit Proposal
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="project-header">
+                <div class="project-info">
+                    <div class="project-meta">
+                        <span class="project-category">
+                            <i class="fas fa-tag"></i> {{ project.category.name }}
+                        </span>
+                        <span class="project-status published">
+                            <i class="fas fa-circle"></i> Open
+                        </span>
+                    </div>
+                      
+                    <h1 class="project-title">{{ project.title }}</h1>
+                    
+                    <div class="project-client">
+                        <div class="client-avatar">
+                            {% if project.client.user.profile_image %}
+                                <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Sarah Johnson">
+                            {% else %}
+                                <div class="profile-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="client-info">
+                            <span class="client-name">{{ project.client.user.full_name }}</span>
+                            <span class="client-location">
+                                <i class="fas fa-map-marker-alt"></i> {{ project.client.user.city }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span>{{ project.get_experience_level_display }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ project.estimated_duration }} weeks</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-rupee-sign"></i>
+                            {% if project.is_fixed_price %}
+                                <span>{{ project.fixed_budget|format_currency }}</span>
+                            {% else %}
+                                <span>{{ project.budget_min|format_currency }} - {{ project.budget_max|format_currency }}</span>
+                            {% endif %}
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Proposal Form Section -->
 <div class="content-wrapper">
     <div class="edit-profile-container">
         <div class="profile-card">
@@ -17,7 +94,7 @@
                         <i class="fas fa-paper-plane profile-icon"></i>
                     </div>
                     <div>
-                        <h2>Submit Proposal for "{{ project.title }}"</h2>
+                        <h2>Submit Proposal</h2>
                         <p class="subtitle">Create a compelling proposal to win this project</p>
                     </div>
                 </div>
@@ -33,87 +110,105 @@
                     {% csrf_token %}
                     
                     <div class="form-grid">
-                        <div class="form-section">
+                        <div class="form-section full-width">
                             <h3 class="section-title">
                                 <i class="fas fa-info-circle"></i> Project Summary
                             </h3>
-                            <div class="project-summary">
-                                <div class="summary-item">
-                                    <div class="summary-icon">
-                                        <i class="fas fa-wallet"></i>
+                            <div class="project-summary" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div class="summary-column">
+                                    <div class="summary-item">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-wallet"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <div class="summary-label">Budget</div>
+                                            <div class="summary-value">
+                                                {% if project.is_fixed_price %}
+                                                    Rs. {{ project.fixed_budget|format_currency }}
+                                                {% else %}
+                                                    Rs. {{ project.budget_min|format_currency }} - {{ project.budget_max|format_currency }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="summary-content">
-                                        <div class="summary-label">Budget</div>
-                                        <div class="summary-value">
+                                    
+                                    <div class="summary-item">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <div class="summary-label">Duration</div>
+                                            <div class="summary-value">{{ project.estimated_duration }} weeks</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="summary-item">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <div class="summary-label">Expertise Level</div>
+                                            <div class="summary-value">{{ project.get_experience_level_display }}</div>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="summary-column">
+                                    <div class="summary-item">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-tag"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <div class="summary-label">Category</div>
+                                            <div class="summary-value">{{ project.category.name }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <div class="summary-label">Posted</div>
+                                            <div class="summary-value">{{ project.created_at|format_posted_time }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="summary-item">
+                                        <div class="summary-icon">
+                                            <i class="fas fa-briefcase"></i>
+                                        </div>
+                                        <div class="summary-content">
+                                            <div class="summary-label">Project Type</div>
                                             {% if project.is_fixed_price %}
-                                                Rs. {{ project.fixed_budget|floatformat:2 }}
+                                                <div class="summary-value">Fixed Price</div>
                                             {% else %}
-                                                Rs. {{ project.budget_min|floatformat:2 }} - {{ project.budget_max|floatformat:2 }}
+                                                <div class="summary-value">Price Range</div>
                                             {% endif %}
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="summary-item">
-                                    <div class="summary-icon">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                    <div class="summary-content">
-                                        <div class="summary-label">Duration</div>
-                                        <div class="summary-value">{{ project.estimated_duration }} weeks</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="summary-item">
-                                    <div class="summary-icon">
-                                        <i class="fas fa-user-tie"></i>
-                                    </div>
-                                    <div class="summary-content">
-                                        <div class="summary-label">Expertise Level</div>
-                                        <div class="summary-value">{{ project.get_experience_level_display }}</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="summary-item">
-                                    <div class="summary-icon">
-                                        <i class="fas fa-tag"></i>
-                                    </div>
-                                    <div class="summary-content">
-                                        <div class="summary-label">Category</div>
-                                        <div class="summary-value">{{ project.category.name }}</div>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="form-section">
+                        </div>                        
+                        <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-file-alt"></i> Proposal Details
+                                <i class="fas fa-file-alt"></i> Your Proposal Details
                             </h3>
+                            
                             <div class="form-group">
                                 <label for="cover_letter">
                                     <i class="fas fa-align-left"></i> Cover Letter
                                 </label>
                                 <textarea id="cover_letter" name="cover_letter" class="form-control" 
-                                    placeholder="Explain why you're the best fit for this project" 
-                                    rows="6" maxlength="2000" required></textarea>
+                                placeholder="Explain why you're the best fit: your understanding, experience, approach, and any questions."
+                                    rows="8" maxlength="3000">{{ cover_letter }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="cover-letter-char-count">0</span>/2000 characters
+                                        <span id="cover-letter-char-count">0</span>/3000 characters
                                     </div>
                                     <div class="bio-tips">
                                         <i class="fas fa-lightbulb"></i>
-                                        <span>Tip: Highlight relevant experience and your approach</span>
+                                        <span>Tip: A detailed, personalized proposal increases your chances</span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-section full-width">
-                            <h3 class="section-title">
-                                <i class="fas fa-money-bill-wave"></i> Pricing & Timeline
-                            </h3>
-                            
+                            </div>                                                   
                             <div class="duration-grid">
                                 <div class="form-group">
                                     <label for="proposed_amount">
@@ -122,9 +217,9 @@
                                     <div class="input-with-symbol">
                                         <span class="input-symbol">Rs</span>
                                         <input type="number" id="proposed_amount" name="proposed_amount" 
-                                            class="form-control" min="1000" step="500" required>
+                                            class="form-control" min="1000" step="500"
+                                            placeholder="Enter your proposed amount" value="{{ proposed_amount }}">
                                     </div>
-                                    <div class="input-hint">Amount you're proposing for this project</div>
                                 </div>
                                 
                                 <div class="form-group">
@@ -132,15 +227,76 @@
                                         <i class="fas fa-clock"></i> Estimated Duration (weeks)
                                     </label>
                                     <input type="number" id="estimated_duration" name="estimated_duration" 
-                                        class="form-control" min="1" max="104" required>
-                                    <div class="input-hint">How long will this project take?</div>
+                                        class="form-control" min="1" max="104" 
+                                        placeholder="Enter weeks needed" value="{{ estimated_duration }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="available_start_date">
+                                        <i class="fas fa-calendar-check"></i> Available Start Date
+                                    </label>
+                                    <input type="date" id="available_start_date" name="available_start_date" 
+                                        class="form-control"
+                                        placeholder="When can you start?" value="{{ available_start_date }}">
+                                </div>
+                            </div>                            
+                            <div class="form-group">
+                                <label for="approach_methodology">
+                                    <i class="fas fa-tasks"></i> Approach & Methodology
+                                </label>
+                                <textarea id="approach_methodology" name="approach_methodology" class="form-control" 
+                                    placeholder="Describe your approach to completing the project including any phases or milestones" 
+                                    rows="4">{{ approach_methodology }}</textarea>
+
+                                <div class="textarea-footer">
+                                    <div class="char-counter">
+                                        <span id="approach-methodology-char-count">0</span>/2000 characters
+                                    </div>
+                                    <div class="bio-tips">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Tip: Outline your step-by-step plan, key milestones, and methodology to demonstrate your expertise</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="relevant_experience">
+                                    <i class="fas fa-award"></i> Relevant Experience
+                                </label>
+                                <textarea id="relevant_experience" name="relevant_experience" class="form-control" 
+                                    placeholder="Describe your relevant experience for this project" 
+                                    rows="4">{{ relevant_experience }}</textarea>
+
+                                <div class="textarea-footer">
+                                    <div class="char-counter">
+                                        <span id="relevant-experience-char-count">0</span>/1500 characters
+                                    </div>
+                                    <div class="bio-tips">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Tip: Highlight specific projects, skills, and achievements that directly relate to this opportunity</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="questions_for_client">
+                                    <i class="fas fa-question-circle"></i> Questions for Client
+                                </label>
+                                <textarea id="questions_for_client" name="questions_for_client" class="form-control" 
+                                    placeholder="Any questions you have about the project requirements" 
+                                    rows="3">{{ questions_for_client }}</textarea>
+                                <div class="textarea-footer">
+                                    <div class="char-counter">
+                                        <span id="questions-client-char-count">0</span>/500 characters
+                                    </div>
+                                    <div class="bio-tips">
+                                        <i class="fas fa-lightbulb"></i>
+                                        <span>Tip: Ask questions to clarify the project requirements and ensure you have all the information you need</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="form-section full-width attachment-section">
                             <h3 class="section-title">
-                                <i class="fas fa-paperclip"></i> Supporting Documents (Optional)
+                                <i class="fas fa-paperclip"></i> Attachments (Optional)
                             </h3>
                             <div class="form-group">
                                 <div class="file-upload-container">
@@ -150,11 +306,12 @@
                                             <h4>Drag & drop files here or click to browse</h4>
                                             <p class="file-types">Supports: PDF, DOC, JPG, PNG (Max 5MB each)</p>
                                         </div>
-                                        <input type="file" id="attachment" name="attachment[]" class="file-upload-input" multiple>
+                                        <input type="file" id="attachment" name="attachment[]" class="file-upload-input" multiple
+                                            {% if attachments %}value="{{ attachments }}"{% endif %}>
                                     </label>
                                     
                                     <div class="file-preview-container" id="file-preview">
-                                        <!-- File previews will appear here -->
+                                        
                                     </div>
                                     
                                     <div class="upload-status">
@@ -167,7 +324,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div class="form-actions">
                         <button type="submit" class="save-btn">
                             <i class="fas fa-paper-plane"></i> Submit Proposal
@@ -181,13 +337,6 @@
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/projects/description-handler.js' %}"></script>
-<script src="{% static 'js/projects/attachments-handler.js' %}"></script>
-<script>
-    // Character counter for cover letter
-    document.getElementById('cover_letter').addEventListener('input', function() {
-        const charCount = this.value.length;
-        document.getElementById('cover-letter-char-count').textContent = charCount;
-    });
-</script>
+<script src="{% static 'js/proposals/char-counter.js' %}"></script>
+<script src="{% static 'js/proposals/attachment-handler.js' %}"></script>
 {% endblock %}

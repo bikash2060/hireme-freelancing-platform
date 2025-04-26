@@ -2,17 +2,22 @@ from typing import Tuple, Optional, List, Union
 from django.core.files.uploadedfile import UploadedFile
 from projects.models import Project
 import os
+from datetime import datetime
+from decimal import Decimal
 
 class ProposalValidator:
     """Utility class for validating proposal data."""
     
-    MIN_COVER_LETTER = 100
-    MAX_COVER_LETTER = 2000
+    MIN_COVER_LETTER = 200
+    MAX_COVER_LETTER = 3000
     MIN_PROPOSED_AMOUNT = 1000
     MIN_DURATION = 1
     MAX_DURATION = 104
     MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
     ALLOWED_FILE_EXTENSIONS = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png']
+    MAX_APPROACH_LENGTH = 2000
+    MAX_EXPERIENCE_LENGTH = 1500
+    MAX_QUESTIONS_LENGTH = 500
 
     @classmethod
     def validate_proposal_data(
@@ -21,7 +26,11 @@ class ProposalValidator:
         proposed_amount: Union[str, float],
         estimated_duration: Union[str, int],
         attachments: List[UploadedFile],
-        project: Project
+        project: Project,
+        approach_methodology: Optional[str] = None,
+        relevant_experience: Optional[str] = None,
+        questions_for_client: Optional[str] = None,
+        available_start_date: Optional[str] = None
     ) -> Tuple[bool, Optional[str]]:
         """Validate all proposal data fields."""
         validation_methods = [
@@ -30,6 +39,10 @@ class ProposalValidator:
             cls._validate_duration,
             cls._validate_attachments,
             cls._validate_budget_against_project,
+            cls._validate_approach_methodology,
+            cls._validate_relevant_experience,
+            cls._validate_questions_for_client,
+            cls._validate_available_start_date,
         ]
 
         for method in validation_methods:
@@ -38,7 +51,11 @@ class ProposalValidator:
                 proposed_amount=proposed_amount,
                 estimated_duration=estimated_duration,
                 attachments=attachments,
-                project=project
+                project=project,
+                approach_methodology=approach_methodology,
+                relevant_experience=relevant_experience,
+                questions_for_client=questions_for_client,
+                available_start_date=available_start_date
             )
             if not is_valid:
                 return False, error_msg
@@ -108,15 +125,56 @@ class ProposalValidator:
     def _validate_budget_against_project(cls, proposed_amount: Union[str, float], project: Project, **kwargs) -> Tuple[bool, Optional[str]]:
         """Validate proposed amount against project budget constraints."""
         try:
-            proposed = float(proposed_amount)
+            proposed = Decimal(str(proposed_amount))
             
             if project.is_fixed_price:
-                if proposed > project.fixed_budget * 1.5:  # Allow 50% over fixed budget
-                    return False, "Your proposed amount is significantly higher than the client's budget."
+                max_allowed = project.fixed_budget * Decimal('1.5')
+                if proposed > max_allowed:
+                    return False, f"Proposed amount exceeds allowed limit ({max_allowed})."
             else:
-                if proposed > project.budget_max * 1.5:  # Allow 50% over max budget
-                    return False, "Your proposed amount is significantly higher than the client's maximum budget."
+                max_allowed = project.budget_max * Decimal('1.5')
+                if proposed > max_allowed:
+                    return False, f"Proposed amount exceeds allowed limit ({max_allowed})."
+
                 
             return True, None
-        except (ValueError, TypeError):
-            return False, "Invalid proposed amount."
+        except (ValueError, TypeError) as e:
+            print(f"[DEBUG] Error converting proposed amount: {e}")
+            return False, f"Invalid proposed amount. Please enter a valid number. Error: {str(e)}"
+
+    @classmethod
+    def _validate_approach_methodology(cls, approach_methodology: Optional[str] = None, **kwargs) -> Tuple[bool, Optional[str]]:
+        """Validate approach and methodology field."""
+        if approach_methodology and len(approach_methodology.strip()) > cls.MAX_APPROACH_LENGTH:
+            return False, f"Approach & methodology must not exceed {cls.MAX_APPROACH_LENGTH} characters."
+        return True, None
+
+    @classmethod
+    def _validate_relevant_experience(cls, relevant_experience: Optional[str] = None, **kwargs) -> Tuple[bool, Optional[str]]:
+        """Validate relevant experience field."""
+        if relevant_experience and len(relevant_experience.strip()) > cls.MAX_EXPERIENCE_LENGTH:
+            return False, f"Relevant experience must not exceed {cls.MAX_EXPERIENCE_LENGTH} characters."
+        return True, None
+
+    @classmethod
+    def _validate_questions_for_client(cls, questions_for_client: Optional[str] = None, **kwargs) -> Tuple[bool, Optional[str]]:
+        """Validate questions for client field."""
+        if questions_for_client and len(questions_for_client.strip()) > cls.MAX_QUESTIONS_LENGTH:
+            return False, f"Questions for client must not exceed {cls.MAX_QUESTIONS_LENGTH} characters."
+        return True, None
+
+    @classmethod
+    def _validate_available_start_date(cls, available_start_date: Optional[str] = None, **kwargs) -> Tuple[bool, Optional[str]]:
+        """Validate available start date field."""
+        if not available_start_date or available_start_date.strip() == "":
+            return True, None
+            
+        try:
+            input_date = datetime.strptime(available_start_date.strip(), '%Y-%m-%d').date()
+            today = datetime.now().date()
+            
+            if input_date < today:
+                return False, "Available start date cannot be in the past."
+            return True, None
+        except ValueError:
+            return False, "Please enter a valid date in YYYY-MM-DD format."

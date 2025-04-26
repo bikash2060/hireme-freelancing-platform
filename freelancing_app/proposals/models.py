@@ -3,13 +3,12 @@ from freelancerprofile.models import Freelancer
 from projects.models import Project
 
 class Proposal(models.Model):
-    
     class Status(models.TextChoices):
         PENDING = 'pending', ('Pending')
         ACCEPTED = 'accepted', ('Accepted')
         REJECTED = 'rejected', ('Rejected')
         WITHDRAWN = 'withdrawn', ('Withdrawn')
-        
+    
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='proposals')
     freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE, related_name='proposals')
     cover_letter = models.TextField()
@@ -18,7 +17,12 @@ class Proposal(models.Model):
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     submitted_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
+    available_start_date = models.DateField(null=True, blank=True)
+    approach_methodology = models.TextField(blank=True)
+    relevant_experience = models.TextField(blank=True)
+    questions_for_client = models.TextField(blank=True)
+    
     class Meta:
         ordering = ['-submitted_at']
         unique_together = ['project', 'freelancer']
@@ -27,13 +31,14 @@ class Proposal(models.Model):
     def __str__(self):
         return f"Proposal for {self.project.title} by {self.freelancer.username}"
 
+
 class ProposalAttachment(models.Model):
     proposal = models.ForeignKey(Proposal, on_delete=models.CASCADE, related_name='attachments')
     file = models.FileField(upload_to='proposal_attachments/')
     uploaded_at = models.DateTimeField(auto_now_add=True)
-
+    
     def __str__(self):
         return f"Attachment for {self.proposal.project.title}"
-
+    
     class Meta:
         db_table = "proposal_attachment"
