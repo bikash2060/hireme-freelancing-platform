@@ -4,7 +4,7 @@
 {% load custom_filters %}
 {% load project_filters %}
 
-{% block title %}Project Detail - HireMe{% endblock %}
+{% block title %}{{ project.title }} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/home/project-detail.css' %}">
@@ -14,53 +14,73 @@
 <!-- Hero Section -->
 <div class="hero-section">
     <div class="container">
-        <div class="hero-content">            
+        <div class="hero-content">     
+            <div class="breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-list">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home:projects' %}">Projects</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            {{ project.title|truncatechars:30 }}
+                        </li>
+                    </ol>
+                </nav>
+            </div>
             <div class="project-header">
                 <div class="project-info">
                     <div class="project-meta">
                         <span class="project-category">
-                            <i class="fas fa-code"></i> Web Development
+                            <i class="fas fa-tag"></i> {{ project.category.name }}
                         </span>
                         <span class="project-status published">
                             <i class="fas fa-circle"></i> Open
                         </span>
                     </div>
                       
-                    <h1 class="project-title">E-commerce Platform Development</h1>
+                    <h1 class="project-title">{{ project.title }}</h1>
                     
                     <div class="project-client">
                         <div class="client-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
+                            {% if project.client.user.profile_image %}
+                                <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Sarah Johnson">
+                            {% else %}
+                                <div class="profile-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="client-info">
-                            <span class="client-name">Sarah Johnson</span>
+                            <span class="client-name">{{ project.client.user.full_name }}</span>
                             <span class="client-location">
-                                <i class="fas fa-map-marker-alt"></i> New York, USA
+                                <i class="fas fa-map-marker-alt"></i> {{ project.client.user.city }}
                             </span>
                         </div>
                     </div>
-                    
                     <div class="project-stats">
                         <div class="stat-item">
                             <i class="fas fa-briefcase"></i>
-                            <span>Expert Level</span>
+                            <span>{{ project.get_experience_level_display }}</span>
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-clock"></i>
-                            <span>12 weeks</span>
+                            <span>{{ project.estimated_duration }} weeks</span>
                         </div>
                         <div class="stat-item">
-                            <span class="currency-symbol">रु</span>
-                            <span>5,000 - 7,500</span>
+                            <i class="fas fa-rupee-sign"></i>
+                            {% if project.is_fixed_price %}
+                                <span>{{ project.fixed_budget|format_currency }}</span>
+                            {% else %}
+                                <span>{{ project.budget_min|format_currency }} - {{ project.budget_max|format_currency }}</span>
+                            {% endif %}
                         </div>                        
                     </div>
-                    
                     <div class="action-buttons">
                         <a href="" class="btn btn-primary">
                             <i class="fas fa-paper-plane"></i> Submit Proposal
-                        </a>
-                        <a href="" class="btn btn-secondary">
-                            <i class="fas fa-bookmark"></i> Save Project
                         </a>
                     </div>
                 </div>
@@ -73,148 +93,94 @@
 <div class="overview-section">
     <div class="container">
         <div class="overview-grid">
-
             <div class="overview-main">
-
                 <div class="section-card">
                     <h3 class="section-title">
                         <i class="fas fa-align-left"></i> Project Description
                     </h3>
                     <div class="project-description">
-                        <p>We are looking for an experienced full-stack developer to build a custom e-commerce platform for our boutique fashion brand. The platform should support product listings, shopping cart functionality, secure checkout, user accounts, and basic inventory management.</p>
+                        <p>{{ project.description }}</p>
                         
                         <h4>Key Requirements:</h4>
-                        <ul>
-                            <li>Responsive design that works on all devices</li>
-                            <li>Integration with Stripe or PayPal for payments</li>
-                            <li>User registration and login system</li>
-                            <li>Product search and filtering</li>
-                            <li>Admin dashboard for managing products and orders</li>
-                            <li>Basic analytics to track sales and visitor behavior</li>
-                        </ul>
+                        {% if key_requirements %}
+                            <ul>
+                                {% for requirement in key_requirements %}
+                                    <li>{{ requirement }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No key requirements provided.</span>
+                        {% endif %}
                         
                         <h4>Additional Information:</h4>
-                        <p>We already have a logo and brand colors established. The design should be clean, modern, and focus on showcasing our products effectively. We expect the developer to provide guidance on best practices for e-commerce UX.</p>
-                        
-                        <p>The project should be completed within 12 weeks. We're open to suggestions on technology stack but prefer solutions that are maintainable and scalable.</p>
+                        {% if project.additional_info %}
+                            <p>{{ project.additional_info }}</p>
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No additional information provided.</span>
+                        {% endif %}
                     </div>
                 </div>
-
                 <div class="section-card skills-card">
                     <div class="skills-header">
                         <h3 class="section-title">
                             <i class="fas fa-code"></i> Professional Skills
                         </h3>
                         <div class="skills-counter">
-                            <span class="counter-number">12</span>
+                            <span class="counter-number">{{ project.project_skills.count }}</span>
                             <span class="counter-text">Skills</span>
                         </div>
                     </div>
-                    <div class="skills-list">
-                        <div class="skill-tag" data-skill-level="expert">
-                            <i class="fas fa-code"></i> Python
-                            <span class="skill-level-badge">Expert</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="expert">
-                            <i class="fas fa-code"></i> JavaScript
-                            <span class="skill-level-badge">Expert</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="advanced">
-                            <i class="fas fa-code"></i> React
-                            <span class="skill-level-badge">Advanced</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="advanced">
-                            <i class="fas fa-code"></i> Node.js
-                            <span class="skill-level-badge">Advanced</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="advanced">
-                            <i class="fas fa-code"></i> PostgreSQL
-                            <span class="skill-level-badge">Advanced</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="intermediate">
-                            <i class="fas fa-code"></i> AWS
-                            <span class="skill-level-badge">Intermediate</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="intermediate">
-                            <i class="fas fa-code"></i> Docker
-                            <span class="skill-level-badge">Intermediate</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="expert">
-                            <i class="fas fa-code"></i> Django
-                            <span class="skill-level-badge">Expert</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="advanced">
-                            <i class="fas fa-code"></i> RESTful APIs
-                            <span class="skill-level-badge">Advanced</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="advanced">
-                            <i class="fas fa-code"></i> Git
-                            <span class="skill-level-badge">Advanced</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="expert">
-                            <i class="fas fa-code"></i> Responsive Design
-                            <span class="skill-level-badge">Expert</span>
-                        </div>
-                        <div class="skill-tag" data-skill-level="advanced">
-                            <i class="fas fa-code"></i> Performance Optimization
-                            <span class="skill-level-badge">Advanced</span>
-                        </div>
+                    <div class="skills-list">   
+                        {% for project_skill in project.project_skills.all %}
+                            <div class="skill-tag" data-skill-level="{{ project_skill.level }}">
+                                <i class="fas fa-code"></i> {{ project_skill.skill.name }}
+                                <span class="skill-level-badge">{{ project_skill.get_level_display }}</span>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
-
                 <div class="section-card">
                     <h3 class="section-title">
                         <i class="fas fa-paperclip"></i> Attachments
                     </h3>
                     <div class="attachments-list">
-                        <div class="attachment-item">
-                            <div class="attachment-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="attachment-content">
-                                <h4 class="attachment-title">Project Brief.pdf</h4>
-                                <div class="attachment-meta">
-                                    <span class="attachment-size">2.4 MB</span>
-                                    <span class="attachment-date">Uploaded 3 days ago</span>
+                        {% if attachments %}
+                            {% for attachment in attachments %}
+                                <div class="attachment-item">
+                                    <div class="attachment-icon">
+                                        {% if attachment.file.name|lower|slice:'-4:' == '.pdf' %}
+                                            <i class="fas fa-file-pdf"></i>
+                                        {% elif attachment.file.name|lower|slice:'-4:' == '.doc' or attachment.file.name|lower|slice:'-5:' == '.docx' %}
+                                            <i class="fas fa-file-word"></i>
+                                        {% elif attachment.file.name|lower|slice:'-4:' == '.jpg' or attachment.file.name|lower|slice:'-5:' == '.jpeg' or attachment.file.name|lower|slice:'-4:' == '.png' %}
+                                            <i class="fas fa-file-image"></i>
+                                        {% elif attachment.file.name|lower|slice:'-5:' == '.xlsx' or attachment.file.name|lower|slice:'-4:' == '.xls' %}
+                                            <i class="fas fa-file-excel"></i>
+                                        {% elif attachment.file.name|lower|slice:'-4:' == '.zip' or attachment.file.name|lower|slice:'-4:' == '.rar' %}
+                                            <i class="fas fa-file-archive"></i>
+                                        {% else %}
+                                            <i class="fas fa-file"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="attachment-content">
+                                        <h4 class="attachment-title">{{ attachment.filename }}</h4>
+                                        <div class="attachment-meta">
+                                            <span class="attachment-size">{{ attachment.file.size|filesizeformat }}</span>
+                                            <span class="attachment-date">Uploaded {{ attachment.uploaded_at|format_posted_time }}</span>
+                                        </div>
+                                    </div>
+                                    <a href="{{ attachment.file.url }}" class="attachment-download" download>
+                                        <i class="fas fa-download"></i>
+                                    </a>
                                 </div>
+                            {% endfor %}
+                        {% else %}  
+                            <div class="no-attachments">
+                                <i class="fas fa-info-circle"></i> No attachments available for this project
                             </div>
-                            <a href="#" class="attachment-download">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
-                        <div class="attachment-item">
-                            <div class="attachment-icon">
-                                <i class="fas fa-file-image"></i>
-                            </div>
-                            <div class="attachment-content">
-                                <h4 class="attachment-title">Brand Guidelines.zip</h4>
-                                <div class="attachment-meta">
-                                    <span class="attachment-size">5.1 MB</span>
-                                    <span class="attachment-date">Uploaded 1 week ago</span>
-                                </div>
-                            </div>
-                            <a href="#" class="attachment-download">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
-                        <div class="attachment-item">
-                            <div class="attachment-icon">
-                                <i class="fas fa-file-excel"></i>
-                            </div>
-                            <div class="attachment-content">
-                                <h4 class="attachment-title">Product Inventory.xlsx</h4>
-                                <div class="attachment-meta">
-                                    <span class="attachment-size">1.2 MB</span>
-                                    <span class="attachment-date">Uploaded 5 days ago</span>
-                                </div>
-                            </div>
-                            <a href="#" class="attachment-download">
-                                <i class="fas fa-download"></i>
-                            </a>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
-
                 <div class="section-card">
                     <h3 class="section-title">
                         <i class="fas fa-comments"></i> Client Reviews (12)
@@ -274,33 +240,30 @@
                     </div>
                 </div>
             </div>
-
             <div class="overview-sidebar">
-                
                 <div class="sidebar-card">
                     <h3 class="card-title">
                         <i class="fas fa-chart-line"></i> Project Stats
                     </h3>
                     <div class="project-stats">
                         <div class="stat-item">
-                            <div class="stat-value">12</div>
+                            <div class="stat-value">{{ project.proposals.count|default:0 }}</div>
                             <div class="stat-label">Proposals Received</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">5</div>
+                            <div class="stat-value">{{ project.shortlisted_freelancers.count|default:0 }}</div>
                             <div class="stat-label">Shortlisted Freelancers</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">12</div>
+                            <div class="stat-value">{{ project.estimated_duration }} weeks</div>
                             <div class="stat-label">Weeks Duration</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">रु 7,500</div>
+                            <div class="stat-value">Rs.</div>
                             <div class="stat-label">Avg. Bid</div>
                         </div>
                     </div>
-                </div>                
-
+                </div> 
                 <div class="sidebar-card">
                     <h3 class="card-title">
                         <i class="fas fa-info-circle"></i> Project Details
@@ -312,7 +275,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Posted</div>
-                                <div class="info-value">3 days ago</div>
+                                <div class="info-value">{{ project.created_at|format_posted_time }}</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -321,7 +284,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Duration</div>
-                                <div class="info-value">12 weeks</div>
+                                <div class="info-value">{{ project.estimated_duration }} weeks</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -330,7 +293,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Experience Level</div>
-                                <div class="info-value">Expert</div>
+                                <div class="info-value">{{ project.get_experience_level_display }}</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -339,7 +302,11 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Budget</div>
-                                <div class="info-value">$5,000 - $7,500</div>
+                                {% if project.is_fixed_price %}
+                                    <div class="info-value">Rs. {{ project.fixed_budget|format_currency }}</div>
+                                {% else %}
+                                    <div class="info-value">Rs. {{ project.budget_min|format_currency }} - Rs. {{ project.budget_max|format_currency }}</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="info-item">
@@ -348,21 +315,15 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Project Type</div>
-                                <div class="info-value">Fixed Price</div>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-icon">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            <div class="info-content">
-                                <div class="info-label">Location</div>
-                                <div class="info-value">Remote</div>
+                                {% if project.is_fixed_price %}
+                                    <div class="info-value">Fixed Price</div>
+                                {% else %}
+                                    <div class="info-value">Price Range</div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="sidebar-card">
                     <h3 class="card-title">
                         <i class="fas fa-user-tie"></i> About the Client
@@ -370,12 +331,18 @@
                     <div class="client-info-card">
                         <div class="client-header">
                             <div class="client-avatar">
-                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
+                                {% if project.client.user.profile_image %}
+                                    <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Sarah Johnson">
+                                {% else %}
+                                    <div class="profile-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="client-details">
-                                <h4 class="client-name">Sarah Johnson</h4>
+                                <h4 class="client-name">{{ project.client.user.full_name }}</h4>
                                 <div class="client-location">
-                                    <i class="fas fa-map-marker-alt"></i> New York, USA
+                                    <i class="fas fa-map-marker-alt"></i> {{ project.client.user.city }}
                                 </div>
                             </div>
                         </div>
@@ -385,7 +352,7 @@
                                     <i class="fas fa-project-diagram"></i>
                                 </div>
                                 <div class="stat-details">
-                                    <div class="stat-value">12</div>
+                                    <div class="stat-value">{{ total_projects|default:0 }}</div>
                                     <div class="stat-label">Projects Posted</div>
                                 </div>
                             </div>
@@ -394,7 +361,7 @@
                                     <i class="fas fa-check-circle"></i>
                                 </div>
                                 <div class="stat-details">
-                                    <div class="stat-value">8</div>
+                                    <div class="stat-value">{{ completed_projects|default:0 }}</div>
                                     <div class="stat-label">Projects Completed</div>
                                 </div>
                             </div>
@@ -403,17 +370,16 @@
                                     <i class="fas fa-star"></i>
                                 </div>
                                 <div class="stat-details">
-                                    <div class="stat-value">4.8</div>
+                                    <div class="stat-value">{{ project.client.user.rating|default:0 }}</div>
                                     <div class="stat-label">Average Rating</div>
                                 </div>
                             </div>
                         </div>
                         <div class="client-description">
-                            <p>Fashion entrepreneur with 10+ years in the industry. Founder of a boutique fashion brand looking to expand online presence.</p>
+                            <p>{{ project.client.user.bio|default:"No description available" }}</p>
                         </div>
                     </div>
                 </div>
-
                 <div class="sidebar-card share-project-card">
                     <h3 class="card-title">
                         <i class="fas fa-share-alt"></i> Share Project
@@ -437,208 +403,94 @@
                         </div>
                     </div>
                     <div class="share-link-container">
-                        <input type="text" class="share-link-input" value="https://hireme.com/projects/e-commerce-platform-development" readonly>
+                        <input type="text" class="share-link-input" value="{{ project_url }}" readonly>
                         <button class="copy-btn">
                             <i class="fas fa-copy"></i> Copy
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 
-<!-- Add this section after the overview-section -->
+<!-- Similar Projects Section -->
 <div class="similar-projects-section">
     <div class="container">
         <div class="section-header">
             <h2 class="section-title">Similar Projects</h2>
-            <a href="#" class="view-all-link">
-                View All <i class="fas fa-arrow-right"></i>
-            </a>
+            {% if similar_projects %}
+                <a href="{% url 'home:projects' %}?category={{ project.category.id }}" class="view-all-link">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            {% endif %}
         </div>
-        <div class="projects-grid">
-            <!-- Project Card 1 -->
-            <div class="project-card">
-                <span class="project-status-tag published">
-                    <i class="fas fa-circle"></i> Open
-                </span>
-                <div class="project-header">
-                    <div class="project-bg">
-                        <i class="fas fa-shopping-cart"></i>
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <div class="project-category">
-                        <i class="fas fa-code"></i> Web Development
-                    </div>
-                </div>
-                <div class="project-content">
-                    <h3 class="project-title">
-                        <a href="#">Mobile E-commerce App Development</a>
-                    </h3>
-                    <div class="project-client">
-                        <div class="client-avatar">
-                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="David Wilson">
+        {% if similar_projects%}
+            <div class="projects-grid">
+                {% for similar_project in similar_projects %}
+                    <div class="project-card" onclick="window.location.href='{% url 'home:project-detail' project_id=similar_project.id %}'">
+                        <span class="project-status-tag {{ similar_project.status|lower }}">
+                            <i class="fas fa-circle"></i> Open
+                        </span>
+                        <div class="project-header">
+                            <div class="project-bg">
+                                <img src="{% static 'images/defaultimages/hero/freelancing-work-1.jpg' %}" alt="Project Background">
+                            </div>
+                            <div class="project-category">
+                                <i class="fas fa-tag"></i> 
+                                {{ similar_project.category.name }}
+                            </div>
                         </div>
-                        <div class="client-info">
-                            <span class="client-name">David Wilson</span>
-                            <span class="client-location">
-                                <i class="fas fa-map-marker-alt"></i> Chicago, USA
-                            </span>
+                        <div class="project-content">
+                            <h3 class="project-title">
+                                {{ similar_project.title }}
+                            </h3>
+                            <div class="project-client">
+                                <div class="client-avatar">
+                                    {% if similar_project.client.user.profile_image %}
+                                        <img src="{% get_media_prefix %}profile_images/{{ similar_project.client.user.profile_image }}" alt="{{ similar_project.client.user.full_name }}">
+                                    {% else %}
+                                        <div class="profile-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="client-info">
+                                    <span class="client-name">{{ similar_project.client.user.full_name }}</span>
+                                    <span class="client-location">
+                                        <i class="fas fa-map-marker-alt"></i> 
+                                        {{ similar_project.client.user.city|default:"Location not specified" }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="project-excerpt">
+                                <p>{{ similar_project.description|truncatewords:20 }}</p>
+                            </div>
+                            <div class="project-meta">
+                                <div class="meta-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>{{ similar_project.estimated_duration }} weeks</span>
+                                </div>
+                                <div class="meta-item project-price">
+                                    <span class="currency-symbol">Rs.</span>
+                                    <span>
+                                        {% if similar_project.is_fixed_price %}
+                                            {{ similar_project.fixed_budget|format_currency }}
+                                        {% else %}
+                                            {{ similar_project.budget_min|format_currency }} - {{ similar_project.budget_max|format_currency }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="project-excerpt">
-                        <p>Looking for an experienced developer to create a mobile e-commerce application for our electronics store. The app should include product browsing, user accounts, shopping cart, and secure checkout.</p>
-                    </div>
-                    <div class="project-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-clock"></i>
-                            <span>10 weeks</span>
-                        </div>
-                        <div class="meta-item project-price">
-                            <span class="currency-symbol">रु</span>
-                            <span>4,500 - 6,000</span>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-            
-            <!-- Project Card 2 -->
-            <div class="project-card">
-                <span class="project-status-tag hiring">
-                    <i class="fas fa-circle"></i> Hiring
-                </span>
-                <div class="project-header">
-                    <div class="project-bg">
-                        <i class="fas fa-store"></i>
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="project-category">
-                        <i class="fas fa-code"></i> Full Stack
-                    </div>
-                </div>
-                <div class="project-content">
-                    <h3 class="project-title">
-                        <a href="#">Multi-vendor Marketplace Development</a>
-                    </h3>
-                    <div class="project-client">
-                        <div class="client-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Michelle Park">
-                        </div>
-                        <div class="client-info">
-                            <span class="client-name">Michelle Park</span>
-                            <span class="client-location">
-                                <i class="fas fa-map-marker-alt"></i> Toronto, Canada
-                            </span>
-                        </div>
-                    </div>
-                    <div class="project-excerpt">
-                        <p>We need a skilled developer to build a multi-vendor marketplace platform with vendor accounts, product listings, order management, and commission tracking features.</p>
-                    </div>
-                    <div class="project-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-clock"></i>
-                            <span>16 weeks</span>
-                        </div>
-                        <div class="meta-item project-price">
-                            <span class="currency-symbol">रु</span>
-                            <span>8,000 - 10,000</span>
-                        </div>
-                    </div>
-                </div>
+        {% else %}
+            <div class="no-similar-projects">
+                <i class="fas fa-info-circle"></i> No similar projects found
             </div>
-            
-            <!-- Project Card 3 -->
-            <div class="project-card">
-                <span class="project-status-tag in_progress">
-                    <i class="fas fa-circle"></i> In Progress
-                </span>
-                <div class="project-header">
-                    <div class="project-bg">
-                        <i class="fas fa-shopping-bag"></i>
-                        <i class="fas fa-credit-card"></i>
-                    </div>
-                    <div class="project-category">
-                        <i class="fas fa-code"></i> E-commerce
-                    </div>
-                </div>
-                <div class="project-content">
-                    <h3 class="project-title">
-                        <a href="#">Payment Gateway Integration for Online Store</a>
-                    </h3>
-                    <div class="project-client">
-                        <div class="client-avatar">
-                            <img src="https://randomuser.me/api/portraits/men/78.jpg" alt="Robert Chen">
-                        </div>
-                        <div class="client-info">
-                            <span class="client-name">Robert Chen</span>
-                            <span class="client-location">
-                                <i class="fas fa-map-marker-alt"></i> Singapore
-                            </span>
-                        </div>
-                    </div>
-                    <div class="project-excerpt">
-                        <p>Seeking a developer to integrate multiple payment gateways into our existing Shopify store, including Stripe, PayPal, and local payment methods with comprehensive reporting.</p>
-                    </div>
-                    <div class="project-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-clock"></i>
-                            <span>4 weeks</span>
-                        </div>
-                        <div class="meta-item project-price">
-                            <span class="currency-symbol">रु</span>
-                            <span>2,500 - 3,500</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Project Card 4 -->
-            <div class="project-card">
-                <span class="project-status-tag published">
-                    <i class="fas fa-circle"></i> Open
-                </span>
-                <div class="project-header">
-                    <div class="project-bg">
-                        <i class="fas fa-tshirt"></i>
-                        <i class="fas fa-tags"></i>
-                    </div>
-                    <div class="project-category">
-                        <i class="fas fa-code"></i> Web Development
-                    </div>
-                </div>
-                <div class="project-content">
-                    <h3 class="project-title">
-                        <a href="#">Fashion E-commerce Website with AR Try-On</a>
-                    </h3>
-                    <div class="project-client">
-                        <div class="client-avatar">
-                            <img src="https://randomuser.me/api/portraits/women/52.jpg" alt="Lisa Wong">
-                        </div>
-                        <div class="client-info">
-                            <span class="client-name">Lisa Wong</span>
-                            <span class="client-location">
-                                <i class="fas fa-map-marker-alt"></i> Hong Kong
-                            </span>
-                        </div>
-                    </div>
-                    <div class="project-excerpt">
-                        <p>Looking for an expert developer to build a fashion e-commerce website with innovative AR try-on features, allowing customers to virtually try clothes before purchasing.</p>
-                    </div>
-                    <div class="project-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-clock"></i>
-                            <span>14 weeks</span>
-                        </div>
-                        <div class="meta-item project-price">
-                            <span class="currency-symbol">रु</span>
-                            <span>7,000 - 9,000</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

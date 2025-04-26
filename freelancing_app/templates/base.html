@@ -80,9 +80,6 @@
                         <a href="{% url 'project:client-projects' %}?status=draft" class="dropdown-item">
                             <i class="fas fa-file"></i> Draft Projects
                         </a>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-search"></i> Browse All Projects
-                        </a>
                     </div>
                 </div>
 
@@ -125,18 +122,15 @@
                         Find Work <i class="fas fa-chevron-down dropdown-icon"></i>
                     </button>
                     <div class="nav-dropdown-content">
-                        <a href="" class="dropdown-item">
+                        <a href="{% url 'home:projects' %}" class="dropdown-item">
                             <i class="fas fa-search"></i> Browse Projects
-                        </a>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-bookmark"></i> Saved Projects
                         </a>
                         <div class="dropdown-content-divider"></div>
                         <a href="" class="dropdown-item">
                             <i class="fas fa-paper-plane"></i> My Proposals
                         </a>
                     </div>
-                </div>
+                </div>                
                 
                 <div class="nav-dropdown">
                     <button class="nav-dropbtn">
@@ -154,28 +148,25 @@
                             <i class="fas fa-money-bill-wave"></i> Earnings
                         </a>
                     </div>
-                </div>
+                </div>                
                 
                 <div class="nav-dropdown">
                     <button class="nav-dropbtn">
-                        My Profile <i class="fas fa-chevron-down dropdown-icon"></i>
+                        Career <i class="fas fa-chevron-down dropdown-icon"></i>
                     </button>
                     <div class="nav-dropdown-content">
                         <a href="" class="dropdown-item">
-                            <i class="fas fa-user"></i> View Public Profile
+                            <i class="fas fa-briefcase"></i> My Portfolio
                         </a>
                         <a href="" class="dropdown-item">
-                            <i class="fas fa-edit"></i> Edit Profile
+                            <i class="fas fa-tools"></i> My Skills & Services
                         </a>
                         <div class="dropdown-content-divider"></div>
                         <a href="" class="dropdown-item">
-                            <i class="fas fa-briefcase"></i> Portfolio
-                        </a>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-tools"></i> Skills & Services
+                            <i class="fas fa-star"></i> Reviews & Ratings
                         </a>
                     </div>
-                </div>
+                </div>                
             {% endif %}
         </div>
 

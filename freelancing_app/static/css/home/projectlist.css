@@ -546,7 +546,7 @@
 
 /* Projects List Section */
 .project-list-section {
-    padding: 20px 0;
+    margin-bottom: 50px;
 }
 
 .project-list-section .card-grid {
@@ -554,6 +554,7 @@
     grid-template-columns: 1fr;
     gap: 25px;
     margin: 0 auto;
+    cursor: pointer;
 }
 
 .project-list-section .project-card {
@@ -570,7 +571,6 @@
 }
 
 .project-list-section .project-card:hover {
-    transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     border-color: #d0d0d0;
 }
@@ -781,11 +781,100 @@
 
 .project-list-section .project-skills {
     display: flex;
+    flex-wrap: wrap;
     gap: 1.5rem;
     margin-top: 1.5rem;
     padding: 1rem;
     background-color: #f8fafc;
     border-radius: 0.75rem;
+}
+
+.project-list-section .project-skills .skill-tag {
+    background-color: white;
+    color: #334155;
+    padding: 8px 14px 8px 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.project-list-section .project-skills .skill-tag:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    border-color: #c7d2fe;
+}
+
+.project-list-section .project-skills .skill-tag i {
+    color: #6366f1;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    min-width: 16px;
+}
+
+.project-list-section .project-skills .skill-tag:hover i {
+    transform: scale(1.1);
+    color: #4f46e5;
+}
+
+.project-list-section .project-skills .skill-level-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 6px;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+}
+
+.project-list-section .project-skills .skill-tag[data-skill-level="expert"] .skill-level-badge {
+    background-color: #ecfdf5;
+    color: #059669;
+}
+
+.project-list-section .project-skills .skill-tag[data-skill-level="advanced"] .skill-level-badge {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+
+.project-list-section .project-skills .skill-tag[data-skill-level="intermediate"] .skill-level-badge {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.project-list-section .project-skills .skill-tag::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.project-list-section .project-skills .skill-tag[data-skill-level="expert"]::after {
+    background: linear-gradient(90deg, #059669, #10b981);
+}
+
+.project-list-section .project-skills .skill-tag[data-skill-level="advanced"]::after {
+    background: linear-gradient(90deg, #2563eb, #3b82f6);
+}
+
+.project-list-section .project-skills .skill-tag[data-skill-level="intermediate"]::after {
+    background: linear-gradient(90deg, #d97706, #f59e0b);
+}
+
+.project-list-section .project-skills .skill-tag:hover::after {
+    transform: scaleX(1);
 }
 
 .project-list-section .skills-section,

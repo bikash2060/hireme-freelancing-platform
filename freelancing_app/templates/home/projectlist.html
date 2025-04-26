@@ -241,83 +241,111 @@
 <!-- Projects List Section -->
 <div class="project-list-section">
     <div class="container">
-        <div class="card-grid">
-            <div class="project-card">
-                <div class="poster-info">
-                    <img class="poster-profile" src="/media/profile_images/default.jpg" alt="Profile Picture">
-                    <div class="poster-details">
-                        <p class="poster-name">Client Company
-                            <span class="verified-badge" title="Verified Client">
-                                <i class="fas fa-check-circle"></i>
-                            </span>
-                        </p>
-                        <p class="poster-posted-time">
-                            <i class="far fa-clock"></i> Posted 3 days ago
-                        </p>
-                    </div>
-                    <div class="project-status status-active">Open</div>
-                </div>
-                <div class="project-info">
-                    <div class="project-meta-header">
-                        <div class="project-category" title="Category">
-                            <i class="fas fa-tag"></i> Web & Mobile Development
-                        </div>
-                        <div class="project-budget">
-                            <span class="budget-type">Fixed</span>
-                            <span class="budget-amount">Rs. 50,000</span>
-                        </div>
-                    </div>
-                    <h4>Build a Custom Django-based Freelancer Marketplace</h4>
-                    <div class="project-meta">
-                        <span class="proposals-count" title="Proposals Received">
-                            <i class="fas fa-paper-plane"></i> 12 proposals
-                        </span>
-                        <span class="project-duration" title="Expected delivery timeframe">
-                            <i class="far fa-clock"></i> Delivery in 4 weeks
-                        </span>
-                        <span class="expertise-level expert" title="Required expertise level">
-                            <i class="fas fa-user-graduate"></i> Expert
-                        </span>
-                    </div>
-                    <div class="project-skills">
-                        <div class="skills-section">
-                            <div class="skills-header">
-                                <i class="fas fa-tools"></i>
-                                <span class="sub-title">Key Skills</span>
-                                <span class="skills-count">5 skills</span>
+
+        {% if projects %}
+            <div class="card-grid">
+                {% for project in projects %}
+                    <div class="project-card" onclick="window.location.href='{% url 'home:project-detail' project.id %}'">
+                        <div class="poster-info">
+                            {% if project.client.user.profile_image %}
+                                <img class="poster-profile" src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Profile Picture">
+                            {% else %}
+                                <div class="profile-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                            <div class="poster-details">
+                                <p class="poster-name">{{ project.client.user.full_name }}
+                                    <span class="verified-badge" title="Verified Client">
+                                        <i class="fas fa-check-circle"></i>
+                                    </span>
+                                </p>
+                                <p class="poster-posted-time">
+                                    <i class="far fa-clock"></i> {{ project.created_at|format_posted_time }}
+                                </p>
                             </div>
-                            <div class="skills-list-container">
-                                <div class="skills-list">
-                                    <span class="skill-tag"><i class="fas fa-code"></i> Django</span>
-                                    <span class="skill-tag"><i class="fas fa-code"></i> PostgreSQL</span>
-                                    <span class="skill-tag"><i class="fas fa-code"></i> HTML/CSS</span>
-                                    <span class="skill-tag"><i class="fas fa-code"></i> JavaScript</span>
-                                    <span class="skill-tag"><i class="fas fa-code"></i> AWS</span>
+                            <div class="project-status status-active">Open</div>
+                        </div>
+                        <div class="project-info">
+                            <div class="project-meta-header">
+                                <div class="project-category" title="Category">
+                                    <i class="fas fa-tag"></i> {{ project.category.name }}
+                                </div>
+                                <div class="project-budget">
+                                    {% if project.is_fixed_price %}
+                                        <span class="budget-type">Fixed</span>
+                                        <span class="budget-amount">Rs. {{ project.fixed_budget|format_currency }}</span>
+                                    {% else %}
+                                        <span class="budget-type">Price Range</span>
+                                        <span class="budget-amount">Rs. {{ project.budget_min|format_currency }} - Rs. {{ project.budget_max|format_currency }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <h4>{{ project.title }}</h4>
+                            <div class="project-meta">
+                                <span class="proposals-count" title="Proposals Received">
+                                    <i class="fas fa-paper-plane"></i> {{ project.proposals.count|default:0 }} proposals
+                                </span>
+                                <span class="project-duration" title="Expected delivery timeframe">
+                                    <i class="far fa-clock"></i> Delivery in {{ project.estimated_duration }} weeks
+                                </span>
+                                <span class="expertise-level {{ project.get_experience_level_display|lower }}" title="Required expertise level">
+                                    <i class="fas fa-user-graduate"></i> {{ project.get_experience_level_display }}
+                                </span>
+                            </div>
+                            <div class="project-skills">
+                                <div class="skills-section">
+                                    <div class="skills-header">
+                                        <i class="fas fa-tools"></i>
+                                        <span class="sub-title">Key Skills</span>
+                                        <span class="skills-count">{{ project.project_skills.count }} skills</span>
+                                    </div>
+                                    <div class="skills-list-container">
+                                        <div class="skills-list">
+                                            {% for project_skill in project.project_skills.all %}
+                                                <div class="skill-tag" data-skill-level="{{ project_skill.level }}">
+                                                    <i class="fas fa-code"></i> {{ project_skill.skill.name }}
+                                                    <span class="skill-level-badge">{{ project_skill.get_level_display }}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="description-section">
+                                    <div class="description-header">
+                                        <i class="fas fa-align-left"></i>
+                                        <span class="sub-title">Project Description</span>
+                                    </div>
+                                    <div class="description-content">
+                                        {{ project.description }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="description-section">
-                            <div class="description-header">
-                                <i class="fas fa-align-left"></i>
-                                <span class="sub-title">Project Description</span>
-                            </div>
-                            <div class="description-content">
-                                Looking to develop a feature-rich freelancer marketplace using Django. Should include user accounts, messaging, payments, job postings, and real-time notifications. Must be mobile-friendly and scalable.
-                            </div>
+                        <div class="card-buttons">
+                            <a href="#" class="send-proposal-btn">
+                                <i class="fas fa-paper-plane"></i> Send Proposal
+                            </a>
+                            <a href="{% url 'home:project-detail' project.id %}" class="view-details-btn">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
                         </div>
                     </div>
-                </div>
-                <div class="card-buttons">
-                    <a href="#" class="send-proposal-btn">
-                        <i class="fas fa-paper-plane"></i> Send Proposal
-                    </a>
-                    <a href="#" class="view-details-btn">
-                        <i class="fas fa-eye"></i> View Details
-                    </a>
-                </div>
+                {% endfor %}
             </div>
-            
-        </div>
+        {% else %}
+            <div class="empty-projects">
+                <div class="empty-illustration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No matching projects found</h3>
+                <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
+            </div>
+        {% endif %}
     </div>
     
     {% if projects.has_other_pages %}
@@ -335,7 +363,7 @@
         <div class="page-numbers">
             {% if projects.number > 3 %}
             <a href="?page=1" class="page-number">1</a>
-            {% if projects.number > 4 %}  {# Only show ellipsis if there's a gap #}
+            {% if projects.number > 4 %}  
             <span class="page-ellipsis">...</span>
             {% endif %}
             {% endif %}
@@ -370,18 +398,6 @@
     </div>
     {% endif %}
 </div>
-
-{% comment %} <div class="empty-projects">
-    <div class="empty-illustration">
-        <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-        </svg>
-    </div>
-    <h3 class="empty-title">No matching projects found</h3>
-    <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
-</div> {% endcomment %}
 {% endblock %}
 
 {% block js_files %}

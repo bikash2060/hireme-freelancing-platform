@@ -1,9 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Reset filters on page load by removing URL parameters
-    if (window.location.search) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
     const filters = document.querySelectorAll('input[type="checkbox"], .search-input');
 
     filters.forEach(input => {
@@ -59,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
+    
     // Skill search functionality
     const skillSearchInput = document.querySelector('.skill-search-input');
     if (skillSearchInput) {
@@ -137,3 +132,7 @@ function removeMultiFilterParam(paramName, valueToRemove) {
     params.forEach(val => url.searchParams.append(paramName, val));
     window.location.href = url.toString();
 }
+
+
+
+

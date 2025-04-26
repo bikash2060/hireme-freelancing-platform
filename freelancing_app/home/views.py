@@ -10,8 +10,11 @@ from clientprofile.models import Client
 from django.contrib.auth import logout
 from freelancing_app import settings
 from django.contrib import messages
+from django.urls import reverse
 from django.views import View
+from decimal import Decimal
 import random
+import os
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -488,12 +491,12 @@ class FreelancerDetailView(View):
             return redirect(self.home_url)
 
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: ProjectListView
 # Description: Filters and paginates available projects with advanced options
-# Tested On:
-# Status:
-# Code Refractor Status: In Progress
+# Tested On: 2025-04-26
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class ProjectListView(View):
     """
@@ -673,29 +676,194 @@ class ProjectListView(View):
 # Code Refractor Status: Not Started
 # ------------------------------------------------------
 class ProjectDetailView(View):
-    template_name = 'home/project-detail.html'
-    home_url = 'home:home'
+    """
+    - Displays detailed view of a published project
+    - Implements strict access control:
+        * Unauthenticated users can view
+        * Freelancers can view
+        * Only the project owner (client) can view if authenticated as client
+    - Handles error cases and unauthorized access attempts
+    - Prefetches related data for performance
+    """
+    
+    # Constants
+    TEMPLATE_NAME = 'home/project-detail.html'
+    PROJECT_DETAIL_URL = 'home:project-detail'
+    HOME_URL = 'home:home'
+    SIMILAR_PROJECTS_LIMIT = 4
     
     def get(self, request, project_id):
+        """
+        Main entry point for GET requests.
+        Handles access control, data fetching and template rendering.
+        """
         try:
-            # project = Project.objects.get(id=project_id, status=Project.Status.PUBLISHED)
+            if not self._has_access(request, project_id):
+                return self._handle_unauthorized_access(request)
+                
+            context = self._build_context(request, project_id)
             
-            # if request.user.is_authenticated:
-            #     if request.user.role.lower() == 'client' and project.client.user != request.user:
-            #         return redirect(self.home_url)
-            
-            # context = {
-            #     'project': project,
-            # }
-            return render(request, self.template_name)
+            return self._render_project_detail(request, context)
             
         except Project.DoesNotExist:
-            messages.error(request, "Project not found or no longer available")
-            return redirect(self.home_url)
+            return self._handle_project_not_found(request)
         except Exception as e:
             print(e)
-            messages.error(request, "Something went wrong. Please try again.")
-            return redirect(self.home_url)
+            return self._handle_error(request, str(e))
+
+    def _has_access(self, request, project_id):
+        """
+        Determines if user has access to view the project.
+        Rules:
+        - Unauthenticated users can view
+        - Freelancers can view
+        - Only the project owner (client) can view if authenticated as client
+        """
+        if not request.user.is_authenticated:
+            return True
+            
+        user_role = getattr(request.user, 'role', '').lower()
+        
+        # Freelancers can always view
+        if user_role == 'freelancer':
+            return True
+                
+        return False
+
+    def _build_context(self, request, project_id):
+        """
+        Builds template context with all required data including:
+        - Project details
+        - Related skills with levels
+        - Attachments
+        - Client's project statistics
+        """
+        project = Project.objects.prefetch_related(
+                'project_skills__skill',
+                'project_attachments'
+        ).get(id=project_id)
+        
+        project_url = request.build_absolute_uri(
+            reverse(self.PROJECT_DETAIL_URL, kwargs={'project_id': project.id})
+        )
+        
+        attachments = []
+        for attachment in project.project_attachments.all():
+            try:
+                if os.path.exists(attachment.file.path):
+                    attachments.append({
+                        'file': attachment.file,
+                        'filename': os.path.basename(attachment.file.name),
+                        'uploaded_at': attachment.uploaded_at
+                    })
+                else:
+                    filename = os.path.basename(attachment.file.name)
+                    project_attachments_path = os.path.join(settings.MEDIA_ROOT, 'project_attachments', filename)
+                    if os.path.exists(project_attachments_path):
+                        attachment.file.name = filename
+                        attachment.save()
+                        attachments.append({
+                            'file': attachment.file,
+                            'filename': filename,
+                            'uploaded_at': attachment.uploaded_at
+                        })
+            except Exception as e:
+                print(f"[Attachment Error]: {e}")
+                continue
+        
+        key_requirements = []
+        if project.key_requirements:
+            key_requirements = [req.strip() for req in project.key_requirements.split('\n') if req.strip()]
+            
+        client = project.client  
+        total_projects = Project.objects.filter(client=client).count()
+        completed_projects = Project.objects.filter(client=client, status=Project.Status.COMPLETED).count()
+        
+        similar_projects = self._get_similar_projects(project)
+        
+        context = {
+            'project': project,
+            'project_url': project_url,  
+            'project_title': project.title,  
+            'key_requirements': key_requirements,
+            'attachments': attachments,  
+            'total_projects': total_projects,
+            'completed_projects': completed_projects,
+            'similar_projects': similar_projects,
+        }
+        return context
+    
+    def _get_similar_projects(self, project):
+        """
+        Finds similar projects based on:
+        1. Same category
+        2. Matching skills
+        3. Similar budget range (for price range projects)
+        4. Excludes the current project
+        Orders by:
+        1. Number of matching skills
+        2. Closest budget match
+        3. Most recently posted
+        """        
+        skill_ids = list(project.project_skills.values_list('skill_id', flat=True))
+        
+        similar_projects = Project.objects.filter(
+            status=Project.Status.PUBLISHED
+        ).exclude(
+            id=project.id
+        ).prefetch_related(
+            'project_skills__skill',
+            'client__user'
+        )
+        
+        if project.category:
+            similar_projects = similar_projects.filter(category=project.category)
+        
+        similar_projects = similar_projects.annotate(
+            matching_skills_count=Count(
+                'project_skills',
+                filter=Q(project_skills__skill_id__in=skill_ids)
+            )
+        ).order_by('-matching_skills_count', '-created_at')
+        
+        if project.is_fixed_price:
+            lower_bound = project.fixed_budget * Decimal('0.8')
+            upper_bound = project.fixed_budget * Decimal('1.2')
+            similar_projects = similar_projects.filter(
+                Q(is_fixed_price=True, fixed_budget__gte=lower_bound, fixed_budget__lte=upper_bound) |
+                Q(is_fixed_price=False, budget_min__lte=upper_bound, budget_max__gte=lower_bound)
+            )
+        else:
+            similar_projects = similar_projects.filter(
+                Q(is_fixed_price=True, fixed_budget__gte=project.budget_min, fixed_budget__lte=project.budget_max) |
+                Q(is_fixed_price=False, 
+                  budget_min__lte=project.budget_max, 
+                  budget_max__gte=project.budget_min)
+            )
+        
+        return similar_projects[:self.SIMILAR_PROJECTS_LIMIT]
+
+    def _render_project_detail(self, request, context):
+        """Renders the project detail template"""
+        try:
+            return render(request, self.TEMPLATE_NAME, context)
+        except Exception as e:
+            raise Exception(f"Template rendering failed: {str(e)}")
+
+    def _handle_unauthorized_access(self, request):
+        """Handles unauthorized access attempts"""
+        messages.error(request, 'You do not have permission to view this project.')
+        return redirect(self.HOME_URL)
+
+    def _handle_project_not_found(self, request):
+        """Handles case when project doesn't exist"""
+        messages.error(request, 'Project not found or no longer available.')
+        return redirect(self.HOME_URL)
+
+    def _handle_error(self, request, error_message):
+        """Handles unexpected exceptions"""
+        messages.error(request, 'Something went wrong. Please try again.')
+        return redirect(self.HOME_URL)
 
 # ------------------------------------------------------
 # ⏳ [PENDING TEST]
