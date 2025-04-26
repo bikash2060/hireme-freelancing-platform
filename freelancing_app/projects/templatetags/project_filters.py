@@ -1,6 +1,7 @@
 from django import template
 from datetime import datetime, timedelta
 from urllib.parse import urlencode
+import os
 
 register = template.Library()
 
@@ -35,4 +36,9 @@ def format_posted_time(value):
             return "1 minute ago"
         return f"{minutes} minutes ago"
     
-    return "Just now" 
+    return "Just now"
+
+@register.filter
+def basename(value):
+    """Returns the basename of a file path"""
+    return os.path.basename(value) 

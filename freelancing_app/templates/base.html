@@ -77,7 +77,7 @@
                             <i class="fas fa-briefcase"></i> My Projects
                         </a>
                         <div class="dropdown-content-divider"></div>
-                        <a href="" class="dropdown-item">
+                        <a href="{% url 'project:client-projects' %}?status=draft" class="dropdown-item">
                             <i class="fas fa-file"></i> Draft Projects
                         </a>
                         <a href="" class="dropdown-item">
@@ -246,7 +246,9 @@
                             <div class="notification-content">
                                 {% if notifications %}
                                     {% for notification in notifications %}
-                                        <div class="notification-item {% if not notification.is_read %}unread{% endif %}" data-notification-id="{{ notification.id }}">
+                                        <div class="notification-item {% if not notification.is_read %}unread{% endif %}" 
+                                             data-notification-id="{{ notification.id }}"
+                                             {% if notification.redirect_url %}data-redirect-url="{{ notification.redirect_url }}"{% endif %}>
                                             <div class="notification-icon">
                                                 <i class="fa-solid fa-bullhorn"></i>
                                             </div>

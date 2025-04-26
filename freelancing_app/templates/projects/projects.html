@@ -229,7 +229,7 @@
         {% if projects %}
             <div class="projects-list-view" id="projects-container">
                 {% for project in projects %}
-                    <div class="project-card">
+                    <div class="project-card" onclick="window.location.href='{% url 'project:client-project-detail' project.id %}'">
                         <div class="project-status-indicator {{ project.status }}"></div>
                         <div class="project-card-header">
                             <div class="project-icon">
@@ -327,7 +327,7 @@
                                 <a href="" class="btn-action secondary-btn">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <a href="" class="btn-action primary-btn">
+                                <a href="{% url 'project:publish-project' project.id %}" class="btn-action primary-btn">
                                     <i class="fas fa-paper-plane"></i> Publish
                                 </a>
                             {% elif project.status == 'published' %}

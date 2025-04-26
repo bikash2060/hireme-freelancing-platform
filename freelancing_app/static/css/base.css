@@ -589,28 +589,27 @@ html[lang="ne"] .navbar .links .nav-link {
     border-bottom: 1px solid #e6e6f2;
     transition: background-color 0.2s ease;
     cursor: pointer;
+    text-decoration: none;
+    color: inherit;
 }
 
-.navbar .notification-item:last-child {
-    border-bottom: none;
-}
-
-.navbar .notification-item:hover {
+.navbar .notification-item:not(.empty-state):hover {
     background-color: #f0f7ff;
-    border-bottom-color: #d7d7e8; 
+    border-bottom-color: #d7d7e8;
+    text-decoration: none;
 }
 
 .navbar .notification-item.unread {
-    background-color: #f8f7ff; 
-    box-shadow: 2px 0 0 0 #9d6cff inset; 
-    border-bottom: 1px solid #e6e0f9; 
+    background-color: #f8f7ff;
+    box-shadow: 2px 0 0 0 #9d6cff inset;
+    border-bottom: 1px solid #e6e0f9;
     transition: all 0.3s ease;
 }
 
 .navbar .notification-item.unread:hover {
-    background-color: #f1eeff; 
+    background-color: #f1eeff;
     box-shadow: 2px 0 0 0 #8a5cf7 inset;
-    border-bottom-color: #d7d0f2; 
+    border-bottom-color: #d7d0f2;
 }
 
 .navbar .notification-item.unread:hover .notification-icon {

@@ -5,12 +5,12 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.conf import settings
+from django.urls import reverse
 from django.db.models import Q
 from django.views import View
 from .models import *
 from .utils import *
 import os
-import json
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -61,6 +61,7 @@ class NewProjectView(BaseProjectView):
     """
     TEMPLATE_NAME = 'projects/newproject.html'
     NEW_PROJECT_URL = 'project:new-project'
+    PROJECT_URL = 'project:client-project-detail'
 
     def get(self, request):
         try:
@@ -217,18 +218,19 @@ class NewProjectView(BaseProjectView):
                     filename = fs.save(attachment.name, attachment)
                     ProjectAttachment.objects.create(
                         project=project,
-                        file=filename.split('/')[-1] 
+                        file=os.path.basename(filename)  
                     )
                     
             # Send notification
+            project_detail_url = reverse(self.PROJECT_URL, kwargs={'project_id': project.id})
             NotificationManager.send_notification(
                 user=request.user,
                 message=notification_message,
-                redirect_url=None
+                redirect_url=project_detail_url
             )
             
             messages.success(request, success_message)
-            return redirect(self.HOME_URL)
+            return redirect(project_detail_url)
             
         except Exception as e:
             print(f"[NewProjectView POST Error]: {e}")
@@ -339,3 +341,122 @@ class ClientProjectsView(BaseProjectView):
             print(f"[ClientProjectsView Error]: {e}")
             messages.error(request, 'Something went wrong while loading your projects.')
             return redirect(self.HOME_URL)
+        
+# ------------------------------------------------------
+# ⏳ [PENDING TEST]
+# View Name: ClientProjectDetailView
+# Description: Displays detailed view of a client's project
+# Tested On:
+# Status: 
+# Code Refractor Status: 
+# ------------------------------------------------------
+class ClientProjectDetailView(BaseProjectView):
+    """
+    - Shows detailed view of a client's project
+    - Includes project info, skills, attachments, and management options
+    """
+    TEMPLATE_NAME = 'projects/project-detail.html'
+    PROJECT_URL = 'project:client-projects'
+
+    def get(self, request, project_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.prefetch_related(
+                'project_skills__skill',
+                'project_attachments'
+            ).get(id=project_id, client=client)
+            
+            attachments = []
+            for attachment in project.project_attachments.all():
+                try:
+                    if os.path.exists(attachment.file.path):
+                        attachments.append({
+                            'file': attachment.file,
+                            'filename': os.path.basename(attachment.file.name),
+                            'uploaded_at': attachment.uploaded_at
+                        })
+                    else:
+                        filename = os.path.basename(attachment.file.name)
+                        project_attachments_path = os.path.join(settings.MEDIA_ROOT, 'project_attachments', filename)
+                        if os.path.exists(project_attachments_path):
+                            attachment.file.name = filename
+                            attachment.save()
+                            attachments.append({
+                                'file': attachment.file,
+                                'filename': filename,
+                                'uploaded_at': attachment.uploaded_at
+                            })
+                except Exception as e:
+                    print(f"[Attachment Error]: {e}")
+                    continue
+            
+            key_requirements = []
+            if project.key_requirements:
+                key_requirements = [req.strip() for req in project.key_requirements.split('\n') if req.strip()]
+            
+            context = {
+                'project': project,
+                'key_requirements': key_requirements,
+                'client': client,
+                'attachments': attachments,  
+            }
+            
+            return render(request, self.TEMPLATE_NAME, context)
+            
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found or you do not have permission to view it.')
+            return redirect(self.PROJECT_URL)
+        except Exception as e:
+            print(f"[ClientProjectDetailView Error]: {e}")
+            messages.error(request, 'Something went wrong while loading the project.')
+            return redirect(self.PROJECT_URL)
+        
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: PublishProjectView
+# Description: Handles publishing of draft projects
+# Tested On: 2025-04-26
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class PublishProjectView(BaseProjectView):
+    """
+    - Handles publishing of draft projects
+    - Validates project meets requirements before publishing
+    - Sends notification to client
+    """
+    PROJECT_URL = 'project:client-project-detail'
+    CLIENT_PROJECTS_URL = 'project:client-projects'
+
+    def get(self, request, project_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.get(id=project_id, client=client)
+
+            # Validate project can be published
+            if project.status != Project.Status.DRAFT:
+                messages.error(request, 'Only draft projects can be published.')
+                return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project.id}))
+            
+            # Update project status to published
+            project.status = Project.Status.PUBLISHED
+            project.save()
+
+            # Send notification
+            project_detail_url = reverse(self.PROJECT_URL, kwargs={'project_id': project.id})
+            NotificationManager.send_notification(
+                user=request.user,
+                message=f"Your project {project.title} has been successfully published and is now visible to freelancers.",
+                redirect_url=project_detail_url
+            )
+
+            messages.success(request, 'Your project has been successfully published and is now live!')
+            return redirect(project_detail_url)
+
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found or you do not have permission to publish it.')
+            return redirect(self.CLIENT_PROJECTS_URL)
+        except Exception as e:
+            print(f"[PublishProjectView Error]: {e}")
+            messages.error(request, 'Something went wrong while publishing your project.')
+            return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project_id}))
