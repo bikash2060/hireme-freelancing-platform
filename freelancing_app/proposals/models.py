@@ -7,7 +7,6 @@ class Proposal(models.Model):
         PENDING = 'pending', ('Pending')
         ACCEPTED = 'accepted', ('Accepted')
         REJECTED = 'rejected', ('Rejected')
-        WITHDRAWN = 'withdrawn', ('Withdrawn')
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='proposals')
     freelancer = models.ForeignKey(Freelancer, on_delete=models.CASCADE, related_name='proposals')

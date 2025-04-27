@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
+from projects.models import Project, ProjectCategory
 from notification.utils import NotificationManager
 from .models import Proposal, ProposalAttachment
 from freelancerprofile.models import Freelancer
 from django.core.paginator import Paginator
 from .utils import ProposalValidator
 from django.contrib import messages
-from projects.models import Project
 from django.conf import settings
 from django.urls import reverse
 from django.db.models import Q
@@ -207,61 +207,13 @@ class FreelancerProposalsView(BaseProposalView):
     def get(self, request):
         try:           
             freelancer = self.get_freelancer(request)
-            proposals_list = Proposal.objects.filter(freelancer=freelancer).order_by('-created_at')
-            
-            # Get filter values from request
-            selected_statuses = request.GET.getlist('status')
-            selected_categories = request.GET.getlist('category')
-            selected_budgets = request.GET.getlist('budget')
-            keyword = request.GET.get('search')
-            
-            # Search by keyword
-            if keyword:
-                proposals_list = proposals_list.filter(
-                    Q(project__title__icontains=keyword) |
-                    Q(status__icontains=keyword) |
-                    Q(project__category__name__icontains=keyword)
-                )
-                
-            # Filter by status
-            if selected_statuses and 'all' not in selected_statuses:
-                proposals_list = proposals_list.filter(status__in=selected_statuses)
-                
-            # Filter by project category
-            if selected_categories and 'all' not in selected_categories:
-                proposals_list = proposals_list.filter(project__category_id__in=selected_categories)
-                
-            # Filter by budget
-            if selected_budgets and 'all' not in selected_budgets:
-                budget_q = Q()
-                for b in selected_budgets:
-                    if b == '500000+':
-                        budget_q |= Q(proposed_amount__gte=500000)
-                    else:
-                        parts = b.split('-')
-                        if len(parts) == 2:
-                            min_val, max_val = map(int, parts)
-                            budget_q |= Q(proposed_amount__gte=min_val, proposed_amount__lte=max_val)
-                proposals_list = proposals_list.filter(budget_q)
-                
-            # Pagination
-            paginator = Paginator(proposals_list, self.ITEMS_PER_PAGE)
-            page_number = request.GET.get('page')
-            proposals = paginator.get_page(page_number)
-            
-            # Get categories for filter options
-            from projects.models import ProjectCategory
+            proposals_list = Proposal.objects.filter(freelancer=freelancer).order_by('-submitted_at')
             categories = ProjectCategory.objects.all().order_by('name')
             
             context = {
-                'proposals': proposals,
+                'proposals': proposals_list,
                 'status_choices': Proposal.Status.choices,
                 'categories': categories,
-                'selected_statuses': selected_statuses,
-                'selected_categories': selected_categories,
-                'selected_budgets': selected_budgets,
-                'search_keyword': keyword,
-                'categories_dict': {str(c.id): c for c in categories},
             }
             return render(request, self.TEMPLATE_NAME, context)
             

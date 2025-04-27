@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% load static %}
+{% load project_filters %}
+{% load number_filters %}
+{% load custom_filters %}
+
+{% block title %}My Proposals - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/proposals/proposals.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    <line x1="12" y1="11" x2="12" y2="17"></line>
+                    <line x1="9" y1="14" x2="15" y2="14"></line>
+                </svg>
+            </div>
+            <div class="hero-text">
+                <h2 class="title">Your Proposals</h2>
+                <p class="subtitle">Keep track of all your proposals — filter, review proposals, and manage progress with ease.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Bar and Filter Section -->
+<div class="search-filter-section">
+    <div class="search-container">
+        <div class="search-filter-bar">
+            {% if request.GET %}
+                <div class="applied-filters-container">
+                    
+                    {% if request.GET.search %}
+                        <div class="applied-filter-tag search-tag">
+                            Search: "{{ request.GET.search }}"
+                            <span class="remove-filter" onclick="removeFilterParam('search')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    {% for status in selected_statuses %}
+                        <div class="applied-filter-tag status-tag">
+                            Status: {{ status|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('status', '{{ status }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% for category in selected_categories %}
+                        {% with cat=categories_dict|get_item:category %}
+                            {% if cat %}
+                                <div class="applied-filter-tag category-tag">
+                                    Category: {{ cat.name }}
+                                    <span class="remove-filter" onclick="removeMultiFilterParam('category', '{{ category }}')">
+                                        <i class="fas fa-times"></i>
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+
+                    {% for budget in selected_budgets %}
+                        <div class="applied-filter-tag budget-filter">
+                            Budget: 
+                            {% if budget == '500000+' %}
+                                Rs. 5,00,000+
+                            {% else %}
+                                Rs. {{ budget }}
+                            {% endif %}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('budget', '{{ budget }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% for experience in selected_experience %}
+                        <div class="applied-filter-tag experience-tag">
+                            Experience: {{ experience|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('experience', '{{ experience }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% for duration in selected_durations %}
+                        <div class="applied-filter-tag duration-filter">
+                            Duration: 
+                            {% if duration == '12+' %}
+                                3+ months
+                            {% elif duration == '4-12' %}
+                                1-3 months
+                            {% else %}
+                                Less than 4 weeks
+                            {% endif %}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('duration', '{{ duration }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="Search proposals..." value="{{ request.GET.search }}" class="search-input">
+            </div>
+            <div class="filters-container">
+                <div class="filters">
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Status</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                {% for value, label in status_choices %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="status" value="{{ value }}"
+                                            {% if value in selected_statuses or 'all' in selected_statuses %}checked{% endif %}>
+                                        {{ label }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown scrollable-dropdown large-above-dropdown">
+                        <button class="filter-btn">
+                            <span>Category</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="category-search-container">
+                                <input type="text" placeholder="Search categories..." class="category-search-input">
+                            </div>
+                            <div class="category-items">
+                                {% for category in categories %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="category" value="{{ category.id }}"
+                                            {% if category.id|stringformat:"s" in selected_categories or 'all' in selected_categories %}checked{% endif %}>
+                                        {{ category.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Budget</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="0-50000"
+                                       {% if '0-50000' in selected_budgets %}checked{% endif %}>
+                                Rs. 0 - 50,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="50000-100000"
+                                       {% if '50000-100000' in selected_budgets %}checked{% endif %}>
+                                Rs. 50,000 - 1,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="100000-500000"
+                                       {% if '100000-500000' in selected_budgets %}checked{% endif %}>
+                                Rs. 1,00,000 - 5,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="500000+"
+                                       {% if '500000+' in selected_budgets %}checked{% endif %}>
+                                Rs. 5,00,000+
+                            </label>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Experience</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            {% for value, label in expertise_levels %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="experience" value="{{ value }}"
+                                        {% if value in selected_experience or 'all' in selected_experience %}checked{% endif %}>
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">  
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="0-4"
+                                       {% if '0-4' in selected_durations %}checked{% endif %}>
+                                Less than 4 weeks
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="4-12"
+                                       {% if '4-12' in selected_durations %}checked{% endif %}>
+                                1-3 months
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="12+"
+                                       {% if '12+' in selected_durations %}checked{% endif %}>
+                                3+ months
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button class="clear-filters-btn">
+                    <i class="fas fa-undo"></i> Reset Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/proposals/proposals-filter.js' %}"></script>
+{% endblock %}

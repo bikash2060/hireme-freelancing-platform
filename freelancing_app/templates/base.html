@@ -44,142 +44,134 @@
 <!-- Main Navigation Bar Section -->
 <div class="nav-container">
     <nav class="navbar">
+
+        <div class="left-nav">
+            <!-- Company Logo Section -->
+            <div class="logo">
+                <a href="{% url 'home:home' %}">
+                    <div class="logo-container">
+                        <img src="{% static 'images/logo/Logo.png' %}" alt="Company Logo">
+                    </div>
+                </a>
+            </div>
+    
+            <!-- Navigation Links Section -->
+            <div class="links">
+                {% if not request.user.is_authenticated %}
+                    <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+                    <a href="{% url 'home:freelancers' %}" class="nav-link {% if request.resolver_match.url_name == 'freelancers' %}active{% endif %}">Find Freelancers</a>
+                    <a href="{% url 'home:projects' %}" class="nav-link {% if request.resolver_match.url_name == 'projects' %}active{% endif %}">Find Projects</a>
+                    <a href="{% url 'home:about-us' %}" class="nav-link {% if request.resolver_match.url_name == 'about-us' %}active{% endif %}">About Us</a>
+                    <a href="{% url 'home:contact-us' %}" class="nav-link {% if request.resolver_match.url_name == 'contact-us' %}active{% endif %}">Contact Us</a>
+                {% elif request.user.role == 'client' or request.user.role == 'CLIENT' %}
+                    <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+    
+                    <div class="nav-dropdown">
+                        <button class="nav-dropbtn">
+                            Projects <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="nav-dropdown-content">
+                            <a href="{% url 'project:new-project' %}" class="dropdown-item">
+                                <i class="fas fa-plus-circle"></i> Post New Project
+                            </a>
+                            <a href="{% url 'project:client-projects' %}" class="dropdown-item">
+                                <i class="fas fa-briefcase"></i> My Projects
+                            </a>
+                            <div class="dropdown-content-divider"></div>
+                            <a href="{% url 'project:client-projects' %}?status=draft" class="dropdown-item">
+                                <i class="fas fa-file"></i> Draft Projects
+                            </a>
+                        </div>
+                    </div>
+    
+                    <div class="nav-dropdown">
+                        <button class="nav-dropbtn">
+                            Freelancers <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="nav-dropdown-content">
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-search"></i> Find Freelancers
+                            </a>
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-bookmark"></i> Saved Freelancers
+                            </a>
+                        </div>
+                    </div>
+    
+                    <div class="nav-dropdown">
+                        <button class="nav-dropbtn">
+                            Contracts <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="nav-dropdown-content">
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-file-signature"></i> Active Contracts
+                            </a>
+                            <div class="dropdown-content-divider"></div>
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-check-circle"></i> Completed Work
+                            </a>
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-credit-card"></i> Payments
+                            </a>
+                        </div>
+                    </div>
+                {% elif request.user.role == 'freelancer' or request.user.role == 'FREELANCER' %}
+                    <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+    
+                    <div class="nav-dropdown">
+                        <button class="nav-dropbtn">
+                            Find Work <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="nav-dropdown-content">
+                            <a href="{% url 'home:projects' %}" class="dropdown-item">
+                                <i class="fas fa-search"></i> Browse Projects
+                            </a>
+                            <div class="dropdown-content-divider"></div>
+                            <a href="{% url 'proposals:freelancer-proposals' %}" class="dropdown-item">
+                                <i class="fas fa-paper-plane"></i> My Proposals
+                            </a>
+                        </div>
+                    </div>                
+                    
+                    <div class="nav-dropdown">
+                        <button class="nav-dropbtn">
+                            My Work <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="nav-dropdown-content">
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-tasks"></i> Active Contracts
+                            </a>
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-check-circle"></i> Completed Work
+                            </a>
+                            <div class="dropdown-content-divider"></div>
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-money-bill-wave"></i> Earnings
+                            </a>
+                        </div>
+                    </div>                
+                    
+                    <div class="nav-dropdown">
+                        <button class="nav-dropbtn">
+                            Career <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="nav-dropdown-content">
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-briefcase"></i> My Portfolio
+                            </a>
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-tools"></i> My Skills & Services
+                            </a>
+                            <div class="dropdown-content-divider"></div>
+                            <a href="" class="dropdown-item">
+                                <i class="fas fa-star"></i> Reviews & Ratings
+                            </a>
+                        </div>
+                    </div>                
+                {% endif %}
+            </div>
+        </div>
         
-        <!-- Company Logo Section -->
-        <div class="logo">
-            <a href="{% url 'home:home' %}">
-                <div class="logo-container">
-                    <img src="{% static 'images/logo/Logo.png' %}" alt="Company Logo">
-                </div>
-            </a>
-        </div>
-
-        <!-- Navigation Links Section -->
-        <div class="links">
-            {% if not request.user.is_authenticated %}
-                <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
-                <a href="{% url 'home:freelancers' %}" class="nav-link {% if request.resolver_match.url_name == 'freelancers' %}active{% endif %}">Find Freelancers</a>
-                <a href="{% url 'home:projects' %}" class="nav-link {% if request.resolver_match.url_name == 'projects' %}active{% endif %}">Find Projects</a>
-                <a href="{% url 'home:about-us' %}" class="nav-link {% if request.resolver_match.url_name == 'about-us' %}active{% endif %}">About Us</a>
-                <a href="{% url 'home:contact-us' %}" class="nav-link {% if request.resolver_match.url_name == 'contact-us' %}active{% endif %}">Contact Us</a>
-            {% elif request.user.role == 'client' or request.user.role == 'CLIENT' %}
-                <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
-
-                <div class="nav-dropdown">
-                    <button class="nav-dropbtn">
-                        Projects <i class="fas fa-chevron-down dropdown-icon"></i>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <a href="{% url 'project:new-project' %}" class="dropdown-item">
-                            <i class="fas fa-plus-circle"></i> Post New Project
-                        </a>
-                        <a href="{% url 'project:client-projects' %}" class="dropdown-item">
-                            <i class="fas fa-briefcase"></i> My Projects
-                        </a>
-                        <div class="dropdown-content-divider"></div>
-                        <a href="{% url 'project:client-projects' %}?status=draft" class="dropdown-item">
-                            <i class="fas fa-file"></i> Draft Projects
-                        </a>
-                    </div>
-                </div>
-
-                <div class="nav-dropdown">
-                    <button class="nav-dropbtn">
-                        Freelancers <i class="fas fa-chevron-down dropdown-icon"></i>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-search"></i> Find Freelancers
-                        </a>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-bookmark"></i> Saved Freelancers
-                        </a>
-                    </div>
-                </div>
-
-                <div class="nav-dropdown">
-                    <button class="nav-dropbtn">
-                        Contracts <i class="fas fa-chevron-down dropdown-icon"></i>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-file-signature"></i> Active Contracts
-                        </a>
-                        <div class="dropdown-content-divider"></div>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-check-circle"></i> Completed Work
-                        </a>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-credit-card"></i> Payments
-                        </a>
-                    </div>
-                </div>
-            {% elif request.user.role == 'freelancer' or request.user.role == 'FREELANCER' %}
-                <a href="{% url 'home:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
-
-                <div class="nav-dropdown">
-                    <button class="nav-dropbtn">
-                        Find Work <i class="fas fa-chevron-down dropdown-icon"></i>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <a href="{% url 'home:projects' %}" class="dropdown-item">
-                            <i class="fas fa-search"></i> Browse Projects
-                        </a>
-                        <div class="dropdown-content-divider"></div>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-paper-plane"></i> My Proposals
-                        </a>
-                    </div>
-                </div>                
-                
-                <div class="nav-dropdown">
-                    <button class="nav-dropbtn">
-                        My Work <i class="fas fa-chevron-down dropdown-icon"></i>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-tasks"></i> Active Contracts
-                        </a>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-check-circle"></i> Completed Work
-                        </a>
-                        <div class="dropdown-content-divider"></div>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-money-bill-wave"></i> Earnings
-                        </a>
-                    </div>
-                </div>                
-                
-                <div class="nav-dropdown">
-                    <button class="nav-dropbtn">
-                        Career <i class="fas fa-chevron-down dropdown-icon"></i>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-briefcase"></i> My Portfolio
-                        </a>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-tools"></i> My Skills & Services
-                        </a>
-                        <div class="dropdown-content-divider"></div>
-                        <a href="" class="dropdown-item">
-                            <i class="fas fa-star"></i> Reviews & Ratings
-                        </a>
-                    </div>
-                </div>                
-            {% endif %}
-        </div>
-
-        <!-- Search Bar Section -->
-        <div class="search-bar">
-            <select class="search-type">
-                <option value="freelancers">Freelancers</option>
-                <option value="projects">Projects</option>
-            </select>
-            <input type="text" placeholder="Search..." />
-            <button><i class="fas fa-search"></i></button>
-        </div>
-
         <!-- Mobile View Links and Search Section -->
         <div class="mobile-nav">
             <div class="search-bar">

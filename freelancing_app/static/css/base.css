@@ -93,6 +93,12 @@ html[lang="ne"] .navbar .links .nav-link {
     z-index: 1000; 
 }
 
+.navbar .left-nav{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
 .navbar .mobile-nav{
     display: none;
 }
