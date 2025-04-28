@@ -16,6 +16,7 @@ class Proposal(models.Model):
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     submitted_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_shortlisted = models.BooleanField(default=False)
     
     available_start_date = models.DateField(null=True, blank=True)
     approach_methodology = models.TextField(blank=True)

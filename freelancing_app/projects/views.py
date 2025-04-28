@@ -4,14 +4,14 @@ from notification.utils import NotificationManager
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.db.models import Q, Avg
 from django.conf import settings
 from django.urls import reverse
-from django.db.models import Q
 from django.views import View
 from .models import *
 from .utils import *
-import os
 import json
+import os
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -256,7 +256,7 @@ class ClientProjectsView(BaseProjectView):
     ITEMS_PER_PAGE = 10
 
     def get(self, request):
-        try:           
+        try:    
             client = self.get_client(request)
             projects_list = Project.objects.filter(client=client).order_by('-created_at')
             categories = ProjectCategory.objects.all().order_by('name')
@@ -370,38 +370,39 @@ class ClientProjectDetailView(BaseProjectView):
             attachments = []
             for attachment in project.project_attachments.all():
                 try:
-                    if os.path.exists(attachment.file.path):
+                    filename = os.path.basename(attachment.file.name)
+                    file_path = os.path.join(settings.MEDIA_ROOT, 'project_attachments', filename)
+                    
+                    if os.path.exists(file_path):
+                        if attachment.file.name != os.path.join('project_attachments', filename):
+                            attachment.file.name = os.path.join('project_attachments', filename)
+                            attachment.save()
+                            
                         attachments.append({
                             'file': attachment.file,
-                            'filename': os.path.basename(attachment.file.name),
+                            'filename': filename,
                             'uploaded_at': attachment.uploaded_at
                         })
                     else:
-                        filename = os.path.basename(attachment.file.name)
-                        project_attachments_path = os.path.join(settings.MEDIA_ROOT, 'project_attachments', filename)
-                        if os.path.exists(project_attachments_path):
-                            attachment.file.name = filename
-                            attachment.save()
-                            attachments.append({
-                                'file': attachment.file,
-                                'filename': filename,
-                                'uploaded_at': attachment.uploaded_at
-                            })
+                        print(f"[Attachment Warning]: File not found at {file_path}")
                 except Exception as e:
                     print(f"[Attachment Error]: {e}")
                     continue
-                
-            print(f"Attachments: {attachments}")
-            
+                            
             key_requirements = []
             if project.key_requirements:
                 key_requirements = [req.strip() for req in project.key_requirements.split('\n') if req.strip()]
-            
+                
+            shortlisted_count = project.proposals.filter(is_shortlisted=True).count()
+            avg_bid_amount = project.proposals.aggregate(avg_amount=Avg('proposed_amount'))['avg_amount'] or 0
+
             context = {
                 'project': project,
-                'key_requirements': key_requirements,
                 'client': client,
                 'attachments': attachments,  
+                'key_requirements': key_requirements,
+                'shortlisted_count': shortlisted_count,
+                'avg_bid_amount': avg_bid_amount
             }
             
             return render(request, self.TEMPLATE_NAME, context)

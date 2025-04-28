@@ -216,7 +216,7 @@
                             <div class="stat-label">Proposals Received</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">{{ project.shortlisted_freelancers.count|default:0 }}</div>
+                            <div class="stat-value">{{ shortlisted_count|default:0 }}</div>
                             <div class="stat-label">Shortlisted Freelancers</div>
                         </div>
                         <div class="stat-item">
@@ -224,7 +224,7 @@
                             <div class="stat-label">Weeks Duration</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">Rs. 500000 </div>
+                            <div class="stat-value">Rs. {{ avg_bid_amount|format_currency|default:'0' }}</div>
                             <div class="stat-label">Avg. Bid</div>
                         </div>
                     </div>
