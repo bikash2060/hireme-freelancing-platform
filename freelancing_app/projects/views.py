@@ -1,6 +1,7 @@
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
 from notification.utils import NotificationManager
+from freelancerprofile.models import Freelancer
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
@@ -9,13 +10,10 @@ from django.conf import settings
 from django.urls import reverse
 from django.views import View
 from proposals.models import *
-from freelancerprofile.models import Freelancer
 from .models import *
 from .utils import *
 import json
 import os
-from datetime import datetime, timedelta
-from django.utils import timezone
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -954,7 +952,7 @@ class ProjectProposalsView(BaseProjectView):
             return redirect(self.PROJECT_URL)
 
 # ------------------------------------------------------
-# Pending:
+# ✅ [TESTED & COMPLETED]
 # View Name: ProposalDetailView
 # Description: Displays detailed view of a specific proposal
 # Tested On: 
@@ -1037,83 +1035,74 @@ class ProposalActionView(BaseProjectView):
     - Validates action and updates proposal status
     - Sends notifications to freelancer
     """
+    FREELANCER_PROPOSAL_DETAILS_URL = 'proposal:freelancer-proposal-detail'
+    PROJECT_PROPOSAL_DETAILS_URL = 'project:project-proposal-details'
+    PROJECT_PROPOSALS_URL = 'project:project-proposals'
     PROJECT_URL = 'project:client-projects'
-    PROPOSAL_DETAIL_URL = 'project:project-proposal-details'
     ALLOWED_ACTIONS = ['accept', 'shortlist', 'reject']
 
     def post(self, request, project_id, proposal_id, action):
         try:
-            # Validate action
             if action not in self.ALLOWED_ACTIONS:
                 messages.error(request, 'Invalid action specified.')
-                return redirect(self.PROJECT_URL)
+                return redirect(self.PROJECT_PROPOSALS_URL, project_id=project_id)
 
-            # Get client and validate project ownership
             client = self.get_client(request)
             project = Project.objects.get(id=project_id, client=client)
             proposal = Proposal.objects.get(id=proposal_id, project=project)
 
-            # Check if proposal is in pending state
             if proposal.status != 'pending':
                 messages.error(request, f'Cannot {action} a proposal that is not pending.')
-                return redirect(self.PROPOSAL_DETAIL_URL, project_id=project_id, proposal_id=proposal_id)
+                return redirect(self.PROJECT_PROPOSAL_DETAILS_URL, project_id=project_id, proposal_id=proposal_id)
 
-            # Handle different actions
             if action == 'accept':
-                # Check if project is already in progress
                 if project.status == 'in_progress':
                     messages.error(request, 'Project is already in progress.')
                     return redirect(self.PROPOSAL_DETAIL_URL, project_id=project_id, proposal_id=proposal_id)
 
-                # Update proposal status
                 proposal.status = 'accepted'
                 proposal.save()
 
-                # Update project status
                 project.status = 'in_progress'
                 project.save()
 
-                # Send notification to freelancer
                 short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
                 NotificationManager.send_notification(
                     user=proposal.freelancer.user,
                     message=f'Congratulations! Your proposal for the project {short_title} has been accepted. Please check the project details for the next steps.',
-                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs={'project_id': project_id, 'proposal_id': proposal_id})
+                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs= {'proposal_id': proposal_id})
                 )
 
                 messages.success(request, 'Proposal accepted successfully. Project is now in progress.')
             
             elif action == 'shortlist':
-                # Toggle shortlist status
                 proposal.is_shortlisted = not proposal.is_shortlisted
                 proposal.save()
 
-                # Send notification to freelancer
                 short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
                 NotificationManager.send_notification(
                     user=proposal.freelancer.user,
                     message=f'Your proposal for project {short_title} has been {"shortlisted" if proposal.is_shortlisted else "removed from shortlist"}.',
-                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs={'project_id': project_id, 'proposal_id': proposal_id})
+                    redirect_url=reverse(self.FREELANCER_PROPOSAL_DETAILS_URL, kwargs= {'proposal_id': proposal_id})
                 )
 
                 messages.success(request, f'Proposal {"shortlisted" if proposal.is_shortlisted else "removed from shortlist"} successfully.')
+                return redirect(self.PROJECT_PROPOSAL_DETAILS_URL, project_id=project_id, proposal_id=proposal_id)
             
-            elif action == 'reject':
-                # Update proposal status
-                proposal.status = 'rejected'
+            else:
+                proposal.status = Proposal.Status.REJECTED
+                proposal.is_shortlisted = False  
                 proposal.save()
 
-                # Send notification to freelancer
                 short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
                 NotificationManager.send_notification(
                     user=proposal.freelancer.user,
                     message=f'Your proposal for project {short_title} has been rejected.',
-                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs={'project_id': project_id, 'proposal_id': proposal_id})
+                    redirect_url=reverse(self.FREELANCER_PROPOSAL_DETAILS_URL, kwargs={'proposal_id': proposal_id})
                 )
-
+                
                 messages.success(request, 'Proposal rejected successfully.')
-
-            return redirect(self.PROPOSAL_DETAIL_URL, project_id=project_id, proposal_id=proposal_id)
+                return redirect(self.PROJECT_PROPOSAL_DETAILS_URL, project_id=project_id, proposal_id=proposal_id)
 
         except Project.DoesNotExist:
             messages.error(request, 'Project not found.')

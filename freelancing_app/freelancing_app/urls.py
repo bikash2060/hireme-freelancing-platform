@@ -27,6 +27,7 @@ urlpatterns += i18n_patterns(
     # Project-related routes
     path('project/', include('projects.urls', namespace='project')),
     path('proposal/', include('proposals.urls', namespace='proposals')),
+    path('contract/', include('contract.urls', namespace='contract')),
     
     # Communication
     path('chat/', include('chat.urls', namespace='chat')),
