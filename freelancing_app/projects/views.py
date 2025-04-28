@@ -177,12 +177,13 @@ class NewProjectView(BaseProjectView):
                 return render(request, self.TEMPLATE_NAME, context)
             
             # Determine project status and notification
+            title_short = (title[:30] + '...') if len(title) > 30 else title
             if status == 'posted':
-                notification_message = f"Your project {title} has been successfully published and is now visible to freelancers."
+                notification_message = f"Your project {title_short} has been successfully published and is now visible to freelancers."
                 project_status = Project.Status.PUBLISHED
                 success_message = 'Your project has been successfully published and is now live.'
             else:
-                notification_message = f"Your project {title} has been saved as a draft. You can publish it anytime later."
+                notification_message = f"Your project {title_short} has been saved as a draft. You can publish it anytime later."
                 project_status = Project.Status.DRAFT
                 success_message = 'Your project has been saved as a draft.'
                 
@@ -408,7 +409,7 @@ class ClientProjectDetailView(BaseProjectView):
             return render(request, self.TEMPLATE_NAME, context)
             
         except Project.DoesNotExist:
-            messages.error(request, 'Project not found or you do not have permission to view it.')
+            messages.error(request, 'The project you are trying to access does not exist.')
             return redirect(self.PROJECT_URL)
         except Exception as e:
             print(f"[ClientProjectDetailView Error]: {e}")
@@ -439,7 +440,7 @@ class PublishProjectView(BaseProjectView):
 
             # Validate project can be published
             if project.status != Project.Status.DRAFT:
-                messages.error(request, 'Only draft projects can be published.')
+                messages.warning(request, 'Only draft projects can be published.')
                 return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project.id}))
             
             # Update project status to published
@@ -447,10 +448,11 @@ class PublishProjectView(BaseProjectView):
             project.save()
 
             # Send notification
+            title_short = (project.title[:30] + '...') if len(project.title) > 30 else project.title
             project_detail_url = reverse(self.PROJECT_URL, kwargs={'project_id': project.id})
             NotificationManager.send_notification(
                 user=request.user,
-                message=f"Your project {project.title} has been successfully published and is now visible to freelancers.",
+                message=f"Your project {title_short} has been successfully published and is now visible to freelancers.",
                 redirect_url=project_detail_url
             )
 
@@ -493,7 +495,7 @@ class EditProjectView(BaseProjectView):
 
             # Don't allow editing of non-draft projects
             if project.status != Project.Status.DRAFT:
-                messages.error(request, 'Only draft projects can be edited.')
+                messages.warning(request, 'Only draft projects can be edited.')
                 return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project.id}))
 
             skills = Skill.objects.all().order_by('name')
@@ -668,12 +670,13 @@ class EditProjectView(BaseProjectView):
             project.budget_max = budget_max
             
             # Only update status if posting (not saving as draft)
+            title_short = (title[:30] + '...') if len(title) > 30 else title
             if status == 'posted':
                 project.status = Project.Status.PUBLISHED
-                notification_message = f"Your project {title} has been successfully published and is now visible to freelancers."
+                notification_message = f"Your project {title_short} has been successfully published and is now visible to freelancers."
                 success_message = 'Your project has been successfully published and is now live.'
             else:
-                notification_message = f"Your project {title} has been updated and saved as a draft."
+                notification_message = f"Your project {title_short} has been updated and saved as a draft."
                 success_message = 'Your project has been updated and saved as a draft.'
             
             project.save()
@@ -731,3 +734,64 @@ class EditProjectView(BaseProjectView):
             print(f"[EditProjectView POST Error]: {e}")
             messages.error(request, 'Something went wrong while updating your project.')
             return redirect(reverse('project:edit-project', kwargs={'project_id': project_id}))
+        
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: DeleteProjectView
+# Description: Handles deletion of existing projects
+# Tested On: 2025-04-28
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class DeleteProjectView(BaseProjectView):
+    """
+    - Handles deletion of existing projects
+    - Only allows deletion of draft projects or projects without accepted proposals
+    - Deletes associated attachments and skills
+    """
+    PROJECT_URL = 'project:client-project-detail'
+    CLIENT_PROJECTS_URL = 'project:client-projects'
+
+    def get(self, request, project_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.get(id=project_id, client=client)
+
+            # Check if project can be deleted (only drafts or projects without accepted proposals)
+            if project.status != Project.Status.DRAFT and project.proposals.filter(status='accepted').exists():
+                messages.error(request, 'Cannot delete this project as it has accepted proposals.')
+                return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project.id}))
+
+            # Delete project attachments first
+            attachments = project.project_attachments.all()
+            for attachment in attachments:
+                try:
+                    file_path = os.path.join(settings.MEDIA_ROOT, str(attachment.file))
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                except Exception as e:
+                    print(f"[Delete Attachment Error]: {e}")
+                attachment.delete()
+
+            # Delete the project
+            project_title = project.title
+            project.delete()
+
+            # Send notification
+            title_short = (project_title[:30] + '...') if len(project_title) > 30 else project_title
+            NotificationManager.send_notification(
+                user=request.user,
+                message=f"Your project {title_short} has been successfully deleted.",
+                redirect_url=reverse(self.CLIENT_PROJECTS_URL)
+            )
+
+            messages.success(request, 'Project has been successfully deleted.')
+            return redirect(self.CLIENT_PROJECTS_URL)
+
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found or you do not have permission to delete it.')
+            return redirect(self.CLIENT_PROJECTS_URL)
+        except Exception as e:
+            print(f"[DeleteProjectView Error]: {e}")
+            messages.error(request, 'Something went wrong while deleting the project.')
+            return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project_id}))

@@ -66,6 +66,9 @@
                     
                     <div class="action-buttons">
                         {% if project.status == 'draft' %}
+                            <a href="{% url 'project:delete-project' project.id %}" class="btn btn-secondary delete-action" data-item-type="project">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
                             <a href="{% url 'project:edit-project' project.id %}" class="btn btn-secondary">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
@@ -73,6 +76,11 @@
                                 <i class="fas fa-paper-plane"></i> Publish
                             </a>
                         {% elif project.status == 'published' %}
+                            {% if project.proposals.count == 0 %}
+                                <a href="{% url 'project:delete-project' project.id %}" class="btn btn-secondary delete-action" data-item-type="project">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            {% endif %}
                             <a href="" class="btn btn-primary">
                                 <i class="fas fa-users"></i> View Proposals ({{ project.proposals.count|default:0 }})
                             </a>

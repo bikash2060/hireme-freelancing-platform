@@ -9,4 +9,5 @@ urlpatterns = [
    path('<int:project_id>/details/', ClientProjectDetailView.as_view(), name='client-project-detail'),
    path('<int:project_id>/publish/', PublishProjectView.as_view(), name='publish-project'),
    path('<int:project_id>/update/', EditProjectView.as_view(), name='edit-project'),
+   path('<int:project_id>/delete/', DeleteProjectView.as_view(), name='delete-project'),
 ]
