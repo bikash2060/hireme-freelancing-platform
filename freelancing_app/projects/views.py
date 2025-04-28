@@ -8,6 +8,8 @@ from django.db.models import Q, Avg
 from django.conf import settings
 from django.urls import reverse
 from django.views import View
+from proposals.models import *
+from freelancerprofile.models import Freelancer
 from .models import *
 from .utils import *
 import json
@@ -795,3 +797,119 @@ class DeleteProjectView(BaseProjectView):
             print(f"[DeleteProjectView Error]: {e}")
             messages.error(request, 'Something went wrong while deleting the project.')
             return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project_id}))
+
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: ProjectProposalsView
+# Description: Displays all proposals for a client's project
+# Tested On: 2025-04-28
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class ProjectProposalsView(BaseProjectView):
+    """
+    - Displays all proposals for a specific project owned by the client
+    - Provides filtering by status, shortlisted status, and sorting options
+    - Shows proposal details including attachments
+    """
+    TEMPLATE_NAME = 'projects/project-proposals.html'
+    ITEMS_PER_PAGE = 10
+    PROJECT_URL = 'project:client-projects'
+
+    def get(self, request, project_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.get(id=project_id, client=client)
+            proposals = Proposal.objects.filter(project=project).select_related(
+                'freelancer__user'
+            ).prefetch_related(
+                'attachments'
+            ).order_by('-submitted_at')
+            
+            # Get filter values from request
+            keyword = request.GET.get('search')
+            selected_statuses = request.GET.getlist('status')
+            selected_budgets = request.GET.getlist('budget')
+            selected_experience = request.GET.getlist('experience')
+            selected_availability = request.GET.getlist('availability')
+            selected_durations = request.GET.getlist('duration')
+            
+            # Search by keyword
+            if keyword:
+                proposals = proposals.filter(
+                    Q(title__icontains=keyword) |
+                    Q(cover_letter__icontains=keyword) |
+                    Q(proposed_amount__icontains=keyword) |
+                    Q(estimated_duration__icontains=keyword) |
+                    Q(status__icontains=keyword) |
+                    Q(approach_methodology__icontains=keyword) |
+                    Q(relevant_experience__icontains=keyword) |
+                    Q(questions_for_client__icontains=keyword) |
+                    Q(freelancer__user__first_name__icontains=keyword) |
+                    Q(freelancer__user__last_name__icontains=keyword) |
+                    Q(freelancer__expertise_level__icontains=keyword) |
+                    Q(freelancer__availability__icontains=keyword)
+                )
+                
+            # Filter by status
+            if selected_statuses and 'all' not in selected_statuses:
+                proposals = proposals.filter(status__in=selected_statuses)
+            
+            # Filter by experience level
+            if selected_experience and 'all' not in selected_experience:
+                proposals = proposals.filter(freelancer__expertise_level__in=selected_experience)
+            
+            # Filter by availability
+            if selected_availability and 'all' not in selected_availability:
+                proposals = proposals.filter(freelancer__availability__in=selected_availability)
+                
+            # Filter by budget
+            if selected_budgets and 'all' not in selected_budgets:
+                min_budget = selected_budgets[0].split('-')[0] if selected_budgets else None
+                max_budget = selected_budgets[0].split('-')[1] if len(selected_budgets) > 1 else None
+                if min_budget and max_budget:
+                    proposals = proposals.filter(proposed_amount__gte=min_budget, proposed_amount__lte=max_budget)
+                elif min_budget:
+                    proposals = proposals.filter(proposed_amount__gte=min_budget)
+                elif max_budget:
+                    proposals = proposals.filter(proposed_amount__lte=max_budget)
+            
+            # Filter by duration
+            if selected_durations and 'all' not in selected_durations:
+                duration_q = Q()
+                for d in selected_durations:
+                    if d == '12+':
+                        duration_q |= Q(estimated_duration__gte=12)
+                    else:
+                        min_d, max_d = map(int, d.split('-'))
+                        duration_q |= Q(estimated_duration__gte=min_d, estimated_duration__lte=max_d)
+                proposals = proposals.filter(duration_q)
+            
+            # Pagination
+            paginator = Paginator(proposals, self.ITEMS_PER_PAGE)
+            page_number = request.GET.get('page')
+            proposals = paginator.get_page(page_number)          
+            
+            context = {
+                'project': project,
+                'proposals': proposals,
+                'status_choices': Proposal.Status.choices,
+                'freelancer_experience_levels': Freelancer.ExpertiseLevel.choices,
+                'freelancer_availability_choices': Freelancer.Availability.choices,
+                'selected_statuses': selected_statuses,
+                'selected_experience': selected_experience,
+                'selected_budgets': selected_budgets,
+                'selected_durations': selected_durations,
+                'selected_availability': selected_availability,
+                'search_keyword': keyword,
+            }
+            
+            return render(request, self.TEMPLATE_NAME, context)
+            
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found or you do not have permission to view its proposals.')
+            return redirect(self.PROJECT_URL)
+        except Exception as e:
+            print(f"[ProjectProposalsView Error]: {e}")
+            messages.error(request, 'Something went wrong while loading project proposals.')
+            return redirect(reverse('project:client-project-detail', kwargs={'project_id': project_id}))

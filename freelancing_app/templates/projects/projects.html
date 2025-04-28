@@ -331,7 +331,7 @@
                                     <i class="fas fa-paper-plane"></i> Publish
                                 </a>
                             {% elif project.status == 'published' %}
-                                <a href="" class="btn-action primary-btn">
+                                <a href="{% url 'project:project-proposals' project.id %}" class="btn-action primary-btn">
                                     <i class="fas fa-users"></i> View Proposals ({{ project.proposals.count|default:0 }})
                                 </a>
                             {% elif project.status == 'hiring' %}

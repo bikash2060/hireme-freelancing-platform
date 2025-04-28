@@ -1,0 +1,400 @@
+{% extends "base.html" %}
+{% load static %}
+{% load project_filters %}
+{% load number_filters %}
+{% load custom_filters %}
+
+{% block title %}{{ project.title }} - Proposals - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/projects/project-proposals.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">      
+            <div class="breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-list">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'project:client-projects' %}">My Projects</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'project:client-project-detail' project.id %}">{{ project.title|truncatechars:20 }}</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Proposals
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="project-header">
+                <div class="project-info">
+                    <div class="project-meta">
+                        <span class="project-category">
+                            <i class="fas fa-tag"></i> {{ project.category.name }}
+                        </span>
+                        <span class="project-status {{ project.status }}">
+                            <i class="fas fa-circle"></i> {{ project.get_status_display }}
+                        </span>
+                    </div>
+                      
+                    <h1 class="project-title">{{ project.title }}</h1>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>{{ project.get_experience_level_display }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ project.estimated_duration }} weeks</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-rupee-sign"></i>
+                            {% if project.is_fixed_price %}
+                                <span>{{ project.fixed_budget|format_currency }}</span>
+                            {% else %}
+                                <span>{{ project.budget_min|format_currency }} - {{ project.budget_max|format_currency }}</span>
+                            {% endif %}
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Bar and Filter Section -->
+<div class="search-filter-section">
+    <div class="search-container">
+        <div class="search-filter-bar">
+            {% if request.GET %}
+                <div class="applied-filters-container">
+                    
+                    {% if request.GET.search %}
+                        <div class="applied-filter-tag search-tag">
+                            Search: "{{ request.GET.search }}"
+                            <span class="remove-filter" onclick="removeFilterParam('search')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    {% for status in selected_statuses %}
+                        <div class="applied-filter-tag status-tag">
+                            Status: {{ status|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('status', '{{ status }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% for budget in selected_budgets %}
+                        <div class="applied-filter-tag budget-filter">
+                            Budget: 
+                            {% if budget == '500000+' %}
+                                Rs. 5,00,000+
+                            {% else %}
+                                Rs. {{ budget }}
+                            {% endif %}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('budget', '{{ budget }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% for experience in selected_experience %}
+                        <div class="applied-filter-tag experience-tag">
+                            Experience: {{ experience|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('experience', '{{ experience }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% for availability in selected_availability %}
+                        <div class="applied-filter-tag availability-tag">
+                            Availability: {{ availability|title }}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('availability', '{{ availability }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+
+                    {% for duration in selected_durations %}
+                        <div class="applied-filter-tag duration-filter">
+                            Duration: 
+                            {% if duration == '12+' %}
+                                3+ months
+                            {% elif duration == '4-12' %}
+                                1-3 months
+                            {% else %}
+                                Less than 4 weeks
+                            {% endif %}
+                            <span class="remove-filter" onclick="removeMultiFilterParam('duration', '{{ duration }}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="Search proposals..." value="{{ request.GET.search }}" class="search-input">
+            </div>
+            <div class="filters-container">
+                <div class="filters">
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Status</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                {% for value, label in status_choices %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="status" value="{{ value }}"
+                                            {% if value in selected_statuses or 'all' in selected_statuses %}checked{% endif %}>
+                                        {{ label }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Budget</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="0-50000"
+                                       {% if '0-50000' in selected_budgets %}checked{% endif %}>
+                                Rs. 0 - 50,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="50000-100000"
+                                       {% if '50000-100000' in selected_budgets %}checked{% endif %}>
+                                Rs. 50,000 - 1,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="100000-500000"
+                                       {% if '100000-500000' in selected_budgets %}checked{% endif %}>
+                                Rs. 1,00,000 - 5,00,000
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="budget" value="500000+"
+                                       {% if '500000+' in selected_budgets %}checked{% endif %}>
+                                Rs. 5,00,000+
+                            </label>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Experience</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            {% for value, label in freelancer_experience_levels %}
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="experience" value="{{ value }}"
+                                        {% if value in selected_experience or 'all' in selected_experience %}checked{% endif %}>
+                                    {{ label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Availability</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            {% for value, label in freelancer_availability_choices %}
+                                {% if value != "not-available" %}
+                                    <label class="dropdown-item">
+                                        <input type="checkbox" name="availability" value="{{ value }}"
+                                            {% if value in selected_availability or 'all' in selected_availability %}checked{% endif %}>
+                                        {{ label }}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">  
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="0-4"
+                                       {% if '0-4' in selected_durations %}checked{% endif %}>
+                                Less than 4 weeks
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="4-12"
+                                       {% if '4-12' in selected_durations %}checked{% endif %}>
+                                1-3 months
+                            </label>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="duration" value="12+"
+                                       {% if '12+' in selected_durations %}checked{% endif %}>
+                                3+ months
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <button class="clear-filters-btn">
+                    <i class="fas fa-undo"></i> Reset Filters
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Proposals List Section -->
+<div class="proposal-list-section">
+    <div class="container">    
+        
+        {% if proposals%}
+            <div class="card-grid">
+                {% for proposal in proposals %}
+                    <div class="proposal-card">
+                        <div class="proposal-info">
+                            <div class="freelancer-profile">
+                                <div class="profile-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="freelancer-badge {% if proposal.is_shortlisted %}top-rated{% else %}rising-talent{% endif %}" 
+                                    title="{% if proposal.is_shortlisted %}Shortlisted{% else %}New Proposal{% endif %}">
+                                    <i class="fas fa-{% if proposal.is_shortlisted %}star{% else %}seedling{% endif %}"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="proposal-details">
+                                <div class="proposal-header">
+                                    <div class="name-and-badge">
+                                        <h2 class="proposal-title">Proposal for {{ proposal.project.title }}</h2>
+                                        <span class="status-badge status-{{ proposal.status }}" title="{{ proposal.status|title }}">
+                                            {{ proposal.status|title }}
+                                        </span>
+                                    </div>
+                                    <div class="proposal-amount">${{ proposal.proposed_amount }}</div>
+                                </div>
+                                
+                                <div class="freelancer-name">By {{ proposal.freelancer.username }}</div>
+                                
+                                <div class="proposal-meta">
+                                    <span class="duration"><i class="fas fa-clock"></i> {{ proposal.estimated_duration }} weeks</span>
+                                    <span class="submitted"><i class="fas fa-calendar-alt"></i> {{ proposal.submitted_at|date:"M d, Y" }}</span>
+                                    {% if proposal.available_start_date %}
+                                    <span class="start-date"><i class="fas fa-calendar-check"></i> Available {{ proposal.available_start_date|date:"M d, Y" }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="proposal-details-info">
+                            <div class="proposal-stats">
+                                <div class="stat-item">
+                                    <i class="fas fa-file-alt"></i>
+                                    <div>
+                                        <span class="stat-value">{{ proposal.cover_letter|truncatewords:10 }}</span>
+                                        <span class="stat-label">Cover Letter</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <div>
+                                        <span class="stat-value">{{ proposal.approach_methodology|truncatewords:5|default:"Not specified" }}</span>
+                                        <span class="stat-label">Approach</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-briefcase"></i>
+                                    <div>
+                                        <span class="stat-value">{{ proposal.relevant_experience|truncatewords:5|default:"Not specified" }}</span>
+                                        <span class="stat-label">Experience</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fas fa-question-circle"></i>
+                                    <div>
+                                        <span class="stat-value">{{ proposal.questions_for_client|truncatewords:5|default:"No questions" }}</span>
+                                        <span class="stat-label">Questions</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Attachments Section -->
+                            {% if proposal.attachments.all %}
+                            <div class="proposal-attachments">
+                                <div class="attachments-header">
+                                    <i class="fas fa-paperclip"></i>
+                                    <span class="sub-title">Attachments</span>
+                                    <span class="attachments-count">{{ proposal.attachments.count }} file(s)</span>
+                                </div>
+                                <div class="attachments-list-container">
+                                    <div class="attachments-list">
+                                        {% for attachment in proposal.attachments.all %}
+                                        <span class="attachment-tag">
+                                            <span class="attachment-icon"><i class="fas fa-file"></i></span>
+                                            {{ attachment.file.name|slice:"20:" }}
+                                        </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="footer-section">
+                            <div class="footer-stats">
+                                <div class="footer-stat">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Submitted {{ proposal.submitted_at|timesince }} ago</span>
+                                </div>
+                                <div class="footer-stat">
+                                    <i class="fas fa-sync-alt"></i>
+                                    <span>Updated {{ proposal.updated_at|timesince }} ago</span>
+                                </div>
+                            </div>
+                            <div class="footer-actions">
+                                <a href="#" class="action-button view-button">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                                {% if proposal.status == 'pending' %}
+                                <a href="#" class="action-button accept-button">
+                                    <i class="fas fa-check"></i> Accept
+                                </a>
+                                <a href="#" class="action-button reject-button">
+                                    <i class="fas fa-times"></i> Reject
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-proposals">
+                <div class="empty-illustration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No matching proposals found</h3>
+                <p class="empty-message">We couldn't find any proposals matching your search and filter criteria. Try adjusting your filters or search term.</p>
+            </div>
+        {% endif %}
+    </div>    
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/projects/project-filter.js' %}"></script>
+{% endblock %}

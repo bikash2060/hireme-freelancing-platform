@@ -81,11 +81,11 @@
                                     <i class="fas fa-trash"></i> Delete
                                 </a>
                             {% endif %}
-                            <a href="" class="btn btn-primary">
+                            <a href="{% url 'project:project-proposals' project.id %}" class="btn btn-primary">
                                 <i class="fas fa-users"></i> View Proposals ({{ project.proposals.count|default:0 }})
                             </a>
                         {% elif project.status == 'hiring' %}
-                            <a href="" class="btn btn-secondary">
+                            <a href="{% url 'project:project-proposals' project.id %}" class="btn btn-secondary">
                                 <i class="fas fa-users"></i> Review Proposals
                             </a>
                             <a href="" class="btn btn-primary">

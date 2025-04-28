@@ -10,4 +10,5 @@ urlpatterns = [
    path('<int:project_id>/publish/', PublishProjectView.as_view(), name='publish-project'),
    path('<int:project_id>/update/', EditProjectView.as_view(), name='edit-project'),
    path('<int:project_id>/delete/', DeleteProjectView.as_view(), name='delete-project'),
+   path('<int:project_id>/proposals/', ProjectProposalsView.as_view(), name='project-proposals'),
 ]
