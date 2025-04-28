@@ -51,12 +51,12 @@ class BaseProposalView(CustomLoginRequiredMixin, View):
         return Freelancer.objects.get(user=request.user)
 
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: SubmitProposalView
 # Description: Handles submission of new proposals
-# Tested On: 
-# Status: 
-# Code Refractor Status: 
+# Tested On: 2025-04-28
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class SubmitProposalView(BaseProposalView):
     """
@@ -65,6 +65,8 @@ class SubmitProposalView(BaseProposalView):
     """
     TEMPLATE_NAME = 'proposals/newproposal.html'
     PROJECT_DETAIL_URL = 'home:project-detail'
+    PROJECT_PROPOSALS_URL = 'project:project-proposals'
+    PROPOSAL_DETAIL_URL = 'proposal:freelancer-proposal-detail'
     
     def get(self, request, project_id):
         try:
@@ -73,8 +75,9 @@ class SubmitProposalView(BaseProposalView):
             
             # Check if freelancer already submitted a proposal
             if Proposal.objects.filter(project=project, freelancer=freelancer).exists():
+                proposal = Proposal.objects.get(project=project, freelancer=freelancer)
                 messages.warning(request, 'You have already submitted a proposal for this project.')
-                return redirect(self.PROJECT_DETAIL_URL, project_id=project.id)
+                return redirect(reverse(self.PROPOSAL_DETAIL_URL, kwargs={'proposal_id': proposal.id}))
                 
             return render(request, self.TEMPLATE_NAME, {
                 'project': project,
@@ -97,8 +100,9 @@ class SubmitProposalView(BaseProposalView):
             
             # Check if freelancer already submitted a proposal
             if Proposal.objects.filter(project=project, freelancer=freelancer).exists():
+                proposal = Proposal.objects.get(project=project, freelancer=freelancer)
                 messages.warning(request, 'You have already submitted a proposal for this project.')
-                return redirect(self.PROJECT_DETAIL_URL, project_id=project.id)
+                return redirect(reverse(self.PROPOSAL_DETAIL_URL, kwargs={'proposal_id': proposal.id}))
             
             # Get form data
             cover_letter = request.POST.get('cover_letter', '').strip()
@@ -169,14 +173,24 @@ class SubmitProposalView(BaseProposalView):
                     )
             
             # Send notification to client
+            title_short = (project.title[:30] + '...') if len(project.title) > 30 else project.title
+            client_notification_url = reverse(self.PROJECT_PROPOSALS_URL, kwargs={'project_id': project.id})
             NotificationManager.send_notification(
                 user=project.client.user,
-                message=f"New proposal received for your project {project.title} from {freelancer.user.full_name}.",
-                redirect_url=None
+                message=f"New proposal received for your project {title_short} from {freelancer.user.full_name}.",
+                redirect_url=client_notification_url
+            )
+            
+            # Send notification to freelancer
+            freelancer_notification_url = reverse(self.PROPOSAL_DETAIL_URL, kwargs={'proposal_id': proposal.id})
+            NotificationManager.send_notification(
+                user=freelancer.user,
+                message=f"You have successfully submitted a proposal for {project.title}.",
+                redirect_url=freelancer_notification_url
             )
             
             messages.success(request, 'Your proposal has been submitted successfully!')
-            return redirect(self.HOME_URL)
+            return redirect(freelancer_notification_url)
             
         except Project.DoesNotExist:
             messages.error(request, 'Project not found.')
@@ -188,10 +202,10 @@ class SubmitProposalView(BaseProposalView):
             return redirect(self.PROJECT_DETAIL_URL, project_id=project_id)
 
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: FreelancerProposalsView
 # Description: Displays and filters freelancer's proposals
-# Tested On: 
+# Tested On: 2025-04-28
 # Status: 
 # Code Refractor Status: 
 # ------------------------------------------------------
@@ -210,10 +224,74 @@ class FreelancerProposalsView(BaseProposalView):
             proposals_list = Proposal.objects.filter(freelancer=freelancer).order_by('-submitted_at')
             categories = ProjectCategory.objects.all().order_by('name')
             
+            # Get filter values from request
+            keyword = request.GET.get('search')
+            selected_statuses = request.GET.getlist('status')
+            selected_categories = request.GET.getlist('category')
+            selected_budgets = request.GET.getlist('budget')
+            selected_durations = request.GET.getlist('duration')
+            
+            # Search by keyword
+            if keyword:
+                proposals_list = proposals_list.filter(
+                    Q(project__title__icontains=keyword) |
+                    Q(cover_letter__icontains=keyword) |
+                    Q(proposed_amount__icontains=keyword) |
+                    Q(estimated_duration__icontains=keyword) |
+                    Q(status__icontains=keyword) |
+                    Q(approach_methodology__icontains=keyword) |
+                    Q(relevant_experience__icontains=keyword) |
+                    Q(questions_for_client__icontains=keyword) 
+                )
+            
+            # Filter by status
+            if selected_statuses and 'all' not in selected_statuses:
+                proposals_list = proposals_list.filter(status__in=selected_statuses)
+                
+            # Filter by category
+            if selected_categories and 'all' not in selected_categories:
+                proposals_list = proposals_list.filter(project__category_id__in=selected_categories)
+            
+            # Filter by budget
+            if selected_budgets and 'all' not in selected_budgets:
+                budget_q = Q()
+                for b in selected_budgets:
+                    if b == '500000+':
+                        budget_q |= Q(proposed_amount__gte=500000)
+                    else:
+                        parts = b.split('-')
+                        if len(parts) == 2:
+                            min_val, max_val = map(int, parts)
+                            budget_q |= Q(proposed_amount__gte=min_val, proposed_amount__lte=max_val)
+                proposals_list = proposals_list.filter(budget_q)
+            
+            # Filter by duration
+            if selected_durations and 'all' not in selected_durations:
+                duration_q = Q()
+                for d in selected_durations:
+                    if d == '12+':
+                        duration_q |= Q(estimated_duration__gte=12)
+                    else:
+                        min_d, max_d = map(int, d.split('-'))
+                        duration_q |= Q(estimated_duration__gte=min_d, estimated_duration__lte=max_d)
+                proposals_list = proposals_list.filter(duration_q)
+            
+            # Pagination
+            paginator = Paginator(proposals_list, self.ITEMS_PER_PAGE)
+            page_number = request.GET.get('page')
+            proposals_list = paginator.get_page(page_number)
+            
             context = {
                 'proposals': proposals_list,
                 'status_choices': Proposal.Status.choices,
                 'categories': categories,
+                'selected_statuses': selected_statuses,
+                'selected_categories': selected_categories,
+                'selected_budgets': selected_budgets,
+                'selected_durations': selected_durations,
+                'search_keyword': keyword,
+                'freelancer': freelancer,
+                'categories_dict': {str(c.id): c for c in categories},
             }
             return render(request, self.TEMPLATE_NAME, context)
             
@@ -223,11 +301,11 @@ class FreelancerProposalsView(BaseProposalView):
             return redirect(self.HOME_URL)
 
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: FreelancerProposalDetailView
 # Description: Displays detailed view of a freelancer's proposal
-# Tested On:
-# Status: 
+# Tested On: 2025-04-28 
+# Status: Working as expected
 # Code Refractor Status: 
 # ------------------------------------------------------
 class FreelancerProposalDetailView(BaseProposalView):
@@ -235,52 +313,41 @@ class FreelancerProposalDetailView(BaseProposalView):
     - Shows detailed view of a freelancer's proposal
     - Includes proposal info, attachments, and management options
     """
-    TEMPLATE_NAME = 'proposals/proposal-detail.html'
+    TEMPLATE_NAME = 'proposals/proposal-details.html'
     PROPOSALS_URL = 'proposal:freelancer-proposals'
 
     def get(self, request, proposal_id):
         try:
             freelancer = self.get_freelancer(request)
-            proposal = Proposal.objects.prefetch_related(
-                'proposal_attachments'
-            ).get(id=proposal_id, freelancer=freelancer)
+            proposal = Proposal.objects.get(id=proposal_id, freelancer=freelancer)
             
-            # Get project details
-            project = proposal.project
-            
-            # Prepare attachments
             attachments = []
-            for attachment in proposal.proposal_attachments.all():
+            for attachment in proposal.attachments.all():
                 try:
-                    if os.path.exists(attachment.file.path):
+                    filename = os.path.basename(attachment.file.name)
+                    file_path = os.path.join(settings.MEDIA_ROOT, 'proposal_attachments', filename)
+                    
+                    if os.path.exists(file_path):
+                        if attachment.file.name != os.path.join('proposal_attachments', filename):
+                            attachment.file.name = os.path.join('proposal_attachments', filename)
+                            attachment.save()
+                            
                         attachments.append({
                             'file': attachment.file,
-                            'filename': os.path.basename(attachment.file.name),
+                            'filename': filename,
                             'uploaded_at': attachment.uploaded_at
                         })
                     else:
-                        filename = os.path.basename(attachment.file.name)
-                        proposal_attachments_path = os.path.join(settings.MEDIA_ROOT, 'proposal_attachments', filename)
-                        if os.path.exists(proposal_attachments_path):
-                            attachment.file.name = filename
-                            attachment.save()
-                            attachments.append({
-                                'file': attachment.file,
-                                'filename': filename,
-                                'uploaded_at': attachment.uploaded_at
-                            })
+                        print(f"[Attachment Warning]: File not found at {file_path}")
                 except Exception as e:
                     print(f"[Attachment Error]: {e}")
                     continue
-                    
-            context = {
+                
+            return render(request, self.TEMPLATE_NAME, {
                 'proposal': proposal,
-                'project': project,
                 'freelancer': freelancer,
                 'attachments': attachments,
-            }
-            
-            return render(request, self.TEMPLATE_NAME, context)
+            })
             
         except Proposal.DoesNotExist:
             messages.error(request, 'Proposal not found or you do not have permission to view it.')
@@ -291,7 +358,7 @@ class FreelancerProposalDetailView(BaseProposalView):
             return redirect(self.PROPOSALS_URL)
 
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ⏳ [PENDING TEST] - Will be done in future
 # View Name: EditProposalView
 # Description: Handles editing of existing proposals
 # Tested On:
@@ -310,9 +377,13 @@ class EditProposalView(BaseProposalView):
 
     def get(self, request, proposal_id):
         try:
+            # Send Message to freelancer when they try to edit a proposal
+            messages.warning(request, 'Editing proposals feature is not available yet.')
+            return redirect(self.HOME_URL)
+            
             freelancer = self.get_freelancer(request)
             proposal = Proposal.objects.prefetch_related(
-                'proposal_attachments'
+                'attachments'
             ).get(id=proposal_id, freelancer=freelancer)
             
             # Don't allow editing of non-pending proposals
@@ -322,8 +393,8 @@ class EditProposalView(BaseProposalView):
             
             # Prepare existing attachments
             existing_attachments = []
-            if proposal.proposal_attachments.all():
-                for attachment in proposal.proposal_attachments.all():
+            if proposal.attachments.all():
+                for attachment in proposal.attachments.all():
                     try:
                         file_path = os.path.join(settings.MEDIA_ROOT, str(attachment.file))
                         if os.path.exists(file_path):
@@ -428,7 +499,7 @@ class EditProposalView(BaseProposalView):
                         continue
             
             # Send notification to client about update
-            client_notification_url = reverse('project:project-proposals', kwargs={'project_id': proposal.project.id})
+            client_notification_url = reverse(self.PROJECT_PROPOSALS_URL, kwargs={'project_id': proposal.project.id})
             NotificationManager.send_notification(
                 user=proposal.project.client.user,
                 message=f"A proposal for your project '{proposal.project.title}' has been updated by {freelancer.user.get_full_name()}",
@@ -445,3 +516,64 @@ class EditProposalView(BaseProposalView):
             print(f"[EditProposalView POST Error]: {e}")
             messages.error(request, 'Something went wrong while updating your proposal.')
             return redirect(reverse('proposal:edit-proposal', kwargs={'proposal_id': proposal_id}))
+
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: DeleteProposalView
+# Description: Handles deletion of existing proposals
+# Tested On: 2025-04-28
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class DeleteProposalView(BaseProposalView):
+    """
+    - Handles deletion of existing proposals
+    - Only allows deletion of pending proposals
+    - Deletes associated attachments
+    """
+    PROPOSAL_URL = 'proposal:freelancer-proposal-detail'
+    PROPOSALS_URL = 'proposal:freelancer-proposals'
+
+    def get(self, request, proposal_id):
+        try:
+            freelancer = self.get_freelancer(request)
+            proposal = Proposal.objects.get(id=proposal_id, freelancer=freelancer)
+
+            # Check if proposal can be deleted (only rejected proposals)
+            if proposal.status != Proposal.Status.REJECTED:
+                messages.error(request, 'Cannot delete this proposal as it is not rejected.')
+                return redirect(reverse(self.PROPOSAL_URL, kwargs={'proposal_id': proposal.id}))
+
+            # Delete proposal attachments first
+            attachments = proposal.attachments.all()
+            for attachment in attachments:
+                try:
+                    file_path = os.path.join(settings.MEDIA_ROOT, str(attachment.file))
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+                except Exception as e:
+                    print(f"[Delete Attachment Error]: {e}")
+                attachment.delete()
+
+            # Delete the proposal
+            proposal_title = proposal.project.title
+            proposal.delete()
+
+            # Send notification
+            title_short = (proposal_title[:30] + '...') if len(proposal_title) > 30 else proposal_title
+            NotificationManager.send_notification(
+                user=request.user,
+                message=f"Your proposal for {title_short} has been successfully deleted.",
+                redirect_url=reverse(self.PROPOSALS_URL)
+            )
+
+            messages.success(request, 'Proposal has been successfully deleted.')
+            return redirect(self.PROPOSALS_URL)
+
+        except Proposal.DoesNotExist:
+            messages.error(request, 'Proposal not found or you do not have permission to delete it.')
+            return redirect(self.PROPOSALS_URL)
+        except Exception as e:
+            print(f"[DeleteProposalView Error]: {e}")
+            messages.error(request, 'Something went wrong while deleting the proposal.')
+            return redirect(reverse(self.PROPOSAL_URL, kwargs={'proposal_id': proposal_id}))

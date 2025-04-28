@@ -10,6 +10,7 @@ from clientprofile.models import Client
 from django.contrib.auth import logout
 from freelancing_app import settings
 from django.contrib import messages
+from django.db.models import Avg
 from django.urls import reverse
 from django.views import View
 from decimal import Decimal
@@ -779,6 +780,9 @@ class ProjectDetailView(View):
         total_projects = Project.objects.filter(client=client).count()
         completed_projects = Project.objects.filter(client=client, status=Project.Status.COMPLETED).count()
         
+        shortlisted_count = project.proposals.filter(is_shortlisted=True).count()
+        avg_bid_amount = project.proposals.aggregate(avg_amount=Avg('proposed_amount'))['avg_amount'] or 0
+        
         similar_projects = self._get_similar_projects(project)
         
         context = {
@@ -790,6 +794,8 @@ class ProjectDetailView(View):
             'total_projects': total_projects,
             'completed_projects': completed_projects,
             'similar_projects': similar_projects,
+            'shortlisted_count': shortlisted_count,
+            'avg_bid_amount': avg_bid_amount,
         }
         return context
     

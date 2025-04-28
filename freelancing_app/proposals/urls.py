@@ -8,4 +8,5 @@ urlpatterns = [
     path('my-proposals/', FreelancerProposalsView.as_view(), name='freelancer-proposals'),
     path('<int:proposal_id>/details/', FreelancerProposalDetailView.as_view(), name='freelancer-proposal-detail'),
     path('<int:proposal_id>/edit/', EditProposalView.as_view(), name='edit-proposal'),
+    path('<int:proposal_id>/delete/', DeleteProposalView.as_view(), name='delete-proposal'),
 ]

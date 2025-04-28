@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (deleteUrl === '#') {
                     hideModal();
                     setTimeout(() => {
-                        alert('Item successfully removed');
                         confirmBtn.innerHTML = 'Remove';
                         confirmBtn.disabled = false;
                     }, 300);

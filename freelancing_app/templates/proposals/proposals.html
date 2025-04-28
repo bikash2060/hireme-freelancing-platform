@@ -179,20 +179,6 @@
                     </div>
                     <div class="filter-dropdown">
                         <button class="filter-btn">
-                            <span>Experience</span> <i class="fas fa-chevron-down dropdown-icon"></i>
-                        </button>
-                        <div class="dropdown-content">
-                            {% for value, label in expertise_levels %}
-                                <label class="dropdown-item">
-                                    <input type="checkbox" name="experience" value="{{ value }}"
-                                        {% if value in selected_experience or 'all' in selected_experience %}checked{% endif %}>
-                                    {{ label }}
-                                </label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="filter-dropdown">
-                        <button class="filter-btn">
                             <span>Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
                         <div class="dropdown-content">  
@@ -222,10 +208,154 @@
     </div>
 </div>
 
-
+<!-- Proposals Section -->
+<div class="proposals-section">
+    <div class="container">
+        {% if proposals %}
+            <div class="proposals-list-view" id="proposals-container">
+                {% for proposal in proposals %}
+                    <div class="proposal-card" onclick="window.location.href='{% url 'proposal:freelancer-proposal-detail' proposal.id %}'">
+                        <div class="proposal-status-indicator {{ proposal.status }}"></div>
+                        <div class="proposal-card-header">
+                            <div class="proposal-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="proposal-meta">
+                                <div class="title-row">
+                                    <h3 class="proposal-title">{{ proposal.project.title }}</h3>
+                                    <span class="proposal-status {{ proposal.status }}">{{ proposal.get_status_display }}</span>
+                                </div>
+                                <div class="meta-row">
+                                    <span class="proposal-category">
+                                        <i class="fas fa-tag"></i> {{ proposal.project.category.name }}
+                                    </span>
+                                    <span class="proposal-submitted"><i class="far fa-clock"></i> Submitted {{ proposal.submitted_at|format_posted_time }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="proposal-details">
+                            <div class="detail-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <div>
+                                    <span>Proposed Amount</span>
+                                    <span class="detail-value">Rs {{ proposal.proposed_amount|format_currency }}</span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <span>Estimated Duration</span>
+                                    <span class="detail-value">{{ proposal.estimated_duration }} weeks</span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-user-tie"></i>
+                                <div>
+                                    <span>Project Status</span>
+                                    <span class="detail-value">{{ proposal.project.get_status_display }}</span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-star"></i>
+                                <div>
+                                    <span>Shortlisted</span>
+                                    <span class="detail-value">
+                                        {% if proposal.is_shortlisted %}
+                                            <span class="badge success">Yes</span>
+                                        {% else %}
+                                            <span class="badge">No</span>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="proposal-excerpt">
+                            <h4>Cover Letter Excerpt</h4>
+                            <p>{{ proposal.cover_letter|truncatechars:150 }}</p>
+                        </div>
+                        
+                        <div class="proposal-footer">
+                            <a href="{% url 'proposal:freelancer-proposal-detail' proposal.id %}" class="btn-action primary-btn">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-proposals">
+                <div class="empty-illustration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No proposals found</h3>
+                <p class="empty-message">
+                    {% if request.GET %}
+                        We couldn't find any proposals matching your search and filter criteria. Try adjusting your filters or search term.
+                    {% else %}
+                        You haven't submitted any proposals yet. Browse projects to submit your first proposal.
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+    </div>
+    
+    {% if proposals.has_other_pages %}
+    <div class="pagination">
+        {% if proposals.has_previous %}
+            <a href="?page={{ proposals.previous_page_number }}" class="pagination-btn prev-next">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+        {% else %}
+            <button class="pagination-btn prev-next" disabled>
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+        {% endif %}
+        
+        <div class="page-numbers">
+            {% if proposals.number > 3 %}
+                <a href="?page=1" class="page-number">1</a>
+                {% if proposals.number > 4 %}  {# Only show ellipsis if there's a gap #}
+                    <span class="page-ellipsis">...</span>
+                {% endif %}
+            {% endif %}
+            
+            {% for i in proposals.paginator.page_range %}
+                {% if i >= proposals.number|add:"-2" and i <= proposals.number|add:"2" %}
+                    {% if proposals.number == i %}
+                        <button class="page-number active">{{ i }}</button>
+                    {% else %}
+                        <a href="?page={{ i }}" class="page-number">{{ i }}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            {% if proposals.number < proposals.paginator.num_pages|add:"-2" %}
+                {% if proposals.number < proposals.paginator.num_pages|add:"-3" %}  {# Only show ellipsis if there's a gap #}
+                    <span class="page-ellipsis">...</span>
+                {% endif %}
+                <a href="?page={{ proposals.paginator.num_pages }}" class="page-number">{{ proposals.paginator.num_pages }}</a>
+            {% endif %}
+        </div>
+        
+        {% if proposals.has_next %}
+            <a href="?page={{ proposals.next_page_number }}" class="pagination-btn prev-next">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+        {% else %}
+            <button class="pagination-btn prev-next" disabled>
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}
-
-{% block footer %}{% endblock %}
 
 {% block js_files %}
 <script src="{% static 'js/proposals/proposals-filter.js' %}"></script>

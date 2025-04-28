@@ -198,7 +198,7 @@
                                 </label>
                                 <textarea id="cover_letter" name="cover_letter" class="form-control" 
                                 placeholder="Explain why you're the best fit: your understanding, experience, approach, and any questions."
-                                    rows="8" maxlength="3000">{{ cover_letter }}</textarea>
+                                    rows="8" maxlength="3000" required>{{ cover_letter }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
                                         <span id="cover-letter-char-count">0</span>/3000 characters
@@ -218,7 +218,7 @@
                                         <span class="input-symbol">Rs</span>
                                         <input type="number" id="proposed_amount" name="proposed_amount" 
                                             class="form-control" min="1000" step="500"
-                                            placeholder="Enter your proposed amount" value="{{ proposed_amount }}">
+                                            placeholder="Enter your proposed amount" value="{{ proposed_amount }}" required>
                                     </div>
                                 </div>
                                 
@@ -228,7 +228,7 @@
                                     </label>
                                     <input type="number" id="estimated_duration" name="estimated_duration" 
                                         class="form-control" min="1" max="104" 
-                                        placeholder="Enter weeks needed" value="{{ estimated_duration }}">
+                                        placeholder="Enter weeks needed" value="{{ estimated_duration }}" required>
                                 </div>
                                 
                                 <div class="form-group">
@@ -237,7 +237,7 @@
                                     </label>
                                     <input type="date" id="available_start_date" name="available_start_date" 
                                         class="form-control"
-                                        placeholder="When can you start?" value="{{ available_start_date }}">
+                                        placeholder="When can you start?" value="{{ available_start_date }}" required>
                                 </div>
                             </div>                            
                             <div class="form-group">
@@ -246,7 +246,7 @@
                                 </label>
                                 <textarea id="approach_methodology" name="approach_methodology" class="form-control" 
                                     placeholder="Describe your approach to completing the project including any phases or milestones" 
-                                    rows="4">{{ approach_methodology }}</textarea>
+                                    rows="4" required>{{ approach_methodology }}</textarea>
 
                                 <div class="textarea-footer">
                                     <div class="char-counter">
@@ -264,7 +264,7 @@
                                 </label>
                                 <textarea id="relevant_experience" name="relevant_experience" class="form-control" 
                                     placeholder="Describe your relevant experience for this project" 
-                                    rows="4">{{ relevant_experience }}</textarea>
+                                    rows="4" required>{{ relevant_experience }}</textarea>
 
                                 <div class="textarea-footer">
                                     <div class="char-counter">
@@ -282,7 +282,7 @@
                                 </label>
                                 <textarea id="questions_for_client" name="questions_for_client" class="form-control" 
                                     placeholder="Any questions you have about the project requirements" 
-                                    rows="3">{{ questions_for_client }}</textarea>
+                                    rows="3" required>{{ questions_for_client }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
                                         <span id="questions-client-char-count">0</span>/500 characters
