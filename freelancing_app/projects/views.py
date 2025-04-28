@@ -14,6 +14,8 @@ from .models import *
 from .utils import *
 import json
 import os
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -797,6 +799,47 @@ class DeleteProjectView(BaseProjectView):
             print(f"[DeleteProjectView Error]: {e}")
             messages.error(request, 'Something went wrong while deleting the project.')
             return redirect(reverse(self.PROJECT_URL, kwargs={'project_id': project_id}))
+        
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: SetHiringView
+# Description: Handles changing project status to hiring
+# Tested On: 2025-04-28
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class SetHiringView(BaseProjectView):
+    """
+    - Handles changing project status to hiring
+    - Prevents new proposals from being submitted
+    """
+    PROJECT_URL = 'project:client-project-detail'
+    CLIENT_PROJECTS_URL = 'project:client-projects'
+
+    def get(self, request, project_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.get(id=project_id, client=client)
+            
+            # Only allow status change from published to hiring
+            if project.status != Project.Status.PUBLISHED:
+                messages.error(request, 'Only published projects can be set to hiring status.')
+                return redirect(self.PROJECT_URL, project_id=project_id)
+            
+            # Update project status
+            project.status = Project.Status.HIRING
+            project.save()
+            
+            messages.success(request, 'Project status has been updated to hiring. No new proposals will be accepted.')
+            return redirect(self.PROJECT_URL, project_id=project_id)
+            
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found.')
+            return redirect(self.CLIENT_PROJECTS_URL)
+        except Exception as e:
+            print(f"[SetHiringView Error]: {e}")
+            messages.error(request, 'An error occurred while updating the project status.')
+            return redirect(self.CLIENT_PROJECTS_URL)
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -833,63 +876,59 @@ class ProjectProposalsView(BaseProjectView):
             selected_experience = request.GET.getlist('experience')
             selected_availability = request.GET.getlist('availability')
             selected_durations = request.GET.getlist('duration')
-            
-            # Search by keyword
+            is_shortlisted = request.GET.get('shortlisted') == 'true'
+
+            # Apply filters
             if keyword:
                 proposals = proposals.filter(
-                    Q(title__icontains=keyword) |
                     Q(cover_letter__icontains=keyword) |
-                    Q(proposed_amount__icontains=keyword) |
-                    Q(estimated_duration__icontains=keyword) |
-                    Q(status__icontains=keyword) |
                     Q(approach_methodology__icontains=keyword) |
                     Q(relevant_experience__icontains=keyword) |
                     Q(questions_for_client__icontains=keyword) |
-                    Q(freelancer__user__first_name__icontains=keyword) |
-                    Q(freelancer__user__last_name__icontains=keyword) |
-                    Q(freelancer__expertise_level__icontains=keyword) |
-                    Q(freelancer__availability__icontains=keyword)
+                    Q(freelancer__user__full_name__icontains=keyword)
                 )
-                
-            # Filter by status
-            if selected_statuses and 'all' not in selected_statuses:
+
+            if selected_statuses:
                 proposals = proposals.filter(status__in=selected_statuses)
-            
-            # Filter by experience level
-            if selected_experience and 'all' not in selected_experience:
-                proposals = proposals.filter(freelancer__expertise_level__in=selected_experience)
-            
-            # Filter by availability
-            if selected_availability and 'all' not in selected_availability:
+
+            if selected_budgets:
+                budget_filters = Q()
+                for budget in selected_budgets:
+                    if budget == '0-50000':
+                        budget_filters |= Q(proposed_amount__lte=50000)
+                    elif budget == '50000-100000':
+                        budget_filters |= Q(proposed_amount__gt=50000, proposed_amount__lte=100000)
+                    elif budget == '100000-500000':
+                        budget_filters |= Q(proposed_amount__gt=100000, proposed_amount__lte=500000)
+                    elif budget == '500000+':
+                        budget_filters |= Q(proposed_amount__gt=500000)
+                proposals = proposals.filter(budget_filters)
+
+            if selected_experience:
+                proposals = proposals.filter(freelancer__experience_level__in=selected_experience)
+
+            if selected_availability:
                 proposals = proposals.filter(freelancer__availability__in=selected_availability)
-                
-            # Filter by budget
-            if selected_budgets and 'all' not in selected_budgets:
-                min_budget = selected_budgets[0].split('-')[0] if selected_budgets else None
-                max_budget = selected_budgets[0].split('-')[1] if len(selected_budgets) > 1 else None
-                if min_budget and max_budget:
-                    proposals = proposals.filter(proposed_amount__gte=min_budget, proposed_amount__lte=max_budget)
-                elif min_budget:
-                    proposals = proposals.filter(proposed_amount__gte=min_budget)
-                elif max_budget:
-                    proposals = proposals.filter(proposed_amount__lte=max_budget)
-            
-            # Filter by duration
-            if selected_durations and 'all' not in selected_durations:
-                duration_q = Q()
-                for d in selected_durations:
-                    if d == '12+':
-                        duration_q |= Q(estimated_duration__gte=12)
-                    else:
-                        min_d, max_d = map(int, d.split('-'))
-                        duration_q |= Q(estimated_duration__gte=min_d, estimated_duration__lte=max_d)
-                proposals = proposals.filter(duration_q)
-            
+
+            if selected_durations:
+                duration_filters = Q()
+                for duration in selected_durations:
+                    if duration == '0-4':
+                        duration_filters |= Q(estimated_duration__lte=4)
+                    elif duration == '4-12':
+                        duration_filters |= Q(estimated_duration__gt=4, estimated_duration__lte=12)
+                    elif duration == '12+':
+                        duration_filters |= Q(estimated_duration__gt=12)
+                proposals = proposals.filter(duration_filters)
+
+            if is_shortlisted:
+                proposals = proposals.filter(is_shortlisted=True)
+
             # Pagination
             paginator = Paginator(proposals, self.ITEMS_PER_PAGE)
             page_number = request.GET.get('page')
-            proposals = paginator.get_page(page_number)          
-            
+            proposals = paginator.get_page(page_number)
+
             context = {
                 'project': project,
                 'proposals': proposals,
@@ -897,19 +936,195 @@ class ProjectProposalsView(BaseProjectView):
                 'freelancer_experience_levels': Freelancer.ExpertiseLevel.choices,
                 'freelancer_availability_choices': Freelancer.Availability.choices,
                 'selected_statuses': selected_statuses,
-                'selected_experience': selected_experience,
                 'selected_budgets': selected_budgets,
-                'selected_durations': selected_durations,
+                'selected_experience': selected_experience,
                 'selected_availability': selected_availability,
-                'search_keyword': keyword,
+                'selected_durations': selected_durations,
+                'is_shortlisted': is_shortlisted,
+            }
+
+            return render(request, self.TEMPLATE_NAME, context)
+
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found.')
+            return redirect(self.PROJECT_URL)
+        except Exception as e:
+            print(f"[ProjectProposalsView Error]: {e}")
+            messages.error(request, 'An error occurred while loading proposals.')
+            return redirect(self.PROJECT_URL)
+         
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: ProposalDetailView
+# Description: Displays detailed view of a specific proposal
+# Tested On: 2025-04-28
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class ProjectProposalDetailsView(BaseProjectView):
+    """
+    - Shows detailed view of a specific proposal
+    - Includes proposal info, attachments, freelancer details, and management options
+    """
+    TEMPLATE_NAME = 'projects/project-proposal-details.html'
+    PROJECT_URL = 'project:client-projects'
+    PROPOSAL_DETAIL_URL = 'project:project-proposal-details'
+    ALLOWED_ACTIONS = ['accept', 'reject', 'shortlist']
+
+    def get(self, request, project_id, proposal_id):
+        try:
+            client = self.get_client(request)
+            project = Project.objects.get(id=project_id, client=client)
+            proposal = Proposal.objects.select_related(
+                'freelancer__user',
+                'project'
+            ).prefetch_related(
+                'attachments'
+            ).get(id=proposal_id, project=project)
+            
+            attachments = []
+            for attachment in proposal.attachments.all():
+                try:
+                    filename = os.path.basename(attachment.file.name)
+                    file_path = os.path.join(settings.MEDIA_ROOT, 'proposal_attachments', filename)
+                    
+                    if os.path.exists(file_path):
+                        if attachment.file.name != os.path.join('proposal_attachments', filename):
+                            attachment.file.name = os.path.join('proposal_attachments', filename)
+                            attachment.save()
+                            
+                        attachments.append({
+                            'file': attachment.file,
+                            'filename': filename,
+                            'uploaded_at': attachment.uploaded_at
+                        })
+                    else:
+                        print(f"[Attachment Warning]: File not found at {file_path}")
+                except Exception as e:
+                    print(f"[Attachment Error]: {e}")
+                    continue
+            
+            context = {
+                'project': project,
+                'proposal': proposal,
+                'attachments': attachments,
             }
             
             return render(request, self.TEMPLATE_NAME, context)
             
         except Project.DoesNotExist:
-            messages.error(request, 'Project not found or you do not have permission to view its proposals.')
+            messages.error(request, 'Project not found or you do not have permission to view this proposal.')
+            return redirect(self.PROJECT_URL)
+        except Proposal.DoesNotExist:
+            messages.error(request, 'Proposal not found or you do not have permission to view it.')
             return redirect(self.PROJECT_URL)
         except Exception as e:
-            print(f"[ProjectProposalsView Error]: {e}")
-            messages.error(request, 'Something went wrong while loading project proposals.')
-            return redirect(reverse('project:client-project-detail', kwargs={'project_id': project_id}))
+            print(f"[ProposalDetailView Error]: {e}")
+            messages.error(request, 'Something went wrong while loading the proposal details.')
+            return redirect(self.PROJECT_URL)
+
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: ProposalActionView
+# Description: Handles actions on proposals (accept, shortlist, reject)
+# Tested On: 2025-04-28
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class ProposalActionView(BaseProjectView):
+    """
+    - Handles actions on proposals (accept, shortlist, reject)
+    - Validates action and updates proposal status
+    - Sends notifications to freelancer
+    """
+    PROJECT_URL = 'project:client-projects'
+    PROPOSAL_DETAIL_URL = 'project:project-proposal-details'
+    ALLOWED_ACTIONS = ['accept', 'shortlist', 'reject']
+
+    def post(self, request, project_id, proposal_id, action):
+        try:
+            # Validate action
+            if action not in self.ALLOWED_ACTIONS:
+                messages.error(request, 'Invalid action specified.')
+                return redirect(self.PROJECT_URL)
+
+            # Get client and validate project ownership
+            client = self.get_client(request)
+            project = Project.objects.get(id=project_id, client=client)
+            proposal = Proposal.objects.get(id=proposal_id, project=project)
+
+            # Check if proposal is in pending state
+            if proposal.status != 'pending':
+                messages.error(request, f'Cannot {action} a proposal that is not pending.')
+                return redirect(self.PROPOSAL_DETAIL_URL, project_id=project_id, proposal_id=proposal_id)
+
+            # Handle different actions
+            if action == 'accept':
+                # Check if project is already in progress
+                if project.status == 'in_progress':
+                    messages.error(request, 'Project is already in progress.')
+                    return redirect(self.PROPOSAL_DETAIL_URL, project_id=project_id, proposal_id=proposal_id)
+
+                # Update proposal status
+                proposal.status = 'accepted'
+                proposal.save()
+
+                # Update project status
+                project.status = 'in_progress'
+                project.save()
+
+                # Send notification to freelancer
+                short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
+                NotificationManager.send_notification(
+                    user=proposal.freelancer.user,
+                    message=f'Congratulations! Your proposal for the project {short_title} has been accepted. Please check the project details for the next steps.',
+                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs={'project_id': project_id, 'proposal_id': proposal_id})
+                )
+
+                messages.success(request, 'Proposal accepted successfully. Project is now in progress.')
+            
+            elif action == 'shortlist':
+                # Toggle shortlist status
+                proposal.is_shortlisted = not proposal.is_shortlisted
+                proposal.save()
+
+                # Send notification to freelancer
+                short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
+                NotificationManager.send_notification(
+                    user=proposal.freelancer.user,
+                    message=f'Your proposal for project {short_title} has been {"shortlisted" if proposal.is_shortlisted else "removed from shortlist"}.',
+                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs={'project_id': project_id, 'proposal_id': proposal_id})
+                )
+
+                messages.success(request, f'Proposal {"shortlisted" if proposal.is_shortlisted else "removed from shortlist"} successfully.')
+            
+            elif action == 'reject':
+                # Update proposal status
+                proposal.status = 'rejected'
+                proposal.save()
+
+                # Send notification to freelancer
+                short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
+                NotificationManager.send_notification(
+                    user=proposal.freelancer.user,
+                    message=f'Your proposal for project {short_title} has been rejected.',
+                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs={'project_id': project_id, 'proposal_id': proposal_id})
+                )
+
+                messages.success(request, 'Proposal rejected successfully.')
+
+            return redirect(self.PROPOSAL_DETAIL_URL, project_id=project_id, proposal_id=proposal_id)
+
+        except Project.DoesNotExist:
+            messages.error(request, 'Project not found.')
+            return redirect(self.PROJECT_URL)
+        except Proposal.DoesNotExist:
+            messages.error(request, 'Proposal not found.')
+            return redirect(self.PROJECT_URL)
+        except Exception as e:
+            print(f"[ProposalActionView Error]: {e}")
+            messages.error(request, 'An error occurred while processing your request.')
+            return redirect(self.PROJECT_URL)
+
+
+

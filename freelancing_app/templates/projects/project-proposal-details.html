@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load static %}
+{% load number_filters %}
+{% load custom_filters %}
+{% load project_filters %}
+
+{% block title %}Proposal Details - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/projects/project-proposal-details.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">      
+            
+            <div class="breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-list">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'project:client-projects' %}">My Projects</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'project:client-project-detail' project.id %}">{{ project.title|truncatechars:30 }}</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'project:project-proposals' project.id %}">Proposals</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Proposal Details
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+            <div class="project-header">
+                <div class="project-info">
+                    <div class="project-meta">
+                        <span class="project-category">
+                            <i class="fas fa-tag"></i> {{ project.category.name }}
+                        </span>
+                        <span class="project-status {{ project.status }}">
+                            <i class="fas fa-circle"></i> {{ project.get_status_display }}
+                        </span>
+                    </div>
+                      
+                    <h1 class="project-title">{{ project.title }}</h1>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span>{{ project.get_experience_level_display }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ project.estimated_duration }} weeks</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-rupee-sign"></i>
+                            {% if project.is_fixed_price %}
+                                <span>{{ project.fixed_budget|format_currency }}</span>
+                            {% else %}
+                                <span>{{ project.budget_min|format_currency }} - {{ project.budget_max|format_currency }}</span>
+                            {% endif %}
+                        </div>                        
+                    </div>
+                    
+                    <div class="action-buttons">
+                        {% if proposal.status == 'pending' %}
+                            <form method="post" action="{% url 'project:proposal-action' project.id proposal.id 'accept' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button accept-button">
+                                    <i class="fas fa-check"></i> Accept
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'project:proposal-action' project.id proposal.id 'shortlist' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button shortlist-button">
+                                    <i class="fas fa-list"></i> {% if proposal.is_shortlisted %}Remove from Shortlist{% else %}Shortlist{% endif %}
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'project:proposal-action' project.id proposal.id 'reject' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="action-button reject-button">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Proposal Overview Section -->
+<div class="overview-section">
+    <div class="container">
+        <div class="overview-grid">
+            <div class="overview-main">
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-align-left"></i> Proposal Details
+                    </h3>
+                    <div class="project-description">
+                        <h4>Cover Letter:</h4>
+                        <p>{{ proposal.cover_letter }}</p>
+                        
+                        <h4>Approach Methodology:</h4>
+                        {% if proposal.approach_methodology %}
+                            {% for line in proposal.approach_methodology|split_lines %}
+                                <div class="approach-line" style="margin-bottom: 10px;">
+                                    {{ line }}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No approach methodology provided.</span>
+                        {% endif %}
+                        
+                        <h4>Relevant Experience:</h4>
+                        {% if proposal.relevant_experience %}
+                            {% for line in proposal.relevant_experience|split_lines %}
+                                <div class="relevant-line" style="margin-bottom: 10px;">
+                                    {{ line }}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No relevant experience provided.</span>
+                        {% endif %}
+                        
+                        <h4>Questions for Client:</h4>
+                        {% if proposal.questions_for_client %}
+                            <div class="client-questions">
+                                {% for question in proposal.questions_for_client|split_lines %}
+                                    <div class="question-item" style="margin-bottom: 10px;">
+                                        {{ question }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No questions for client provided.</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-paperclip"></i> Attachments
+                    </h3>
+                    <div class="attachments-list">
+                        {% if attachments %}
+                            {% for attachment in attachments %}
+                                <div class="attachment-item">
+                                    <div class="attachment-icon">
+                                        {% if attachment.file.name|lower|slice:'-4:' == '.pdf' %}
+                                            <i class="fas fa-file-pdf"></i>
+                                        {% elif attachment.file.name|lower|slice:'-4:' == '.doc' or attachment.file.name|lower|slice:'-5:' == '.docx' %}
+                                            <i class="fas fa-file-word"></i>
+                                        {% elif attachment.file.name|lower|slice:'-4:' == '.jpg' or attachment.file.name|lower|slice:'-5:' == '.jpeg' or attachment.file.name|lower|slice:'-4:' == '.png' %}
+                                            <i class="fas fa-file-image"></i>
+                                        {% elif attachment.file.name|lower|slice:'-5:' == '.xlsx' or attachment.file.name|lower|slice:'-4:' == '.xls' %}
+                                            <i class="fas fa-file-excel"></i>
+                                        {% elif attachment.file.name|lower|slice:'-4:' == '.zip' or attachment.file.name|lower|slice:'-4:' == '.rar' %}
+                                            <i class="fas fa-file-archive"></i>
+                                        {% else %}
+                                            <i class="fas fa-file"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="attachment-content">
+                                        <h4 class="attachment-title">{{ attachment.filename }}</h4>
+                                        <div class="attachment-meta">
+                                            <span class="attachment-size">{{ attachment.file.size|filesizeformat }}</span>
+                                            <span class="attachment-date">Uploaded {{ attachment.uploaded_at|format_posted_time }}</span>
+                                        </div>
+                                    </div>
+                                    <a href="{{ attachment.file.url }}" class="attachment-download" download>
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% else %}  
+                            <div class="no-attachments">
+                                <i class="fas fa-info-circle"></i> No attachments available for this project
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="overview-sidebar">
+                <div class="sidebar-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-info-circle"></i> Proposal Details
+                    </h3>
+                    <div class="project-info-list">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Submitted</div>
+                                <div class="info-value">{{ proposal.submitted_at|format_posted_time }}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Proposed Amount</div>
+                                <div class="info-value">Rs. {{ proposal.proposed_amount|format_currency }}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Estimated Duration</div>
+                                <div class="info-value">{{ proposal.estimated_duration }} weeks</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Available Start Date</div>
+                                <div class="info-value">{{ proposal.available_start_date }}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Status</div>
+                                <div class="info-value">{{ proposal.status|title }}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="info-content">  
+                                <div class="info-label">Shortlisted</div>
+                                <div class="info-value">{{ proposal.is_shortlisted|yesno:'Yes,No' }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Project Type</div>
+                                {% if project.is_fixed_price %}
+                                    <div class="info-value">Fixed Price</div>
+                                {% else %}
+                                    <div class="info-value">Price Range</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-card freelancer-profile-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-tie"></i> Freelancer Profile
+                    </h3>
+                    <div class="freelancer-profile">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                {% if proposal.freelancer.user.profile_image %}
+                                    <img src="{% get_media_prefix %}profile_images/{{ proposal.freelancer.user.profile_image }}" 
+                                         alt="{{ proposal.freelancer.user.full_name }}" 
+                                         class="avatar-image"
+                                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'profile-icon\'><i class=\'fas fa-user\'></i></div>'">
+                                {% else %}
+                                    <div class="profile-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="profile-info">
+                                <h4 class="profile-name">{{ proposal.freelancer.user.full_name }}</h4>
+                                <div class="profile-meta">
+                                    <span class="meta-item location">
+                                        <i class="fas fa-map-marker-alt"></i> 
+                                        {% if proposal.freelancer.user.city %}
+                                            {{ proposal.freelancer.user.city }}
+                                        {% else %}
+                                            Location not specified
+                                        {% endif %}
+                                    </span>
+                                    <span class="meta-item member-since">
+                                        <i class="fas fa-calendar-alt"></i> 
+                                        Member since {{ proposal.freelancer.user.date_joined|date:"M Y" }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.total_projects|default:"0" }}</div>
+                                    <div class="stat-label">Total Projects</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon primary">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.completed_projects|default:"0" }}</div>
+                                    <div class="stat-label">Completed</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.on_time_percentage|default:"100" }}%</div>
+                                    <div class="stat-label">On Time</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon danger">
+                                    <i class="fas fa-redo"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.revision_rate|default:"0" }}%</div>
+                                    <div class="stat-label">Revision Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="expertise-section">
+                            <h5 class="section-title">
+                                <i class="fas fa-star"></i> Expertise
+                            </h5>
+                            <div class="expertise-tags">
+                                {% for skill in proposal.freelancer.skills.all|slice:":6" %}
+                                    <span class="skill-tag">{{ skill.name }}</span>
+                                {% empty %}
+                                    <span class="no-skills">No skills listed</span>
+                                {% endfor %}
+                                {% if proposal.freelancer.skills.count > 6 %}
+                                    <span class="skill-tag more-skills">+{{ proposal.freelancer.skills.count|add:"-6" }} more</span>
+                                {% endif %}
+                            </div>
+                        </div>                
+                        <div class="action-buttons">
+                            <a href="" class="btn btn-message">
+                                <i class="fas fa-envelope"></i> Send Message
+                            </a>
+                            <a href="" class="btn btn-portfolio">
+                                <i class="fas fa-briefcase"></i> View Portfolio
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

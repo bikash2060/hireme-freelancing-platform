@@ -86,6 +86,15 @@
                         </div>
                     {% endif %}
 
+                    {% if request.GET.shortlisted == 'true' %}
+                        <div class="applied-filter-tag shortlist-tag">
+                            Shortlisted: Yes
+                            <span class="remove-filter" onclick="removeFilterParam('shortlisted')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    {% endif %}
+
                     {% for status in selected_statuses %}
                         <div class="applied-filter-tag status-tag">
                             Status: {{ status|title }}
@@ -150,6 +159,20 @@
             </div>
             <div class="filters-container">
                 <div class="filters">
+                    <div class="filter-dropdown">
+                        <button class="filter-btn">
+                            <span>Shortlisted</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <div class="dropdown-section">
+                                <label class="dropdown-item">
+                                    <input type="checkbox" name="shortlisted" value="true"
+                                        {% if is_shortlisted %}checked{% endif %}>
+                                    Show Only Shortlisted
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="filter-dropdown">
                         <button class="filter-btn">
                             <span>Status</span> <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -261,18 +284,19 @@
         {% if proposals%}
             <div class="card-grid">
                 {% for proposal in proposals %}
-                    <div class="proposal-card">
+                    <div class="proposal-card" onclick="window.location.href='{% url 'project:project-proposal-details' project.id proposal.id %}'">
                         <div class="proposal-info">
                             <div class="freelancer-profile">
-                                <div class="profile-icon">
-                                    <i class="fas fa-user"></i>
-                                </div>
-                                <div class="freelancer-badge {% if proposal.is_shortlisted %}top-rated{% else %}rising-talent{% endif %}" 
-                                    title="{% if proposal.is_shortlisted %}Shortlisted{% else %}New Proposal{% endif %}">
-                                    <i class="fas fa-{% if proposal.is_shortlisted %}star{% else %}seedling{% endif %}"></i>
-                                </div>
+                                {% if proposal.freelancer.user.profile_image %}
+                                    <div class="profile-icon">
+                                        <img src="{% get_media_prefix %}profile_images/{{ proposal.freelancer.user.profile_image }}" alt="Profile Picture">
+                                    </div>
+                                {% else %}
+                                    <div class="profile-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
                             </div>
-                            
                             <div class="proposal-details">
                                 <div class="proposal-header">
                                     <div class="name-and-badge">
@@ -280,89 +304,112 @@
                                         <span class="status-badge status-{{ proposal.status }}" title="{{ proposal.status|title }}">
                                             {{ proposal.status|title }}
                                         </span>
+                                        {% if proposal.is_shortlisted %}
+                                            <span class="shortlisted-badge">Shortlisted</span>
+                                        {% endif %}
                                     </div>
-                                    <div class="proposal-amount">${{ proposal.proposed_amount }}</div>
+                                    <div class="proposal-amount" title="Proposed Amount">Rs. {{ proposal.proposed_amount|format_currency }}</div>
                                 </div>
                                 
-                                <div class="freelancer-name">By {{ proposal.freelancer.username }}</div>
+                                <div class="freelancer-name" title="Freelancer Name">By {{ proposal.freelancer.user.full_name }}</div>
                                 
                                 <div class="proposal-meta">
-                                    <span class="duration"><i class="fas fa-clock"></i> {{ proposal.estimated_duration }} weeks</span>
-                                    <span class="submitted"><i class="fas fa-calendar-alt"></i> {{ proposal.submitted_at|date:"M d, Y" }}</span>
+                                    <span class="duration" title="Duration"><i class="fas fa-clock"></i> {{ proposal.estimated_duration }} weeks</span>
+                                    <span class="submitted" title="Submitted Date"><i class="fas fa-calendar-alt"></i> {{ proposal.submitted_at|date:"M d, Y" }}</span>
                                     {% if proposal.available_start_date %}
-                                    <span class="start-date"><i class="fas fa-calendar-check"></i> Available {{ proposal.available_start_date|date:"M d, Y" }}</span>
+                                        <span class="start-date" title="Available Start Date"><i class="fas fa-calendar-check"></i> Available {{ proposal.available_start_date|date:"M d, Y" }}</span>
                                     {% endif %}
                                 </div>
                             </div>
                         </div>
-                        
                         <div class="proposal-details-info">
                             <div class="proposal-stats">
                                 <div class="stat-item">
-                                    <i class="fas fa-file-alt"></i>
-                                    <div>
-                                        <span class="stat-value">{{ proposal.cover_letter|truncatewords:10 }}</span>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-value" title="{{ proposal.cover_letter }}">
+                                            {{ proposal.cover_letter|truncatewords:10 }}
+                                        </span>
                                         <span class="stat-label">Cover Letter</span>
                                     </div>
+                                    <button class="stat-expand" aria-label="Expand cover letter">
+                                        <i class="fas fa-expand-alt"></i>
+                                    </button>
                                 </div>
+                                
                                 <div class="stat-item">
-                                    <i class="fas fa-project-diagram"></i>
-                                    <div>
-                                        <span class="stat-value">{{ proposal.approach_methodology|truncatewords:5|default:"Not specified" }}</span>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-project-diagram"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-value" title="{{ proposal.approach_methodology }}">
+                                            {{ proposal.approach_methodology|truncatewords:10|default:"Not specified" }}
+                                        </span>
                                         <span class="stat-label">Approach</span>
                                     </div>
                                 </div>
+                                
                                 <div class="stat-item">
-                                    <i class="fas fa-briefcase"></i>
-                                    <div>
-                                        <span class="stat-value">{{ proposal.relevant_experience|truncatewords:5|default:"Not specified" }}</span>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-value" title="{{ proposal.relevant_experience }}">
+                                            {{ proposal.relevant_experience|truncatewords:5|default:"Not specified" }}
+                                        </span>
                                         <span class="stat-label">Experience</span>
                                     </div>
                                 </div>
+                                
                                 <div class="stat-item">
-                                    <i class="fas fa-question-circle"></i>
-                                    <div>
-                                        <span class="stat-value">{{ proposal.questions_for_client|truncatewords:5|default:"No questions" }}</span>
+                                    <div class="stat-icon">
+                                        <i class="fas fa-question-circle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <span class="stat-value" title="{{ proposal.questions_for_client }}">
+                                            {{ proposal.questions_for_client|truncatewords:10|default:"No questions" }}
+                                        </span>
                                         <span class="stat-label">Questions</span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Attachments Section -->
                             {% if proposal.attachments.all %}
-                            <div class="proposal-attachments">
-                                <div class="attachments-header">
-                                    <i class="fas fa-paperclip"></i>
-                                    <span class="sub-title">Attachments</span>
-                                    <span class="attachments-count">{{ proposal.attachments.count }} file(s)</span>
-                                </div>
-                                <div class="attachments-list-container">
-                                    <div class="attachments-list">
-                                        {% for attachment in proposal.attachments.all %}
-                                        <span class="attachment-tag">
-                                            <span class="attachment-icon"><i class="fas fa-file"></i></span>
-                                            {{ attachment.file.name|slice:"20:" }}
-                                        </span>
-                                        {% endfor %}
+                                <div class="proposal-attachments">
+                                    <div class="attachments-header">
+                                        <div class="attachments-title">
+                                            <i class="fas fa-paperclip"></i>
+                                            <span class="sub-title">Attachments</span>
+                                            <span class="attachments-count">{{ proposal.attachments.count }} file(s)</span>
+                                        </div>
+                                    </div>
+                                    <div class="attachments-list-container">
+                                        <div class="attachments-list">
+                                            {% for attachment in proposal.attachments.all %}
+                                            <a href="{{ attachment.file.url }}" class="attachment-tag" download>
+                                                <span class="attachment-icon">
+                                                    <i class="fas fa-file-{{ attachment.file.name }}"></i>
+                                                </span>
+                                                <span class="attachment-name">{{ attachment.file.name|basename|truncatechars:20 }}</span>
+                                                <span class="attachment-size">{{ attachment.file.size|filesizeformat }}</span>
+                                            </a>
+                                            {% endfor %}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             {% endif %}
                         </div>
-                        
                         <div class="footer-section">
                             <div class="footer-stats">
                                 <div class="footer-stat">
                                     <i class="fas fa-calendar-alt"></i>
-                                    <span>Submitted {{ proposal.submitted_at|timesince }} ago</span>
-                                </div>
-                                <div class="footer-stat">
-                                    <i class="fas fa-sync-alt"></i>
-                                    <span>Updated {{ proposal.updated_at|timesince }} ago</span>
+                                    <span>Submitted {{ proposal.submitted_at|format_posted_time }}</span>
                                 </div>
                             </div>
                             <div class="footer-actions">
-                                <a href="#" class="action-button view-button">
+                                <a href="{% url 'project:project-proposal-details' project.id proposal.id %}" class="action-button view-button">
                                     <i class="fas fa-eye"></i> View Details
                                 </a>
                                 {% if proposal.status == 'pending' %}
@@ -387,10 +434,66 @@
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
                 </div>
-                <h3 class="empty-title">No matching proposals found</h3>
-                <p class="empty-message">We couldn't find any proposals matching your search and filter criteria. Try adjusting your filters or search term.</p>
+                {% if request.GET %}
+                    <h3 class="empty-title">No matching proposals found</h3>
+                    <p class="empty-message">We couldn't find any proposals matching your search and filter criteria. Try adjusting your filters or search term.</p>
+                {% else %}
+                    <h3 class="empty-title">No proposals found</h3>
+                    <p class="empty-message">You haven't received any proposals yet. Start by posting a new project to get started.</p>
+                {% endif %}
             </div>
         {% endif %}
+
+        {% if proposals.has_other_pages %}
+            <div class="pagination">
+                {% if proposals.has_previous %}
+                    <a href="?page={{ proposals.previous_page_number }}" class="pagination-btn prev-next">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </a>
+                {% else %}
+                    <button class="pagination-btn prev-next" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                {% endif %}
+                
+                <div class="page-numbers">
+                    {% if projects.number > 3 %}
+                        <a href="?page=1" class="page-number">1</a>
+                        {% if proposals.number > 4 %}  {# Only show ellipsis if there's a gap #}
+                            <span class="page-ellipsis">...</span>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% for i in proposals.paginator.page_range %}
+                        {% if i >= proposals.number|add:"-2" and i <= proposals.number|add:"2" %}
+                            {% if proposals.number == i %}
+                                <button class="page-number active">{{ i }}</button>
+                            {% else %}
+                                <a href="?page={{ i }}" class="page-number">{{ i }}</a>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if proposals.number < proposals.paginator.num_pages|add:"-2" %}
+                        {% if proposals.number < proposals.paginator.num_pages|add:"-3" %}  {# Only show ellipsis if there's a gap #}
+                            <span class="page-ellipsis">...</span>
+                        {% endif %}
+                        <a href="?page={{ proposals.paginator.num_pages }}" class="page-number">{{ proposals.paginator.num_pages }}</a>
+                    {% endif %}
+                </div>
+                
+                {% if proposals.has_next %}
+                    <a href="?page={{ proposals.next_page_number }}" class="pagination-btn prev-next">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </a>
+                {% else %}
+                    <button class="pagination-btn prev-next" disabled>
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                {% endif %}
+            </div>
+        {% endif %}
+
     </div>    
 </div>
 {% endblock %}

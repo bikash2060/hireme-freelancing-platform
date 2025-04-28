@@ -338,9 +338,6 @@
                                 <a href="" class="btn-action secondary-btn">
                                     <i class="fas fa-users"></i> Review Proposals
                                 </a>
-                                <a href="" class="btn-action primary-btn">
-                                    <i class="fas fa-user-check"></i> Hire Freelancer
-                                </a>
                             {% elif project.status == 'in_progress' %}
                                 <a href="" class="btn-action secondary-btn">
                                     <i class="fas fa-tasks"></i> Milestones
@@ -377,8 +374,13 @@
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
                 </div>
-                <h3 class="empty-title">No matching projects found</h3>
-                <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
+                {% if request.GET.search %}
+                    <h3 class="empty-title">No matching projects found</h3>
+                    <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
+                {% else %}
+                    <h3 class="empty-title">No projects found</h3>
+                    <p class="empty-message">You haven't posted any projects yet. Start by posting a new project to get started.</p>
+                {% endif %}
             </div>
         {% endif %}
 
