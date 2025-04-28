@@ -125,11 +125,10 @@ class NewProjectView(BaseProjectView):
                 key_requirements = '\n'.join([req.strip() for req in key_requirements.split('\n') if req.strip()])
                 
             print(f"Key Requirements: {key_requirements}")
-            
+                            
             additional_info = request.POST.get('additional_info', '').strip()
             attachments = request.FILES.getlist('attachment[]')
             status = request.POST.get('status', 'draft')
-            
             
             # Prepare context for form re-rendering
             context = {
@@ -174,6 +173,7 @@ class NewProjectView(BaseProjectView):
             
             if not is_valid:
                 messages.error(request, error_message)
+                print("checking requirements", key_requirements)
                 return render(request, self.TEMPLATE_NAME, context)
             
             # Determine project status and notification
@@ -221,20 +221,6 @@ class NewProjectView(BaseProjectView):
                         project=project,
                         file=os.path.basename(filename)  
                     )
-                    
-            # Handle deleted attachments
-            deleted_attachments = request.POST.get('deleted_attachments', '').split(',')
-            if deleted_attachments and deleted_attachments[0]:  # Check if there are any deleted attachments
-                for attachment_id in deleted_attachments:
-                    try:
-                        attachment = ProjectAttachment.objects.get(id=attachment_id, project=project)
-                        # Delete the file from storage
-                        if os.path.exists(attachment.file.path):
-                            os.remove(attachment.file.path)
-                        attachment.delete()
-                    except (ProjectAttachment.DoesNotExist, Exception) as e:
-                        print(f"[Delete Attachment Error]: {e}")
-                        continue
                     
             # Send notification
             project_detail_url = reverse(self.PROJECT_URL, kwargs={'project_id': project.id})
@@ -404,6 +390,8 @@ class ClientProjectDetailView(BaseProjectView):
                 except Exception as e:
                     print(f"[Attachment Error]: {e}")
                     continue
+                
+            print(f"Attachments: {attachments}")
             
             key_requirements = []
             if project.key_requirements:
@@ -707,7 +695,7 @@ class EditProjectView(BaseProjectView):
                     filename = fs.save(attachment.name, attachment)
                     ProjectAttachment.objects.create(
                         project=project,
-                        file=os.path.basename(filename)  
+                        file=filename  # Store just the filename
                     )
 
             # Handle deleted attachments

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Function to create character counter handler
     function createCharacterCounter(textareaId, counterId, maxLength) {
         const textarea = document.getElementById(textareaId);
         const charCount = document.getElementById(counterId);
@@ -42,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize character counters for both textareas
     createCharacterCounter('description', 'desc-char-count', 500);
     createCharacterCounter('additional_info', 'additional-info-char-count', 500);
 });

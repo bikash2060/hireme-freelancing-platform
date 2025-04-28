@@ -14,10 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Set initial state
     toggleBudgetFields();
     
-    // Add event listeners
     fixedOption.addEventListener('change', toggleBudgetFields);
     rangeOption.addEventListener('change', toggleBudgetFields);
 });

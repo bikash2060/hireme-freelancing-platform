@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function () {
     noResultsMsg.style.display = 'none';
     skillsOptions.parentNode.insertBefore(noResultsMsg, skillsOptions.nextSibling);
 
-    // Handle checkbox change using event delegation
     skillsOptions.addEventListener('change', function (e) {
         if (e.target && e.target.name === 'skills') {
             const skillOption = e.target.closest('.skill-option');
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Prevent skill level dropdown from toggling the checkbox
     document.querySelectorAll('.skill-level-selector select').forEach(select => {
         select.addEventListener('click', e => e.stopPropagation());
         select.addEventListener('change', () => {
@@ -36,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Real-time search
     skillsSearch.addEventListener('input', function () {
         const searchTerm = this.value.toLowerCase().trim();
         const skillOptions = skillsOptions.querySelectorAll('.skill-option');
@@ -64,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function () {
         moveSelectedSkillsToTop();
     });
 
-    // Show level selectors for already-checked skills on page load
     document.querySelectorAll('input[name="skills"]:checked').forEach(checkbox => {
         const skillOption = checkbox.closest('.skill-option');
         const levelSelector = skillOption.querySelector('.skill-level-selector');
@@ -94,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedSkillsList.appendChild(skillElement);
         });
 
-        // Remove skill event
         document.querySelectorAll('.remove-skill').forEach(removeBtn => {
             removeBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
@@ -132,6 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    updateSelectedSkills(); // Initialize preview
-    moveSelectedSkillsToTop(); // Reorder on load
+    updateSelectedSkills(); 
+    moveSelectedSkillsToTop(); 
 });

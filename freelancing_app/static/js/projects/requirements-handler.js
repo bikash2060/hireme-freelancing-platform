@@ -6,13 +6,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function initializeRequirements() {
         if (hiddenInput && hiddenInput.value) {
-            // Decode the string and split by actual newlines
             const decodedValue = hiddenInput.value.replace(/\\u000A/g, '\n');
             const existingReqs = decodedValue.split('\n').filter(req => req.trim());
             if (existingReqs.length > 0) {
                 requirementsList.innerHTML = '';
                 existingReqs.forEach(req => {
-                    // Clean the requirement text
                     const cleanReq = req.trim().replace(/\\u000A/g, '');
                     if (cleanReq) {
                         addRequirementItem(cleanReq);

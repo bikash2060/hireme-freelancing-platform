@@ -1,6 +1,4 @@
-// Share Project Functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Copy to clipboard functionality
     const copyBtn = document.querySelector('.share-project-card .copy-btn');
     const shareInput = document.querySelector('.share-project-card .share-link-input');
     
@@ -8,16 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
         copyBtn.addEventListener('click', function() {
             // Select the text
             shareInput.select();
-            shareInput.setSelectionRange(0, 99999); // For mobile devices
+            shareInput.setSelectionRange(0, 99999);
             
-            // Copy the text
             navigator.clipboard.writeText(shareInput.value)
                 .then(() => {
-                    // Update button text temporarily
                     const originalContent = copyBtn.innerHTML;
                     copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
                     
-                    // Reset button text after 2 seconds
                     setTimeout(() => {
                         copyBtn.innerHTML = originalContent;
                     }, 2000);
@@ -28,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Share options functionality
     const shareOptions = document.querySelectorAll('.share-project-card .share-option');
     const projectUrl = document.querySelector('.share-link-input').value;
     const projectTitle = "E-commerce Platform Development";
@@ -37,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         option.addEventListener('click', function() {
             let shareUrl = '';
             
-            // Create appropriate share URLs based on the platform
             if (option.classList.contains('facebook')) {
                 shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(projectUrl)}`;
             } else if (option.classList.contains('twitter')) {
@@ -50,14 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 shareUrl = `mailto:?subject=${encodeURIComponent('Interesting Project: ' + projectTitle)}&body=${encodeURIComponent('Check out this project: ' + projectUrl)}`;
             }
             
-            // Open share URL in a new window
             if (shareUrl) {
                 window.open(shareUrl, '_blank', 'width=600,height=400');
             }
         });
     });
     
-    // Add hover effects to similar project cards
     const projectCards = document.querySelectorAll('.similar-projects-section .project-card');
     projectCards.forEach(card => {
         card.addEventListener('mouseenter', function() {

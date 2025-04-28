@@ -1,5 +1,4 @@
 function initializeProjectForm() {
-    // Get the form element
     const form = document.getElementById('project-form');
     
     if (!form) return;
@@ -14,7 +13,6 @@ function initializeProjectForm() {
         form.appendChild(statusInput);
     }
     
-    // Update status when buttons are clicked
     document.querySelectorAll('button[type="submit"]').forEach(button => {
         button.addEventListener('click', function() {
             statusInput.value = this.value;

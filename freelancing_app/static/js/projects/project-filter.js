@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Category search functionality
     const categorySearchInput = document.querySelector('.category-search-input');
     if (categorySearchInput) {
         categorySearchInput.addEventListener('input', function() {
@@ -35,13 +34,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            // Remove existing no-results message if it exists
             const existingNoResults = categoryItemsContainer.querySelector('.no-categories-found');
             if (existingNoResults) {
                 existingNoResults.remove();
             }
 
-            // Add no-results message if no matches found
             if (!hasMatches) {
                 const noResultsMessage = document.createElement('div');
                 noResultsMessage.className = 'no-categories-found';

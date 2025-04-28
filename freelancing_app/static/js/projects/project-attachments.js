@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle file selection
     fileInput.addEventListener('change', () => {
         if (fileInput.files.length) {
             handleFiles(fileInput.files);
@@ -72,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
             statusText.style.color = '#666';
         }
         
-        // Add event listeners to remove buttons
         document.querySelectorAll('.remove-file').forEach(button => {
             button.addEventListener('click', function() {
                 const index = this.getAttribute('data-index');
