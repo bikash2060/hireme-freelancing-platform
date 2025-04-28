@@ -36,6 +36,9 @@
                         <span class="project-category">
                             <i class="fas fa-tag"></i> {{ proposal.project.category.name }}
                         </span>
+                        <span class="project-status {{ proposal.status }}">
+                            <i class="fas fa-circle"></i> {{ proposal.get_status_display }}
+                        </span>
                     </div>
                       
                     <h1 class="project-title" onclick="window.location.href='{% url 'home:project-detail' proposal.project.id %}'">{{ proposal.project.title }}</h1>

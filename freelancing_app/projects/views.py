@@ -804,9 +804,9 @@ class DeleteProjectView(BaseProjectView):
 # ✅ [TESTED & COMPLETED]
 # View Name: SetHiringView
 # Description: Handles changing project status to hiring
-# Tested On: 2025-04-28
-# Status: Working as expected
-# Code Refractor Status: Completed
+# Tested On: 
+# Status: 
+# Code Refractor Status: 
 # ------------------------------------------------------
 class SetHiringView(BaseProjectView):
     """
@@ -840,12 +840,12 @@ class SetHiringView(BaseProjectView):
             print(f"[SetHiringView Error]: {e}")
             messages.error(request, 'An error occurred while updating the project status.')
             return redirect(self.CLIENT_PROJECTS_URL)
-
+        
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: ProjectProposalsView
 # Description: Displays all proposals for a client's project
-# Tested On: 2025-04-28
+# Tested On: 2025-04-29
 # Status: Working as expected
 # Code Refractor Status: Completed
 # ------------------------------------------------------
@@ -952,14 +952,14 @@ class ProjectProposalsView(BaseProjectView):
             print(f"[ProjectProposalsView Error]: {e}")
             messages.error(request, 'An error occurred while loading proposals.')
             return redirect(self.PROJECT_URL)
-         
+
 # ------------------------------------------------------
-# ✅ [TESTED & COMPLETED]
+# Pending:
 # View Name: ProposalDetailView
 # Description: Displays detailed view of a specific proposal
-# Tested On: 2025-04-28
-# Status: Working as expected
-# Code Refractor Status: Completed
+# Tested On: 
+# Status: 
+# Code Refractor Status: 
 # ------------------------------------------------------
 class ProjectProposalDetailsView(BaseProjectView):
     """
@@ -1024,12 +1024,12 @@ class ProjectProposalDetailsView(BaseProjectView):
             return redirect(self.PROJECT_URL)
 
 # ------------------------------------------------------
-# ✅ [TESTED & COMPLETED]
+# Pending:
 # View Name: ProposalActionView
 # Description: Handles actions on proposals (accept, shortlist, reject)
-# Tested On: 2025-04-28
-# Status: Working as expected
-# Code Refractor Status: Completed
+# Tested On: 
+# Status: 
+# Code Refractor Status: 
 # ------------------------------------------------------
 class ProposalActionView(BaseProjectView):
     """

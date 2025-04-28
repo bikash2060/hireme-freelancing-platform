@@ -130,46 +130,40 @@
     vertical-align: middle;
 }
 
-.hero-section .project-header .project-status.draft {
-    background-color: #e0e7ff;
-    color: #4338ca;
-}
-
-.hero-section .project-header .project-status.published {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.hero-section .project-header .project-status.hiring {
-    background-color: #dbeafe;
-    color: #1e40af;
-}
-
-.hero-section .project-header .project-status.in_progress {
+.hero-section .project-header .project-status.pending {
     background-color: #fef3c7;
     color: #92400e;
 }
 
-.hero-section .project-header .project-status.completed {
+.hero-section .project-header .project-status.pending i {
+    color: #92400e;
+}
+
+.hero-section .project-header .project-status.shortlisted {
     background-color: #dbeafe;
     color: #1e40af;
 }
 
-.hero-section .project-header .project-status.cancelled {
+.hero-section .project-header .project-status.shortlisted i {
+    color: #1e40af;
+}
+
+.hero-section .project-header .project-status.accepted {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.hero-section .project-header .project-status.accepted i {
+    color: #1e40af;
+}
+
+.hero-section .project-header .project-status.rejected {
     background-color: #f8fafc;
     color: #64748b;
 }
 
-.hero-section .project-header .project-status.published i {
-    color: #065f46; 
-}
-
-.hero-section .project-header .project-status.hiring i {
-    color: #1e40af; 
-}
-
-.hero-section .project-header .project-status.in_progress i {
-    color: #92400e; 
+.hero-section .project-header .project-status.rejected i {
+    color: #64748b;
 }
 
 .hero-section .project-header .project-title {

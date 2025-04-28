@@ -42,3 +42,7 @@ def format_posted_time(value):
 def basename(value):
     """Returns the basename of a file path"""
     return os.path.basename(value) 
+
+@register.filter
+def multiply(value, arg):
+    return value * arg

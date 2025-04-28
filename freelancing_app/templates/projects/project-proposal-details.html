@@ -44,8 +44,8 @@
                         <span class="project-category">
                             <i class="fas fa-tag"></i> {{ project.category.name }}
                         </span>
-                        <span class="project-status {{ project.status }}">
-                            <i class="fas fa-circle"></i> {{ project.get_status_display }}
+                        <span class="project-status {{ proposal.status }}">
+                            <i class="fas fa-circle"></i> {{ proposal.get_status_display }}
                         </span>
                     </div>
                       
@@ -357,10 +357,10 @@
                             </div>
                         </div>                
                         <div class="action-buttons">
-                            <a href="" class="btn btn-message">
+                            <a href="#" class="btn btn-message" onclick="startChatWithFreelancer({{ proposal.freelancer.user.id }})">
                                 <i class="fas fa-envelope"></i> Send Message
                             </a>
-                            <a href="" class="btn btn-portfolio">
+                            <a href="{% url 'home:freelancer-detail' proposal.freelancer.id %}" class="btn btn-portfolio" target="_blank">
                                 <i class="fas fa-briefcase"></i> View Portfolio
                             </a>
                         </div>

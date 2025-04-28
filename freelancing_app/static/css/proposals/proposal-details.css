@@ -115,6 +115,57 @@
     font-size: 0.8rem;
 }
 
+.hero-section .project-header .project-status {
+    padding: 6px 12px 6px 8px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hero-section .project-header .project-status i {
+    font-size: 0.4rem;
+    vertical-align: middle;
+}
+
+.hero-section .project-header .project-status.pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.hero-section .project-header .project-status.pending i {
+    color: #92400e;
+}
+
+.hero-section .project-header .project-status.shortlisted {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.hero-section .project-header .project-status.shortlisted i {
+    color: #1e40af;
+}
+
+.hero-section .project-header .project-status.accepted {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.hero-section .project-header .project-status.accepted i {
+    color: #1e40af;
+}
+
+.hero-section .project-header .project-status.rejected {
+    background-color: #f8fafc;
+    color: #64748b;
+}
+
+.hero-section .project-header .project-status.rejected i {
+    color: #64748b;
+}
+
 .hero-section .project-header .project-title {
     font-size: 2.2rem;
     font-weight: 700;

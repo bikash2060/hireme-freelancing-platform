@@ -1,3 +1,4 @@
+from freelancerprofile.models import WorkExperience, Education, FreelancerLanguage
 from freelancerprofile.models import FreelanceServiceCategory
 from projects.models import ProjectCategory, Skill, Project
 from accounts.mixins import CustomLoginRequiredMixin
@@ -13,6 +14,7 @@ from django.contrib import messages
 from django.db.models import Avg
 from django.urls import reverse
 from django.views import View
+from itertools import chain
 from decimal import Decimal
 import random
 import os
@@ -289,12 +291,12 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
         return render(request, self.TEMPLATE_NAME)
         
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: FreelancerListView
 # Description: Displays list of freelancers for clients or unauthenticated users
-# Tested On:
-# Status:
-# Code Refractor Status: In Progress
+# Tested On: 2025-04-29
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------    
 class FreelancerListView(View):
     """
@@ -340,7 +342,10 @@ class FreelancerListView(View):
         """Returns base queryset of active freelancers"""
         return Freelancer.objects.filter(
             user__is_verified=True
-        ).select_related('user').prefetch_related('skills').distinct().order_by('-user__date_joined')
+        ).select_related('user').prefetch_related(
+            'skills',
+            'freelancerskill_set'
+        ).distinct().order_by('-user__date_joined')
 
     def _apply_filters(self, request, freelancers):
         """Applies all filters from request parameters"""
@@ -464,32 +469,142 @@ class FreelancerListView(View):
         return redirect(self.HOME_URL) 
      
 # ------------------------------------------------------
-# ⏳ [PENDING TEST]
+# ✅ [TESTED & COMPLETED]
 # View Name: FreelancerDetailView   
 # Description: Displays detailed information about a freelancer
-# Tested On:
-# Status:
-# Code Refractor Status: Not Started
+# Tested On: 2025-04-29
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class FreelancerDetailView(View):
-    template_name = 'home/freelancer-detail.html'
-    home_url = 'home:home'
+    """
+    - Displays detailed view of a freelancer profile
+    - Implements strict access control:
+        * Unauthenticated users can view
+        * Clients can view
+        * Only the freelancer can view if authenticated as freelancer
+    - Handles error cases and unauthorized access attempts
+    - Prefetches related data for performance
+    """
+    
+    # Constants
+    TEMPLATE_NAME = 'home/freelancer-detail.html'
+    FREELANCER_DETAIL_URL = 'home:freelancer-detail'
+    HOME_URL = 'home:home'
+    SIMILAR_FREELANCERS_LIMIT = 4
     
     def get(self, request, freelancer_id):
+        """
+        Main entry point for GET requests.
+        Handles access control, data fetching and template rendering.
+        """
         try:
-            # freelancer = Freelancer.objects.get(id=freelancer_id, user__is_verified=True)
+            if not self._has_access(request, freelancer_id):
+                return self._handle_unauthorized_access(request)
+                
+            context = self._build_context(request, freelancer_id)
             
-            # context = {
-            #     'freelancer': freelancer,
-            # }   
-            return render(request, self.template_name)
+            return self._render_freelancer_detail(request, context)
+            
         except Freelancer.DoesNotExist:
-            messages.error(request, "Freelancer not found or no longer available")
-            return redirect(self.home_url)
+            return self._handle_freelancer_not_found(request)
         except Exception as e:
             print(e)
-            messages.error(request, "Something went wrong. Please try again.")
-            return redirect(self.home_url)
+            return self._handle_error(request, str(e))
+
+    def _has_access(self, request, freelancer_id):
+        """
+        Determines if user has access to view the freelancer profile.
+        Rules:
+        - Unauthenticated users can view
+        - Clients can view
+        - Only the freelancer can view if authenticated as freelancer
+        """
+        if not request.user.is_authenticated:
+            return True
+            
+        user_role = getattr(request.user, 'role', '').lower()
+        
+        # Clients can always view
+        if user_role == 'client':
+            return True
+            
+        # Freelancers can only view their own profile
+        if user_role == 'freelancer':
+            try:
+                freelancer = Freelancer.objects.get(id=freelancer_id)
+                return freelancer.user == request.user
+            except Freelancer.DoesNotExist:
+                return False
+                
+        return False
+
+    def _build_context(self, request, freelancer_id):
+        """
+        Builds template context with all required data including:
+        - Freelancer details
+        - Related skills with levels
+        - Portfolio items
+        - Freelancer's project statistics
+        """
+        freelancer = Freelancer.objects.get(id=freelancer_id)
+        
+        freelancer_languages = FreelancerLanguage.objects.filter(
+                freelancer=freelancer
+            ).select_related('language')
+        
+        # Work Experience (ordered: ongoing first)
+        experiences = WorkExperience.objects.filter(freelancer=freelancer)
+        ongoing_experiences = experiences.filter(currently_working=True).order_by('-start_date')
+        past_experiences = experiences.filter(currently_working=False).order_by(
+            '-end_date' if WorkExperience._meta.get_field('end_date').null else 'end_date'
+        )
+        ordered_experiences = list(chain(ongoing_experiences, past_experiences))
+
+        # Education (ordered: ongoing first)
+        educations = Education.objects.filter(freelancer=freelancer)
+        ongoing_educations = educations.filter(currently_studying=True).order_by('-start_date')
+        past_educations = educations.filter(currently_studying=False).order_by(
+            '-end_date' if Education._meta.get_field('end_date').null else 'end_date'
+        )
+        ordered_educations = list(chain(ongoing_educations, past_educations))
+        
+        # Get service categories based on freelancer's skills
+        freelancer_skills = freelancer.skills.all()
+        service_categories = FreelanceServiceCategory.objects.filter(
+            skills__in=freelancer_skills
+        ).distinct()
+        
+        context = {
+            'freelancer': freelancer,
+            'freelancer_languages': freelancer_languages,
+            'experiences': ordered_experiences,
+            'educations': ordered_educations,
+            'service_categories': service_categories,
+        }
+        return context
+
+    def _render_freelancer_detail(self, request, context):
+        """Renders the freelancer detail template"""
+        try:
+            return render(request, self.TEMPLATE_NAME, context)
+        except Exception as e:
+            raise Exception(f"Template rendering failed: {str(e)}")
+
+    def _handle_unauthorized_access(self, request):
+        """Handles unauthorized access attempts"""
+        messages.error(request, 'You do not have permission to view this freelancer profile.')
+        return redirect(self.HOME_URL)
+
+    def _handle_freelancer_not_found(self, request):
+        """Handles case when freelancer doesn't exist"""
+        messages.error(request, 'Freelancer not found or no longer available.')
+        return redirect(self.HOME_URL)
+
+    def _handle_error(self, request, error_message):
+        """Handles unexpected exceptions"""
+        messages.error(request, 'Something went wrong. Please try again.')
+        return redirect(self.HOME_URL)
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]

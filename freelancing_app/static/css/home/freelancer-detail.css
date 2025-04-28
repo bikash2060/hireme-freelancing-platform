@@ -529,7 +529,6 @@
     padding: 15px;
     transition: all 0.2s ease;
     display: flex;
-    align-items: center;
     gap: 12px;
 }
 
@@ -1156,7 +1155,6 @@
     color: #64748b;
 }
 
-/* Profile Info */
 .overview-section .overview-grid .overview-sidebar .sidebar-card .profile-info-list {
     display: flex;
     flex-direction: column;
@@ -1196,7 +1194,6 @@
     color: #334155;
 }
 
-/* Profile Links */
 .overview-section .overview-grid .overview-sidebar .sidebar-card .profile-links {
     display: flex;
     flex-direction: column;
@@ -1251,62 +1248,5 @@
     font-weight: 500;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
 
-.overview-section .overview-grid .overview-main .section-card {
-    animation: fadeIn 0.5s ease forwards;
-    opacity: 0;
-}
 
-.section-card:nth-child(1) { animation-delay: 0.1s; }
-.section-card:nth-child(2) { animation-delay: 0.2s; }
-.section-card:nth-child(3) { animation-delay: 0.3s; }
-.section-card:nth-child(4) { animation-delay: 0.4s; }
-.section-card:nth-child(5) { animation-delay: 0.5s; }
-.section-card:nth-child(6) { animation-delay: 0.6s; }
-
-.overview-section .overview-grid .overview-sidebar .sidebar-card {
-    animation: fadeIn 0.5s ease forwards;
-    opacity: 0;
-}
-
-.overview-section .overview-grid .overview-sidebar .sidebar-card:nth-child(1) { animation-delay: 0.3s; }
-.overview-section .overview-grid .overview-sidebar .sidebar-card:nth-child(2) { animation-delay: 0.4s; }
-.overview-section .overview-grid .overview-sidebar .sidebar-card:nth-child(3) { animation-delay: 0.5s; }
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-.overview-section .overview-grid .overview-main .section-card .skill-tag:hover {
-    animation: pulse 1s infinite ease-in-out;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(-20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.overview-section .overview-grid .overview-main .section-card .experience-item, .overview-section .overview-grid .overview-main .section-card .education-item {
-    animation: slideIn 0.5s ease forwards;
-    opacity: 0;
-}
-
-.overview-section .overview-grid .overview-main .section-card .experience-item:nth-child(1), .overview-section .overview-grid .overview-main .section-card .education-item:nth-child(1) { animation-delay: 0.2s; }
-.overview-section .overview-grid .overview-main .section-card .experience-item:nth-child(2), .overview-section .overview-grid .overview-main .section-card .education-item:nth-child(2) { animation-delay: 0.3s; }
-.overview-section .overview-grid .overview-main .section-card .experience-item:nth-child(3), .overview-section .overview-grid .overview-main .section-card .education-item:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes progressBar {
-    from { width: 0; }
-    to { width: 100%; }
-}
-
-.overview-section .overview-grid .overview-main .section-card .language-progress {
-    animation: progressBar 1s ease forwards;
-    width: 0;
-}

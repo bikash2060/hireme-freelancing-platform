@@ -937,6 +937,24 @@ class ChatApp {
     }
 }
 
+// Add this function at the end of the file, before the DOMContentLoaded event listener
+function startChatWithFreelancer(freelancerId) {
+    const chatApp = window.chatApp;
+    if (!chatApp) {
+        console.error('Chat app not initialized');
+        return;
+    }
+
+    const otherUser = {
+        id: freelancerId,
+        full_name: 'Loading...',
+        username: 'Loading...',
+        profile_image: null
+    };
+
+    chatApp.startNewChat(otherUser);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const chatApp = new ChatApp();
+    window.chatApp = new ChatApp();
 });
