@@ -1,0 +1,704 @@
+/* Hero Section */
+.hero-section {
+    margin-top: 100px;
+    padding: 40px 0;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e9ecef;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 300px;
+    height: 300px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+    animation: pulse 8s infinite ease-in-out;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: rgba(76, 211, 194, 0.1);
+    border-radius: 50%;
+    z-index: 0;
+    animation: pulse 10s infinite ease-in-out;
+}
+
+.hero-section .hero-content {
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+}
+
+.hero-section .header-icon {
+    background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.hero-section .header-icon:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+.hero-section .header-icon .icon {
+    width: 36px;
+    height: 36px;
+    color: white;
+}
+
+.hero-section .hero-text .title {
+    font-size: 40px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, #1e293b 0%, #3b82f6 70%, #4f46e5 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-section .hero-text .subtitle {
+    font-size: 18px;
+    color: #475569;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+}
+
+/* Main Contract Container */
+.sign-contract-container {
+    margin: 2rem auto;
+    padding: 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    top: -40px;
+    margin-bottom: -40px;
+}
+
+.sign-contract-container .contract-header {
+    padding: 2.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.sign-contract-container .contract-project-info h2 {
+    font-size: 1.5rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.sign-contract-container .contract-project-info h3 {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.sign-contract-container .freelancer-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+
+.sign-contract-container .freelancer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.sign-contract-container .contract-progress {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    position: relative;
+}
+
+.sign-contract-container .sign-contract-container .progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    min-width: 100px;
+}
+
+.sign-contract-container .step-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #adb5bd;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sign-contract-container .step-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+    text-align: center;
+}
+
+.sign-contract-container .progress-line {
+    flex-grow: 1;
+    height: 4px;
+    background-color: #e9ecef;
+    margin: 0 0.5rem;
+    position: relative;
+    top: -22px;
+    z-index: 0;
+    max-width: 120px;
+}
+
+.sign-contract-container .progress-step.active .step-icon {
+    background-color: #4f46e5;
+    color: white;
+    border-color: #e0e7ff;
+}
+
+.sign-contract-container .progress-step.active .step-label {
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.sign-contract-container .progress-step.completed .step-icon {
+    background-color: #10b981;
+    color: white;
+    border-color: #d1fae5;
+}
+
+.sign-contract-container .progress-line.active, .progress-line.completed {
+    background-color: #4f46e5;
+}
+
+.sign-contract-container .progress-line.completed {
+    background-color: #10b981;
+}
+
+.sign-contract-container .contract-body {
+    padding: 0;
+}
+
+.sign-contract-container .contract-section {
+    padding: 2.5rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.sign-contract-container .contract-section:last-child {
+    border-bottom: none;
+}
+
+.sign-contract-container .section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.sign-contract-container .section-header h3 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin: 0;
+    font-weight: 600;
+}
+
+.sign-contract-container .section-icon {
+    width: 28px;
+    height: 28px;
+    color: #4f46e5;
+    margin-right: 12px;
+}
+
+.sign-contract-container .contract-details {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+}
+
+.sign-contract-container .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.sign-contract-container .detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.sign-contract-container .detail-item.highlight {
+    background-color: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 3px solid #4f46e5;
+}
+
+.sign-contract-container .detail-label {
+    font-weight: 500;
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.sign-contract-container .detail-value {
+    font-size: 1.1rem;
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.sign-contract-container .detail-item.highlight .detail-value {
+    font-size: 1.2rem;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.sign-contract-container .terms-section {
+    background-color: #f8fafc;
+}
+
+.sign-contract-container .terms-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    line-height: 1.6;
+}
+
+.sign-contract-container .terms-acceptance {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.sign-contract-container .checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sign-contract-container .checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.sign-contract-container .checkmark {
+    height: 22px;
+    width: 22px;
+    background-color: #f1f5f9;
+    border-radius: 6px;
+    margin-right: 12px;
+    transition: all 0.2s ease;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign-contract-container .checkbox-container:hover input ~ .checkmark {
+    background-color: #e2e8f0;
+}
+
+.sign-contract-container .checkbox-container input:checked ~ .checkmark {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+}
+
+.sign-contract-container .checkmark:after {
+    content: "";
+    display: none;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-top: -2px;
+}
+
+.sign-contract-container .checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.sign-contract-container .terms-text {
+    font-size: 1rem;
+    color: #334155;
+}
+
+.sign-contract-container .signature-section {
+    background-color: white;
+}
+
+.sign-contract-container .signature-intro {
+    color: #64748b;
+    margin-bottom: 2rem;
+    font-size: 1.05rem;
+}
+
+.sign-contract-container .signature-options {
+    margin: 2rem 0;
+}
+
+.sign-contract-container .option-tabs {
+    display: flex;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 1.5rem;
+}
+
+.sign-contract-container .option-tab {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    color: #64748b;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sign-contract-container .option-tab:hover {
+    color: #4f46e5;
+}
+
+.sign-contract-container .option-tab.active {
+    color: #4f46e5;
+    border-bottom-color: #4f46e5;
+}
+
+.sign-contract-container .signature-option-content {
+    display: none;
+}
+
+.sign-contract-container .signature-option-content.active {
+    display: block;
+}
+
+.sign-contract-container .input-group {
+    margin-bottom: 1.5rem;
+}
+
+.sign-contract-container .signature-input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+}
+
+.sign-contract-container .signature-input:focus {
+    border-color: #4f46e5;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    background-color: white;
+}
+
+.sign-contract-container .input-hint {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.sign-contract-container .signature-styles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sign-contract-container .style-option {
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.sign-contract-container .style-option:hover {
+    border-color: #c7d2fe;
+}
+
+.sign-contract-container .style-option.active {
+    background: #eef2ff;
+    color: #4f46e5;
+    border-color: #c7d2fe;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+}
+
+.sign-contract-container .style-preview {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sign-contract-container .signature-pad-container {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sign-contract-container .signature-pad {
+    border: 1px dashed #c7d2fe;
+    background: white;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    background-color: #f8fafc;
+}
+
+.sign-contract-container #signature-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    background-color: white;
+}
+
+.sign-contract-container .signature-pad-actions {
+    text-align: right;
+}
+
+.sign-contract-container .btn-clear {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.sign-contract-container .btn-clear:hover {
+    background-color: #f1f5f9;
+    color: #4f46e5;
+}
+
+.sign-contract-container .signature-preview-container {
+    margin: 3rem 0;
+    text-align: center;
+}
+
+.sign-contract-container .signature-preview-container h4 {
+    font-size: 1.2rem;
+    color: #475569;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.sign-contract-container .signature-preview {
+    display: inline-block;
+    padding: 2rem 3rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    min-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sign-contract-container .preview-signature {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
+.sign-contract-container .preview-signature.drawn-signature img {
+    max-width: 100%;
+    max-height: 60px;
+}
+
+.sign-contract-container .signature-line {
+    width: 200px;
+    height: 1px;
+    background: #cbd5e1;
+    margin: 0 auto 1rem;
+}
+
+.sign-contract-container .signature-name {
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.sign-contract-container .signature-date {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.sign-contract-container .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.sign-contract-container .action-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.sign-contract-container .btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid transparent;
+}
+
+.sign-contract-container .btn-secondary {
+    background-color: #f1f5f9;
+    color: #475569;
+    border-color: #e2e8f0;
+}
+
+.sign-contract-container .btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+.sign-contract-container .btn-outline {
+    background-color: white;
+    color: #4f46e5;
+    border-color: #c7d2fe;
+}
+
+.sign-contract-container .btn-outline:hover {
+    background-color: #f8fafc;
+}
+
+.sign-contract-container .btn-primary {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.sign-contract-container .btn-primary:hover {
+    background-color: #4338ca;
+}
+
+.sign-contract-container .btn-primary:disabled {
+    background-color: #c7d2fe;
+    cursor: not-allowed;
+}
+
+.sign-contract-container .contract-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 2.5rem;
+    background-color: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.sign-contract-container .security-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sign-contract-container .security-info i {
+    color: #10b981;
+}
+
+.sign-contract-container .support-link {
+    color: #4f46e5;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.sign-contract-container .support-link:hover {
+    text-decoration: underline;
+}

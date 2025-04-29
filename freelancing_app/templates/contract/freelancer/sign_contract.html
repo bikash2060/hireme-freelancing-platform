@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+{% load extra_filters %}
+{% load project_filters %}
+{% load number_filters %}
+{% load custom_filters %}
+
+{% block title %}Sign Contract - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/contract/freelancer/sign-contract.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Pacifico&family=Satisfy&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                    <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                    <path d="M2 2l7.586 7.586"></path>
+                    <circle cx="11" cy="11" r="2"></circle>
+                </svg>
+            </div>
+            <div class="hero-text">
+                <h2 class="title">Sign Your Contract</h2>
+                <p class="subtitle">Secure your professional agreement with a digital signature</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Contract Signing Section -->
+<div class="sign-contract-container">
+    <div class="contract-header">
+        <div class="contract-project-info">
+            <h2>Signing Contract for</h2>
+            <h3>{{ contract.proposal.project.title }}</h3>
+            <div class="client-info">
+                <div class="client-avatar">
+                    {{ contract.proposal.project.client.user.full_name|first|upper }}
+                </div>
+                <span>With {{ contract.proposal.project.client.user.full_name }}</span>
+            </div>
+        </div>
+        
+        <div class="contract-progress">
+            <div class="progress-step completed">
+                <div class="step-icon"><i class="fas fa-check"></i></div>
+                <div class="step-label">Proposal</div>
+            </div>
+            <div class="progress-line completed"></div>
+            <div class="progress-step completed">
+                <div class="step-icon"><i class="fas fa-check"></i></div>
+                <div class="step-label">Negotiation</div>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step active">
+                <div class="step-icon"><i class="fas fa-pen-fancy"></i></div>
+                <div class="step-label">Signing</div>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step">
+                <div class="step-icon"><i class="fas fa-rocket"></i></div>
+                <div class="step-label">Start Work</div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="contract-body">
+            <div class="contract-section summary-section">
+                <div class="section-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="section-icon">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    <h3>Contract Summary</h3>
+                </div>
+                <div class="contract-details">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Project Title</span>
+                            <span class="detail-value">{{ contract.proposal.project.title }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Client</span>
+                            <span class="detail-value">{{ contract.proposal.project.client.user.full_name }}</span>
+                        </div>
+                        <div class="detail-item highlight">
+                            <span class="detail-label">Agreed Amount</span>
+                            <span class="detail-value">Rs. {{ contract.agreed_amount|format_currency }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Start Date</span>
+                            <span class="detail-value">{{ contract.start_date }}</span>
+                        </div>
+                        {% if contract.end_date %}
+                        <div class="detail-item">
+                            <span class="detail-label">End Date</span>
+                            <span class="detail-value">{{ contract.end_date }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Duration</span>
+                            <span class="detail-value">{{ contract.start_date|timesince:contract.end_date }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="detail-item">
+                            <span class="detail-label">Payment Terms</span>
+                            <span class="detail-value">{{ contract.proposal.payment_terms }}</span>
+                        </div>
+                    </div>
+                </div>
+                <form class="contract-signature-form" id="signature-form" method="POST" action="{% url 'contract:freelancer_sign_contract' contract.id %}" style="text-align: right; margin-top: 20px;">
+                    {% csrf_token %}
+                    <div class="signing-button">
+                        <button class="btn btn-primary" id="sign-contract-button">Sign Contract</button>
+                    </div>
+                </form>
+            </div>            
+            
+        </div>
+        
+        <div class="contract-footer">
+            <div class="security-info">
+                <i class="fas fa-lock"></i> 
+                <span>Secured with 256-bit encryption • Legally binding</span>
+            </div>
+            <div class="support-info">
+                Need help? <a href="#" class="support-link">Contact our support team</a>
+            </div>
+        </div>        
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+{% endblock %}

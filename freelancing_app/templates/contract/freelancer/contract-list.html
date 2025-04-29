@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% load static %}
+{% load extra_filters %}
+{% load project_filters %}
+{% load number_filters %}
+{% load custom_filters %}
+
+{% block title %}My Contracts - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/contract/client/contract-list.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                    <path d="M20 11.08V8l-6-6H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2v-3.08"></path>
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                    <rect x="8" y="14" width="8" height="4" rx="1" ry="1"></rect>
+                    <path d="M22 13h-2"></path>
+                    <path d="M18 15l-2-2 2-2"></path>
+                </svg>
+            </div>
+            <div class="hero-text">
+                <h2 class="title">Secure Your Projects with Confidence</h2>
+                <p class="subtitle">Easily review, manage, and sign your contracts — everything you need to build trust and success in one place.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contract Section -->
+<div class="contract-section">
+    <div class="container">
+        <div class="filters-container">
+            <div class="search-filter">
+                <div class="search-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="contract-search" placeholder="Search contracts...">
+                </div>
+            </div>
+            
+            <div class="filter-options">
+                <div class="filter-dropdown">
+                    <button class="filter-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-icon">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Filter
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="dropdown-header">Contract Status</div>
+                        <label><input type="checkbox" value="all" checked> All Contracts</label>
+                        <label><input type="checkbox" value="active"> Active</label>
+                        <label><input type="checkbox" value="completed"> Completed</label>
+                        <label><input type="checkbox" value="cancelled"> Cancelled</label>
+                    </div>
+                </div>
+                
+                <div class="filter-dropdown">
+                    <button class="filter-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-icon">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                        Sort
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="dropdown-header">Sort Options</div>
+                        <label><input type="radio" name="sort" value="newest" checked> Newest First</label>
+                        <label><input type="radio" name="sort" value="oldest"> Oldest First</label>
+                        <label><input type="radio" name="sort" value="amount-high"> Amount (High to Low)</label>
+                        <label><input type="radio" name="sort" value="amount-low"> Amount (Low to High)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contracts-container">
+            {% if contracts %}
+                {% for contract in contracts %}
+                <div class="contract-card" data-status="{{ contract.status }}" data-amount="{{ contract.agreed_amount }}" data-date="{{ contract.created_at|date:'Y-m-d' }}">
+                    <div class="contract-header">
+                        <div class="contract-title-wrapper">
+                            <h3 class="contract-title">{{ contract.proposal.project.title }}</h3>
+                            <div class="contract-meta">
+                                <span class="contract-date">{{ contract.created_at|date:"M d, Y" }}</span>
+                            </div>
+                        </div>
+                        <div class="contract-status-wrapper">
+                            <div class="contract-status status-{{ contract.status }}">
+                                {{ contract.get_status_display }}
+                            </div>
+                            <div class="contract-amount">Rs. {{ contract.agreed_amount|format_currency }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contract-info">
+                        <div class="info-item freelancer-info">
+                            <div class="info-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Client
+                            </div>
+                            <div class="info-value">
+                                <div class="freelancer-avatar">
+                                    {{ contract.proposal.project.client.user.full_name|first|upper }}
+                                </div>
+                                {{ contract.proposal.project.client.user.full_name }}
+                            </div>
+                        </div>
+                        
+                        <div class="info-item timeline-info">
+                            <div class="info-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                Timeline
+                            </div>
+                            <div class="info-value">
+                                <div class="timeline-dates">
+                                    <span class="start-date">{{ contract.start_date }}</span>
+                                    {% if contract.end_date %}
+                                    <span class="date-separator">→</span>
+                                    <span class="end-date">{{ contract.end_date }}</span>
+                                    {% endif %}
+                                </div>
+                                {% if contract.end_date %}
+                                <div class="timeline-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: {% if contract.status == 'completed' %}100%{% else %}50%{% endif %}"></div>
+                                    </div>
+                                    <div class="progress-text">
+                                        {% if contract.status == 'completed' %}Completed{% else %}In Progress{% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="info-item signatures-info">
+                            <div class="info-label">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="info-icon">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                Signatures
+                            </div>
+                            <div class="info-value">
+                                <div class="signatures-grid">
+                                    <div class="signature-status {% if contract.freelancer_signature %}signed{% else %}unsigned{% endif %}">
+                                        <span class="signature-label">You:</span>
+                                        {% if contract.freelancer_signature %}
+                                        <span class="signature-indicator signed">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            Signed
+                                        </span>
+                                        {% else %}
+                                        <span class="signature-indicator unsigned">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                            Pending
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="signature-status {% if contract.client_signature %}signed{% else %}unsigned{% endif %}">
+                                        <span class="signature-label">Client:</span>
+                                        {% if contract.client_signature %}
+                                        <span class="signature-indicator signed">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            Signed
+                                        </span>
+                                        {% else %}
+                                        <span class="signature-indicator unsigned">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                            Pending
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contract-actions">
+                        <a href="" class="action-btn view-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            View Details
+                        </a>
+                        
+                        {% if contract.status == 'active' %}
+                        <a href="" class="action-btn submissions-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            Deliverables
+                        </a>
+                        {% endif %}
+                        
+                        {% if not contract.freelancer_signature %}
+                        <a href="{% url 'contract:freelancer_sign_contract' contract.id %}" class="action-btn sign-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                                <path d="M2 2l7.586 7.586"></path>
+                                <circle cx="11" cy="11" r="2"></circle>
+                            </svg>
+                            Sign Now
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-contracts">
+                    <div class="no-data-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                            <polyline points="13 2 13 9 20 9"></polyline>
+                            <path d="M9 13h6"></path>
+                            <path d="M9 17h6"></path>
+                        </svg>
+                    </div>
+                    <h3>No Contracts Found</h3>
+                    <p>You don't have any active contracts yet. When you hire freelancers, your contracts will appear here.</p>
+                    <div class="no-contracts-actions">
+                        <a href="{% url 'projects:create_project' %}" class="action-btn primary-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Create a Project
+                        </a>
+                        <a href="{% url 'projects:project_list' %}" class="action-btn secondary-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            Browse Projects
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/contract/freelancer/contract-list.js' %}"></script>
+{% endblock %}

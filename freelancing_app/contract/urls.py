@@ -4,12 +4,15 @@ from .views import *
 app_name = 'contract'
 
 urlpatterns = [
-    path('create/<int:proposal_id>/', CreateContractView.as_view(), name='create-contract'),
-    path('client/<int:contract_id>/', ClientContractDetailView.as_view(), name='client-contract-detail'),
-    path('freelancer/<int:contract_id>/', FreelancerContractDetailView.as_view(), name='freelancer-contract-detail'),
-    path('sign/<int:contract_id>/', SignContractView.as_view(), name='sign-contract'),
-    path('submit-work/<int:contract_id>/', SubmitWorkView.as_view(), name='submit-work'),
-    path('review-work/<int:submission_id>/<str:action>/', ReviewWorkView.as_view(), name='review-work'),
-    path('process-payment/<int:contract_id>/', ProcessPaymentView.as_view(), name='process-payment'),
-    path('submit-review/<int:contract_id>/', SubmitReviewView.as_view(), name='submit-review'),
+    path('client/contracts/', ClientContractListView.as_view(), name='client_contract_list'),
+    path('client/contract/<int:contract_id>/', ClientContractDetailView.as_view(), name='client_contract_detail'),
+    path('client/sign-contract/<int:contract_id>/', ClientSignContractView.as_view(), name='client_sign_contract'),
+    path('client/review-submission/<int:submission_id>/', ClientReviewSubmissionView.as_view(), name='client_review_submission'),
+    path('client/complete-contract/<int:contract_id>/', ClientCompleteContractView.as_view(), name='client_complete_contract'),
+    path('client/leave-review/<int:contract_id>/', ClientLeaveReviewView.as_view(), name='client_leave_review'),
+    
+    path('freelancer/contracts/', FreelancerContractListView.as_view(), name='freelancer_contract_list'),
+    path('freelancer/contract/<int:contract_id>/', FreelancerContractDetailView.as_view(), name='freelancer_contract_detail'),
+    path('freelancer/sign-contract/<int:contract_id>/', FreelancerSignContractView.as_view(), name='freelancer_sign_contract'),
+    path('freelancer/submit-work/<int:contract_id>/', FreelancerSubmitWorkView.as_view(), name='freelancer_submit_work'),
 ]

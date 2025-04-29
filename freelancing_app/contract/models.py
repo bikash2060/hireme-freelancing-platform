@@ -29,13 +29,8 @@ class Contract(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    terms = models.TextField(
-        blank=True,
-        default="Standard platform terms apply."
-    )
     client_signature = models.BooleanField(default=False)
     freelancer_signature = models.BooleanField(default=False)
-    is_terms_accepted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Contract #{self.id} - {self.proposal.project.title}"

@@ -4,6 +4,8 @@ from notification.utils import NotificationManager
 from freelancerprofile.models import Freelancer
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
+from datetime import date, timedelta
+from contract.models import Contract
 from django.contrib import messages
 from django.db.models import Q, Avg
 from django.conf import settings
@@ -1056,25 +1058,43 @@ class ProposalActionView(BaseProjectView):
                 return redirect(self.PROJECT_PROPOSAL_DETAILS_URL, project_id=project_id, proposal_id=proposal_id)
 
             if action == 'accept':
-                if project.status == 'in_progress':
-                    messages.error(request, 'Project is already in progress.')
-                    return redirect(self.PROPOSAL_DETAIL_URL, project_id=project_id, proposal_id=proposal_id)
-
-                proposal.status = 'accepted'
+                proposal.status = Proposal.Status.ACCEPTED
+                proposal.is_shortlisted = False
                 proposal.save()
-
-                project.status = 'in_progress'
+                
+                Proposal.objects.filter(
+                    project=project,
+                    status=Proposal.Status.PENDING
+                ).exclude(id=proposal.id).update(status=Proposal.Status.REJECTED)
+                
+                start_date = date.today()
+                end_date = start_date + timedelta(weeks=project.estimated_duration)
+                
+                contract = Contract.objects.create(
+                        proposal=proposal,
+                        agreed_amount=proposal.proposed_amount,
+                        start_date=start_date,
+                        end_date=end_date,
+                        status=Contract.Status.ACTIVE,
+                        client_signature=False,  
+                        freelancer_signature=False,  
+                        is_terms_accepted=False
+                    )
+                
+                project.status = Project.Status.IN_PROGRESS
                 project.save()
-
+                
                 short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
                 NotificationManager.send_notification(
                     user=proposal.freelancer.user,
-                    message=f'Congratulations! Your proposal for the project {short_title} has been accepted. Please check the project details for the next steps.',
-                    redirect_url=reverse(self.PROPOSAL_DETAIL_URL, kwargs= {'proposal_id': proposal_id})
+                    message=f'Your proposal for project {short_title} has been accepted! A contract has been created.',
+                    # redirect_url=reverse(self.FREELANCER_PROPOSAL_DETAILS_URL, kwargs={'proposal_id': proposal_id})
+                    redirect_url=None
                 )
-
-                messages.success(request, 'Proposal accepted successfully. Project is now in progress.')
-            
+                
+                messages.success(request, 'Proposal accepted and contract created successfully.')
+                return redirect(self.HOME_URL)
+                
             elif action == 'shortlist':
                 proposal.is_shortlisted = not proposal.is_shortlisted
                 proposal.save()
