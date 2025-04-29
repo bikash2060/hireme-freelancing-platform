@@ -214,23 +214,13 @@
                     </div>
                     
                     <div class="contract-actions">
-                        <a href="" class="action-btn view-btn">
+                        <a href="{% url 'contract:freelancer_contract_detail' contract.id %}" class="action-btn view-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
                             View Details
                         </a>
-                        
-                        {% if contract.status == 'active' %}
-                        <a href="" class="action-btn submissions-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
-                            Deliverables
-                        </a>
-                        {% endif %}
                         
                         {% if not contract.freelancer_signature %}
                         <a href="{% url 'contract:freelancer_sign_contract' contract.id %}" class="action-btn sign-btn">

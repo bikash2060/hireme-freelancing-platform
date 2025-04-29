@@ -38,41 +38,7 @@ class Contract(models.Model):
     class Meta:
         db_table = "contract"
         ordering = ['-created_at']
-        
-class WorkSubmission(models.Model):
-    class Status(models.TextChoices):
-        PENDING = 'pending', _('Pending')
-        APPROVED = 'approved', _('Approved')
-        REJECTED = 'rejected', _('Rejected')
-    
-    contract = models.ForeignKey(  
-        Contract,
-        on_delete=models.CASCADE,
-        related_name='work_submissions'  
-    )
-    attachment = models.FileField(
-        upload_to='work_submissions/%Y/%m/',  
-        blank=True,
-        null=True
-    )
-    description = models.TextField(
-        blank=True,
-        help_text="Description of changes or deliverables."
-    )
-    submitted_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(
-        max_length=20,
-        choices=Status.choices,
-        default=Status.PENDING,
-    )
 
-    class Meta:
-        db_table = "work_submission"
-        ordering = ['-submitted_at']
-
-    def __str__(self):
-        return f"Submission #{self.id} for Contract #{self.contract.id}"
-    
 class Transaction(models.Model):
     class Status(models.TextChoices):   
         PENDING = 'pending', _('Pending')

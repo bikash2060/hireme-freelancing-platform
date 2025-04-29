@@ -1,4 +1,4 @@
-from .models import Contract, WorkSubmission, Transaction, Review
+from .models import Contract, Transaction, Review
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
@@ -154,7 +154,7 @@ class ClientContractDetailView(BaseContractView):
             'contract': contract,
             'active_tab': 'contracts'
         }
-        return render(request, 'contract/client/contract_detail.html', context)
+        return render(request, 'contract/client/contract-detail.html', context)
 
 class FreelancerContractDetailView(BaseContractView):
     """View for freelancers to see the details of a contract."""
@@ -169,116 +169,8 @@ class FreelancerContractDetailView(BaseContractView):
             'contract': contract,
             'active_tab': 'contracts'
         }
-        return render(request, 'contract/freelancer/contract_detail.html', context)
+        return render(request, 'contract/freelancer/contract-details.html', context)
 
-# Work Submission Views
-class FreelancerSubmitWorkView(BaseContractView):
-    """View for freelancers to submit work for a contract."""
-    
-    def get(self, request, contract_id):
-        contract = self.get_contract(request, contract_id)
-        if not contract or request.user.role != 'freelancer':
-            messages.error(request, "Contract not found or you don't have permission to access it.")
-            return redirect('contract:freelancer_contract_list')
-        
-        if contract.status != Contract.Status.ACTIVE:
-            messages.error(request, "You can only submit work for active contracts.")
-            return redirect('contract:freelancer_contract_detail', contract_id=contract_id)
-        
-        context = {
-            'contract': contract,
-            'active_tab': 'contracts'
-        }
-        return render(request, 'contract/freelancer/submit_work.html', context)
-    
-    def post(self, request, contract_id):
-        contract = self.get_contract(request, contract_id)
-        if not contract or request.user.role != 'freelancer':
-            messages.error(request, "Contract not found or you don't have permission to access it.")
-            return redirect('contract:freelancer_contract_list')
-        
-        if contract.status != Contract.Status.ACTIVE:
-            messages.error(request, "You can only submit work for active contracts.")
-            return redirect('contract:freelancer_contract_detail', contract_id=contract_id)
-        
-        description = request.POST.get('description', '')
-        attachment = request.FILES.get('attachment')
-        
-        submission = WorkSubmission(
-            contract=contract,
-            description=description
-        )
-        
-        if attachment:
-            submission.attachment = attachment
-        
-        submission.save()
-        
-        # Notify client about new submission
-        client_user = contract.proposal.project.client.user
-        NotificationManager.create_notification(
-            user=client_user,
-            title="New Work Submission",
-            message=f"Freelancer has submitted work for {contract.proposal.project.title}",
-            link=reverse('contract:client_contract_detail', args=[contract.id])
-        )
-        
-        messages.success(request, "Work submitted successfully.")
-        return redirect('contract:freelancer_contract_detail', contract_id=contract_id)
-
-class ClientReviewSubmissionView(BaseContractView):
-    """View for clients to review work submissions."""
-    
-    def post(self, request, submission_id):
-        try:
-            submission = WorkSubmission.objects.select_related(
-                'contract__proposal__project__client__user'
-            ).get(id=submission_id)
-            
-            # Verify client owns this contract
-            if request.user != submission.contract.proposal.project.client.user:
-                messages.error(request, "You don't have permission to review this submission.")
-                return redirect('contract:client_contract_list')
-            
-            action = request.POST.get('action')
-            
-            if action == 'approve':
-                submission.status = WorkSubmission.Status.APPROVED
-                submission.save()
-                
-                # Notify freelancer
-                freelancer_user = submission.contract.proposal.freelancer.user
-                NotificationManager.create_notification(
-                    user=freelancer_user,
-                    title="Work Submission Approved",
-                    message=f"Your work submission for {submission.contract.proposal.project.title} has been approved",
-                    link=reverse('contract:freelancer_contract_detail', args=[submission.contract.id])
-                )
-                
-                messages.success(request, "Work submission approved.")
-            
-            elif action == 'reject':
-                submission.status = WorkSubmission.Status.REJECTED
-                submission.save()
-                
-                # Notify freelancer
-                freelancer_user = submission.contract.proposal.freelancer.user
-                NotificationManager.create_notification(
-                    user=freelancer_user,
-                    title="Work Submission Rejected",
-                    message=f"Your work submission for {submission.contract.proposal.project.title} has been rejected",
-                    link=reverse('contract:freelancer_contract_detail', args=[submission.contract.id])
-                )
-                
-                messages.success(request, "Work submission rejected.")
-            
-            return redirect('contract:client_contract_detail', contract_id=submission.contract.id)
-            
-        except WorkSubmission.DoesNotExist:
-            messages.error(request, "Submission not found.")
-            return redirect('contract:client_contract_list')
-
-# Contract Completion Views
 class ClientCompleteContractView(BaseContractView):
     """View for clients to mark a contract as completed."""
     
@@ -292,18 +184,11 @@ class ClientCompleteContractView(BaseContractView):
             messages.error(request, "Only active contracts can be marked as completed.")
             return redirect('contract:client_contract_detail', contract_id=contract_id)
         
-        # Check if there are any approved submissions
-        if not contract.work_submissions.filter(status=WorkSubmission.Status.APPROVED).exists():
-            messages.error(request, "There must be at least one approved work submission before completing the contract.")
-            return redirect('contract:client_contract_detail', contract_id=contract_id)
-        
         with transaction.atomic():
-            # Update contract status
             contract.status = Contract.Status.COMPLETED
             contract.completed_date = datetime.now().date()
             contract.save()
             
-            # Create transaction record (if not exists)
             Transaction.objects.get_or_create(
                 contract=contract,
                 defaults={

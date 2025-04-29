@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+{% load static %}
+{% load number_filters %}
+{% load custom_filters %}
+{% load project_filters %}
+
+{% block title %}Contract Details - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/contract/client/contract-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="hero-content">      
+            
+            <div class="breadcrumb">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb-list">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'contract:client_contract_list' %}">My Contracts</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            {{ contract.proposal.project.title|truncatechars:30 }}
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+            <div class="project-header">
+                <div class="project-info">
+                    <div class="project-meta">
+                        <span class="project-category">
+                            <i class="fas fa-tag"></i> {{ contract.proposal.project.category.name }}
+                        </span>
+                        <span class="project-status {{ contract.status }}">
+                            <i class="fas fa-circle"></i> {{ contract.get_status_display }}
+                        </span>
+                    </div>
+                      
+                    <h1 class="project-title">{{ contract.proposal.project.title }}</h1>
+                </div>
+                <div class="action-buttons">
+                    {% if contract.status == 'active' %}
+                        <a href="" class="btn btn-primary">
+                            <i class="fas fa-check-circle"></i> Mark as Complete
+                        </a>
+                    {% endif %}
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contract Overview Section -->
+<div class="overview-section">
+    <div class="container">
+        <div class="overview-grid">
+            <div class="overview-main">
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-align-left"></i> Project Description
+                    </h3>
+                    <div class="project-description">
+                        <h4>Project Description:</h4>
+                        <p>{{ contract.proposal.project.description }}</p>
+                        
+                        <h4>Key Requirements:</h4>
+                        {% if contract.proposal.project.key_requirements %}
+                            <ul>
+                                {% for requirement in contract.proposal.project.key_requirements|split_lines %}
+                                    <li>{{ requirement }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No key requirements provided.</span>
+                        {% endif %}
+                        
+                        <h4>Additional Information:</h4>
+                        {% if contract.proposal.project.additional_info %}
+                            <p>{{ contract.proposal.project.additional_info }}</p>
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No additional information provided.</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="section-card skills-card">
+                    <div class="skills-header">
+                        <h3 class="section-title">
+                            <i class="fas fa-code"></i> Professional Skills
+                        </h3>
+                        <div class="skills-counter">
+                            <span class="counter-number">{{ contract.proposal.project.project_skills.count }}</span>
+                            <span class="counter-text">Skills</span>
+                        </div>
+                    </div>
+                    <div class="skills-list">   
+                        {% for project_skill in contract.proposal.project.project_skills.all %}
+                            <div class="skill-tag" data-skill-level="{{ project_skill.level }}">
+                                <i class="fas fa-code"></i> {{ project_skill.skill.name }}
+                                <span class="skill-level-badge">{{ project_skill.get_level_display }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="section-card">
+                    <h3 class="section-title">
+                        <i class="fas fa-align-left"></i> Proposal Description
+                    </h3>
+                    <div class="project-description">
+                        <h4>Cover Letter:</h4>
+                        <p>{{ contract.proposal.cover_letter }}</p>
+                        
+                        <h4>Approach Methodology:</h4>
+                        {% if contract.proposal.approach_methodology %}
+                            {% for line in contract.proposal.approach_methodology|split_lines %}
+                                <div class="approach-line" style="margin-bottom: 10px;">
+                                    {{ line }}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No approach methodology provided.</span>
+                        {% endif %}
+                        
+                        <h4>Relevant Experience:</h4>
+                        {% if contract.proposal.relevant_experience %}
+                            {% for line in contract.proposal.relevant_experience|split_lines %}
+                                <div class="relevant-line" style="margin-bottom: 10px;">
+                                    {{ line }}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: #949494; font-style: italic;">No relevant experience provided.</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="overview-sidebar">
+                <div class="sidebar-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-info-circle"></i> Contract Details
+                    </h3>
+                    <div class="project-info-list">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Start Date</div>
+                                <div class="info-value">{{ contract.start_date }}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">End Date</div>
+                                <div class="info-value">{{ contract.end_date }}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Completion Date</div>
+                                <div class="info-value">{{ contract.completed_date }}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Contract Amount</div>
+                                <div class="info-value">{{ contract.agreed_amount|format_currency}}</div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Freelancer Signed</div>
+                                <div class="info-value">
+                                    {% if contract.freelancer_signature %}
+                                        Yes
+                                    {% else %}
+                                        No
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>                        
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Project Type</div>
+                                {% if project.is_fixed_price %}
+                                    <div class="info-value">Fixed Price</div>
+                                {% else %}
+                                    <div class="info-value">Price Range</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-card freelancer-profile-card">
+                    <h3 class="card-title">
+                        <i class="fas fa-user-tie"></i> Freelancer Profile
+                    </h3>
+                    <div class="freelancer-profile">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                {% if contract.proposal.freelancer.user.profile_image %}
+                                    <img src="{% get_media_prefix %}profile_images/{{ contract.proposal.freelancer.user.profile_image }}" 
+                                         alt="{{ contract.proposal.freelancer.user.full_name }}" 
+                                         class="avatar-image"
+                                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'profile-icon\'><i class=\'fas fa-user\'></i></div>'">
+                                {% else %}
+                                    <div class="profile-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="profile-info">
+                                <h4 class="profile-name">{{ contract.proposal.freelancer.user.full_name }}</h4>
+                                <div class="profile-meta">
+                                    <span class="meta-item location">
+                                        <i class="fas fa-map-marker-alt"></i> 
+                                        {% if contract.proposal.freelancer.user.city %}
+                                            {{ contract.proposal.freelancer.user.city }}
+                                        {% else %}
+                                            Location not specified
+                                        {% endif %}
+                                    </span>
+                                    <span class="meta-item member-since">
+                                        <i class="fas fa-calendar-alt"></i> 
+                                        Member since {{ contract.proposal.freelancer.user.date_joined|date:"M Y" }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.total_projects|default:"0" }}</div>
+                                    <div class="stat-label">Total Projects</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon primary">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.completed_projects|default:"0" }}</div>
+                                    <div class="stat-label">Completed</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.on_time_percentage|default:"100" }}%</div>
+                                    <div class="stat-label">On Time</div>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon danger">
+                                    <i class="fas fa-redo"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-value">{{ proposal.freelancer.revision_rate|default:"0" }}%</div>
+                                    <div class="stat-label">Revision Rate</div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="expertise-section">
+                            <h5 class="section-title">
+                                <i class="fas fa-star"></i> Expertise
+                            </h5>
+                            <div class="expertise-tags">
+                                {% for skill in contract.proposal.freelancer.skills.all|slice:":6" %}
+                                    <span class="skill-tag">{{ skill.name }}</span>
+                                {% empty %}
+                                    <span class="no-skills">No skills listed</span>
+                                {% endfor %}
+                                {% if contract.proposal.freelancer.skills.count > 6 %}
+                                    <span class="skill-tag more-skills">+{{ contract.proposal.freelancer.skills.count|add:"-6" }} more</span>
+                                {% endif %}
+                            </div>
+                        </div>                
+                        <div class="action-buttons">
+                            <a href="#" class="btn btn-message" onclick="startChatWithFreelancer({{ contract.proposal.freelancer.user.id }})">
+                                <i class="fas fa-envelope"></i> Send Message
+                            </a>
+                            <a href="{% url 'home:freelancer-detail' contract.proposal.freelancer.id %}" class="btn btn-portfolio" target="_blank">
+                                <i class="fas fa-briefcase"></i> View Portfolio
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
