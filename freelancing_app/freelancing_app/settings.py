@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from django.utils.translation import gettext_lazy as _
+import dj_database_url
 
 # Define base directory path for the project.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-y9vjmoy_i9&x-5!dq7w-dq+fsts@dsmut9(yp)$)lyg%rd43_x"
 
 # Debug mode setting; should be False in production.
-DEBUG = True
+DEBUG = False
 
 # List of allowed hostnames for the application.
 ALLOWED_HOSTS = ['*']
@@ -113,6 +114,8 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+DATABASES["default"] = dj_database_url.parse('postgresql://hireme_coursework_user:8BPJ2ghHVPk3G3CGiO4Wi4Sp42Co3JJB@dpg-d0a94c15pdvs73ccc870-a.oregon-postgres.render.com/hireme_coursework')
 
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
