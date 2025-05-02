@@ -68,7 +68,7 @@ class UserLoginView(BaseAuthView):
             return render(request, self.TEMPLATE_NAME, {'form_data': form_data or {}})
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.home_url)
+            return redirect(self.HOME_URL)
 
     def _process_login(self, request):
         try:
@@ -92,14 +92,14 @@ class UserLoginView(BaseAuthView):
             if user:
                 login(request, user)
                 messages.success(request, 'You have successfully logged in.')
-                return redirect(self.home_url)
+                return redirect(self.HOME_URL)
 
             # Handle login failure
             return self._handle_failed_login(request, email, form_data)
 
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.login_url)
+            return redirect(self.LOGIN_URL)
 
     def _handle_failed_login(self, request, email, form_data):
         """Display appropriate error for login failure"""
@@ -219,7 +219,7 @@ class PasswordResetOTPVerifyView(BaseAuthView):
             return render(request, self.TEMPLATE_NAME)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.login_url)
+            return redirect(self.LOGIN_URL)
 
     def _verify_otp(self, request):
         try:
@@ -253,7 +253,7 @@ class PasswordResetOTPVerifyView(BaseAuthView):
             return self._render_otp_form(request)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.login_url)
+            return redirect(self.LOGIN_URL)
 
     def _get_otp_from_request(self, request):
         """Helper to extract 6-digit OTP from request"""
@@ -332,7 +332,7 @@ class ChangePasswordView(BaseAuthView):
             return render(request, self.TEMPLATE_NAME)
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
-            return redirect(self.home_url)
+            return redirect(self.HOME_URL)
 
     def _update_password(self, request):
         try:
@@ -354,7 +354,7 @@ class ChangePasswordView(BaseAuthView):
 
             del request.session['email_address']
             messages.success(request, 'Password changed successfully.')
-            return redirect(self.login_url)
+            return redirect(self.LOGIN_URL)
 
         except User.DoesNotExist:
             messages.error(request, 'No user found with this email address.')
@@ -411,7 +411,7 @@ class UserSignupView(BaseAuthView):
             return render(request, self.TEMPLATE_NAME, {'form_data': form_data or {}})
         except Exception:
             messages.error(request, 'Something went wrong. Please try again later.')
-            return redirect(self.home_url)
+            return redirect(self.HOME_URL)
 
     def _process_signup_form(self, request):
         try:
@@ -463,7 +463,7 @@ class UserSignupView(BaseAuthView):
         user = User.objects.get(email=email)
         if user.auth_method == 'google':
             messages.error(request, 'This email is associated with a Google account. Please sign in using Google.')
-            return redirect(self.login_url)
+            return redirect(self.LOGIN_URL)
         messages.error(request, 'This email is already registered. Please use a different email.')
         return self._render_signup_form(request, form_data)
 

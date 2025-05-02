@@ -40,21 +40,21 @@
             <label for="signup-email">Email</label>
             <div class="input-container">
               <i class="far fa-envelope input-icon"></i>
-              <input type="email" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}" required/>
+              <input type="text" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}"/>
             </div>
           </div>
           <div class="signup-input-box">
             <label for="signup-username">Username</label>
             <div class="input-container">
               <i class="far fa-user input-icon"></i>
-              <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}" required/>
+              <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}"/>
             </div>
           </div>
           <div class="signup-input-box">
             <label for="signup-password">Password</label>
             <div class="input-container password-container">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="signup-password" placeholder="Enter your password" name="password" required/>
+              <input type="password" id="signup-password" placeholder="Enter your password" name="password"/>
               <button type="button" class="far fa-eye toggle-icon" id="toggleSignupPassword" aria-label="Toggle password visibility"></button>
             </div>
           </div>
@@ -62,7 +62,7 @@
             <label for="signup-confirm-password">Confirm Password</label>
             <div class="input-container password-container">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword" required/>
+              <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword"/>
               <button type="button" class="far fa-eye toggle-icon" id="toggleSignupConfirmPassword" aria-label="Toggle password visibility"></button>
             </div>
           </div>
