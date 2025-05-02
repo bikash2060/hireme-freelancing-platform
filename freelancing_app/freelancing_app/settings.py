@@ -115,8 +115,6 @@ DATABASES = {
     }
 }
 
-DATABASES["default"] = dj_database_url.parse('postgresql://hireme_coursework_user:8BPJ2ghHVPk3G3CGiO4Wi4Sp42Co3JJB@dpg-d0a94c15pdvs73ccc870-a.oregon-postgres.render.com/hireme_coursework')
-
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
