@@ -3,47 +3,53 @@ document.addEventListener('DOMContentLoaded', function () {
     const skillsOptions = document.getElementById('skills-options');
     const selectedSkillsList = document.querySelector('.selected-skills-list');
 
+    // Add debug logging
+    console.log('Skills search element:', skillsSearch);
+    console.log('Skills options element:', skillsOptions);
+    console.log('Selected skills list element:', selectedSkillsList);
+
     const noResultsMsg = document.createElement('div');
     noResultsMsg.className = 'no-results-msg';
     noResultsMsg.textContent = 'No matching skills found';
     noResultsMsg.style.display = 'none';
     skillsOptions.parentNode.insertBefore(noResultsMsg, skillsOptions.nextSibling);
 
+    // Initialize selected skills on page load
+    function initializeSelectedSkills() {
+        const checkedSkills = document.querySelectorAll('input[name="skills"]:checked');
+        console.log('Initializing selected skills:', checkedSkills.length);
+        updateSelectedSkills();
+        moveSelectedSkillsToTop();
+    }
+
     // Handle checkbox change using event delegation
     skillsOptions.addEventListener('change', function (e) {
         if (e.target && e.target.name === 'skills') {
-            const skillOption = e.target.closest('.skill-option');
-            const levelSelector = skillOption.querySelector('.skill-level-selector');
-
-            if (e.target.checked) {
-                levelSelector.style.display = 'block';
-            } else {
-                levelSelector.style.display = 'none';
-                levelSelector.querySelector('select').value = 'intermediate';
-            }
-
             updateSelectedSkills();
             moveSelectedSkillsToTop();
         }
     });
 
-    // Prevent skill level dropdown from toggling the checkbox
-    document.querySelectorAll('.skill-level-selector select').forEach(select => {
-        select.addEventListener('click', e => e.stopPropagation());
-        select.addEventListener('change', () => {
-            updateSelectedSkills();
-            moveSelectedSkillsToTop();
-        });
-    });
-
     // Real-time search
     skillsSearch.addEventListener('input', function () {
+        console.log('Search input event triggered');
         const searchTerm = this.value.toLowerCase().trim();
+        console.log('Search term:', searchTerm);
+        
         const skillOptions = skillsOptions.querySelectorAll('.skill-option');
+        console.log('Number of skill options:', skillOptions.length);
+        
         let hasMatches = false;
 
         skillOptions.forEach(option => {
-            const skillName = option.querySelector('.skill-name').textContent.toLowerCase();
+            const skillLabel = option.querySelector('label');
+            if (!skillLabel) {
+                console.log('No label found for option:', option);
+                return;
+            }
+            const skillName = skillLabel.textContent.toLowerCase();
+            console.log('Checking skill:', skillName);
+            
             if (searchTerm === '' || skillName.includes(searchTerm)) {
                 option.style.display = 'flex';
                 hasMatches = true;
@@ -64,28 +70,24 @@ document.addEventListener('DOMContentLoaded', function () {
         moveSelectedSkillsToTop();
     });
 
-    // Show level selectors for already-checked skills on page load
-    document.querySelectorAll('input[name="skills"]:checked').forEach(checkbox => {
-        const skillOption = checkbox.closest('.skill-option');
-        const levelSelector = skillOption.querySelector('.skill-level-selector');
-        levelSelector.style.display = 'block';
-    });
-
     function updateSelectedSkills() {
         selectedSkillsList.innerHTML = '';
         const checkedSkills = document.querySelectorAll('input[name="skills"]:checked');
+        console.log('Updating selected skills:', checkedSkills.length);
 
         checkedSkills.forEach(checkbox => {
             const skillId = checkbox.id;
-            const skillName = checkbox.closest('.skill-option').querySelector('.skill-name').textContent;
-            const levelSelector = checkbox.closest('.skill-option').querySelector('.skill-level-selector select');
-            const selectedLevel = levelSelector ? levelSelector.value : 'intermediate';
-            const levelText = levelSelector ? levelSelector.options[levelSelector.selectedIndex].text : 'Intermediate';
+            const skillLabel = checkbox.closest('.skill-option').querySelector('label');
+            if (!skillLabel) {
+                console.log('No label found for checked skill:', skillId);
+                return;
+            }
+            const skillName = skillLabel.textContent;
 
             const skillElement = document.createElement('div');
             skillElement.className = 'selected-skill';
             skillElement.innerHTML = `
-                ${skillName} <span class="skill-level-badge">${levelText}</span>
+                ${skillName}
                 <span class="remove-skill" data-skill-id="${skillId}">
                     <i class="fas fa-times"></i>
                 </span>
@@ -102,9 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const checkbox = document.getElementById(skillId);
                 if (checkbox) {
                     checkbox.checked = false;
-                    const skillOption = checkbox.closest('.skill-option');
-                    const levelSelector = skillOption.querySelector('.skill-level-selector');
-                    levelSelector.style.display = 'none';
                     updateSelectedSkills();
                     moveSelectedSkillsToTop();
                 }
@@ -132,6 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    updateSelectedSkills(); // Initialize preview
-    moveSelectedSkillsToTop(); // Reorder on load
+    // Initialize everything on page load
+    initializeSelectedSkills();
 });

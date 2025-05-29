@@ -342,8 +342,13 @@
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
                 </div>
-                <h3 class="empty-title">No matching projects found</h3>
-                <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
+                {% if request.GET %}
+                    <h3 class="empty-title">No matching projects found</h3>
+                    <p class="empty-message">We couldn't find any projects matching your search and filter criteria. Try adjusting your filters or search term.</p>
+                {% else %}
+                    <h3 class="empty-title">No projects found</h3>
+                    <p class="empty-message">There are currently no projects available. Please check back later or post a project to attract freelancers.</p>
+                {% endif %}
             </div>
         {% endif %}
     </div>

@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+
     const illustrationControls = document.querySelectorAll('.control-dot');
     const illustrationItems = document.querySelectorAll('.illustration-item');
 

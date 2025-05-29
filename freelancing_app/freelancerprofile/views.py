@@ -594,11 +594,19 @@ class EditExperienceView(ExperienceBaseView):
                 messages.error(request, error)
                 return render(request, self.TEMPLATE_NAME, context)
 
-            updated = AddExperienceView()._create_experience(request.user.freelancer, form_data)
-            for attr in ['company_name', 'job_title', 'employment_type', 'start_date',
-                         'end_date', 'currently_working', 'country', 'city', 'description']:
-                setattr(experience, attr, getattr(updated, attr))
+            # Update experience directly
+            experience.company_name = form_data['company_name']
+            experience.job_title = form_data['job_title']
+            experience.employment_type = form_data['employment_type']
+            experience.start_date = datetime.strptime(form_data['start_date'], '%Y-%m').date()
+            experience.end_date = datetime.strptime(form_data['end_date'], '%Y-%m').date() if form_data['end_date'] else None
+            experience.currently_working = form_data['currently_working']
+            experience.country = Country.objects.get(id=form_data['country_id']) if form_data['country_id'] else None
+            experience.city = City.objects.get(id=form_data['city_id']) if form_data['city_id'] else None
+            experience.description = form_data['job_description']
             experience.save()
+            
+            # Update skills
             experience.skills.set(form_data['selected_skill_ids'])
 
             messages.success(request, 'Your work experience has been successfully updated!')

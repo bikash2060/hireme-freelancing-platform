@@ -291,12 +291,12 @@ class GetUserProfileView(CustomLoginRequiredMixin, View):
         return render(request, self.TEMPLATE_NAME)
         
 # ------------------------------------------------------
-# ✅ [TESTED & COMPLETED]
+# 🚧 [IN-PROGRESS]
 # View Name: FreelancerListView
 # Description: Displays list of freelancers for clients or unauthenticated users
 # Tested On: 2025-04-29
 # Status: Working as expected
-# Code Refractor Status: Completed
+# Code Refractor Status: In-Progress
 # ------------------------------------------------------    
 class FreelancerListView(View):
     """
@@ -469,12 +469,12 @@ class FreelancerListView(View):
         return redirect(self.HOME_URL) 
      
 # ------------------------------------------------------
-# ✅ [TESTED & COMPLETED]
+# 🚧 [IN-PROGRESS]
 # View Name: FreelancerDetailView   
 # Description: Displays detailed information about a freelancer
 # Tested On: 2025-04-29
 # Status: Working as expected
-# Code Refractor Status: Completed
+# Code Refractor Status: In-Progress
 # ------------------------------------------------------
 class FreelancerDetailView(View):
     """
@@ -607,12 +607,12 @@ class FreelancerDetailView(View):
         return redirect(self.HOME_URL)
 
 # ------------------------------------------------------
-# ✅ [TESTED & COMPLETED]
+# 🚧 [IN-PROGRESS]
 # View Name: ProjectListView
 # Description: Filters and paginates available projects with advanced options
 # Tested On: 2025-04-26
 # Status: Working as expected
-# Code Refractor Status: Completed
+# Code Refractor Status: In-Progress
 # ------------------------------------------------------
 class ProjectListView(View):
     """
@@ -784,12 +784,12 @@ class ProjectListView(View):
         return redirect(self.HOME_URL) 
     
 # ------------------------------------------------------
-# ✅ [TESTED & COMPLETED]
+# 🚧 [IN-PROGRESS]
 # View Name: ProjectDetailView
 # Description: Displays individual project detail page with role-based restriction
 # Tested On: 2025-04-26
 # Status: Working as expected
-# Code Refractor Status: Completed
+# Code Refractor Status: In-Progress
 # ------------------------------------------------------
 class ProjectDetailView(View):
     """
