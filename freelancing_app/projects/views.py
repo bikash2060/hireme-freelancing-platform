@@ -224,7 +224,7 @@ class NewProjectView(BaseProjectView):
                     filename = fs.save(attachment.name, attachment)
                     ProjectAttachment.objects.create(
                         project=project,
-                        file=os.path.basename(filename)  
+                        file='project_attachments/' + os.path.basename(filename)  
                     )
                     
             # Send notification
@@ -703,7 +703,7 @@ class EditProjectView(BaseProjectView):
                     filename = fs.save(attachment.name, attachment)
                     ProjectAttachment.objects.create(
                         project=project,
-                        file=filename  # Store just the filename
+                        file='project_attachments/' + os.path.basename(filename)  
                     )
 
             # Handle deleted attachments
