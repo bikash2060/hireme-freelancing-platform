@@ -42,6 +42,22 @@
                 <h1>Workspace: <span>{{ contract.proposal.project.title }}</span></h1>
                 <p class="project-description">{{ contract.proposal.project.description|truncatechars:120 }}</p>
             </div>
+
+            {% if user.role == 'freelancer' %}
+                <div class="chat-button-container">
+                    <a href="#" class="btn btn-chat pulse" onclick="startChatWithFreelancer({{ contract.proposal.project.client.user.id }})">
+                        <i class="fas fa-comments"></i>
+                        <span>Chat with Client</span>
+                    </a>
+                </div>
+            {% else %}
+                <div class="chat-button-container">
+                    <a href="#" class="btn btn-chat pulse" onclick="startChatWithFreelancer({{ contract.proposal.freelancer.user.id }})">
+                        <i class="fas fa-comments"></i>
+                        <span>Chat with Freelancer</span>
+                    </a>
+                </div>
+            {% endif %}
             
             <div class="workspace-info-card">
                 <div class="info-grid">
@@ -147,7 +163,7 @@
                                 </div>
                                 <div class="submission-actions">
                                     {% if submission.attachment %}
-                                    <a href="{{ submission.attachment.url }}" class="btn btn-icon" target="_blank" title="Download Files">
+                                    <a href="{{ submission.attachment.url }}" class="btn btn-icon" download title="Download Files">
                                         <i class="fas fa-download"></i>
                                     </a>
                                     {% endif %}
@@ -214,11 +230,12 @@
                                     </div>
                                     <div class="form-group file-upload">
                                         <label for="final_attachment">Final Work Files</label>
-                                        <div class="upload-area">
+                                        <div class="upload-area" id="finalUploadArea">
                                             <i class="fas fa-cloud-upload-alt"></i>
                                             <p>Drag & drop final files here or click to browse</p>
                                             <input type="file" id="final_attachment" name="final_attachment" required>
                                         </div>
+                                        <div class="file-preview" id="finalFilePreview"></div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-paper-plane"></i> Submit Final Work
@@ -238,15 +255,15 @@
                                             <label class="payment-method">
                                                 <input type="radio" name="payment_method" value="esewa" required>
                                                 <div class="method-card">
-                                                    <img src="{% static 'images/payment/esewa.png' %}" alt="Esewa">
-                                                    <span>Esewa</span>
+                                                    <img src="{% static 'images/logo/eSewa.png' %}" alt="Esewa">
+                                                    <span class="method-name">Esewa</span>
                                                 </div>
                                             </label>
                                             <label class="payment-method">
                                                 <input type="radio" name="payment_method" value="khalti" required>
                                                 <div class="method-card">
-                                                    <img src="{% static 'images/payment/khalti.png' %}" alt="Khalti">
-                                                    <span>Khalti</span>
+                                                    <img src="{% static 'images/logo/khalti.png' %}" alt="Khalti">
+                                                    <span class="method-name">Khalti</span>
                                                 </div>
                                             </label>
                                         </div>
@@ -298,11 +315,6 @@
                         </div>
                         <h3>No Work Submitted Yet</h3>
                         <p>When work is submitted, it will appear here for review.</p>
-                        {% if user.role == 'freelancer' %}
-                        <a href="#submit-work" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Submit Your First Work
-                        </a>
-                        {% endif %}
                     </div>
                 {% endif %}
             </div>

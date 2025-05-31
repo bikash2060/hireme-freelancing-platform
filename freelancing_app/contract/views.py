@@ -179,7 +179,6 @@ class FreelancerContractDetailView(BaseContractView):
         }
         return render(request, 'contract/freelancer/contract-details.html', context)
 
-
 class WorkspaceView(BaseContractView):
     """View for managing workspace and submissions"""
     TEMPLATE_NAME = 'contract/workspace.html'
@@ -387,6 +386,11 @@ class ProcessPaymentView(BaseContractView):
         contract.completed_date = datetime.now().date()
         contract.save()
         
+        # Update project status
+        project = contract.proposal.project
+        project.status = 'completed'
+        project.save()
+        
         # Notify freelancer
         freelancer_user = contract.proposal.freelancer.user
         NotificationManager.send_notification(
@@ -395,8 +399,16 @@ class ProcessPaymentView(BaseContractView):
             redirect_url=reverse('contract:freelancer_contract_detail', args=[contract.id])
         )
         
-        messages.success(request, "Payment processed successfully.")
-        return redirect('contract:freelancer_contract_detail', contract_id=contract_id)
+        # Notify client
+        client_user = contract.proposal.project.client.user
+        NotificationManager.send_notification(
+            user=client_user,
+            message=f"Project {contract.proposal.project.title} has been completed",
+            redirect_url=reverse('contract:client_contract_detail', args=[contract.id])
+        )
+        
+        messages.success(request, "Payment processed successfully and project marked as completed.")
+        return redirect('contract:client_contract_detail', contract_id=contract_id)
 
 
 class LeaveReviewView(BaseContractView):
