@@ -3,6 +3,8 @@
 {% load number_filters %}
 {% load custom_filters %}
 {% load project_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
 {% block title %}{{ project.title }} - HireMe{% endblock %}
 
@@ -41,7 +43,7 @@
                         </span>
                     </div>
                       
-                    <h1 class="project-title">{{ project.title }}</h1>
+                    <h1 class="project-title">{% translate project.title %}</h1>
                     
                     <div class="project-client">
                         <div class="client-avatar">
@@ -80,7 +82,7 @@
                     </div>
                     <div class="action-buttons">
                         <a href="{% url 'proposal:submit-proposal' project.id %}" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Submit Proposal
+                            <i class="fas fa-paper-plane"></i> {% translate "Submit Proposal" %}
                         </a>
                     </div>
                 </div>
@@ -96,38 +98,38 @@
             <div class="overview-main">
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-align-left"></i> Project Description
+                        <i class="fas fa-align-left"></i> {% translate "Project Description" %}
                     </h3>
                     <div class="project-description">
-                        <p>{{ project.description }}</p>
+                        <p>{% translate project.description %}</p>
                         
-                        <h4>Key Requirements:</h4>
+                        <h4>{% translate "Key Requirements:" %}</h4>
                         {% if key_requirements %}
                             <ul>
                                 {% for requirement in key_requirements %}
-                                    <li>{{ requirement }}</li>
+                                    <li>{% translate requirement %}</li>
                                 {% endfor %}
                             </ul>
                         {% else %}
-                            <span style="color: #949494; font-style: italic;">No key requirements provided.</span>
+                            <span style="color: #949494; font-style: italic;">{% translate "No key requirements provided." %}</span>
                         {% endif %}
                         
-                        <h4>Additional Information:</h4>
+                        <h4>{% translate "Additional Information:" %}</h4>
                         {% if project.additional_info %}
-                            <p>{{ project.additional_info }}</p>
+                            <p>{% translate project.additional_info %}</p>
                         {% else %}
-                            <span style="color: #949494; font-style: italic;">No additional information provided.</span>
+                            <span style="color: #949494; font-style: italic;">{% translate "No additional information provided." %}</span>
                         {% endif %}
                     </div>
                 </div>
                 <div class="section-card skills-card">
                     <div class="skills-header">
                         <h3 class="section-title">
-                            <i class="fas fa-code"></i> Professional Skills
+                            <i class="fas fa-code"></i> {% translate "Professional Skills" %}
                         </h3>
                         <div class="skills-counter">
                             <span class="counter-number">{{ project.project_skills.count }}</span>
-                            <span class="counter-text">Skills</span>
+                            <span class="counter-text">{% translate "Skills" %}</span>
                         </div>
                     </div>
                     <div class="skills-list">   
@@ -141,7 +143,7 @@
                 </div>
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-paperclip"></i> Attachments
+                        <i class="fas fa-paperclip"></i> {% translate "Attachments" %}
                     </h3>
                     <div class="attachments-list">
                         {% if attachments %}
@@ -176,14 +178,14 @@
                             {% endfor %}
                         {% else %}  
                             <div class="no-attachments">
-                                <i class="fas fa-info-circle"></i> No attachments available for this project
+                                <i class="fas fa-info-circle"></i> {% translate "No attachments available for this project" %}
                             </div>
                         {% endif %}
                     </div>
                 </div>
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-comments"></i> Client Reviews ({{ client_reviews|length }})
+                        <i class="fas fa-comments"></i> {% translate "Client Reviews" %} ({{ client_reviews|length }})
                     </h3>
                     <div class="reviews-list">
                         {% for review in client_reviews %}
@@ -218,12 +220,12 @@
                                 </div>
                             </div>
                             <div class="review-comment">
-                                <p>{{ review.feedback }}</p>
+                                <p>{% translate review.feedback %}</p>
                             </div>
                         </div>
                         {% empty %}
                         <div class="no-reviews">
-                            <p>No reviews yet.</p>
+                            <p>{% translate "No reviews yet." %}</p>
                         </div>
                         {% endfor %}
                     </div>
@@ -259,30 +261,30 @@
             <div class="overview-sidebar">
                 <div class="sidebar-card">
                     <h3 class="card-title">
-                        <i class="fas fa-chart-line"></i> Project Stats
+                        <i class="fas fa-chart-line"></i> {% translate "Project Stats" %}
                     </h3>
                     <div class="project-stats">
                         <div class="stat-item">
                             <div class="stat-value">{{ project.proposals.count|default:0 }}</div>
-                            <div class="stat-label">Proposals Received</div>
+                            <div class="stat-label">{% translate "Proposals Received" %}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">{{ shortlisted_count|default:0 }}</div>
-                            <div class="stat-label">Shortlisted Freelancers</div>
+                            <div class="stat-label">{% translate "Shortlisted Freelancers" %}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">{{ project.estimated_duration }} weeks</div>
-                            <div class="stat-label">Weeks Duration</div>
+                            <div class="stat-label">{% translate "Weeks Duration" %}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">Rs. {{ avg_bid_amount|format_currency|default:0 }}</div>
-                            <div class="stat-label">Avg. Bid</div>
+                            <div class="stat-label">{% translate "Avg. Bid" %}</div>
                         </div>
                     </div>
                 </div> 
                 <div class="sidebar-card">
                     <h3 class="card-title">
-                        <i class="fas fa-info-circle"></i> Project Details
+                        <i class="fas fa-info-circle"></i> {% translate "Project Details" %}
                     </h3>
                     <div class="project-info-list">
                         <div class="info-item">
@@ -290,7 +292,7 @@
                                 <i class="fas fa-calendar"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Posted</div>
+                                <div class="info-label">{% translate "Posted" %}</div>
                                 <div class="info-value">{{ project.created_at|format_posted_time }}</div>
                             </div>
                         </div>
@@ -299,7 +301,7 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Duration</div>
+                                <div class="info-label">{% translate "Duration" %}</div>
                                 <div class="info-value">{{ project.estimated_duration }} weeks</div>
                             </div>
                         </div>
@@ -308,7 +310,7 @@
                                 <i class="fas fa-briefcase"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Experience Level</div>
+                                <div class="info-label">{% translate "Experience Level" %}</div>
                                 <div class="info-value">{{ project.get_experience_level_display }}</div>
                             </div>
                         </div>
@@ -317,7 +319,7 @@
                                 <i class="fas fa-dollar-sign"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Budget</div>
+                                <div class="info-label">{% translate "Budget" %}</div>
                                 {% if project.is_fixed_price %}
                                     <div class="info-value">Rs. {{ project.fixed_budget|format_currency }}</div>
                                 {% else %}
@@ -330,7 +332,7 @@
                                 <i class="fas fa-tasks"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Project Type</div>
+                                <div class="info-label">{% translate "Project Type" %}</div>
                                 {% if project.is_fixed_price %}
                                     <div class="info-value">Fixed Price</div>
                                 {% else %}
@@ -392,15 +394,15 @@
                             </div>
                         </div>
                         <div class="client-description">
-                            <p>{{ project.client.user.bio|default:"No description available" }}</p>
+                            <p>{% translate project.client.user.bio|default:"No description available" %}</p>
                         </div>
                     </div>
                 </div>
                 <div class="sidebar-card share-project-card">
                     <h3 class="card-title">
-                        <i class="fas fa-share-alt"></i> Share Project
+                        <i class="fas fa-share-alt"></i> {% translate "Share Project" %}
                     </h3>
-                    <p class="share-text">Share this project with your network to help find the right talent or collaborators.</p>
+                    <p class="share-text">{% translate "Share this project with your network to help find the right talent or collaborators." %}</p>
                     <div class="share-options">
                         <div class="share-option facebook">
                             <i class="fab fa-facebook-f"></i>
