@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+{% load translation_tags %}
 
 <!-- Vertical Sidebar Section -->
 <div class="sidebar">
@@ -9,7 +11,7 @@
                     <span class="navlink_icon">
                         <i class="fa-solid fa-user"></i>
                     </span>
-                    <span class="navlink">My Info</span>
+                    <span class="navlink">{% translate "My Info" %}</span>
                 </a>
             </li>
             <li class="item">
@@ -17,7 +19,7 @@
                     <span class="navlink_icon">
                         <i class="fa-solid fa-key"></i>
                     </span>
-                    <span class="navlink">Change Password</span>
+                    <span class="navlink">{% translate "Change Password" %}</span>
                 </a>
             </li>
             <li class="item">
@@ -25,7 +27,7 @@
                     <span class="navlink_icon">
                         <i class="fa-solid fa-credit-card"></i>
                     </span>
-                    <span class="navlink">Payment History</span>
+                    <span class="navlink">{% translate "Payment History" %}</span>
                 </a>
             </li>
         </ul>

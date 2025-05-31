@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static%}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}Account Settings - HireMe{% endblock %}
+{% block title %}{% translate "Account Settings - HireMe" %}{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/clientprofile/profile.css' %}">
@@ -13,7 +15,7 @@
 <!-- User Profile Section -->
 <div class="user-basic-info">
     <div class="settings-container">
-        <h1 class="title">My Profile</h1>
+        <h1 class="title">{% translate "My Profile" %}</h1>
         
         <!-- Personal Information Section -->
         <div class="personal-info">
@@ -21,17 +23,17 @@
                 <div class="card-header">
                     <div class="header-content">
                         <i class="fas fa-user-circle profile-icon"></i>
-                        <h2>Personal Information</h2>
+                        <h2>{% translate "Personal Information" %}</h2>
                     </div>
                     <a href="{% url 'client:edit-personal-info' %}" class="edit-btn">
-                        <i class="fas fa-pencil-alt"></i> Edit Profile
+                        <i class="fas fa-pencil-alt"></i> {% translate "Edit Profile" %}
                     </a>
                 </div>
                 <div class="card-body">
                     <div class="profile-image-section">
                         <div class="image-container">
                         {% if user.profile_image %}
-                            <img src="{% get_media_prefix %}profile_images/{{ user.profile_image }}" alt="Profile Picture" class="profile-img">
+                            <img src="{% get_media_prefix %}profile_images/{{ user.profile_image }}" alt="{% translate 'Profile Picture' %}" class="profile-img">
                         {% else %}
                             <div class="avatar-placeholder">
                                 <i class="fas fa-user"></i>
@@ -49,8 +51,8 @@
                         <div class="info-item">
                             <div class="info-label">
                                 <i class="fas fa-envelope icon"></i>
-                                <span>Email</span>
-                                <span class="visibility-toggle">Reveal</span>
+                                <span>{% translate "Email" %}</span>
+                                <span class="visibility-toggle">{% translate "Reveal" %}</span>
                             </div>
                             <div class="info-value email-value">
                                 <span id="email">{{ user.email }}</span>
@@ -59,16 +61,16 @@
                         <div class="info-item">
                             <div class="info-label">
                                 <i class="fas fa-phone icon"></i>
-                                <span>Phone</span>
+                                <span>{% translate "Phone" %}</span>
                             </div>
                             <div class="info-value phone-value">
-                                <span id="phone">{{ user.phone_number|default:"Not provided" }}</span>
+                                <span id="phone">{{ user.phone_number|default:"{% translate 'Not provided' %}" }}</span>
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">
                                 <i class="fas fa-user-tag icon"></i>  
-                                <span>Role</span>
+                                <span>{% translate "Role" %}</span>
                             </div>
                             <div class="info-value">
                                 {{ user.role|capfirst }}  
@@ -77,27 +79,27 @@
                         <div class="info-item location-card">
                             <div class="info-label">
                                 <i class="fas fa-map-marker-alt icon"></i>
-                                <span>Location</span>
+                                <span>{% translate "Location" %}</span>
                             </div>
                             <div class="info-value">
                                 <div class="location-detail">
                                     <i class="fas fa-city"></i>
-                                    <span>{{ user.city.name|default:"Not specified" }}</span>
+                                    <span>{{ user.city.name|default:"{% translate 'Not specified' %}" }}</span>
                                 </div>
                                 <div class="location-detail">
                                     <i class="fas fa-globe-asia"></i>
-                                    <span>{{ user.country|default:"Not specified" }}</span>
+                                    <span>{{ user.country|default:"{% translate 'Not specified' %}" }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="info-item full-width">
                             <div class="info-label">
                                 <i class="fas fa-info-circle icon"></i>
-                                <span>About Me</span>
+                                <span>{% translate "About Me" %}</span>
                             </div>
                             <div class="info-value bio-value">
                                 <div class="bio-text" id="bio">
-                                    {{ user.bio|default:"No bio available. Tell others about yourself!" }}
+                                    {{ user.bio|default:"{% translate 'No bio available. Tell others about yourself!' %}" }}
                                 </div>
                             </div>
                         </div>
@@ -105,11 +107,11 @@
                     <div class="footer-section">
                         <div class="member-since">
                             <i class="fas fa-calendar-alt"></i>
-                            Member since {{ user.date_joined|date:"F Y" }}
+                            {% translate "Member since" %} {{ user.date_joined|date:"F Y" }}
                         </div>
                         {% if user.is_verified %}
                             <div class="verified-badge">
-                                <i class="fas fa-check-circle"></i> Verified
+                                <i class="fas fa-check-circle"></i> {% translate "Verified" %}
                             </div>
                         {% endif %}
                     </div>

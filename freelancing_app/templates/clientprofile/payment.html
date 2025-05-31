@@ -2,8 +2,10 @@
 {% load static %}
 {% load custom_filters %}
 {% load number_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}Payment History - HireMe{% endblock %}
+{% block title %}{% translate "Payment History - HireMe" %}{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/clientprofile/sidebar.css' %}">
@@ -15,18 +17,18 @@
 
 <div class="payment-basic-info">
     <div class="settings-container">
-        <h1 class="title">Payment History</h1>
+        <h1 class="title">{% translate "Payment History" %}</h1>
         
         <div class="payment-table-container">
             <table class="payment-table">
                 <thead>
                     <tr>
-                        <th>Transaction ID</th>
-                        <th>Project Name</th>
-                        <th>Total Amount</th>
-                        <th>Payment Date</th>
-                        <th>Freelancer</th>
-                        <th>Status</th>
+                        <th>{% translate "Transaction ID" %}</th>
+                        <th>{% translate "Project Name" %}</th>
+                        <th>{% translate "Total Amount" %}</th>
+                        <th>{% translate "Payment Date" %}</th>
+                        <th>{% translate "Freelancer" %}</th>
+                        <th>{% translate "Status" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +47,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="no-payments">No payments found</td>
+                        <td colspan="7" class="no-payments">{% translate "No payments found" %}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

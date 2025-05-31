@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% load static%}
 {% load socialaccount %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}Sign Up – Get Started with HireMe{% endblock %}
+{% block title %}{% translate "Sign Up – Get Started with HireMe" %}{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/accounts/signup.css' %}">
@@ -16,59 +18,59 @@
     <div class="signup_wrapper">
       <div class="signup_illustration">
         <object type="image/svg+xml" data="{% static 'images/illustrations/signup-illustration.svg' %}" width="280" height="220">
-          <img src="{% static 'images/logo/Logo.png' %}" alt="Signup" width="100">
+          <img src="{% static 'images/logo/Logo.png' %}" alt="{% translate 'Signup' %}" width="100">
         </object>
-        <h2>Create Account</h2>
-        <p>Join our community and start your journey</p>
+        <h2>{% translate "Create Account" %}</h2>
+        <p>{% translate "Join our community and start your journey" %}</p>
       </div>
       <div class="signup-form">
-        <h3>Sign Up for HireMe</h3>
+        <h3>{% translate "Sign Up for HireMe" %}</h3>
         <form action="{% url 'account:signup' %}" method="POST">
           {% csrf_token %}
           <div class="signup-options">
             <div class="signup-option">
               <a href="{% provider_login_url 'google' %}">
-                <img src="{% static 'images/logo/Google.png'%}" alt="Google" />
-                <span>Google</span>
+                <img src="{% static 'images/logo/Google.png'%}" alt="{% translate 'Google' %}" />
+                <span>{% translate "Google" %}</span>
               </a>
             </div>
           </div>
           <p class="signup-separator">
-            <span>or continue with email</span>
+            <span>{% translate "or continue with email" %}</span>
           </p>
           <div class="signup-input-box">
-            <label for="signup-email">Email</label>
+            <label for="signup-email">{% translate "Email" %}</label>
             <div class="input-container">
               <i class="far fa-envelope input-icon"></i>
-              <input type="text" id="signup-email" placeholder="Enter email address" name="emailaddress" value="{{ form_data.email|default:'' }}"/>
+              <input type="text" id="signup-email" placeholder="{% translate 'Enter email address' %}" name="emailaddress" value="{{ form_data.email|default:'' }}"/>
             </div>
           </div>
           <div class="signup-input-box">
-            <label for="signup-username">Username</label>
+            <label for="signup-username">{% translate "Username" %}</label>
             <div class="input-container">
               <i class="far fa-user input-icon"></i>
-              <input type="text" id="signup-username" placeholder="Enter username" name="username" value="{{ form_data.username|default:'' }}"/>
+              <input type="text" id="signup-username" placeholder="{% translate 'Enter username' %}" name="username" value="{{ form_data.username|default:'' }}"/>
             </div>
           </div>
           <div class="signup-input-box">
-            <label for="signup-password">Password</label>
+            <label for="signup-password">{% translate "Password" %}</label>
             <div class="input-container password-container">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="signup-password" placeholder="Enter your password" name="password"/>
-              <button type="button" class="far fa-eye toggle-icon" id="toggleSignupPassword" aria-label="Toggle password visibility"></button>
+              <input type="password" id="signup-password" placeholder="{% translate 'Enter your password' %}" name="password"/>
+              <button type="button" class="far fa-eye toggle-icon" id="toggleSignupPassword" aria-label="{% translate 'Toggle password visibility' %}"></button>
             </div>
           </div>
           <div class="signup-input-box">
-            <label for="signup-confirm-password">Confirm Password</label>
+            <label for="signup-confirm-password">{% translate "Confirm Password" %}</label>
             <div class="input-container password-container">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="signup-confirm-password" placeholder="Confirm your password" name="confirmpassword"/>
-              <button type="button" class="far fa-eye toggle-icon" id="toggleSignupConfirmPassword" aria-label="Toggle password visibility"></button>
+              <input type="password" id="signup-confirm-password" placeholder="{% translate 'Confirm your password' %}" name="confirmpassword"/>
+              <button type="button" class="far fa-eye toggle-icon" id="toggleSignupConfirmPassword" aria-label="{% translate 'Toggle password visibility' %}"></button>
             </div>
           </div>
-          <button type="submit" class="signup-button">Create Account</button>
+          <button type="submit" class="signup-button">{% translate "Create Account" %}</button>
           <p class="signup-login-link">
-            Already have an account? <a href="{% url 'account:login' %}">Sign in</a>
+            {% translate "Already have an account?" %} <a href="{% url 'account:login' %}">{% translate "Sign in" %}</a>
           </p>
         </form> 
       </div>
