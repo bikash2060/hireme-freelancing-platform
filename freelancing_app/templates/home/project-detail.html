@@ -183,61 +183,77 @@
                 </div>
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-comments"></i> Client Reviews (12)
+                        <i class="fas fa-comments"></i> Client Reviews ({{ client_reviews|length }})
                     </h3>
                     <div class="reviews-list">
+                        {% for review in client_reviews %}
                         <div class="review-item">
                             <div class="review-header">
                                 <div class="reviewer-info">
                                     <div class="reviewer-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John Doe">
+                                        {% if review.contract.proposal.freelancer.user.profile_image %}
+                                            <img src="{% get_media_prefix %}profile_images/{{ review.contract.proposal.freelancer.user.profile_image }}" alt="{{ review.contract.proposal.freelancer.user.full_name }}">
+                                        {% else %}
+                                            <i class="fas fa-user"></i>
+                                        {% endif %}
                                     </div>
                                     <div class="reviewer-meta">
-                                        <div class="reviewer-name">John Doe</div>
-                                        <div class="reviewer-project">Mobile App Development</div>
+                                        <div class="reviewer-name">{{ review.contract.proposal.freelancer.user.full_name }}</div>
+                                        <div class="reviewer-project">{{ review.contract.proposal.project.title }}</div>
                                     </div>
                                 </div>
                                 <div class="review-rating">
-                                    <div class="review-stars">★★★★★</div>
-                                    <div class="review-date">2 months ago</div>
+                                    <div class="review-stars">
+                                        {% with ''|center:5 as range %}
+                                        {% for _ in range %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="review-date">{{ review.created_at|timesince }} ago</div>
                                 </div>
                             </div>
                             <div class="review-comment">
-                                <p>Sarah was a great client to work with. She provided clear requirements and was responsive throughout the project. Payments were made on time and she provided valuable feedback that improved the final product.</p>
+                                <p>{{ review.feedback }}</p>
                             </div>
                         </div>
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Emily Chen">
-                                    </div>
-                                    <div class="reviewer-meta">
-                                        <div class="reviewer-name">Emily Chen</div>
-                                        <div class="reviewer-project">Website Redesign</div>
-                                    </div>
-                                </div>
-                                <div class="review-rating">
-                                    <div class="review-stars">★★★★☆</div>
-                                    <div class="review-date">5 months ago</div>
-                                </div>
-                            </div>
-                            <div class="review-comment">
-                                <p>Sarah has a good eye for design and knows what she wants. The project scope changed a couple times but she was fair about adjusting the budget accordingly. Would work with her again.</p>
-                            </div>
+                        {% empty %}
+                        <div class="no-reviews">
+                            <p>No reviews yet.</p>
                         </div>
+                        {% endfor %}
                     </div>
+                    {% if client_reviews.has_other_pages %}
                     <div class="review-pagination">
-                        <div class="pagination-item">
-                            <i class="fas fa-chevron-left"></i>
-                        </div>
-                        <div class="pagination-item active">1</div>
-                        <div class="pagination-item">2</div>
-                        <div class="pagination-item">3</div>
-                        <div class="pagination-item">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
+                        {% if client_reviews.has_previous %}
+                            <a href="?review_page={{ client_reviews.previous_page_number }}" class="pagination-item">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        {% else %}
+                            <span class="pagination-item disabled"><i class="fas fa-chevron-left"></i></span>
+                        {% endif %}
+
+                        {% for i in client_reviews.paginator.page_range %}
+                            {% if client_reviews.number == i %}
+                                <span class="pagination-item active">{{ i }}</span>
+                            {% else %}
+                                <a href="?review_page={{ i }}" class="pagination-item">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if client_reviews.has_next %}
+                            <a href="?review_page={{ client_reviews.next_page_number }}" class="pagination-item">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        {% else %}
+                            <span class="pagination-item disabled"><i class="fas fa-chevron-right"></i></span>
+                        {% endif %}
                     </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="overview-sidebar">
@@ -332,7 +348,7 @@
                         <div class="client-header">
                             <div class="client-avatar">
                                 {% if project.client.user.profile_image %}
-                                    <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Sarah Johnson">
+                                    <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="{{ project.client.user.full_name }}">
                                 {% else %}
                                     <div class="profile-icon">
                                         <i class="fas fa-user"></i>
@@ -370,7 +386,7 @@
                                     <i class="fas fa-star"></i>
                                 </div>
                                 <div class="stat-details">
-                                    <div class="stat-value">{{ project.client.user.rating|default:0 }}</div>
+                                    <div class="stat-value">{{ client_avg_rating|default:"0.0" }}</div>
                                     <div class="stat-label">Average Rating</div>
                                 </div>
                             </div>

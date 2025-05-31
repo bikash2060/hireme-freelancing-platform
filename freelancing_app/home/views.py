@@ -865,7 +865,9 @@ class ProjectDetailView(View):
         - Related skills with levels
         - Attachments
         - Client's project statistics
+        - Client reviews and average rating (paginated)
         """
+        from django.core.paginator import Paginator
         project = Project.objects.prefetch_related(
                 'project_skills__skill',
                 'project_attachments'
@@ -910,6 +912,15 @@ class ProjectDetailView(View):
         shortlisted_count = project.proposals.filter(is_shortlisted=True).count()
         avg_bid_amount = project.proposals.aggregate(avg_amount=Avg('proposed_amount'))['avg_amount'] or 0
         
+        # --- Client Reviews and Average Rating (Paginated) ---
+        contracts = Contract.objects.filter(proposal__project__client=client)
+        client_reviews_qs = Review.objects.filter(contract__in=contracts, reviewer_type=Review.ReviewerType.FREELANCER).select_related('contract__proposal__freelancer__user', 'contract__proposal__project').order_by('-created_at')
+        page_number = request.GET.get('review_page', 1)
+        paginator = Paginator(client_reviews_qs, 5)  # 5 reviews per page
+        client_reviews = paginator.get_page(page_number)
+        client_avg_rating = client_reviews_qs.aggregate(avg=Avg('rating'))['avg'] or 0.0
+        client_avg_rating = round(client_avg_rating, 1)
+        
         similar_projects = self._get_similar_projects(project)
         
         context = {
@@ -923,6 +934,8 @@ class ProjectDetailView(View):
             'similar_projects': similar_projects,
             'shortlisted_count': shortlisted_count,
             'avg_bid_amount': avg_bid_amount,
+            'client_reviews': client_reviews,
+            'client_avg_rating': client_avg_rating,
         }
         return context
     
