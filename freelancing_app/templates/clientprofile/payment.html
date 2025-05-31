@@ -27,7 +27,6 @@
                         <th>Payment Date</th>
                         <th>Freelancer</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,13 +41,6 @@
                             <span class="status-badge {% if payment.status == 'completed' %}completed{% else %}pending{% endif %}">
                                 {{ payment.status|title }}
                             </span>
-                        </td>
-                        <td>
-                            {% if payment.status == 'pending' %}
-                            <a href="{{ payment.workspace_url }}" class="pay-now-btn">Pay Now</a>
-                            {% else %}
-                            <span class="completed-text">Not Available</span>
-                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}
