@@ -201,10 +201,16 @@ class WorkspaceView(BaseContractView):
             
         submissions = workspace.submissions.all()
         
+        # Get reviews for both client and freelancer
+        client_review = contract.reviews.filter(reviewer_type=Review.ReviewerType.CLIENT).first()
+        freelancer_review = contract.reviews.filter(reviewer_type=Review.ReviewerType.FREELANCER).first()
+        
         context = {
             'contract': contract,
             'workspace': workspace,
             'submissions': submissions,
+            'client_review': client_review,
+            'freelancer_review': freelancer_review,
             'active_tab': 'workspace'
         }
         return render(request, self.TEMPLATE_NAME, context)
@@ -420,7 +426,13 @@ class LeaveReviewView(BaseContractView):
             messages.error(request, "Contract not found.")
             return redirect('contract:client_contract_list' if request.user.role == 'client' else 'contract:freelancer_contract_list')
             
-        if hasattr(contract, 'review'):
+        # Check if user has already left a review
+        existing_review = Review.objects.filter(
+            contract=contract,
+            reviewer_type=Review.ReviewerType.CLIENT if request.user.role == 'client' else Review.ReviewerType.FREELANCER
+        ).first()
+        
+        if existing_review:
             messages.info(request, "You've already left a review for this contract.")
             return redirect('contract:workspace', contract_id=contract_id)
             
@@ -437,6 +449,7 @@ class LeaveReviewView(BaseContractView):
             
         review = Review.objects.create(
             contract=contract,
+            reviewer_type=Review.ReviewerType.CLIENT if request.user.role == 'client' else Review.ReviewerType.FREELANCER,
             rating=rating,
             feedback=review_text
         )

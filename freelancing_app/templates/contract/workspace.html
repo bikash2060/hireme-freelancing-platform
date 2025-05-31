@@ -343,10 +343,48 @@
                                 </form>
                             </div>
                             {% endif %}
-    
-                            {% if contract.status == 'completed' and not contract.review %}
-                            <div class="review-section">
-                                <h4><i class="fas fa-star"></i> Leave a Review</h4>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="far fa-folder-open"></i>
+                        </div>
+                        <h3>No Work Submitted Yet</h3>
+                        <p>When work is submitted, it will appear here for review.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            {# Review section: only show once, after all submissions #}
+            {% if contract.status == 'completed' %}
+            <div class="review-section">
+                <h4><i class="fas fa-star"></i> Reviews</h4>
+                <div class="row" style="display: flex; gap: 30px; flex-wrap: wrap;">
+                    {% if user.role == 'client' %}
+                        <!-- Left: Client's review (Your Review) -->
+                        <div class="col" style="flex: 1 1 300px;">
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Your Review</div>
+                            {% if client_review %}
+                                <div class="review-submitted">
+                                    <div class="your-review">
+                                        <div class="review-rating">
+                                            {% with ''|center:5 as range %}
+                                            {% for _ in range %}
+                                                {% if forloop.counter <= client_review.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% endwith %}
+                                        </div>
+                                        <p class="review-text">{{ client_review.feedback }}</p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <!-- Review form for client -->
                                 <form action="{% url 'contract:leave_review' contract.id %}" method="POST">
                                     {% csrf_token %}
                                     <div class="form-group">
@@ -372,21 +410,116 @@
                                         <i class="fas fa-check"></i> Submit Review
                                     </button>
                                 </form>
-                            </div>
                             {% endif %}
                         </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="far fa-folder-open"></i>
+                        <!-- Right: Freelancer's review -->
+                        <div class="col" style="flex: 1 1 300px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Freelancer's Review</div>
+                            {% if freelancer_review %}
+                                <div class="review-submitted">
+                                    <div class="your-review">
+                                        <div class="review-rating">
+                                            {% with ''|center:5 as range %}
+                                            {% for _ in range %}
+                                                {% if forloop.counter <= freelancer_review.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% endwith %}
+                                        </div>
+                                        <p class="review-text">{{ freelancer_review.feedback }}</p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div style="color: #94a3b8; margin-top: 30px; text-align: center;">
+                                    <i class="far fa-comment-dots" style="font-size: 2rem;"></i><br>
+                                    No review yet
+                                </div>
+                            {% endif %}
                         </div>
-                        <h3>No Work Submitted Yet</h3>
-                        <p>When work is submitted, it will appear here for review.</p>
-                    </div>
-                {% endif %}
+                    {% else %}
+                        <!-- Left: Freelancer's review (Your Review) -->
+                        <div class="col" style="flex: 1 1 300px;">
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Your Review</div>
+                            {% if freelancer_review %}
+                                <div class="review-submitted">
+                                    <div class="your-review">
+                                        <div class="review-rating">
+                                            {% with ''|center:5 as range %}
+                                            {% for _ in range %}
+                                                {% if forloop.counter <= freelancer_review.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% endwith %}
+                                        </div>
+                                        <p class="review-text">{{ freelancer_review.feedback }}</p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <!-- Review form for freelancer -->
+                                <form action="{% url 'contract:leave_review' contract.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="rating">Rating</label>
+                                        <div class="rating-stars">
+                                            <input type="radio" id="star5" name="rating" value="5">
+                                            <label for="star5"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star4" name="rating" value="4">
+                                            <label for="star4"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star3" name="rating" value="3">
+                                            <label for="star3"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star2" name="rating" value="2">
+                                            <label for="star2"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star1" name="rating" value="1" checked>
+                                            <label for="star1"><i class="fas fa-star"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="review_text">Review</label>
+                                        <textarea id="review_text" name="review_text" required placeholder="Share your experience working with this client..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-check"></i> Submit Review
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <!-- Right: Client's review -->
+                        <div class="col" style="flex: 1 1 300px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Client's Review</div>
+                            {% if client_review %}
+                                <div class="review-submitted">
+                                    <div class="your-review">
+                                        <div class="review-rating">
+                                            {% with ''|center:5 as range %}
+                                            {% for _ in range %}
+                                                {% if forloop.counter <= client_review.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% endwith %}
+                                        </div>
+                                        <p class="review-text">{{ client_review.feedback }}</p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div style="color: #94a3b8; margin-top: 30px; text-align: center;">
+                                    <i class="far fa-comment-dots" style="font-size: 2rem;"></i><br>
+                                    No review yet
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

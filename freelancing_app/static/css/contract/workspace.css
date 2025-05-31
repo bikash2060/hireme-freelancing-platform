@@ -873,3 +873,118 @@
     text-decoration: underline;
 }
 
+.review-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.review-section h4 {
+    margin-bottom: 20px;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.review-section h4 i {
+    color: #f59e0b;
+}
+
+.review-submitted {
+    padding: 15px;
+    background-color: #f1f5f9;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+.review-submitted p {
+    color: #64748b;
+    margin-bottom: 15px;
+}
+
+.your-review {
+    background-color: white;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+.your-review .review-rating {
+    color: #f59e0b;
+    margin-bottom: 10px;
+}
+
+.your-review .review-text {
+    color: #334155;
+    font-style: italic;
+}
+
+.rating-stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.rating-stars input[type="radio"] {
+    display: none;
+}
+
+.rating-stars label {
+    cursor: pointer;
+    color: #e2e8f0;
+    font-size: 1.5rem;
+    transition: color 0.2s ease;
+}
+
+.rating-stars label:hover,
+.rating-stars label:hover ~ label,
+.rating-stars input[type="radio"]:checked ~ label {
+    color: #f59e0b;
+}
+
+.review-section textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+.review-section textarea:focus {
+    outline: none;
+    border-color: #94a3b8;
+    box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.1);
+}
+
+.review-section .btn-primary {
+    margin-top: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.review-section .btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.review-section .btn-primary i {
+    font-size: 0.9rem;
+}
+
