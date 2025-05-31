@@ -3,6 +3,8 @@
 {% load number_filters %}
 {% load custom_filters %}
 {% load project_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
 {% block title %}{{freelancer.user.full_name}} - HireMe{% endblock %}
 
@@ -129,11 +131,11 @@
                 <div class="section-card skills-card">
                     <div class="skills-header">
                         <h3 class="section-title">
-                            <i class="fas fa-code"></i> Professional Skills
+                            <i class="fas fa-code"></i> {% translate "Professional Skills" %}
                         </h3>
                         <div class="skills-counter">
                             <span class="counter-number">{{freelancer.skills.count}}</span>
-                            <span class="counter-text">Skills</span>
+                            <span class="counter-text">{% translate "Skills" %}</span>
                         </div>
                     </div>
                     <div class="skills-list">
@@ -168,14 +170,14 @@
                             </div>
                         {% empty %}
                             <div class="no-services">
-                                <p>No services available yet.</p>
+                                <p>{% translate "No services available yet." %}</p>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-briefcase"></i> Work Experience
+                        <i class="fas fa-briefcase"></i> {% translate "Work Experience" %}
                     </h3>
                     <div class="experience-container">
                         <div class="experience-timeline">
@@ -231,7 +233,7 @@
                 </div>
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-graduation-cap"></i> Education
+                        <i class="fas fa-graduation-cap"></i> {% translate "Education" %}
                     </h3>
                     <div class="education-container">
                         <div class="education-timeline">
@@ -262,7 +264,7 @@
                                 </div>
                             {% empty %}
                                 <div class="no-education">
-                                    <p>No education records available yet.</p>
+                                    <p>{% translate "No education records available yet." %}</p>
                                 </div>
                             {% endfor %}
                         </div>
@@ -270,7 +272,7 @@
                 </div>
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-language"></i> Languages
+                        <i class="fas fa-language"></i> {% translate "Languages" %}
                     </h3>
                     <div class="languages-list">
                         {% for lang in freelancer_languages %}
@@ -353,12 +355,12 @@
                                 </div>
                             </div>
                             <div class="review-comment">
-                                <p>{{ review.feedback }}</p>
+                                <p>{% translate review.feedback %}</p>
                             </div>
                         </div>
                         {% empty %}
                         <div class="no-reviews">
-                            <p>No reviews yet.</p>
+                            <p>{% translate "No reviews yet." %}</p>
                         </div>
                         {% endfor %}
                     </div>
@@ -367,31 +369,31 @@
             <div class="overview-sidebar">
                 <div class="sidebar-card">
                     <h3 class="card-title">
-                        <i class="fas fa-chart-line"></i> Profile Stats
+                        <i class="fas fa-chart-line"></i> {% translate "Profile Stats" %}
                     </h3>
                     <div class="profile-stats">
                         <div class="stat-item">
                             <div class="stat-value">{{freelancer.completed_projects|default:"0"}}</div>
-                            <div class="stat-label">Completed Projects</div>
+                            <div class="stat-label">{% translate "Completed Projects" %}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">{{freelancer.review_stats.average_rating|default:"0.0"|floatformat:1}}</div>
-                            <div class="stat-label">Average Rating</div>
+                            <div class="stat-label">{% translate "Average Rating" %}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">{{freelancer.years_of_experience|default:"0"}}+</div>
-                            <div class="stat-label">Years Experience</div>
+                            <div class="stat-label">{% translate "Years Experience" %}</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-value">{{freelancer.review_stats.on_time_delivery|default:"0"}}%</div>
-                            <div class="stat-label">On-time Delivery</div>
+                            <div class="stat-label">{% translate "On-time Delivery" %}</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="sidebar-card">
                     <h3 class="card-title">
-                        <i class="fas fa-id-card"></i> Professional Info
+                        <i class="fas fa-id-card"></i> {% translate "Professional Info" %}
                     </h3>
                     <div class="profile-info-list">
                         <div class="info-item">
@@ -399,7 +401,7 @@
                                 <i class="fas fa-medal"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Expertise Level</div>
+                                <div class="info-label">{% translate "Expertise Level" %}</div>
                                 <div class="info-value">{{freelancer.get_expertise_level_display|default:"N/A"}}</div>
                             </div>
                         </div>
@@ -408,7 +410,7 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Availability</div>
+                                <div class="info-label">{% translate "Availability" %}</div>
                                 <div class="info-value">{{freelancer.get_availability_display|default:"N/A"}}</div>
                             </div>
                         </div>
@@ -417,7 +419,7 @@
                                 <i class="fas fa-calendar-check"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Preferred Project Duration</div>
+                                <div class="info-label">{% translate "Preferred Project Duration" %}</div>
                                 <div class="info-value">{{freelancer.get_preferred_project_duration_display|default:"N/A"}}</div>
                             </div>
                         </div>
@@ -426,7 +428,7 @@
                                 <i class="fas fa-comments"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Communication Preference</div>
+                                <div class="info-label">{% translate "Communication Preference" %}</div>
                                 <div class="info-value">{{freelancer.get_communication_preference_display|default:"N/A"}}</div>
                             </div>
                         </div>
@@ -435,7 +437,7 @@
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Location</div>
+                                <div class="info-label">{% translate "Location" %}</div>
                                 <div class="info-value">{{freelancer.user.city|default:"N/A"}}</div>
                             </div>
                         </div>
@@ -444,7 +446,7 @@
                                 <i class="fas fa-seedling"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Badge</div>
+                                <div class="info-label">{% translate "Badge" %}</div>
                                 <div class="info-value">{{freelancer.get_badge_display|default:"N/A"}}</div>
                             </div>
                         </div>
@@ -453,7 +455,7 @@
 
                 <div class="sidebar-card">
                     <h3 class="card-title">
-                        <i class="fas fa-link"></i> Profile Links
+                        <i class="fas fa-link"></i> {% translate "Profile Links" %}
                     </h3>
                     <div class="profile-links">
                         {% if freelancer.github_link %}
