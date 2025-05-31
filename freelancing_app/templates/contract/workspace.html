@@ -39,7 +39,19 @@
                         </ol>
                     </nav>
                 </div>
-                <h1>Workspace: <span>{{ contract.proposal.project.title }}</span></h1>
+                <h1>Workspace: 
+                    <span>
+                        {% if user.role == 'client' %}
+                            <a href="{% url 'project:client-project-detail' contract.proposal.project.id %}" class="project-title-link" target="_blank">
+                                {{ contract.proposal.project.title }}
+                            </a>
+                        {% else %}
+                            <a href="{% url 'home:project-detail' contract.proposal.project.id %}" class="project-title-link" target="_blank">
+                                {{ contract.proposal.project.title }}
+                            </a>
+                        {% endif %}
+                    </span>
+                </h1>
                 <p class="project-description">{{ contract.proposal.project.description|truncatechars:120 }}</p>
             </div>
 
@@ -116,37 +128,80 @@
     
         <div class="workspace-sections">
             {% if user.role == 'freelancer' and contract.status != 'completed' %}
-            <div class="work-submission-section card">
-                <div class="section-header">
-                    <h2><i class="fas fa-cloud-upload-alt"></i> Submit Work</h2>
-                    <p>Upload your completed work for client review</p>
-                </div>
-                <form action="{% url 'contract:submit_work' contract.id %}" method="POST" enctype="multipart/form-data" class="submission-form">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="description">Description of Work</label>
-                        <textarea id="description" name="description" required placeholder="Describe the work you've completed..."></textarea>
-                    </div>
-                    <div class="form-group file-upload">
-                        <label for="attachment">Attach Files</label>
-                        <div class="upload-area" id="uploadArea">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <p>Drag & drop files here or click to browse</p>
-                            <input type="file" id="attachment" name="attachment" required>
+                {% with last_submission=submissions|first %}
+                    {% if not submissions or last_submission.status != 'approved' and last_submission.status != 'final_submitted' %}
+                    <div class="work-submission-section card">
+                        <div class="section-header">
+                            <h2><i class="fas fa-cloud-upload-alt"></i> Submit Work</h2>
+                            <p>Upload your completed work for client review</p>
                         </div>
-                        <div class="file-preview" id="filePreview"></div>
+                        <form action="{% url 'contract:submit_work' contract.id %}" method="POST" enctype="multipart/form-data" class="submission-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="description">Description of Work</label>
+                                <textarea id="description" name="description" required placeholder="Describe the work you've completed..."></textarea>
+                            </div>
+                            <div class="form-group file-upload">
+                                <label for="attachment">Attach Files</label>
+                                <div class="upload-area" id="uploadArea">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Drag & drop files here or click to browse</p>
+                                    <input type="file" id="attachment" name="attachment" required>
+                                </div>
+                                <div class="file-preview" id="filePreview"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Submit Work
+                            </button>
+                        </form>
                     </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Submit Work
-                    </button>
-                </form>
-            </div>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
+    
+            {% if user.role == 'client' %}
+                {% with last_submission=submissions|first %}
+                    {% if submissions and last_submission.status == 'approved' and last_submission.status != 'final_submitted' %}
+                    <div class="waiting-notification card">
+                        <div class="section-header">
+                            <h2><i class="fas fa-clock"></i> Waiting for Final Submission</h2>
+                            <p>The freelancer is preparing the final work submission</p>
+                        </div>
+                        <div class="notification-content">
+                            <div class="notification-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="notification-text">
+                                <p>The work has been approved and we're waiting for the freelancer to submit the final version.</p>
+                                <p class="notification-subtext">You'll be notified when the final submission is ready for review.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endwith %}
             {% endif %}
     
             <div class="submissions-section card">
                 <div class="section-header">
-                    <h2><i class="fas fa-tasks"></i> Work Submissions</h2>
-                    <p>Track all submitted work and client feedback</p>
+                    <div class="section-header-content">
+                        <h2><i class="fas fa-tasks"></i> Work Submissions</h2>
+                        <p>Track all submitted work and client feedback</p>
+                    </div>
+                    {% with last_submission=submissions|first %}
+                        {% if last_submission.status == 'final_submitted' %}
+                            {% if contract.status == 'completed' %}
+                                <div class="payment-status completed">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Payment Completed</span>
+                                </div>
+                            {% else %}
+                                <div class="payment-status pending">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Pending Payment</span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
                 </div>
                 
                 {% if submissions %}
@@ -158,7 +213,21 @@
                                     <h3>Submission #{{ forloop.counter }}</h3>
                                     <div class="submission-meta">
                                         <span class="submission-date"><i class="far fa-clock"></i> {{ submission.created_at }}</span>
-                                        <span class="submission-status {{ submission.status }}">{{ submission.status|title }}</span>
+                                        <span class="submission-status {{ submission.status }}">
+                                            {% if submission.status == 'final_submitted' %}
+                                                Final Submitted
+                                            {% elif submission.status == 'submitted' %}
+                                                Submitted
+                                            {% elif submission.status == 'approved' %}
+                                                Approved
+                                            {% elif submission.status == 'rejected' %}
+                                                Rejected
+                                            {% elif submission.status == 'completed' %}
+                                                Completed
+                                            {% else %}
+                                                {{ submission.status|title }}
+                                            {% endif %}
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="submission-actions">

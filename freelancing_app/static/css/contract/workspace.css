@@ -204,6 +204,13 @@
 
 .workspace-container .section-header {
     margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.workspace-container .section-header-content {
+    flex: 1;
 }
 
 .workspace-container .section-header h2 {
@@ -224,6 +231,30 @@
     color: #64748b;
     font-size: 15px;
     margin: 0;
+}
+
+.workspace-container .payment-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.workspace-container .payment-status i {
+    font-size: 16px;
+}
+
+.workspace-container .payment-status.completed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.workspace-container .payment-status.pending {
+    background: #fef3c7;
+    color: #92400e;
 }
 
 .workspace-container .submission-form {
@@ -770,5 +801,75 @@
 
 .btn-chat:hover i {
     transform: scale(1.1);
+}
+
+.workspace-container .waiting-notification {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid #e2e8f0;
+}
+
+.workspace-container .waiting-notification .section-header {
+    margin-bottom: 20px;
+}
+
+.workspace-container .waiting-notification .section-header h2 {
+    color: #334155;
+}
+
+.workspace-container .waiting-notification .section-header h2 i {
+    color: #3b82f6;
+}
+
+.workspace-container .waiting-notification .notification-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.workspace-container .waiting-notification .notification-icon {
+    width: 60px;
+    height: 60px;
+    background: #f0f9ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.workspace-container .waiting-notification .notification-icon i {
+    font-size: 24px;
+    color: #3b82f6;
+}
+
+.workspace-container .waiting-notification .notification-text {
+    flex: 1;
+}
+
+.workspace-container .waiting-notification .notification-text p {
+    margin: 0;
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.workspace-container .waiting-notification .notification-text .notification-subtext {
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.workspace-container .project-title-link {
+    color: #3b82f6;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.workspace-container .project-title-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
 }
 
