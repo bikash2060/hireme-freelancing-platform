@@ -20,6 +20,14 @@
                     <span class="navlink">Change Password</span>
                 </a>
             </li>
+            <li class="item">
+                <a href="{% url 'freelancer:transactions' %}" class="nav_link {% if '/transactions/' in request.path %}active{% endif %}">
+                    <span class="navlink_icon">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </span>
+                    <span class="navlink">Payment History</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

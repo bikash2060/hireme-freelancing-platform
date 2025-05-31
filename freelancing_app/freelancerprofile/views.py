@@ -14,6 +14,7 @@ from itertools import chain
 from .models import *
 from .utils import *
 import os
+from contract.models import Transaction
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -944,3 +945,77 @@ class PasswordChangeView(BaseFreelancerView):
             print(f"[PasswordChangeView POST Error]: {e}")
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.EDIT_URL)
+
+
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: FreelancerTransactionsView
+# Description: Fetches both pending and completed transactions for the logged-in freelancer
+# Tested On: 2025-04-25
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class FreelancerTransactionsView(BaseFreelancerView):
+    """
+    - Fetches both pending and completed transactions for the logged-in freelancer
+    - Returns transaction details including transaction ID, project name, payment date, amount, and client name
+    """
+    TEMPLATE_NAME = 'freelancerprofile/payment.html'
+
+    def get(self, request):
+        try:
+            freelancer = self.get_freelancer(request)
+            
+            # Get completed transactions
+            completed_transactions = Transaction.objects.filter(
+                contract__proposal__freelancer=freelancer,
+                status=Transaction.Status.COMPLETED
+            ).select_related(
+                'contract__proposal__project__client__user'
+            ).order_by('-payment_date')
+            
+            # Get pending transactions where freelancer has submitted final work
+            pending_transactions = Transaction.objects.filter(
+                contract__proposal__freelancer=freelancer,
+                status=Transaction.Status.PENDING,
+                contract__workspace__submissions__status='final_submitted'
+            ).select_related(
+                'contract__proposal__project__client__user'
+            ).order_by('-payment_date')
+            
+            # Prepare transaction data
+            transaction_list = []
+            
+            # Add completed transactions
+            for transaction in completed_transactions:
+                transaction_list.append({
+                    'transaction_id': f"TRX-{transaction.id:06d}",
+                    'project_name': transaction.contract.proposal.project.title,
+                    'amount': transaction.amount,
+                    'payment_date': transaction.payment_date,
+                    'client_name': transaction.contract.proposal.project.client.user.full_name,
+                    'status': 'completed',
+                    'workspace_url': f"/workspace/{transaction.contract.workspace.id}/"
+                })
+            
+            # Add pending transactions
+            for transaction in pending_transactions:
+                transaction_list.append({
+                    'transaction_id': f"TRX-{transaction.id:06d}",
+                    'project_name': transaction.contract.proposal.project.title,
+                    'amount': transaction.amount,
+                    'payment_date': transaction.payment_date,
+                    'client_name': transaction.contract.proposal.project.client.user.full_name,
+                    'status': 'pending',
+                    'workspace_url': f"/workspace/{transaction.contract.workspace.id}/"
+                })
+            
+            return render(request, self.TEMPLATE_NAME, {
+                'payments': transaction_list
+            })
+            
+        except Exception as e:
+            print(f"[FreelancerTransactionsView Error]: {e}")
+            messages.error(request, 'Failed to load transactions. Please try again later.')
+            return redirect(self.PROFILE_URL)
+    

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Payment History - HireMe{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'css/freelancerprofile/payment.css' %}">
+{% endblock %}
+
+{% block content %}
+{% include 'freelancerprofile/sidebar.html' %}
+
+<div class="payment-basic-info">
+    <div class="settings-container">
+        <h1 class="title">Payment History</h1>
+        
+        <div class="payment-table-container">
+            <table class="payment-table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Project Name</th>
+                        <th>Total Amount</th>
+                        <th>Payment Date</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td class="transaction-id">{{ payment.transaction_id }}</td>
+                        <td>{{ payment.project_name }}</td>
+                        <td>${{ payment.amount }}</td>
+                        <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+                        <td>{{ payment.client_name }}</td>
+                        <td>
+                            <span class="status-badge {% if payment.status == 'completed' %}completed{% else %}pending{% endif %}">
+                                {{ payment.status|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ payment.workspace_url }}" class="view-workspace-btn {% if payment.status == 'completed' %}view-only{% endif %}">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="no-payments">No payments found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}{% endblock  %}
+
+{% block js_files %}
+{% endblock %}

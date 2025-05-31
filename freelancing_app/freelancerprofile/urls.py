@@ -18,4 +18,5 @@ urlpatterns = [
     path('my-profile/links/', EditLinksView.as_view(), name='edit-links'),
     path('change-password/', PasswordChangeView.as_view(), name='change-password'),    
     path('locations/cities/', GetCitiesByCountryView.as_view(), name='get-cities'),
+    path('transactions/', FreelancerTransactionsView.as_view(), name='transactions'),
 ]
