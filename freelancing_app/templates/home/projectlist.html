@@ -3,6 +3,8 @@
 {% load project_filters %}
 {% load number_filters %}
 {% load custom_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
 {% block title %}Find Projects - HireMe{% endblock %}
 
@@ -23,17 +25,17 @@
                 </svg>
             </div>
             <div class="hero-text">
-                <h1 class="title">Discover Projects That Match Your Skills</h1>
-                <p class="subtitle">Browse hundreds of new job opportunities posted daily by real clients. Find freelance projects across development, design, content writing, and more.</p>
+                <h1 class="title">{% translate "Discover Projects That Match Your Skills" %}</h1>
+                <p class="subtitle">{% translate "Browse hundreds of new job opportunities posted daily by real clients. Find freelance projects across development, design, content writing, and more." %}</p>
 
                 <div class="social-proof">
                     <div class="trust-badge">
                         <i class="fas fa-briefcase"></i>
-                        <span>Thousands of new projects weekly</span>
+                        <span>{% translate "Thousands of new projects weekly" %}</span>
                     </div>
                     <div class="trust-badge">
                         <i class="fas fa-filter"></i>
-                        <span>Smart filters to find your ideal match</span>
+                        <span>{% translate "Smart filters to find your ideal match" %}</span>
                     </div>
                 </div>
             </div>
@@ -297,8 +299,8 @@
                                 <div class="skills-section">
                                     <div class="skills-header">
                                         <i class="fas fa-tools"></i>
-                                        <span class="sub-title">Key Skills</span>
-                                        <span class="skills-count">{{ project.project_skills.count }} skills</span>
+                                        <span class="sub-title">{% translate "Key Skills" %}</span>
+                                        <span class="skills-count">{{ project.project_skills.count }} {% translate "skills" %}</span>
                                     </div>
                                     <div class="skills-list-container">
                                         <div class="skills-list">
@@ -314,20 +316,20 @@
                                 <div class="description-section">
                                     <div class="description-header">
                                         <i class="fas fa-align-left"></i>
-                                        <span class="sub-title">Project Description</span>
+                                        <span class="sub-title">{% translate "Project Description" %}</span>
                                     </div>
                                     <div class="description-content">
-                                        {{ project.description }}
+                                        {% translate project.description %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-buttons">
                             <a href="{% url 'proposal:submit-proposal' project.id %}" class="send-proposal-btn">
-                                <i class="fas fa-paper-plane"></i> Send Proposal
+                                <i class="fas fa-paper-plane"></i> {% translate "Send Proposal" %}
                             </a>
                             <a href="{% url 'home:project-detail' project.id %}" class="view-details-btn">
-                                <i class="fas fa-eye"></i> View Details
+                                <i class="fas fa-eye"></i> {% translate "View Details" %}
                             </a>
                         </div>
                     </div>
