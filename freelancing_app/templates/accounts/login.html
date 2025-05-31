@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% load socialaccount %}
+{% load i18n %}
+{% load translation_tags %}
+
 
 {% block title %}Welcome Back – Sign In to HireMe{% endblock %}
 
@@ -18,12 +21,12 @@
         <object type="image/svg+xml" data="{% static 'images/illustrations/login-illustration.svg' %}" width="280" height="220">
           <img src="{% static 'images/logo/Logo.png' %}" alt="Login" width="100">
         </object>
-        <h2>Welcome Back!</h2>
-        <p>Enter your credentials to access your account</p>
+        <h2>{% translate "Welcome Back"%}!</h2>
+        <p>{% translate "Enter your credentials to access your account" %}</p>
       </div>
       
       <div class="login_form">
-        <h3>Sign In to HireMe</h3>
+        <h3>{% translate "Sign In to HireMe" %}</h3>
         <form action="{% url 'account:login' %}" method="POST">
           {% csrf_token %}
           <div class="login_option">
