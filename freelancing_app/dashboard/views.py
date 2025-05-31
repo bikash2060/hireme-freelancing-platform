@@ -36,7 +36,11 @@ class ClientDashboardView(CustomLoginRequiredMixin, View):
             in_development = active_projects.filter(status='in_progress').count()
             in_review = active_projects.filter(status='hiring').count()
             
-            active_projects_data = active_projects.select_related(
+            # Get only in_progress projects for the active projects section
+            active_projects_data = Project.objects.filter(
+                client=client, 
+                status='in_progress'
+            ).select_related(
                 'category'
             ).prefetch_related(
                 'proposals__freelancer__user',

@@ -33,7 +33,7 @@
                 <div class="stat-info">
                     <h4>Project Status</h4>
                     <p class="stat-number">{{ active_projects }} Active</p>
-                    <p class="stat-subtext">{{ in_development }} in development, {{ in_review }} in review</p>
+                    <p class="stat-subtext">{{ in_development }} in development</p>
                     <a href="{% url 'contract:client_contract_list' %}" class="stat-link">Manage Projects</a>
                 </div>
             </div>
@@ -132,40 +132,7 @@
                 <h2 class="section-title">Your Active Projects</h2>
                 <p class="section-subtitle">Monitor project progress and deadlines</p>
             </div>
-            {% comment %} <div class="view-toggle-actions">
-                <div class="projects-filter-sort">
-                    <div class="filter-container">
-                        <select class="filter-dropdown" id="status-filter">
-                            <option value="all">All Projects</option>
-                            <option value="not-started">Not Started</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="pending-review">Pending Review</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
-                    </div>
-                    <div class="sort-container">
-                        <select class="sort-dropdown" id="projects-sort">
-                            <option value="date-desc">Due Date (Newest First)</option>
-                            <option value="date-asc">Due Date (Oldest First)</option>
-                            <option value="start-desc">Start Date (Newest First)</option>
-                            <option value="start-asc">Start Date (Oldest First)</option>
-                            <option value="progress-asc">Progress (Low to High)</option>
-                            <option value="progress-desc">Progress (High to Low)</option>
-                            <option value="budget-desc">Budget (High to Low)</option>
-                            <option value="budget-asc">Budget (Low to High)</option>
-                            <option value="name-asc">Project Name (A-Z)</option>
-                            <option value="name-desc">Project Name (Z-A)</option>
-                        </select>
-                    </div>
-                </div>
-            </div> {% endcomment %}
         </div>
-        
-        {% comment %} <div class="projects-summary">
-            <p><span id="project-count">{{ active_projects_data|length }}</span> projects displayed (out of <span id="total-projects">{{ total_projects }}</span>)</p>
-            <button class="clear-filters-btn" id="clear-filters">Clear Filters</button>
-        </div> {% endcomment %}
         
         {% if active_projects_data %}
             <div class="projects-grid-view" id="projects-container">
@@ -286,30 +253,30 @@
         {% endif %}
         
         {% if active_projects_data %}
-        <div class="pagination">
-            <button class="pagination-btn" disabled>
-                <i class="fas fa-chevron-left"></i> Previous
-            </button>
-            <div class="page-numbers">
-                <button class="page-number active">1</button>
-                {% if total_projects > 6 %}
-                    <button class="page-number">2</button>
-                    {% if total_projects > 12 %}
-                        <button class="page-number">3</button>
-                        <span class="page-ellipsis">...</span>
+            <div class="pagination">
+                <button class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers">
+                    <button class="page-number active">1</button>
+                    {% if total_projects > 6 %}
+                        <button class="page-number">2</button>
+                        {% if total_projects > 12 %}
+                            <button class="page-number">3</button>
+                            <span class="page-ellipsis">...</span>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
+                </div>
+                <button class="pagination-btn" {% if total_projects <= 6 %}disabled{% endif %}>
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
-            <button class="pagination-btn" {% if total_projects <= 6 %}disabled{% endif %}>
-                Next <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-        
-        <div class="view-all-container">
-            <a href="{% url 'contract:client_contract_list' %}" class="view-all-link">
-                View All Projects <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
+            
+            <div class="view-all-container">
+                <a href="{% url 'contract:client_contract_list' %}" class="view-all-link">
+                    View All Projects <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
         {% endif %}
     </div>
 </div>
@@ -330,12 +297,15 @@
                     <div class="card-icon">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
-                    <h3>Total Spending</h3>
+                    <h3>Monthly Spending</h3>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">Rs {{ total_spent|floatformat:2|intcomma }}</div>
+                    <div class="progress-value">Rs {{ current_month_spending|floatformat:2|intcomma }}</div>
                     <div class="progress-stats">
-                        <span class="progress-percent">This Month: Rs {{ current_month_spending|floatformat:2|intcomma }}</span>
+                        <span class="progress-percent {% if spending_trend > 0 %}positive{% else %}negative{% endif %}">
+                            <i class="fas {% if spending_trend > 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
+                            {{ spending_trend|floatformat:1 }}% vs last month
+                        </span>
                     </div>
                 </div>
             </div>
@@ -350,7 +320,27 @@
                 <div class="card-body">
                     <div class="progress-value">{{ active_projects }}</div>
                     <div class="progress-stats">
-                        <span class="progress-percent">{{ in_development }} in development, {{ in_review }} in review</span>
+                        <span class="progress-percent">
+                            {{ in_development }} in development
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-card freelancers">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Active Freelancers</h3>
+                </div>
+                <div class="card-body">
+                    <div class="progress-value">{{ current_freelancers }}</div>
+                    <div class="progress-stats">
+                        <span class="progress-percent {% if freelancers_trend > 0 %}positive{% else %}negative{% endif %}">
+                            <i class="fas {% if freelancers_trend > 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
+                            {{ freelancers_trend|floatformat:1 }}% vs last month
+                        </span>
                     </div>
                 </div>
             </div>
@@ -365,7 +355,9 @@
                 <div class="card-body">
                     <div class="progress-value">{{ completed_projects }}</div>
                     <div class="progress-stats">
-                        <span class="progress-percent">Total Value: Rs {{ total_spent|floatformat:2|intcomma }}</span>
+                        <span class="progress-percent">
+                            Total Value: Rs {{ total_spent|floatformat:2|intcomma }}
+                        </span>
                     </div>
                 </div>
             </div>
