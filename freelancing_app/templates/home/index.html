@@ -16,27 +16,27 @@
     <div class="container">
         <div class="hero-section-container">
             <div class="left-section">
-                <div class="tagline">{% trans "Nepal's Premier Freelance Network" %}</div>
-                <h1 class="title">{% trans "Nepal's Brightest Minds, One Click Away" %}</h1>
-                <p class="subtitle">{% trans "Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee." %}</p>
+                <div class="tagline">Nepal's Premier Freelance Network</div>
+                <h1 class="title">Nepal's Brightest Minds, One Click Away</h1>
+                <p class="subtitle">Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee.</p>
                 
                 <div class="benefits">
 
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-user-check"></i></div>
-                        <span>{% trans "Verified Experts" %}</span>
+                        <span>Verified Experts</span>
                     </div>
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-shield-alt"></i></div>
-                        <span>{% trans "Secure Payments" %}</span>
+                        <span>Secure Payments</span>
                     </div>
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-clock"></i></div>
-                        <span>{% trans "Fast Delivery" %}</span>
+                        <span>Fast Delivery</span>
                     </div>
                     <div class="benefit-item">
                         <div class="check-icon"><i class="fas fa-headset"></i></div>
-                        <span>{% trans "24/7 Support" %}</span>
+                        <span>24/7 Support</span>
                     </div>
 
                 </div>
@@ -44,20 +44,20 @@
                 <div class="social-proof">
                     <div class="stat">
                         <div class="stat-number" data-count="{{ verified_freelancers|default:0 }}">{{ verified_freelancers|default:0 }}</div>
-                        <div class="stat-label">{% trans "Verified Freelancers" %}</div>
+                        <div class="stat-label">Verified Freelancers</div>
                     </div>
                 
                     <div class="stat-divider"></div>
                     <div class="stat">
                         <div class="stat-number" data-count="{{ completed_projects|default:0 }}">{{ completed_projects|default:0 }}</div>
-                        <div class="stat-label">{% trans "Completed Projects" %}</div>
+                        <div class="stat-label">Completed Projects</div>
                     </div>
                 
                     <div class="stat-divider"></div>
                 
                     <div class="stat">
                         <div class="stat-number" data-count="{{ client_satisfaction|default:0.0|floatformat:1 }}">{{ client_satisfaction|default:0.0|floatformat:1 }}</div>
-                        <div class="stat-label">{% trans "Client Satisfaction" %}</div>
+                        <div class="stat-label">Client Satisfaction</div>
                     </div>
                 </div>
                 
@@ -65,10 +65,10 @@
 
                     <div class="cta-buttons">
                         <a href="{% url 'account:login' %}" class="hire-button">
-                            <span>{% trans "Get Started" %}</span>
+                            <span>Get Started</span>
                         </a>
                         <a href="#how-it-works" class="learn-more">
-                            {% trans "See How It Works" %}
+                            See How It Works
                             <span class="arrow-icon"><i class="fas fa-arrow-right"></i></span>
                         </a>
                     </div>

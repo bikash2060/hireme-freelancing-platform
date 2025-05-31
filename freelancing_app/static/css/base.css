@@ -20,61 +20,6 @@ body {
     padding: 10px;
 }
 
-/* Nepali Language Specific Styles */
-html[lang="ne"] body {
-    font-family: 'Mukti', 'Poppins', sans-serif;
-}
-
-html[lang="ne"] * {
-    font-family: 'Mukti', 'Poppins', sans-serif;
-}
-
-/* Ensure consistent font sizes for Nepali text */
-html[lang="ne"] h1, 
-html[lang="ne"] h2, 
-html[lang="ne"] h3, 
-html[lang="ne"] h4, 
-html[lang="ne"] h5, 
-html[lang="ne"] h6,
-html[lang="ne"] p,
-html[lang="ne"] span,
-html[lang="ne"] a,
-html[lang="ne"] li,
-html[lang="ne"] button,
-html[lang="ne"] input,
-html[lang="ne"] textarea,
-html[lang="ne"] select,
-html[lang="ne"] label {
-    font-family: 'Mukti', 'Poppins', sans-serif;
-    line-height: 1.5;
-}
-
-/* Adjust line height for Nepali text to prevent overlapping */
-html[lang="ne"] p {
-    line-height: 1.6;
-}
-
-/* Ensure proper spacing for Nepali text in containers */
-html[lang="ne"] .container {
-    letter-spacing: 0.02em;
-}
-
-/* Maintain consistent button text size */
-html[lang="ne"] button {
-    font-size: inherit;
-}
-
-/* Ensure proper input field text size */
-html[lang="ne"] input,
-html[lang="ne"] textarea {
-    font-size: inherit;
-}
-
-/* Maintain consistent navigation text size */
-html[lang="ne"] .navbar .links .nav-link {
-    font-size: 0.95rem;
-}
-
 /* Navigation Section */
 .navbar {
     position: fixed; 
