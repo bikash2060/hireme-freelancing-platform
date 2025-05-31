@@ -36,59 +36,6 @@
 <!-- Contract Section -->
 <div class="contract-section">
     <div class="container">
-        <div class="filters-container">
-            <div class="search-filter">
-                <div class="search-box">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="contract-search" placeholder="Search contracts...">
-                </div>
-            </div>
-            
-            <div class="filter-options">
-                <div class="filter-dropdown">
-                    <button class="filter-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-icon">
-                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                        </svg>
-                        Filter
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="dropdown-content">
-                        <div class="dropdown-header">Contract Status</div>
-                        <label><input type="checkbox" value="all" checked> All Contracts</label>
-                        <label><input type="checkbox" value="active"> Active</label>
-                        <label><input type="checkbox" value="completed"> Completed</label>
-                        <label><input type="checkbox" value="cancelled"> Cancelled</label>
-                    </div>
-                </div>
-                
-                <div class="filter-dropdown">
-                    <button class="filter-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-icon">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                            <line x1="8" y1="21" x2="16" y2="21"></line>
-                            <line x1="12" y1="17" x2="12" y2="21"></line>
-                        </svg>
-                        Sort
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="dropdown-content">
-                        <div class="dropdown-header">Sort Options</div>
-                        <label><input type="radio" name="sort" value="newest" checked> Newest First</label>
-                        <label><input type="radio" name="sort" value="oldest"> Oldest First</label>
-                        <label><input type="radio" name="sort" value="amount-high"> Amount (High to Low)</label>
-                        <label><input type="radio" name="sort" value="amount-low"> Amount (Low to High)</label>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="contracts-container">
             {% if contracts %}

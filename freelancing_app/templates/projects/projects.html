@@ -339,25 +339,12 @@
                                     <i class="fas fa-users"></i> Review Proposals
                                 </a>
                             {% elif project.status == 'in_progress' %}
-                                <a href="" class="btn-action secondary-btn">
-                                    <i class="fas fa-tasks"></i> Milestones
-                                </a>
-                                <a href="" class="btn-action primary-btn">
+                                <a href="{% url 'contract:workspace' project.proposals.get.contract.id %}" class="btn-action primary-btn">
                                     <i class="fas fa-cog"></i> Manage Project
                                 </a>
-                            {% elif project.status == 'completed' %}
-                                <a href="" class="btn-action secondary-btn">
-                                    <i class="fas fa-star"></i> Leave Review
-                                </a>
-                                <a href="" class="btn-action primary-btn">
-                                    <i class="fas fa-check-circle"></i> View Details
-                                </a>
-                            {% elif project.status == 'cancelled' %}
-                                <a href="" class="btn-action secondary-btn">
+                            {% else %}
+                                <a href="{% url 'project:client-project-detail' project.id %}" class="btn-action secondary-btn">
                                     <i class="fas fa-info-circle"></i> View Details
-                                </a>
-                                <a href="" class="btn-action outline-btn">
-                                    <i class="fas fa-redo"></i> Repost Project
                                 </a>
                             {% endif %}
                         </div>
