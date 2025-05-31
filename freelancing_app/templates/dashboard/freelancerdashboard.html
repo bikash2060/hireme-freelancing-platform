@@ -19,7 +19,7 @@
                 <p class="welcome-text">Here's an overview of your freelancing work</p>
             </div>
             <div class="hero-actions">
-                <a href="" class="browse-projects-btn">
+                <a href="{% url 'home:projects' %}" class="browse-projects-btn">
                     <i class="fas fa-briefcase"></i> Browse New Projects
                 </a>
             </div>
@@ -31,9 +31,8 @@
                 </div>
                 <div class="stat-info">
                     <h4>Work Performance</h4>
-                    <p class="stat-number">0 Average</p>
-                    <p class="stat-subtext">From 0 completed projects</p>
-                    <a href="" class="stat-link">View all reviews</a>
+                    <p class="stat-number">{{ average_rating }} Average</p>
+                    <p class="stat-subtext">From {{ total_completed }} completed projects</p>
                 </div>
             </div>
             
@@ -43,9 +42,9 @@
                 </div>
                 <div class="stat-info">
                     <h4>Current Workload</h4>
-                    <p class="stat-number">0 Active</p>
-                    <p class="stat-subtext">0 deadlines this week</p>
-                    <a href="" class="stat-link">Manage projects</a>
+                    <p class="stat-number">{{ active_contracts }} Active</p>
+                    <p class="stat-subtext">{{ contracts_ending_this_week }} deadlines this week</p>
+                    <a href="{% url 'contract:freelancer_contract_list' %}" class="stat-link">Manage projects</a>
                 </div>
             </div>           
             
@@ -55,9 +54,9 @@
                 </div>
                 <div class="stat-info">
                     <h4>Proposal Success</h4>
-                    <p class="stat-number">0%% Rate</p>
-                    <p class="stat-subtext">0 proposals accepted</p>
-                    <a href="" class="stat-link">Improve proposals</a>
+                    <p class="stat-number">{{ success_rate }}% Rate</p>
+                    <p class="stat-subtext">{{ accepted_proposals }} proposals accepted</p>     
+                    <a href="{% url 'proposal:freelancer-proposals' %}" class="stat-link">View All proposals</a>
                 </div>
             </div>           
             
@@ -67,9 +66,9 @@
                 </div>
                 <div class="stat-info">
                     <h4>Earnings Growth</h4>
-                    <p class="stat-number">Rs 0.0 Total</p>
-                    <p class="stat-subtext">=0%% from last month</p>
-                    <a href="" class="stat-link">View analytics</a>
+                    <p class="stat-number">Rs {{ total_earnings|floatformat:2|intcomma }} Total</p>
+                    <p class="stat-subtext">{% if earnings_growth > 0 %}+{% endif %}{{ earnings_growth }}% from last month</p>
+                    <a href="{% url 'freelancer:transactions' %}" class="stat-link">View Payment History</a>
                 </div>
             </div>
         </div>
@@ -89,7 +88,7 @@
                 </div>
                 <h3>Find Projects</h3>
                 <p>Browse new projects that match your skills and expertise</p>
-                <a href="#" class="action-btn">Explore</a>
+                <a href="{% url 'home:projects' %}" class="action-btn">Explore</a>
             </div>           
             <div class="action-card">
                 <div class="action-icon">
@@ -97,7 +96,7 @@
                 </div>
                 <h3>My Proposals</h3>
                 <p>View and manage your submitted project proposals</p>
-                <a href="#" class="action-btn">View</a>
+                <a href="{% url 'proposal:freelancer-proposals' %}" class="action-btn">View</a>
             </div>            
             <div class="action-card">
                 <div class="action-icon">
@@ -105,7 +104,7 @@
                 </div>
                 <h3>Active Projects</h3>
                 <p>Manage your current projects and deadlines</p>
-                <a href="#" class="action-btn">Manage</a>
+                <a href="{% url 'contract:freelancer_contract_list' %}" class="action-btn">Manage</a>
             </div>           
             <div class="action-card">
                 <div class="action-icon">
@@ -113,7 +112,7 @@
                 </div>
                 <h3>Earnings</h3>
                 <p>Track your income and payment history</p>
-                <a href="#" class="action-btn">View</a>
+                <a href="{% url 'freelancer:transactions' %}" class="action-btn">View</a>
             </div>
         </div>
     </div>
@@ -128,136 +127,78 @@
                 <h2 class="section-title">Upcoming Deadlines</h2>
                 <p class="section-subtitle">Stay on top of your important dates and projects</p>
             </div>
-            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            <a href="{% url 'contract:freelancer_contract_list' %}" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
         </div>
+        {% if upcoming_contracts %}
         <!-- Deadlines Card Section -->
         <div class="deadlines-container">
-
-            <div class="deadline-card">
-                <div class="deadline-date">
-                    <span class="day">15</span>
-                    <span class="month">MAR</span>
-                    <span class="year">2023</span>
-                </div>
-                <div class="deadline-content">
-                    <div class="deadline-info">
-                        <h3>E-commerce Redesign</h3>
-                        <div class="client-info">
-                            <i class="fas fa-user-circle client-icon"></i>
-                            <span class="client">Fashion Boutique Inc.</span>
-                        </div>
+            {% for contract in upcoming_contracts %}
+                <div class="deadline-card">
+                    <div class="deadline-date">
+                        <span class="day">{{ contract.end_date|date:"d" }}</span>
+                        <span class="month">{{ contract.end_date|date:"M"|upper }}</span>
+                        <span class="year">{{ contract.end_date|date:"Y" }}</span>
                     </div>
-                    <div class="deadline-footer">
-                        <div class="time-left">
-                            <i class="fas fa-clock"></i>
-                            <span class="time-text">2 days left</span>
-                        </div>
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 75%"></div>
+                    <div class="deadline-content">
+                        <div class="deadline-info">
+                            <h3>{{ contract.proposal.project.title|truncatechars:30 }}</h3>
+                            <div class="client-info">
+                                <i class="fas fa-user-circle client-icon"></i>
+                                <span class="client">{{ contract.proposal.project.client.user.full_name|default:contract.proposal.project.client.user.username }}</span>
                             </div>
-                            <span class="progress-text">75% completed</span>
                         </div>
-                    </div>
-                </div>
-                <a href="#" class="deadline-action" aria-label="View project details">
-                    <i class="fas fa-chevron-right"></i>
-                </a>
-            </div>
-
-            <div class="deadline-card">
-                <div class="deadline-date">
-                    <span class="day">15</span>
-                    <span class="month">MAR</span>
-                    <span class="year">2023</span>
-                </div>
-                <div class="deadline-content">
-                    <div class="deadline-info">
-                        <h3>E-commerce Website Redesign</h3>
-                        <div class="client-info">
-                            <i class="fas fa-user-circle client-icon"></i>
-                            <span class="client">Fashion Boutique Inc.</span>
-                        </div>
-                    </div>
-                    <div class="deadline-footer">
-                        <div class="time-left">
-                            <i class="fas fa-clock"></i>
-                            <span class="time-text">2 days left</span>
-                        </div>
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 75%"></div>
+                        <div class="deadline-footer">
+                            <div class="time-left">
+                                <i class="fas fa-clock"></i>
+                                <span class="time-text">
+                                    {% with days_left=contract.end_date|timeuntil %}
+                                        {{ days_left }}
+                                    {% endwith %}
+                                </span>
                             </div>
-                            <span class="progress-text">75% completed</span>
-                        </div>
-                    </div>
-                </div>
-                <a href="#" class="deadline-action" aria-label="View project details">
-                    <i class="fas fa-chevron-right"></i>
-                </a>
-            </div>
-
-            <div class="deadline-card">
-                <div class="deadline-date">
-                    <span class="day">15</span>
-                    <span class="month">MAR</span>
-                    <span class="year">2023</span>
-                </div>
-                <div class="deadline-content">
-                    <div class="deadline-info">
-                        <h3>E-commerce Website Redesign</h3>
-                        <div class="client-info">
-                            <i class="fas fa-user-circle client-icon"></i>
-                            <span class="client">Fashion Boutique Inc.</span>
-                        </div>
-                    </div>
-                    <div class="deadline-footer">
-                        <div class="time-left">
-                            <i class="fas fa-clock"></i>
-                            <span class="time-text">2 days left</span>
-                        </div>
-                        <div class="progress-container">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 75%"></div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%"></div>
+                                </div>
+                                <span class="progress-text">50% completed</span>
                             </div>
-                            <span class="progress-text">75% completed</span>
                         </div>
                     </div>
+                    <a href="{% url 'contract:workspace' contract.id %}" class="deadline-action" aria-label="View project details">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
                 </div>
-                <a href="#" class="deadline-action" aria-label="View project details">
-                    <i class="fas fa-chevron-right"></i>
-                </a>
-            </div>   
-
+            {% endfor %}
         </div>
-        <!-- Empty State for Deadlines Section -->
-        <div class="empty-deadlines">
-            <div class="empty-illustration">
-                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                    <path d="M12 14v4"></path>
-                    <path d="M8 14v4"></path>
-                    <path d="M16 14v4"></path>
-                </svg>
+        {% else %}
+            <div class="empty-deadlines">
+                <div class="empty-illustration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                        <path d="M12 14v4"></path>
+                        <path d="M8 14v4"></path>
+                        <path d="M16 14v4"></path>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No Upcoming Deadlines</h3>
+                <p class="empty-message">You don't have any projects with deadlines in the next 7 days.</p>
+                <div class="empty-actions">
+                    <a href="{% url 'home:projects' %}" class="btn-primary">
+                        <i class="fas fa-search"></i> Browse Jobs
+                    </a>
+                    <a href="{% url 'proposal:freelancer-proposals' %}" class="btn-secondary">
+                        <i class="fas fa-file-alt"></i> View Proposals
+                    </a>
+                </div>
+                <div class="empty-tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Tip: Complete your profile to attract more clients</span>
+                </div>
             </div>
-            <h3 class="empty-title">No Active Projects</h3>
-            <p class="empty-message">When you're assigned to projects with deadlines, they'll appear here. Check your proposals or available jobs to get started.</p>
-            <div class="empty-actions">
-                <a href="#" class="btn-primary">
-                    <i class="fas fa-search"></i> Browse Jobs
-                </a>
-                <a href="#" class="btn-secondary">
-                    <i class="fas fa-file-alt"></i> View Proposals
-                </a>
-            </div>
-            <div class="empty-tip">
-                <i class="fas fa-lightbulb"></i>
-                <span>Tip: Complete your profile to attract more clients</span>
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -270,17 +211,6 @@
                 <h2>Performance Dashboard</h2>
                 <p class="subtitle">Track your productivity and earnings</p>
             </div>
-            <div class="time-filter">
-                <button class="filter-btn active" data-period="week">
-                    <i class="fas fa-calendar-week"></i> Week
-                </button>
-                <button class="filter-btn" data-period="month">
-                    <i class="fas fa-calendar-alt"></i> Month
-                </button>
-                <button class="filter-btn" data-period="year">
-                    <i class="fas fa-calendar"></i> Year
-                </button>
-            </div>
         </div>
         <!-- Progress Card Section -->
         <div class="progress-cards">
@@ -290,22 +220,12 @@
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3>Earnings</h3>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i> 12%
-                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">Rs 2,450.00</div>
-                    <div class="progress-stats">
-                        <span class="progress-percent">82%</span>
-                        <span class="progress-target">of Rs 3,000.00 target</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 82%"></div>
-                    </div>
+                    <div class="progress-value">Rs {{ current_month_earnings|floatformat:2|intcomma }}</div>
                     <div class="progress-comparison">
                         <span class="previous-period">
-                            <i class="fas fa-history"></i> Last week: Rs 2,100.00
+                            <i class="fas fa-history"></i> Last month: Rs {{ last_month_earnings|floatformat:2|intcomma }}
                         </span>
                     </div>
                 </div>
@@ -317,22 +237,12 @@
                         <i class="fas fa-tasks"></i>
                     </div>
                     <h3>Projects</h3>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i> 5%
-                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">14</div>
-                    <div class="progress-stats">
-                        <span class="progress-percent">70%</span>
-                        <span class="progress-target">of 20 target</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 70%"></div>
-                    </div>
+                    <div class="progress-value">{{ active_contracts }}</div>
                     <div class="progress-comparison">
                         <span class="previous-period">
-                            <i class="fas fa-history"></i> Last week: 12
+                            <i class="fas fa-history"></i> {{ contracts_ending_this_week }} deadlines this week
                         </span>
                     </div>
                 </div>
@@ -343,23 +253,13 @@
                     <div class="card-icon">
                         <i class="fas fa-user-plus"></i>
                     </div>
-                    <h3>New Clients</h3>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i> 8%
-                    </div>
+                    <h3>Client Satisfaction</h3>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">6</div>
-                    <div class="progress-stats">
-                        <span class="progress-percent">75%</span>
-                        <span class="progress-target">of 8 target</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 75%"></div>
-                    </div>
+                    <div class="progress-value">{{ average_rating|floatformat:1 }}</div>
                     <div class="progress-comparison">
                         <span class="previous-period">
-                            <i class="fas fa-history"></i> Last week: 4
+                            <i class="fas fa-history"></i> From {{ total_completed }} completed projects
                         </span>
                     </div>
                 </div>
@@ -368,25 +268,15 @@
             <div class="progress-card ratings">
                 <div class="card-header">
                     <div class="card-icon">
-                        <i class="fas fa-star"></i>
+                        <i class="fas fa-clock"></i>
                     </div>
-                    <h3>Client Ratings</h3>
-                    <div class="trend neutral">
-                        <i class="fas fa-equals"></i> 0%
-                    </div>
+                    <h3>On-Time Delivery</h3>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">4.9</div>
-                    <div class="progress-stats">
-                        <span class="progress-percent">98%</span>
-                        <span class="progress-target">of 5.0 target</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 98%"></div>
-                    </div>
+                    <div class="progress-value">{{ on_time_percentage|floatformat:1 }}%</div>
                     <div class="progress-comparison">
                         <span class="previous-period">
-                            <i class="fas fa-history"></i> Last week: 4.9
+                            <i class="fas fa-history"></i> Based on {{ total_completed }} completed projects
                         </span>
                     </div>
                 </div>
@@ -395,11 +285,7 @@
         <!-- Progress Chart Section -->
         <div class="progress-chart-container">
             <div class="chart-header">
-                <h3>Earnings Overview</h3>
-                <div class="chart-legend">
-                    <span class="legend-item current"><i class="fas fa-circle"></i> Current</span>
-                    <span class="legend-item previous"><i class="fas fa-circle"></i> Previous</span>
-                </div>
+                <h3>Monthly Earnings Trend</h3>
             </div>
             <div class="progress-chart">
                 <canvas id="progressChart"></canvas>
@@ -409,7 +295,7 @@
 </div>
 
 <!-- Ongoing Projects Section -->
-<div class="ongoing-projects">
+{% comment %} <div class="ongoing-projects">
     <div class="container">
         <!-- Ongoing Projects Header Section -->
         <div class="section-header">
@@ -587,10 +473,10 @@
             </div>
         </div>
     </div>
-</div>
+</div> {% endcomment %}
 
 <!-- Recommendation Projects Section -->
-<div class="recommended-section">
+{% comment %} <div class="recommended-section">
     <div class="container">
         <!-- Recommended Projects Header Section -->
         <div class="text">
@@ -606,9 +492,7 @@
                 </div>
                 <div class="poster-info">
                     <img class="poster-profile" src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Profile Picture">
-                    {% comment %} <div class="poster-profile-icon">
-                        <i class="fas fa-user"></i>
-                    </div> {% endcomment %}
+                    </div> 
                     <div class="poster-details">
                         <p class="poster-name">John Doe</p>
                         <p class="poster-posted-time">
@@ -690,7 +574,6 @@
                     <div class="project-status status-active">Active</div>
                 </div>
                 <div class="poster-info">
-                    {% comment %} <img class="poster-profile" src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Profile Picture"> {% endcomment %}
                     <div class="poster-profile-icon">
                         <i class="fas fa-user"></i>
                     </div>
@@ -776,9 +659,6 @@
                 </div>
                 <div class="poster-info">
                     <img class="poster-profile" src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Profile Picture">
-                    {% comment %} <div class="poster-profile-icon">
-                        <i class="fas fa-user"></i>
-                    </div> {% endcomment %}
                     <div class="poster-details">
                         <p class="poster-name">John Doe</p>
                         <p class="poster-posted-time">
@@ -877,98 +757,58 @@
             </div>
         </div>
     </div>
-</div>
+</div> {% endcomment %}
 
 <!-- Client Testimonials Section -->
 <div class="testimonials-section">
     <div class="container">
         <h2 class="section-title">Client Testimonials</h2>
         <p class="section-subtitle">What your clients say about your work</p>
-      
         <div class="testimonial-slider">
-            <div class="testimonial-track">
-                <div class="testimonial-slide">
-                    <div class="testimonial-content">
-                        <p class="testimonial-text">"We were initially hesitant about outsourcing our web development, but this team proved all our concerns wrong. From the initial consultation to the final delivery, their professionalism and expertise were evident. The ongoing support has been exceptional as well."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Jennifer Lee" class="author-image">
-                        <div class="author-details">
-                            <h4 class="author-name">Jennifer Lee</h4>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+            {% if client_reviews %}
+                <div class="testimonial-track">
+                    {% for review in client_reviews %}
+                        <div class="testimonial-slide">
+                            <div class="testimonial-content">
+                                <p class="testimonial-text">
+                                    {% if review.feedback %}"{{ review.feedback }}"{% else %}No feedback provided.{% endif %}
+                                </p>
+                            </div>
+                            <div class="testimonial-author">
+                                <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="{{ review.contract.proposal.project.client.user.get_full_name|default:review.contract.proposal.project.client.user.username }}" class="author-image">
+                                <div class="author-details">
+                                    <h4 class="author-name">
+                                        {{ review.contract.proposal.project.client.user.get_full_name|default:review.contract.proposal.project.client.user.username }}
+                                    </h4>
+                                    <div class="rating">
+                                        {% for i in "12345"|slice:":review.rating" %}
+                                            <i class="fas fa-star"></i>
+                                        {% endfor %}
+                                        {% for i in "12345"|slice:"review.rating:" %}
+                                            <i class="far fa-star"></i>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
+            {% else %}
                 <div class="testimonial-slide">
                     <div class="testimonial-content">
-                        <p class="testimonial-text">"Solid work. They delivered what was promised on time. Would consider working with them again for future projects.Solid work. They delivered what was promised on time. Would consider working with them again for future projects."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Robert Taylor" class="author-image">
-                        <div class="author-details">
-                            <h4 class="author-name">Robert Taylor</h4>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </div>
-                        </div>
+                        <p class="testimonial-text" style="color: #000; text-align: center;">No client testimonials yet.</p>
                     </div>
                 </div>
-                <div class="testimonial-slide">
-                    <div class="testimonial-content">
-                        <p class="testimonial-text">"We were initially hesitant about outsourcing our web development, but this team proved all our concerns wrong. From the initial consultation to the final delivery, their professionalism and expertise were evident. The ongoing support has been exceptional as well."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Jennifer Lee" class="author-image">
-                        <div class="author-details">
-                            <h4 class="author-name">Jennifer Lee</h4>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-slide">
-                    <div class="testimonial-content">
-                        <p class="testimonial-text">"Solid work. They delivered what was promised on time. Would consider working with them again for future projects."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="Robert Taylor" class="author-image">
-                        <div class="author-details">
-                            <h4 class="author-name">Robert Taylor</h4>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="slider-nav">
+            {% endif %}
+            <div class="slider-nav" {% if not client_reviews or client_reviews|length < 2 %}style="display:none;"{% endif %}>
                 <button id="prev-btn" class="nav-button prev">
-                <i class="fas fa-arrow-left"></i>
+                    <i class="fas fa-arrow-left"></i>
                 </button>
                 <button id="next-btn" class="nav-button next">
-                <i class="fas fa-arrow-right"></i>
+                    <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
-            <div class="slider-dots"></div>
+            <div class="slider-dots" {% if not client_reviews or client_reviews|length < 2 %}style="display:none;"{% endif %}></div>
         </div>
     </div>
 </div>
@@ -979,4 +819,82 @@
 <script src="{% static 'js/dashboard/freelancer/chart.js'%}"></script>
 <script src="{% static 'js/dashboard/freelancer/testimonial-slider.js'%}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    const months = {{ months|safe }};
+    const earningsData = {{ earnings_data|safe }};
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Monthly Earnings',
+                data: earningsData,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#4CAF50',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    callbacks: {
+                        label: function(context) {
+                            return 'Rs ' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return 'Rs ' + value.toLocaleString();
+                        },
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}
