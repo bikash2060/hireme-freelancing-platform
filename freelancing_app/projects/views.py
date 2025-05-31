@@ -1084,15 +1084,25 @@ class ProposalActionView(BaseProjectView):
                 project.save()
                 
                 short_title = (project.title[:30] + '...') if len(project.title) > 30 else project.title
+                client_contract_url = reverse('contract:client_contract_detail', kwargs={'contract_id': contract.id})
+                freelancer_contract_url = reverse('contract:freelancer_contract_detail', kwargs={'contract_id': contract.id})
+                
+                # Send notification to freelancer
                 NotificationManager.send_notification(
                     user=proposal.freelancer.user,
                     message=f'Your proposal for project {short_title} has been accepted! A contract has been created.',
-                    # redirect_url=reverse(self.FREELANCER_PROPOSAL_DETAILS_URL, kwargs={'proposal_id': proposal_id})
-                    redirect_url=None
+                    redirect_url=freelancer_contract_url
+                )
+                
+                # Send notification to client
+                NotificationManager.send_notification(
+                    user=request.user,
+                    message=f'You have accepted a proposal for project {short_title}. A contract has been created.',
+                    redirect_url=client_contract_url
                 )
                 
                 messages.success(request, 'Proposal accepted and contract created successfully.')
-                return redirect(self.HOME_URL)
+                return redirect(client_contract_url)
                 
             elif action == 'shortlist':
                 proposal.is_shortlisted = not proposal.is_shortlisted
