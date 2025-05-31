@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% load static%}
 {% load humanize %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}My Dashboard - HireMe{% endblock %}
+{% block title %}{% translate "My Dashboard" %} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/dashboard/freelancer/dashboard.css' %}">
@@ -16,11 +18,11 @@
         <div class="hero-content">
             <div class="welcome-message">
                 <h2>{{ greeting }}, {{ user.username }}</h2>
-                <p class="welcome-text">Here's an overview of your freelancing work</p>
+                <p class="welcome-text">{% translate "Here's an overview of your freelancing work" %}</p>
             </div>
             <div class="hero-actions">
                 <a href="{% url 'home:projects' %}" class="browse-projects-btn">
-                    <i class="fas fa-briefcase"></i> Browse New Projects
+                    <i class="fas fa-briefcase"></i> {% translate "Browse New Projects" %}
                 </a>
             </div>
         </div>
@@ -30,9 +32,9 @@
                     <i class="fas fa-star"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Work Performance</h4>
-                    <p class="stat-number">{{ average_rating }} Average</p>
-                    <p class="stat-subtext">From {{ total_completed }} completed projects</p>
+                    <h4>{% translate "Work Performance" %}</h4>
+                    <p class="stat-number">{{ average_rating }} {% translate "Average" %}</p>
+                    <p class="stat-subtext">{% translate "From" %} {{ total_completed }} {% translate "completed projects" %}</p>
                 </div>
             </div>
             
@@ -41,10 +43,10 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Current Workload</h4>
-                    <p class="stat-number">{{ active_contracts }} Active</p>
-                    <p class="stat-subtext">{{ contracts_ending_this_week }} deadlines this week</p>
-                    <a href="{% url 'contract:freelancer_contract_list' %}" class="stat-link">Manage projects</a>
+                    <h4>{% translate "Current Workload" %}</h4>
+                    <p class="stat-number">{{ active_contracts }} {% translate "Active" %}</p>
+                    <p class="stat-subtext">{{ contracts_ending_this_week }} {% translate "deadlines this week" %}</p>
+                    <a href="{% url 'contract:freelancer_contract_list' %}" class="stat-link">{% translate "Manage projects" %}</a>
                 </div>
             </div>           
             
@@ -53,10 +55,10 @@
                     <i class="fas fa-percentage"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Proposal Success</h4>
-                    <p class="stat-number">{{ success_rate }}% Rate</p>
-                    <p class="stat-subtext">{{ accepted_proposals }} proposals accepted</p>     
-                    <a href="{% url 'proposal:freelancer-proposals' %}" class="stat-link">View All proposals</a>
+                    <h4>{% translate "Proposal Success" %}</h4>
+                    <p class="stat-number">{{ success_rate }}% {% translate "Rate" %}</p>
+                    <p class="stat-subtext">{{ accepted_proposals }} {% translate "proposals accepted" %}</p>     
+                    <a href="{% url 'proposal:freelancer-proposals' %}" class="stat-link">{% translate "View All proposals" %}</a>
                 </div>
             </div>           
             
@@ -65,10 +67,10 @@
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Earnings Growth</h4>
-                    <p class="stat-number">Rs {{ total_earnings|floatformat:2|intcomma }} Total</p>
-                    <p class="stat-subtext">{% if earnings_growth > 0 %}+{% endif %}{{ earnings_growth }}% from last month</p>
-                    <a href="{% url 'freelancer:transactions' %}" class="stat-link">View Payment History</a>
+                    <h4>{% translate "Earnings Growth" %}</h4>
+                    <p class="stat-number">Rs {{ total_earnings|floatformat:2|intcomma }} {% translate "Total" %}</p>
+                    <p class="stat-subtext">{% if earnings_growth > 0 %}+{% endif %}{{ earnings_growth }}% {% translate "from last month" %}</p>
+                    <a href="{% url 'freelancer:transactions' %}" class="stat-link">{% translate "View Payment History" %}</a>
                 </div>
             </div>
         </div>
@@ -79,40 +81,40 @@
 <div class="quick-actions-section">
     <div class="container">
         <!-- Quick Action Header Section -->
-        <h2 class="section-title">Quick Actions</h2>
-        <p class="section-subtitle">Get started with these common tasks</p>       
+        <h2 class="section-title">{% translate "Quick Actions" %}</h2>
+        <p class="section-subtitle">{% translate "Get started with these common tasks" %}</p>       
         <div class="quick-actions-grid">
             <div class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-search"></i>
                 </div>
-                <h3>Find Projects</h3>
-                <p>Browse new projects that match your skills and expertise</p>
-                <a href="{% url 'home:projects' %}" class="action-btn">Explore</a>
+                <h3>{% translate "Find Projects" %}</h3>
+                <p>{% translate "Browse new projects that match your skills and expertise" %}</p>
+                <a href="{% url 'home:projects' %}" class="action-btn">{% translate "Explore" %}</a>
             </div>           
             <div class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-file-alt"></i>
                 </div>
-                <h3>My Proposals</h3>
-                <p>View and manage your submitted project proposals</p>
-                <a href="{% url 'proposal:freelancer-proposals' %}" class="action-btn">View</a>
+                <h3>{% translate "My Proposals" %}</h3>
+                <p>{% translate "View and manage your submitted project proposals" %}</p>
+                <a href="{% url 'proposal:freelancer-proposals' %}" class="action-btn">{% translate "View" %}</a>
             </div>            
             <div class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-tasks"></i>
                 </div>
-                <h3>Active Projects</h3>
-                <p>Manage your current projects and deadlines</p>
-                <a href="{% url 'contract:freelancer_contract_list' %}" class="action-btn">Manage</a>
+                <h3>{% translate "Active Projects" %}</h3>
+                <p>{% translate "Manage your current projects and deadlines" %}</p>
+                <a href="{% url 'contract:freelancer_contract_list' %}" class="action-btn">{% translate "Manage" %}</a>
             </div>           
             <div class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <h3>Earnings</h3>
-                <p>Track your income and payment history</p>
-                <a href="{% url 'freelancer:transactions' %}" class="action-btn">View</a>
+                <h3>{% translate "Earnings" %}</h3>
+                <p>{% translate "Track your income and payment history" %}</p>
+                <a href="{% url 'freelancer:transactions' %}" class="action-btn">{% translate "View" %}</a>
             </div>
         </div>
     </div>
@@ -124,10 +126,10 @@
         <!-- Deadlines Header Section -->
         <div class="section-header">
             <div class="text">
-                <h2 class="section-title">Upcoming Deadlines</h2>
-                <p class="section-subtitle">Stay on top of your important dates and projects</p>
+                <h2 class="section-title">{% translate "Upcoming Deadlines" %}</h2>
+                <p class="section-subtitle">{% translate "Stay on top of your important dates and projects" %}</p>
             </div>
-            <a href="{% url 'contract:freelancer_contract_list' %}" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            <a href="{% url 'contract:freelancer_contract_list' %}" class="view-all">{% translate "View All" %} <i class="fas fa-chevron-right"></i></a>
         </div>
         {% if upcoming_contracts %}
         <!-- Deadlines Card Section -->
@@ -160,11 +162,11 @@
                                 <div class="progress-bar">
                                     <div class="progress-fill" style="width: 50%"></div>
                                 </div>
-                                <span class="progress-text">50% completed</span>
+                                <span class="progress-text">50% {% translate "completed" %}</span>
                             </div>
                         </div>
                     </div>
-                    <a href="{% url 'contract:workspace' contract.id %}" class="deadline-action" aria-label="View project details">
+                    <a href="{% url 'contract:workspace' contract.id %}" class="deadline-action" aria-label="{% translate 'View project details' %}">
                         <i class="fas fa-chevron-right"></i>
                     </a>
                 </div>
@@ -183,19 +185,19 @@
                         <path d="M16 14v4"></path>
                     </svg>
                 </div>
-                <h3 class="empty-title">No Upcoming Deadlines</h3>
-                <p class="empty-message">You don't have any projects with deadlines in the next 7 days.</p>
+                <h3 class="empty-title">{% translate "No Upcoming Deadlines" %}</h3>
+                <p class="empty-message">{% translate "You don't have any projects with deadlines in the next 7 days." %}</p>
                 <div class="empty-actions">
                     <a href="{% url 'home:projects' %}" class="btn-primary">
-                        <i class="fas fa-search"></i> Browse Jobs
+                        <i class="fas fa-search"></i> {% translate "Browse Jobs" %}
                     </a>
                     <a href="{% url 'proposal:freelancer-proposals' %}" class="btn-secondary">
-                        <i class="fas fa-file-alt"></i> View Proposals
+                        <i class="fas fa-file-alt"></i> {% translate "View Proposals" %}
                     </a>
                 </div>
                 <div class="empty-tip">
                     <i class="fas fa-lightbulb"></i>
-                    <span>Tip: Complete your profile to attract more clients</span>
+                    <span>{% translate "Tip: Complete your profile to attract more clients" %}</span>
                 </div>
             </div>
         {% endif %}

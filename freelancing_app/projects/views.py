@@ -263,7 +263,9 @@ class ClientProjectsView(BaseProjectView):
     def get(self, request):
         try:    
             client = self.get_client(request)
-            projects_list = Project.objects.filter(client=client).order_by('-created_at')
+            projects_list = Project.objects.filter(client=client).prefetch_related(
+                'proposals__freelancer__user'
+            ).order_by('-created_at')
             categories = ProjectCategory.objects.all().order_by('name')
             
             # Get filter values from request
