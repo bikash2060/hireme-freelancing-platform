@@ -989,25 +989,25 @@ class FreelancerTransactionsView(BaseFreelancerView):
             # Add completed transactions
             for transaction in completed_transactions:
                 transaction_list.append({
+                    "transaction": transaction,
                     'transaction_id': f"TRX-{transaction.id:06d}",
                     'project_name': transaction.contract.proposal.project.title,
                     'amount': transaction.amount,
                     'payment_date': transaction.payment_date,
                     'client_name': transaction.contract.proposal.project.client.user.full_name,
-                    'status': 'completed',
-                    'workspace_url': f"/workspace/{transaction.contract.workspace.id}/"
+                    'status': 'completed'
                 })
             
             # Add pending transactions
             for transaction in pending_transactions:
                 transaction_list.append({
+                    "transaction": transaction,
                     'transaction_id': f"TRX-{transaction.id:06d}",
                     'project_name': transaction.contract.proposal.project.title,
                     'amount': transaction.amount,
                     'payment_date': transaction.payment_date,
                     'client_name': transaction.contract.proposal.project.client.user.full_name,
-                    'status': 'pending',
-                    'workspace_url': f"/workspace/{transaction.contract.workspace.id}/"
+                    'status': 'pending'
                 })
             
             return render(request, self.TEMPLATE_NAME, {

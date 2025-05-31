@@ -860,7 +860,7 @@
 .freelancer-profile-card .action-buttons {
     display: flex;
     gap: 12px;
-    padding: 0 20px 20px;
+    padding: 0 0 20px;
     margin-top: 10px;
 }
 

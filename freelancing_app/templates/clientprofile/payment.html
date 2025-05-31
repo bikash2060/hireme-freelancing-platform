@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+{% load custom_filters %}
+{% load number_filters %}
 
 {% block title %}Payment History - HireMe{% endblock %}
 
@@ -33,7 +35,7 @@
                     <tr>
                         <td class="transaction-id">{{ payment.transaction_id }}</td>
                         <td>{{ payment.project_name }}</td>
-                        <td>${{ payment.amount }}</td>
+                        <td>Rs. {{ payment.amount|format_currency }}</td>
                         <td>{{ payment.payment_date|date:"M d, Y" }}</td>
                         <td>{{ payment.freelancer_name }}</td>
                         <td>
@@ -45,7 +47,7 @@
                             {% if payment.status == 'pending' %}
                             <a href="{{ payment.workspace_url }}" class="pay-now-btn">Pay Now</a>
                             {% else %}
-                            <span class="completed-text">Completed</span>
+                            <span class="completed-text">Not Available</span>
                             {% endif %}
                         </td>
                     </tr>
