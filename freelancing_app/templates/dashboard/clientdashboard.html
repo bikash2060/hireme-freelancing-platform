@@ -87,7 +87,7 @@
                 </div>
                 <h3>Post New Project</h3>
                 <p>Create a new job listing to attract top freelancers</p>
-                <a href="" class="action-btn">Get Started</a>
+                <a href="{% url 'project:new-project' %}" class="action-btn">Get Started</a>
             </div>           
             
             <div class="action-card">
@@ -96,7 +96,7 @@
                 </div>
                 <h3>Review Proposals</h3>
                 <p>Evaluate freelancer bids and shortlist candidates</p>
-                <a href="" class="action-btn">View Bids</a>
+                <a href="{% url 'project:client-projects' %}" class="action-btn">View Bids</a>
             </div>            
             
             <div class="action-card">
@@ -105,7 +105,7 @@
                 </div>
                 <h3>Contact Freelancers</h3>
                 <p>Communicate with your team and discuss project details</p>
-                <a href="" class="action-btn">
+                <a href="{% url 'contract:client_contract_list' %}" class="action-btn">
                     Send Message
                 </a>
             </div>          
@@ -116,7 +116,7 @@
                 </div>
                 <h3>Process Payments</h3>
                 <p>Release payments and view transaction history</p>
-                <a href="" class="action-btn">Payments</a>
+                <a href="{% url 'client:transactions' %}" class="action-btn">Payments</a>
             </div>
         </div>
     </div>
@@ -130,7 +130,7 @@
                 <h2 class="section-title">Your Active Projects</h2>
                 <p class="section-subtitle">Monitor project progress and deadlines</p>
             </div>
-            <div class="view-toggle-actions">
+            {% comment %} <div class="view-toggle-actions">
                 <div class="projects-filter-sort">
                     <div class="filter-container">
                         <select class="filter-dropdown" id="status-filter">
@@ -157,231 +157,158 @@
                         </select>
                     </div>
                 </div>
-            </div>
+            </div> {% endcomment %}
         </div>
         
-        <div class="projects-summary">
-            <p><span id="project-count">3</span> projects displayed (out of <span id="total-projects">12</span>)</p>
+        {% comment %} <div class="projects-summary">
+            <p><span id="project-count">{{ active_projects_data|length }}</span> projects displayed (out of <span id="total-projects">{{ total_projects }}</span>)</p>
             <button class="clear-filters-btn" id="clear-filters">Clear Filters</button>
-        </div>
+        </div> {% endcomment %}
         
-        <div class="projects-grid-view" id="projects-container">
-            <!-- Project Card 1 - Web Development (In Progress) -->
-<div class="project-card">
-    <div class="project-status-indicator in-progress"></div>
-    <div class="project-card-header">
-        <div class="project-icon">
-            <i class="fas fa-code"></i>
-        </div>
-        <div class="project-meta">
-            <h3 class="project-title">E-Commerce Platform</h3>
-            <span class="project-category">Web Development</span>
-        </div>
-    </div>
-    
-    <div class="project-progress">
-        <div class="progress-info">
-            <span>Progress</span>
-            <span>42%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 42%"></div>
-        </div>
-    </div>
-    
-    <div class="project-details">
-        <div class="detail-item">
-            <i class="fas fa-user-tie"></i>
-            <div>
-                <span>Freelancer</span>
-                <span class="detail-value">Raj Patel</span>
+        {% if active_projects_data %}
+            <div class="projects-grid-view" id="projects-container">
+                {% for project in active_projects_data %}
+                    <div class="project-card">
+                        <div class="project-status-indicator {{ project.status }}"></div>
+                        <div class="project-card-header">
+                            <div class="project-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="project-meta">
+                                <h3 class="project-title">{{ project.title|truncatechars:30 }}</h3>
+                                <span class="project-category">{{ project.category }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-progress">
+                            <div class="progress-info">
+                                <span>Progress</span>
+                                <span>50%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-details">
+                            <div class="detail-item">
+                                <i class="fas fa-user-tie"></i>
+                                <div>
+                                    <span>Freelancer</span>
+                                    <span class="detail-value">
+                                        {% with accepted_proposal=project.proposals.all|first %}
+                                            {% if accepted_proposal and accepted_proposal.status == 'accepted' %}
+                                                {{ accepted_proposal.freelancer.user.full_name|default:accepted_proposal.freelancer.user.username }}
+                                            {% else %}
+                                                Not Assigned
+                                            {% endif %}
+                                        {% endwith %}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <span>Deadline</span>
+                                    <span class="detail-value">
+                                        {% with accepted_proposal=project.proposals.all|first %}
+                                            {% if accepted_proposal and accepted_proposal.contract %}
+                                                {{ accepted_proposal.contract.end_date|date:"M d, Y" }}
+                                            {% else %}
+                                                Not Set
+                                            {% endif %}
+                                        {% endwith %}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-rupee-sign"></i>
+                                <div>
+                                    <span>Budget</span>
+                                    <span class="detail-value">
+                                        {% if project.is_fixed_price %}
+                                            Rs {{ project.fixed_budget }}
+                                        {% else %}
+                                            Rs {{ project.budget_min }} - Rs {{ project.budget_max }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="project-footer">
+                            {% with accepted_proposal=project.proposals.all|first %}
+                                {% if accepted_proposal and accepted_proposal.status == 'accepted' and accepted_proposal.contract %}
+                                    <button class="btn-action message-btn" onclick="startChatWithFreelancer({{ accepted_proposal.freelancer.user.id }})">
+                                        <i class="fas fa-comment-alt"></i> Message
+                                    </button>
+                                    <a href="{% url 'contract:workspace' accepted_proposal.contract.id %}" class="btn-action primary-btn">
+                                        <i class="fas fa-eye"></i> View Project
+                                    </a>
+                                {% else %}
+                                    <button class="btn-action message-btn" disabled>
+                                        <i class="fas fa-comment-alt"></i> Message
+                                    </button>
+                                    <a href="{% url 'project:client-projects' %}" class="btn-action primary-btn" style="text-decoration: none;">
+                                        <i class="fas fa-eye"></i> View Project
+                                    </a>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        </div>
-        <div class="detail-item">
-            <i class="fas fa-calendar-alt"></i>
-            <div>
-                <span>Deadline</span>
-                <span class="detail-value">May 15, 2023</span>
+        {% else %}
+            <div class="empty-projects">
+                <div class="empty-illustration">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="M9.5 9h5L12 12.5z"></path>
+                    </svg>
+                </div>
+                <h3 class="empty-title">No Active Projects</h3>
+                <p class="empty-message">When you create or get assigned to projects, they'll appear here. Start a new project to find talented freelancers for your needs.</p>
+                <div class="empty-actions">
+                    <a href="{% url 'project:new-project' %}" class="btn-primary">
+                        <i class="fas fa-plus-circle"></i> Create New Project
+                    </a>
+                    <a href="{% url 'project:client-projects' %}" class="btn-secondary">
+                        <i class="fas fa-file-alt"></i> View Proposals
+                    </a>
+                </div>
+                <div class="empty-tip">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Tip: Clear project descriptions attract better proposals</span>
+                </div>
             </div>
-        </div>
-        <div class="detail-item">
-            <i class="fas fa-rupee-sign"></i>
-            <div>
-                <span>Budget</span>
-                <span class="detail-value">Rs 8,000</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="project-footer">
-        <button class="btn-action message-btn">
-            <i class="fas fa-comment-alt"></i> Message
-        </button>
-        <button class="btn-action primary-btn">
-            <i class="fas fa-eye"></i> View Project
-        </button>
-    </div>
-</div>
-
-<!-- Project Card 2 - Graphic Design (Pending Review) -->
-<div class="project-card">
-    <div class="project-status-indicator pending-review"></div>
-    <div class="project-card-header">
-        <div class="project-icon">
-            <i class="fas fa-paint-brush"></i>
-        </div>
-        <div class="project-meta">
-            <h3 class="project-title">Brand Identity Design</h3>
-            <span class="project-category">Graphic Design</span>
-        </div>
-    </div>
-    
-    <div class="project-progress">
-        <div class="progress-info">
-            <span>Progress</span>
-            <span>90%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 90%"></div>
-        </div>
-    </div>
-    
-    <div class="project-details">
-        <div class="detail-item">
-            <i class="fas fa-user-tie"></i>
-            <div>
-                <span>Freelancer</span>
-                <span class="detail-value">Priya Sharma</span>
-            </div>
-        </div>
-        <div class="detail-item">
-            <i class="fas fa-calendar-alt"></i>
-            <div>
-                <span>Submitted</span>
-                <span class="detail-value">Apr 28, 2023</span>
-            </div>
-        </div>
-        <div class="detail-item">
-            <i class="fas fa-rupee-sign"></i>
-            <div>
-                <span>Budget</span>
-                <span class="detail-value">Rs 5,500</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="project-footer">
-        <button class="btn-action message-btn">
-            <i class="fas fa-comment-alt"></i> Message
-        </button>
-        <button class="btn-action review-btn">
-            <i class="fas fa-check-circle"></i> Review Work
-        </button>
-    </div>
-</div>
-
-<!-- Project Card 3 - Mobile App (Completed) -->
-<div class="project-card">
-    <div class="project-status-indicator completed"></div>
-    <div class="project-card-header">
-        <div class="project-icon">
-            <i class="fas fa-mobile-alt"></i>
-        </div>
-        <div class="project-meta">
-            <h3 class="project-title">Fitness Tracker App</h3>
-            <span class="project-category">Mobile Development</span>
-        </div>
-    </div>
-    
-    <div class="project-progress">
-        <div class="progress-info">
-            <span>Progress</span>
-            <span>100%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: 100%"></div>
-        </div>
-    </div>
-    
-    <div class="project-details">
-        <div class="detail-item">
-            <i class="fas fa-user-tie"></i>
-            <div>
-                <span>Freelancer</span>
-                <span class="detail-value">Amit Kumar</span>
-            </div>
-        </div>
-        <div class="detail-item">
-            <i class="fas fa-calendar-alt"></i>
-            <div>
-                <span>Completed</span>
-                <span class="detail-value">Apr 10, 2023</span>
-            </div>
-        </div>
-        <div class="detail-item">
-            <i class="fas fa-rupee-sign"></i>
-            <div>
-                <span>Budget</span>
-                <span class="detail-value">Rs 12,000</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="project-footer">
-        <button class="btn-action message-btn">
-            <i class="fas fa-comment-alt"></i> Message
-        </button>
-        <button class="btn-action download-btn">
-            <i class="fas fa-download"></i> Deliverables
-        </button>
-    </div>
-</div>
-        </div>
+        {% endif %}
         
+        {% if active_projects_data %}
         <div class="pagination">
             <button class="pagination-btn" disabled>
                 <i class="fas fa-chevron-left"></i> Previous
             </button>
             <div class="page-numbers">
                 <button class="page-number active">1</button>
-                <button class="page-number">2</button>
-                <button class="page-number">3</button>
-                <span class="page-ellipsis">...</span>
-                <button class="page-number">12</button>
+                {% if total_projects > 6 %}
+                    <button class="page-number">2</button>
+                    {% if total_projects > 12 %}
+                        <button class="page-number">3</button>
+                        <span class="page-ellipsis">...</span>
+                    {% endif %}
+                {% endif %}
             </div>
-            <button class="pagination-btn">
+            <button class="pagination-btn" {% if total_projects <= 6 %}disabled{% endif %}>
                 Next <i class="fas fa-chevron-right"></i>
             </button>
         </div>
         
         <div class="view-all-container">
-            <a href="/projects" class="view-all-link">
+            <a href="{% url 'contract:client_contract_list' %}" class="view-all-link">
                 View All Projects <i class="fas fa-arrow-right"></i>
             </a>
         </div>
-
-        <div class="empty-projects">
-            <div class="empty-illustration">
-                <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    <path d="M9.5 9h5L12 12.5z"></path>
-                </svg>
-            </div>
-            <h3 class="empty-title">No Active Projects</h3>
-            <p class="empty-message">When you create or get assigned to projects, they'll appear here. Start a new project to find talented freelancers for your needs.</p>
-            <div class="empty-actions">
-                <a href="#" class="btn-primary">
-                    <i class="fas fa-plus-circle"></i> Create New Project
-                </a>
-                <a href="#" class="btn-secondary">
-                    <i class="fas fa-file-alt"></i> View Proposals
-                </a>
-            </div>
-            <div class="empty-tip">
-                <i class="fas fa-lightbulb"></i>
-                <span>Tip: Clear project descriptions attract better proposals</span>
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -390,19 +317,8 @@
     <div class="container">
         <div class="progress-header">
             <div class="header-content">
-                <h2>Project Dashboard</h2>
-                <p class="subtitle">Track your projects and spending</p>
-            </div>
-            <div class="time-filter">
-                <button class="filter-btn active" data-period="week">
-                    <i class="fas fa-calendar-week"></i> Week
-                </button>
-                <button class="filter-btn" data-period="month">
-                    <i class="fas fa-calendar-alt"></i> Month
-                </button>
-                <button class="filter-btn" data-period="year">
-                    <i class="fas fa-calendar"></i> Year
-                </button>
+                <h2>Performance Overview</h2>
+                <p class="subtitle">Track your project performance and spending</p>
             </div>
         </div>
         
@@ -412,24 +328,12 @@
                     <div class="card-icon">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
-                    <h3>Project Spending</h3>
-                    <div class="trend down">
-                        <i class="fas fa-arrow-down"></i> 8%
-                    </div>
+                    <h3>Total Spending</h3>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">Rs 18,500.00</div>
+                    <div class="progress-value">Rs {{ total_spent|floatformat:2|intcomma }}</div>
                     <div class="progress-stats">
-                        <span class="progress-percent">62%</span>
-                        <span class="progress-target">of Rs 30,000.00 budget</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 62%"></div>
-                    </div>
-                    <div class="progress-comparison">
-                        <span class="previous-period">
-                            <i class="fas fa-history"></i> Last month: Rs 22,000.00
-                        </span>
+                        <span class="progress-percent">This Month: Rs {{ current_month_spending|floatformat:2|intcomma }}</span>
                     </div>
                 </div>
             </div>
@@ -440,50 +344,11 @@
                         <i class="fas fa-tasks"></i>
                     </div>
                     <h3>Active Projects</h3>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i> 15%
-                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">7</div>
+                    <div class="progress-value">{{ active_projects }}</div>
                     <div class="progress-stats">
-                        <span class="progress-percent">70%</span>
-                        <span class="progress-target">of 10 planned</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 70%"></div>
-                    </div>
-                    <div class="progress-comparison">
-                        <span class="previous-period">
-                            <i class="fas fa-history"></i> Last month: 5
-                        </span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="progress-card freelancers">
-                <div class="card-header">
-                    <div class="card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Freelancers Hired</h3>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i> 25%
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="progress-value">5</div>
-                    <div class="progress-stats">
-                        <span class="progress-percent">100%</span>
-                        <span class="progress-target">of 5 needed</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 100%"></div>
-                    </div>
-                    <div class="progress-comparison">
-                        <span class="previous-period">
-                            <i class="fas fa-history"></i> Last month: 4
-                        </span>
+                        <span class="progress-percent">{{ in_development }} in development, {{ in_review }} in review</span>
                     </div>
                 </div>
             </div>
@@ -493,24 +358,12 @@
                     <div class="card-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h3>On-Time Completion</h3>
-                    <div class="trend neutral">
-                        <i class="fas fa-equals"></i> 0%
-                    </div>
+                    <h3>Completed Projects</h3>
                 </div>
                 <div class="card-body">
-                    <div class="progress-value">85%</div>
+                    <div class="progress-value">{{ completed_projects }}</div>
                     <div class="progress-stats">
-                        <span class="progress-percent">85%</span>
-                        <span class="progress-target">of 90% target</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 85%"></div>
-                    </div>
-                    <div class="progress-comparison">
-                        <span class="previous-period">
-                            <i class="fas fa-history"></i> Last month: 85%
-                        </span>
+                        <span class="progress-percent">Total Value: Rs {{ total_spent|floatformat:2|intcomma }}</span>
                     </div>
                 </div>
             </div>
@@ -518,11 +371,7 @@
         
         <div class="progress-chart-container">
             <div class="chart-header">
-                <h3>Project Spending Overview</h3>
-                <div class="chart-legend">
-                    <span class="legend-item budget"><i class="fas fa-circle"></i> Budget</span>
-                    <span class="legend-item actual"><i class="fas fa-circle"></i> Actual</span>
-                </div>
+                <h3>Monthly Spending Trend</h3>
             </div>
             <div class="progress-chart">
                 <canvas id="clientProgressChart"></canvas>
@@ -532,7 +381,7 @@
 </div>
 
 <!-- Recommended Freelancers Section -->
-<div class="recommended-freelancers-section">
+{% comment %} <div class="recommended-freelancers-section">
     <div class="container">
         <div class="section-header">
             <div class="header-content">
@@ -988,12 +837,89 @@
         </div>
         
     </div>
-</div>
+</div> {% endcomment %}
 
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/dashboard/client/freelancer-slider.js' %}"></script>
-<script src="{% static 'js/dashboard/client/chart.js' %}"></script>
+{{ block.super }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('clientProgressChart').getContext('2d');
+    const months = {{ months|safe }};
+    const spendingData = {{ spending_data|safe }};
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Monthly Spending',
+                data: spendingData,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#4CAF50',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: {
+                        size: 14,
+                        weight: 'bold'
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    callbacks: {
+                        label: function(context) {
+                            return 'Rs ' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return 'Rs ' + value.toLocaleString();
+                        },
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

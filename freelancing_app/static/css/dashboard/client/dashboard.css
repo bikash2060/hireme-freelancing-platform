@@ -671,6 +671,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    text-decoration: none;
 }
 
 .active-projects-section .message-btn {

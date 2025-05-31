@@ -103,10 +103,6 @@
                             <a href="{% url 'contract:client_contract_list' %}" class="dropdown-item">
                                 <i class="fas fa-file-signature"></i> My Contracts
                             </a>
-                            <div class="dropdown-content-divider"></div>
-                            <a href="" class="dropdown-item">
-                                <i class="fas fa-credit-card"></i> Payments
-                            </a>
                         </div>
                     </div>
                 {% elif request.user.role == 'freelancer' or request.user.role == 'FREELANCER' %}
@@ -134,10 +130,6 @@
                         <div class="nav-dropdown-content">
                             <a href="{% url 'contract:freelancer_contract_list' %}" class="dropdown-item">
                                 <i class="fas fa-tasks"></i> Contracts
-                            </a>
-                            <div class="dropdown-content-divider"></div>
-                            <a href="" class="dropdown-item">
-                                <i class="fas fa-money-bill-wave"></i> Earnings
                             </a>
                         </div>
                     </div>                
