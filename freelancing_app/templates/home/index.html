@@ -349,7 +349,7 @@
             </div>
         
             <div class="view-all-container">
-                <a href="#" class="view-all-button">
+                <a href="{% url 'home:freelancers' %}" class="view-all-button">
                     Browse All Freelancers
                     <i class="fas fa-arrow-right"></i>
                 </a>
@@ -367,7 +367,7 @@
                     <h3 class="empty-title">{% trans "No Featured Freelancers Found" %}</h3>
                     <p class="empty-message">{% trans "We couldn't find any featured freelancers at the moment. Check back later as more freelancers join the platform." %}</p>
                     <div class="empty-actions">
-                        <a href="" class="btn-primary">
+                        <a href="{% url 'home:freelancers' %}" class="btn-primary">
                             <i class="fas fa-search"></i> {% trans "Browse All Freelancers" %}
                         </a>
                     </div>
