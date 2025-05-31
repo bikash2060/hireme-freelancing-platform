@@ -21,10 +21,11 @@
                     <tr>
                         <th>Transaction ID</th>
                         <th>Project Name</th>
+                        <th>Total Amount</th>
                         <th>Payment Date</th>
-                        <th>Amount</th>
-                        <th>Status</th>
                         <th>Freelancer</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,18 +33,25 @@
                     <tr>
                         <td class="transaction-id">{{ payment.transaction_id }}</td>
                         <td>{{ payment.project_name }}</td>
-                        <td>{{ payment.payment_date|date:"M d, Y" }}</td>
                         <td>${{ payment.amount }}</td>
+                        <td>{{ payment.payment_date|date:"M d, Y" }}</td>
+                        <td>{{ payment.freelancer_name }}</td>
                         <td>
-                            <span class="status-badge completed">
-                                {{ payment.status }}
+                            <span class="status-badge {% if payment.status == 'completed' %}completed{% else %}pending{% endif %}">
+                                {{ payment.status|title }}
                             </span>
                         </td>
-                        <td>{{ payment.freelancer_name }}</td>
+                        <td>
+                            {% if payment.status == 'pending' %}
+                            <a href="{{ payment.workspace_url }}" class="pay-now-btn">Pay Now</a>
+                            {% else %}
+                            <span class="completed-text">Completed</span>
+                            {% endif %}
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="no-payments">No completed payments found</td>
+                        <td colspan="7" class="no-payments">No payments found</td>
                     </tr>
                     {% endfor %}
                 </tbody>

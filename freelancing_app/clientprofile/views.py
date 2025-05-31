@@ -296,14 +296,14 @@ class PasswordChangeView(BaseClientView):
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
 # View Name: ClientTransactionsView
-# Description: Fetches completed transactions for the logged-in client
+# Description: Fetches both pending and completed transactions for the logged-in client
 # Tested On: 2025-04-25
 # Status: Working as expected
 # Code Refractor Status: Completed
 # ------------------------------------------------------
 class ClientTransactionsView(BaseClientView):
     """
-    - Fetches completed transactions for the logged-in client
+    - Fetches both pending and completed transactions for the logged-in client
     - Returns transaction details including transaction ID, project name, payment date, amount, and freelancer name
     """
     TEMPLATE_NAME = 'clientprofile/payment.html'
@@ -312,8 +312,8 @@ class ClientTransactionsView(BaseClientView):
         try:
             client = self.get_client(request)
             
-            # Get only completed transactions through contracts and proposals
-            transactions = Transaction.objects.filter(
+            # Get completed transactions
+            completed_transactions = Transaction.objects.filter(
                 contract__proposal__project__client=client,
                 status=Transaction.Status.COMPLETED
             ).select_related(
@@ -321,16 +321,41 @@ class ClientTransactionsView(BaseClientView):
                 'contract__proposal__freelancer__user'
             ).order_by('-payment_date')
             
+            # Get pending transactions where freelancer has submitted final work
+            pending_transactions = Transaction.objects.filter(
+                contract__proposal__project__client=client,
+                status=Transaction.Status.PENDING,
+                contract__workspace__submissions__status='final_submitted'
+            ).select_related(
+                'contract__proposal__project',
+                'contract__proposal__freelancer__user'
+            ).order_by('-payment_date')
+            
             # Prepare transaction data
             transaction_list = []
-            for transaction in transactions:
+            
+            # Add completed transactions
+            for transaction in completed_transactions:
                 transaction_list.append({
                     'transaction_id': f"TRX-{transaction.id:06d}",
                     'project_name': transaction.contract.proposal.project.title,
-                    'payment_date': transaction.payment_date,
                     'amount': transaction.amount,
-                    'status': transaction.status,
-                    'freelancer_name': transaction.contract.proposal.freelancer.user.full_name
+                    'payment_date': transaction.payment_date,
+                    'freelancer_name': transaction.contract.proposal.freelancer.user.full_name,
+                    'status': 'completed',
+                    'workspace_url': f"/workspace/{transaction.contract.workspace.id}/"
+                })
+            
+            # Add pending transactions
+            for transaction in pending_transactions:
+                transaction_list.append({
+                    'transaction_id': f"TRX-{transaction.id:06d}",
+                    'project_name': transaction.contract.proposal.project.title,
+                    'amount': transaction.amount,
+                    'payment_date': transaction.payment_date,
+                    'freelancer_name': transaction.contract.proposal.freelancer.user.full_name,
+                    'status': 'pending',
+                    'workspace_url': f"/workspace/{transaction.contract.workspace.id}/"
                 })
             
             return render(request, self.TEMPLATE_NAME, {
