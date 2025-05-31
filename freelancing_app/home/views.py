@@ -18,6 +18,7 @@ from itertools import chain
 from decimal import Decimal
 import random
 import os
+from contract.models import Contract, Review
 
 # ------------------------------------------------------
 # ✅ [TESTED & COMPLETED]
@@ -345,6 +346,12 @@ class FreelancerListView(View):
         ).select_related('user').prefetch_related(
             'skills',
             'freelancerskill_set'
+        ).annotate(
+            completed_projects=Count(
+                'proposals__contract',
+                filter=Q(proposals__contract__status=Contract.Status.COMPLETED),
+                distinct=True
+            )
         ).distinct().order_by('-user__date_joined')
 
     def _apply_filters(self, request, freelancers):
@@ -425,6 +432,11 @@ class FreelancerListView(View):
         """Builds template context with all required data"""
         categories = FreelanceServiceCategory.objects.all()
         skills = Skill.objects.all()
+        
+        # Get review statistics for each freelancer
+        for freelancer in page_obj:
+            stats = Review.get_freelancer_stats(freelancer)
+            freelancer.review_stats = stats
         
         return {
             'freelancers': page_obj,

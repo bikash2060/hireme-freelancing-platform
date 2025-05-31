@@ -289,7 +289,7 @@
                                             <span class="featured-star" title="Featured Freelancer"><i class="fas fa-star"></i> Featured</span>
                                         {% endif %}
                                     </div>
-                                    <a href="#" class="invite-button">Invite to Job</a>
+                                    {% comment %} <a href="#" class="invite-button">Invite to Job</a> {% endcomment %}
                                 </div>
                                 
                                 <div class="freelancer-title">{{ freelancer.professional_title }}</div>
@@ -297,8 +297,8 @@
                                 <div class="freelancer-meta">
                                     <span class="location"><i class="fas fa-map-marker-alt"></i> {{freelancer.user.city|default:"N/A"}}</span>
                                     <span class="rating">
-                                        <i class="fas fa-star"></i> 4.9
-                                        <span class="review-count">(128 reviews)</span>
+                                        <i class="fas fa-star"></i> {{freelancer.review_stats.average_rating|default:"0.0"}}
+                                        <span class="review-count">({{freelancer.review_stats.total_reviews}} reviews)</span>
                                     </span>
                                     <span class="availability"><i class="fas fa-clock"></i> {{freelancer.availability|title}}</span>
                                 </div>
@@ -310,7 +310,7 @@
                                 <div class="stat-item">
                                     <i class="fas fa-briefcase"></i>
                                     <div>
-                                        <span class="stat-value">87</span>
+                                        <span class="stat-value">{{freelancer.completed_projects}}</span>
                                         <span class="stat-label">Projects Completed</span>
                                     </div>
                                 </div>
@@ -331,7 +331,7 @@
                                 <div class="stat-item">
                                     <i class="fas fa-clock"></i>
                                     <div>
-                                        <span class="stat-value">98%</span>
+                                        <span class="stat-value">{{freelancer.review_stats.on_time_delivery}}%</span>
                                         <span class="stat-label">Delivery On Time</span>
                                     </div>
                                 </div>

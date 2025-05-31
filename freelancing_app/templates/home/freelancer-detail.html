@@ -65,21 +65,29 @@
 
                     <div class="rating-section">
                         <div class="stars">
-                            <span class="filled">★★★★★</span>
-                            <span class="rating-value">4.9</span>
-                            <span class="reviews-count">(128 reviews)</span>
+                            {% with ''|center:5 as range %}
+                            {% for _ in range %}
+                                {% if forloop.counter <= freelancer.review_stats.average_rating|floatformat:0 %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                            {% endwith %}
+                            <span class="rating-value">{{freelancer.review_stats.average_rating|default:"0.0"|floatformat:1}}</span>
+                            <span class="reviews-count">({{freelancer.review_stats.total_reviews|default:"0"}} reviews)</span>
                         </div>
                     </div>
 
                     <div class="action-buttons">
                         {% if user.is_authenticated %}
-                            <a href="" class="btn btn-primary">
+                            {% comment %} <a href="" class="btn btn-primary">
                                 <i class="fas fa-paper-plane"></i> Invite to Job
-                            </a>
+                            </a> {% endcomment %}
                         {% else %}
-                            <a href="{% url 'account:login' %}" class="btn btn-primary">
+                            {% comment %} <a href="{% url 'account:login' %}" class="btn btn-primary">
                                 <i class="fas fa-paper-plane"></i> Invite to Job
-                            </a>
+                            </a> {% endcomment %}
                         {% endif %}
                         {% if user.is_authenticated %}
                             <a href="#" class="btn btn-secondary" onclick="startChatWithFreelancer({{ freelancer.user.id }})">
@@ -275,7 +283,7 @@
                         <i class="fas fa-star"></i> Reviews & Ratings
                     </h3>
                     <div class="reviews-header">
-                        <div class="reviews-count">128 reviews</div>
+                        <div class="reviews-count">{{freelancer.review_stats.total_reviews}} reviews</div>
                         <div class="reviews-filter">
                             <div class="filter-item active">All</div>
                             <div class="filter-item">Recent</div>
@@ -285,122 +293,75 @@
                     </div>
                     <div class="reviews-stats">
                         <div class="review-overall">
-                            <div class="review-score">4.9</div>
-                            <div class="review-stars">★★★★★</div>
+                            <div class="review-score">{{freelancer.review_stats.average_rating|floatformat:1}}</div>
+                            <div class="review-stars">
+                                {% with ''|center:5 as range %}
+                                {% for _ in range %}
+                                    {% if forloop.counter <= freelancer.review_stats.average_rating|floatformat:0 %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                {% endwith %}
+                            </div>
                             <div class="review-count">out of 5</div>
                         </div>
                         <div class="review-bars">
+                            {% for rating, count in freelancer.review_stats.rating_distribution.items %}
                             <div class="review-bar-item">
-                                <div class="review-bar-label">5</div>
+                                <div class="review-bar-label">{{rating}}</div>
                                 <div class="review-bar-track">
-                                    <div class="review-bar-progress" style="width: 92%"></div>
+                                    <div class="review-bar-progress" style="width: {% if freelancer.review_stats.total_reviews > 0 %}{{ count|div:freelancer.review_stats.total_reviews|mul:100 }}{% else %}0{% endif %}%"></div>
                                 </div>
-                                <div class="review-bar-count">112</div>
+                                <div class="review-bar-count">{{count}}</div>
                             </div>
-                            <div class="review-bar-item">
-                                <div class="review-bar-label">4</div>
-                                <div class="review-bar-track">
-                                    <div class="review-bar-progress" style="width: 8%"></div>
-                                </div>
-                                <div class="review-bar-count">10</div>
-                            </div>
-                            <div class="review-bar-item">
-                                <div class="review-bar-label">3</div>
-                                <div class="review-bar-track">
-                                    <div class="review-bar-progress" style="width: 4%"></div>
-                                </div>
-                                <div class="review-bar-count">5</div>
-                            </div>
-                            <div class="review-bar-item">
-                                <div class="review-bar-label">2</div>
-                                <div class="review-bar-track">
-                                    <div class="review-bar-progress" style="width: 1%"></div>
-                                </div>
-                                <div class="review-bar-count">1</div>
-                            </div>
-                            <div class="review-bar-item">
-                                <div class="review-bar-label">1</div>
-                                <div class="review-bar-track">
-                                    <div class="review-bar-progress" style="width: 0%"></div>
-                                </div>
-                                <div class="review-bar-count">0</div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="reviews-list">
-                        <div class="review-item">
+                        {% for review in freelancer.review_stats.reviews %}
+                        <div class="review-item"
+                             data-rating="{{ review.rating }}"
+                             data-date="{{ review.created_at|date:'Y-m-d H:i:s' }}">
                             <div class="review-header">
                                 <div class="reviewer-info">
                                     <div class="reviewer-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="Sarah Johnson">
+                                        {% if review.contract.proposal.project.client.user.profile_image %}
+                                            <img src="{% get_media_prefix %}profile_images/{{ review.contract.proposal.project.client.user.profile_image }}" alt="{{ review.contract.proposal.project.client.user.full_name }}">
+                                        {% else %}
+                                            <i class="fas fa-user"></i>
+                                        {% endif %}
                                     </div>
                                     <div class="reviewer-meta">
-                                        <div class="reviewer-name">Sarah Johnson</div>
-                                        <div class="reviewer-project">E-commerce Platform Development</div>
+                                        <div class="reviewer-name">{{ review.contract.proposal.project.client.user.full_name }}</div>
+                                        <div class="reviewer-project">{{ review.contract.proposal.project.title }}</div>
                                     </div>
                                 </div>
                                 <div class="review-rating">
-                                    <div class="review-stars">★★★★★</div>
-                                    <div class="review-date">2 weeks ago</div>
+                                    <div class="review-stars">
+                                        {% with ''|center:5 as range %}
+                                        {% for _ in range %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="review-date">{{ review.created_at|timesince }} ago</div>
                                 </div>
                             </div>
                             <div class="review-comment">
-                                <p>John is an exceptional developer. He completely transformed our e-commerce platform, making it faster, more user-friendly, and significantly more secure. His attention to detail and problem-solving skills are remarkable. He communicated clearly throughout the project and delivered ahead of schedule. Would definitely work with him again!</p>
+                                <p>{{ review.feedback }}</p>
                             </div>
                         </div>
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">
-                                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael Chen">
-                                    </div>
-                                    <div class="reviewer-meta">
-                                        <div class="reviewer-name">Michael Chen</div>
-                                        <div class="reviewer-project">Payment System Integration</div>
-                                    </div>
-                                </div>
-                                <div class="review-rating">
-                                    <div class="review-stars">★★★★★</div>
-                                    <div class="review-date">1 month ago</div>
-                                </div>
-                            </div>
-                            <div class="review-comment">
-                                <p>We hired John to integrate a complex payment system into our application. He not only delivered exactly what we needed but also suggested several improvements that have significantly reduced our transaction failures. His documentation was thorough and made it easy for our team to maintain the system going forward.</p>
-                            </div>
+                        {% empty %}
+                        <div class="no-reviews">
+                            <p>No reviews yet.</p>
                         </div>
-                        <div class="review-item">
-                            <div class="review-header">
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">
-                                        <img src="https://randomuser.me/api/portraits/women/63.jpg" alt="Jennifer Williams">
-                                    </div>
-                                    <div class="reviewer-meta">
-                                        <div class="reviewer-name">Jennifer Williams</div>
-                                        <div class="reviewer-project">Dashboard & Analytics Development</div>
-                                    </div>
-                                </div>
-                                <div class="review-rating">
-                                    <div class="review-stars">★★★★★</div>
-                                    <div class="review-date">2 months ago</div>
-                                </div>
-                            </div>
-                            <div class="review-comment">
-                                <p>John built us a custom analytics dashboard that has transformed how we make business decisions. He took the time to understand our specific needs and delivered a solution that was both powerful and user-friendly. The data visualizations he created are intuitive and have helped us identify several opportunities for growth. Highly recommended!</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="review-pagination">
-                        <div class="pagination-item">
-                            <i class="fas fa-chevron-left"></i>
-                        </div>
-                        <div class="pagination-item active">1</div>
-                        <div class="pagination-item">2</div>
-                        <div class="pagination-item">3</div>
-                        <div class="pagination-item">...</div>
-                        <div class="pagination-item">12</div>
-                        <div class="pagination-item">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -411,19 +372,19 @@
                     </h3>
                     <div class="profile-stats">
                         <div class="stat-item">
-                            <div class="stat-value">128</div>
+                            <div class="stat-value">{{freelancer.completed_projects|default:"0"}}</div>
                             <div class="stat-label">Completed Projects</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">4.9</div>
+                            <div class="stat-value">{{freelancer.review_stats.average_rating|default:"0.0"|floatformat:1}}</div>
                             <div class="stat-label">Average Rating</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">{{freelancer.years_of_experience|default:"N/A"}}+</div>
+                            <div class="stat-value">{{freelancer.years_of_experience|default:"0"}}+</div>
                             <div class="stat-label">Years Experience</div>
                         </div>
                         <div class="stat-item">
-                            <div class="stat-value">98%</div>
+                            <div class="stat-value">{{freelancer.review_stats.on_time_delivery|default:"0"}}%</div>
                             <div class="stat-label">On-time Delivery</div>
                         </div>
                     </div>
@@ -440,7 +401,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Expertise Level</div>
-                                <div class="info-value">{{freelancer.expertise_level|default:"N/A"}}</div>
+                                <div class="info-value">{{freelancer.get_expertise_level_display|default:"N/A"}}</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -449,7 +410,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Availability</div>
-                                <div class="info-value">{{freelancer.availability|default:"N/A"}}</div>
+                                <div class="info-value">{{freelancer.get_availability_display|default:"N/A"}}</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -458,7 +419,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Preferred Project Duration</div>
-                                <div class="info-value">{{freelancer.preferred_project_duration|default:"N/A"}}</div>
+                                <div class="info-value">{{freelancer.get_preferred_project_duration_display|default:"N/A"}}</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -467,7 +428,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Communication Preference</div>
-                                <div class="info-value">{{freelancer.communication_preference|default:"N/A"}}</div>
+                                <div class="info-value">{{freelancer.get_communication_preference_display|default:"N/A"}}</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -485,7 +446,7 @@
                             </div>
                             <div class="info-content">
                                 <div class="info-label">Badge</div>
-                                <div class="info-value">{{freelancer.badge|default:"N/A"}}</div>
+                                <div class="info-value">{{freelancer.get_badge_display|default:"N/A"}}</div>
                             </div>
                         </div>
                     </div>
@@ -550,5 +511,49 @@
 {% endblock %}
 
 {% block js_files %}
-<script src="{% static 'js/home/freelancer-detail.js' %}"></script>
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.reviews-filter .filter-item');
+    const reviews = document.querySelectorAll('.review-item');
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.getAttribute('data-filter');
+            const now = new Date();
+
+            reviews.forEach(review => {
+                const rating = parseInt(review.getAttribute('data-rating'));
+                const dateStr = review.getAttribute('data-date');
+                const reviewDate = new Date(dateStr);
+
+                let show = false;
+                if (filter === 'all') {
+                    show = true;
+                } else if (filter === 'recent') {
+                    // Show reviews from the last 30 days
+                    const daysDiff = (now - reviewDate) / (1000 * 60 * 60 * 24);
+                    show = daysDiff <= 30;
+                } else if (filter === 'positive') {
+                    show = rating >= 4;
+                } else if (filter === 'critical') {
+                    show = rating <= 2;
+                }
+                review.style.display = show ? '' : 'none';
+            });
+
+            // Show/hide 'No reviews yet.' message
+            const visibleReviews = Array.from(reviews).filter(r => r.style.display !== 'none');
+            const noReviewsMsg = document.querySelector('.no-reviews');
+            if (noReviewsMsg) {
+                noReviewsMsg.style.display = visibleReviews.length === 0 ? '' : 'none';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
