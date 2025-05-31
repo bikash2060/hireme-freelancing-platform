@@ -2,6 +2,7 @@
 {% load static%}
 {% load humanize %}
 {% load i18n %}
+{% load translation_tags %}
 
 {% block title %}HireMe | Connect with Skilled Nepali Freelancers{% endblock %}
 
@@ -16,9 +17,9 @@
     <div class="container">
         <div class="hero-section-container">
             <div class="left-section">
-                <div class="tagline">Nepal's Premier Freelance Network</div>
-                <h1 class="title">Nepal's Brightest Minds, One Click Away</h1>
-                <p class="subtitle">Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee.</p>
+                <div class="tagline">{% translate "Nepal's Premier Freelance Network" %}</div>
+                <h1 class="title">{% translate "Nepal's Brightest Minds, One Click Away" %}</h1>
+                <p class="subtitle">{% translate "Tap into a trusted network of top-tier Nepali freelancers — from code to content, design to delivery, all backed by our satisfaction guarantee." %}</p>
                 
                 <div class="benefits">
 
@@ -92,8 +93,8 @@
 <div class="how-it-works" id="how-it-works">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">{% trans "How HireMe Works" %}</h2>
-            <p class="section-subtitle">{% trans "Find the perfect freelancer in just 4 simple steps with our seamless hiring process" %}</p>
+            <h2 class="section-title">{% translate "How" %} HireMe {% translate "Works" %}</h2>
+            <p class="section-subtitle">{% translate "Find the perfect freelancer in just 4 simple steps with our seamless hiring process" %}</p>
         </div>
 
         <div class="steps-container">

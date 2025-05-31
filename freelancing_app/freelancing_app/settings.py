@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "projects",
     "proposals",
     "contract",
+    "translation",  # Add this line
 ]
 
 # Middleware stack for request/response processing

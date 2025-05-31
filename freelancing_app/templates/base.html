@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load translation_tags %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
@@ -11,7 +12,7 @@
     <meta name="user-id" content="{{ user.id }}">
     {% endif %}
 
-    <title>{% block title %}HireMe{% endblock %}</title>
+    <title>{% block title %}{% translate "HireMe" %}{% endblock %}</title>
 
     <!-- Global CSS Styles -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
