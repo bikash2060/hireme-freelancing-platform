@@ -213,7 +213,7 @@
                         <div class="profile-header">
                             <div class="profile-avatar">
                                 {% if contract.proposal.project.client.user.profile_image %}
-                                    <img src="{% get_media_prefix %}profile_images/{{ ccontract.proposal.project.client.user.profile_image }}" 
+                                    <img src="{% get_media_prefix %}profile_images/{{ contract.proposal.project.client.user.profile_image }}" 
                                         alt="{{ ccontract.proposal.project.client.user.full_name }}" 
                                         class="avatar-image"
                                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'profile-icon\'><i class=\'fas fa-user\'></i></div>'">
@@ -238,44 +238,6 @@
                                         <i class="fas fa-calendar-alt"></i> 
                                         Member since {{ contract.proposal.project.client.user.date_joined|date:"M Y" }}
                                     </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-icon success">
-                                    <i class="fas fa-project-diagram"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-value">{{ proposal.freelancer.total_projects|default:"0" }}</div>
-                                    <div class="stat-label">Total Projects</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon primary">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-value">{{ proposal.freelancer.completed_projects|default:"0" }}</div>
-                                    <div class="stat-label">Completed</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon warning">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-value">{{ proposal.freelancer.on_time_percentage|default:"100" }}%</div>
-                                    <div class="stat-label">On Time</div>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon danger">
-                                    <i class="fas fa-redo"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="stat-value">{{ proposal.freelancer.revision_rate|default:"0" }}%</div>
-                                    <div class="stat-label">Revision Rate</div>
                                 </div>
                             </div>
                         </div>
