@@ -8,6 +8,14 @@
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/home/freelancer-detail.css' %}">
+<style>
+.hero-section .rating-section .stars i.fas.fa-star {
+    color: #FFD700 !important; /* Gold color */
+}
+.hero-section .rating-section .stars i.far.fa-star {
+    color: #FFD700 !important; /* Gold color for empty stars too */
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -282,15 +290,6 @@
                     <h3 class="section-title">
                         <i class="fas fa-star"></i> Reviews & Ratings
                     </h3>
-                    <div class="reviews-header">
-                        <div class="reviews-count">{{freelancer.review_stats.total_reviews}} reviews</div>
-                        <div class="reviews-filter">
-                            <div class="filter-item active">All</div>
-                            <div class="filter-item">Recent</div>
-                            <div class="filter-item">Positive</div>
-                            <div class="filter-item">Critical</div>
-                        </div>
-                    </div>
                     <div class="reviews-stats">
                         <div class="review-overall">
                             <div class="review-score">{{freelancer.review_stats.average_rating|floatformat:1}}</div>

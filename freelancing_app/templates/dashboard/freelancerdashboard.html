@@ -775,10 +775,10 @@
                                 </p>
                             </div>
                             <div class="testimonial-author">
-                                <img src="{% static 'images/defaultimages/ronaldo.jpg' %}" alt="{{ review.contract.proposal.project.client.user.get_full_name|default:review.contract.proposal.project.client.user.username }}" class="author-image">
+                                <img src="{% get_media_prefix %}profile_images/{{ review.contract.proposal.project.client.user.profile_image }}" alt="{{ review.contract.proposal.project.client.user.full_name|default:review.contract.proposal.project.client.user.username }}" class="author-image">
                                 <div class="author-details">
                                     <h4 class="author-name">
-                                        {{ review.contract.proposal.project.client.user.get_full_name|default:review.contract.proposal.project.client.user.username }}
+                                        {{ review.contract.proposal.project.client.user.full_name|default:review.contract.proposal.project.client.user.username }}
                                     </h4>
                                     <div class="rating">
                                         {% for i in "12345"|slice:":review.rating" %}

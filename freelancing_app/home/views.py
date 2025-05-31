@@ -561,6 +561,14 @@ class FreelancerDetailView(View):
         """
         freelancer = Freelancer.objects.get(id=freelancer_id)
         
+        # Add review stats and completed projects for template
+        from contract.models import Review, Contract
+        freelancer.review_stats = Review.get_freelancer_stats(freelancer)
+        freelancer.completed_projects = Contract.objects.filter(
+            proposal__freelancer=freelancer,
+            status=Contract.Status.COMPLETED
+        ).count()
+        
         freelancer_languages = FreelancerLanguage.objects.filter(
                 freelancer=freelancer
             ).select_related('language')
