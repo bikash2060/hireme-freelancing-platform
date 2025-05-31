@@ -82,38 +82,21 @@ class TaskSubmission(models.Model):
         return f"Submission #{self.id} - {self.status}"
 
 class Transaction(models.Model):
-    class Status(models.TextChoices):   
-        PENDING = 'pending', _('Pending')
-        COMPLETED = 'completed', _('Completed')
-        FAILED = 'failed', _('Failed')
-        
-    contract = models.OneToOneField(
-        Contract,
-        on_delete=models.CASCADE,
-        related_name='transaction'
-    )
-    amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2
-    )
-    payment_date = models.DateTimeField(auto_now_add=True)
-    payment_method = models.CharField(
-        max_length=50,
-        help_text=_("E.g., Esewa, Khalti, Bank Transfer")
-    )
-    status = models.CharField(
-        max_length=20,
-        choices=Status.choices,
-        default=Status.PENDING
-    )
-
-    class Meta:
-        db_table = "transaction"
-        ordering = ['-payment_date']
-
-    def __str__(self):
-        return f"Transaction for Contract #{self.contract.id}"
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        COMPLETED = 'completed', 'Completed'
+        FAILED = 'failed', 'Failed'
     
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='transactions')
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = models.CharField(max_length=50)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    transaction_uuid = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    
+    def __str__(self):
+        return f"Transaction {self.id} - {self.contract.proposal.project.title}"
+
 class Review(models.Model):
     class ReviewerType(models.TextChoices):
         CLIENT = 'client', _('Client')

@@ -316,7 +316,7 @@
                             {% if submission.status == 'final_submitted' and user.role == 'client' and contract.status != 'completed' %}
                             <div class="payment-section">
                                 <h4><i class="fas fa-credit-card"></i> Process Payment</h4>
-                                <form action="{% url 'contract:process_payment' contract.id %}" method="POST" class="payment-form">
+                                <form action="{% url 'contract:process_payment' contract.id %}" method="POST" class="payment-form" id="paymentForm">
                                     {% csrf_token %}
                                     <div class="form-group">
                                         <label for="payment_method">Select Payment Method</label>
@@ -337,7 +337,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary" id="payButton">
                                         <i class="fas fa-lock"></i> Pay Now
                                     </button>
                                 </form>
@@ -527,4 +527,5 @@
 
 {% block js_files %}
 <script src="{% static 'js/contract/contract.js' %}"></script>
+<script src="{% static 'js/contract/payment.js' %}"></script>
 {% endblock %}

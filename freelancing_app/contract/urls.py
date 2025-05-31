@@ -23,4 +23,6 @@ urlpatterns = [
     path('workspace/<int:contract_id>/review-submission/<int:submission_id>/', views.ReviewSubmissionView.as_view(), name='review_submission'),
     path('workspace/<int:contract_id>/process-payment/', views.ProcessPaymentView.as_view(), name='process_payment'),
     path('workspace/<int:contract_id>/leave-review/', views.LeaveReviewView.as_view(), name='leave_review'),
+    path('payment/success/', views.PaymentSuccessView.as_view(), name='payment_success'),
+    path('payment/failure/', views.PaymentFailureView.as_view(), name='payment_failure'),
 ]
