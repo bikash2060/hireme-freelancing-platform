@@ -115,7 +115,7 @@
         </div>
     
         <div class="workspace-sections">
-            {% if user.role == 'freelancer' %}
+            {% if user.role == 'freelancer' and contract.status != 'completed' %}
             <div class="work-submission-section card">
                 <div class="section-header">
                     <h2><i class="fas fa-cloud-upload-alt"></i> Submit Work</h2>
@@ -172,13 +172,13 @@
                             
                             <div class="submission-body">
                                 <div class="description-section">
-                                    <h4>Description</h4>
+                                    <h4>{% if user.role == 'client' %}Freelancer's Description{% else %}Your Description{% endif %}</h4>
                                     <p>{{ submission.description }}</p>
                                 </div>
                                 
                                 {% if submission.feedback %}
                                 <div class="feedback-section">
-                                    <h4>Client Feedback</h4>
+                                    <h4>{% if user.role == 'client' %}Your Feedback{% else %}Client Feedback{% endif %}</h4>
                                     <div class="feedback-content">
                                         <p>{{ submission.feedback }}</p>
                                     </div>
@@ -244,7 +244,7 @@
                             </div>
                             {% endif %}
     
-                            {% if submission.status == 'final_submitted' and user.role == 'client' %}
+                            {% if submission.status == 'final_submitted' and user.role == 'client' and contract.status != 'completed' %}
                             <div class="payment-section">
                                 <h4><i class="fas fa-credit-card"></i> Process Payment</h4>
                                 <form action="{% url 'contract:process_payment' contract.id %}" method="POST" class="payment-form">
@@ -275,7 +275,7 @@
                             </div>
                             {% endif %}
     
-                            {% if submission.status == 'completed' and not contract.review %}
+                            {% if contract.status == 'completed' and not contract.review %}
                             <div class="review-section">
                                 <h4><i class="fas fa-star"></i> Leave a Review</h4>
                                 <form action="{% url 'contract:leave_review' contract.id %}" method="POST">
