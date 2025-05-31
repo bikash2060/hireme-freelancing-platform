@@ -23,7 +23,7 @@
                             <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{% url 'contract:client_contract_list' %}">My Contracts</a>
+                            <a href="{% url 'contract:freelancer_contract_list' %}">My Contracts</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
                             {{ contract.proposal.project.title|truncatechars:30 }}

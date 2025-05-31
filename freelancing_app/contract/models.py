@@ -39,6 +39,48 @@ class Contract(models.Model):
         db_table = "contract"
         ordering = ['-created_at']
 
+class Workspace(models.Model):
+    """Workspace for project collaboration between client and freelancer"""
+    contract = models.OneToOneField(
+        Contract,
+        on_delete=models.CASCADE,
+        related_name='workspace'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"Workspace for {self.contract.proposal.project.title}"
+    
+    class Meta:
+        db_table = "workspace"
+
+class TaskSubmission(models.Model):
+    STATUS_CHOICES = [
+        ('submitted', 'Submitted'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('final_submitted', 'Final Work Submitted'),
+        ('completed', 'Completed')
+    ]
+    
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='submissions')
+    description = models.TextField()
+    attachment = models.FileField(upload_to='task_attachments/', blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='submitted')
+    feedback = models.TextField(blank=True)
+    final_description = models.TextField(blank=True)
+    final_attachment = models.FileField(upload_to='final_submissions/', blank=True, null=True)
+    due_date = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        
+    def __str__(self):
+        return f"Submission #{self.id} - {self.status}"
+
 class Transaction(models.Model):
     class Status(models.TextChoices):   
         PENDING = 'pending', _('Pending')

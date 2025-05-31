@@ -63,7 +63,7 @@
                     </div>
                     <div class="action-buttons">
                         {% if proposal.status == 'rejected' %}
-                            <a href="" class="btn btn-secondary delete-action" data-item-type="proposal">
+                            <a href="{% url 'proposal:delete-proposal' proposal.id %}" class="btn btn-secondary delete-action" data-item-type="proposal">
                                 <i class="fas fa-trash"></i> Delete
                             </a>
                         {% endif %}

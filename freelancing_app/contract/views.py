@@ -1,4 +1,4 @@
-from .models import Contract, Transaction, Review
+from .models import Contract, Transaction, Review, Workspace, TaskSubmission
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.storage import FileSystemStorage
 from accounts.mixins import CustomLoginRequiredMixin
@@ -150,6 +150,10 @@ class ClientContractDetailView(BaseContractView):
             messages.error(request, "Contract not found or you don't have permission to access it.")
             return redirect('contract:client_contract_list')
         
+        # Redirect to workspace if both parties have signed
+        if contract.client_signature and contract.freelancer_signature:
+            return redirect('contract:workspace', contract_id=contract_id)
+        
         context = {
             'contract': contract,
             'active_tab': 'contracts'
@@ -165,93 +169,251 @@ class FreelancerContractDetailView(BaseContractView):
             messages.error(request, "Contract not found or you don't have permission to access it.")
             return redirect('contract:freelancer_contract_list')
         
+        # Redirect to workspace if both parties have signed
+        if contract.client_signature and contract.freelancer_signature:
+            return redirect('contract:workspace', contract_id=contract_id)
+        
         context = {
             'contract': contract,
             'active_tab': 'contracts'
         }
         return render(request, 'contract/freelancer/contract-details.html', context)
 
-class ClientCompleteContractView(BaseContractView):
-    """View for clients to mark a contract as completed."""
-    
-    def post(self, request, contract_id):
-        contract = self.get_contract(request, contract_id)
-        if not contract or request.user.role != 'client':
-            messages.error(request, "Contract not found or you don't have permission to access it.")
-            return redirect('contract:client_contract_list')
-        
-        if contract.status != Contract.Status.ACTIVE:
-            messages.error(request, "Only active contracts can be marked as completed.")
-            return redirect('contract:client_contract_detail', contract_id=contract_id)
-        
-        with transaction.atomic():
-            contract.status = Contract.Status.COMPLETED
-            contract.completed_date = datetime.now().date()
-            contract.save()
-            
-            Transaction.objects.get_or_create(
-                contract=contract,
-                defaults={
-                    'amount': contract.agreed_amount,
-                    'payment_method': 'System',
-                    'status': Transaction.Status.COMPLETED
-                }
-            )
-            
-            # Notify freelancer
-            freelancer_user = contract.proposal.freelancer.user
-            NotificationManager.create_notification(
-                user=freelancer_user,
-                title="Contract Completed",
-                message=f"Contract for {contract.proposal.project.title} has been marked as completed",
-                link=reverse('contract:freelancer_contract_detail', args=[contract.id])
-            )
-        
-        messages.success(request, "Contract has been marked as completed successfully.")
-        return redirect('contract:client_contract_detail', contract_id=contract_id)
 
-# Review Views
-class ClientLeaveReviewView(BaseContractView):
-    """View for clients to leave reviews for completed contracts."""
+class WorkspaceView(BaseContractView):
+    """View for managing workspace and submissions"""
+    TEMPLATE_NAME = 'contract/workspace.html'
     
     def get(self, request, contract_id):
         contract = self.get_contract(request, contract_id)
-        if not contract or request.user.role != 'client':
+        if not contract:
             messages.error(request, "Contract not found or you don't have permission to access it.")
-            return redirect('contract:client_contract_list')
-        
-        if contract.status != Contract.Status.COMPLETED:
-            messages.error(request, "You can only leave reviews for completed contracts.")
-            return redirect('contract:client_contract_detail', contract_id=contract_id)
-        
-        # Check if review already exists
-        if hasattr(contract, 'review'):
-            messages.info(request, "You've already left a review for this contract.")
-            return redirect('contract:client_contract_detail', contract_id=contract_id)
+            return redirect('contract:client_contract_list' if request.user.role == 'client' else 'contract:freelancer_contract_list')
+            
+        # Create workspace if it doesn't exist and both parties have signed
+        if not hasattr(contract, 'workspace') and contract.client_signature and contract.freelancer_signature:
+            workspace = Workspace.objects.create(contract=contract)
+        else:
+            workspace = getattr(contract, 'workspace', None)
+            
+        if not workspace:
+            messages.warning(request, "Both parties must sign the contract before accessing the workspace.")
+            return redirect('contract:client_contract_detail' if request.user.role == 'client' else 'contract:freelancer_contract_detail', contract_id=contract_id)
+            
+        submissions = workspace.submissions.all()
         
         context = {
             'contract': contract,
-            'active_tab': 'contracts'
+            'workspace': workspace,
+            'submissions': submissions,
+            'active_tab': 'workspace'
         }
-        return render(request, 'contract/client/leave_review.html', context)
+        return render(request, self.TEMPLATE_NAME, context)
+
+class CreateSubmissionView(BaseContractView):
+    """View for creating new submissions"""
+    
+    def post(self, request, contract_id):
+        contract = self.get_contract(request, contract_id)
+        if not contract or request.user.role != 'freelancer':
+            messages.error(request, "Only freelancers can create submissions.")
+            return redirect('contract:freelancer_contract_list')
+            
+        workspace = getattr(contract, 'workspace', None)
+        if not workspace:
+            messages.error(request, "Workspace not found.")
+            return redirect('contract:freelancer_contract_detail', contract_id=contract_id)
+            
+        description = request.POST.get('description', '').strip()
+        attachment = request.FILES.get('attachment')
+        
+        if not description or not attachment:
+            messages.error(request, "Please provide both description and attachment.")
+            return redirect('contract:workspace', contract_id=contract_id)
+            
+        # Handle attachment storage
+        attachment_path = None
+        if attachment:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'task_attachments'))
+            filename = fs.save(attachment.name, attachment)
+            attachment_path = 'task_attachments/' + os.path.basename(filename)
+            
+        submission = TaskSubmission.objects.create(
+            workspace=workspace,
+            description=description,
+            attachment=attachment_path
+        )
+        
+        # Notify client
+        client_user = contract.proposal.project.client.user
+        NotificationManager.send_notification(
+            user=client_user,
+            message=f"New work has been submitted for {contract.proposal.project.title}",
+            redirect_url=reverse('contract:workspace', args=[contract.id])
+        )
+        
+        messages.success(request, "Work submitted successfully for review.")
+        return redirect('contract:workspace', contract_id=contract_id)
+
+class ReviewSubmissionView(BaseContractView):
+    """View for reviewing submitted work"""
+    
+    def post(self, request, contract_id, submission_id):
+        contract = self.get_contract(request, contract_id)
+        if not contract or request.user.role != 'client':
+            messages.error(request, "Only clients can review work.")
+            return redirect('contract:client_contract_list')
+            
+        workspace = getattr(contract, 'workspace', None)
+        if not workspace:
+            messages.error(request, "Workspace not found.")
+            return redirect('contract:client_contract_detail', contract_id=contract_id)
+            
+        submission = get_object_or_404(TaskSubmission, id=submission_id, workspace=workspace)
+        
+        if submission.status != 'submitted':
+            messages.error(request, "This submission is not ready for review.")
+            return redirect('contract:workspace', contract_id=contract_id)
+            
+        action = request.POST.get('action', '').lower().strip()
+        feedback = request.POST.get('feedback', '').strip()
+        
+        if not action:
+            messages.error(request, "No action specified. Please select either Approve or Request Changes.")
+            return redirect('contract:workspace', contract_id=contract_id)
+            
+        if action == 'approve':
+            submission.status = 'approved'
+            message = "Work approved successfully."
+        elif action == 'reject':
+            submission.status = 'rejected'
+            message = "Work rejected."
+        else:
+            messages.error(request, f"Invalid action: {action}. Please select either Approve or Request Changes.")
+            return redirect('contract:workspace', contract_id=contract_id)
+            
+        submission.feedback = feedback
+        submission.save()
+        
+        # Notify freelancer
+        freelancer_user = contract.proposal.freelancer.user
+        NotificationManager.send_notification(
+            user=freelancer_user,
+            message=f"Your submission has been {action}d",
+            redirect_url=reverse('contract:workspace', args=[contract.id])
+        )
+        
+        messages.success(request, message)
+        return redirect('contract:workspace', contract_id=contract_id)
+
+class SubmitFinalWorkView(BaseContractView):
+    """View for freelancers to submit final work"""
+    
+    def post(self, request, contract_id, submission_id):
+        contract = self.get_contract(request, contract_id)
+        if not contract or request.user.role != 'freelancer':
+            messages.error(request, "Only freelancers can submit final work.")
+            return redirect('contract:freelancer_contract_list')
+            
+        submission = get_object_or_404(TaskSubmission, id=submission_id, workspace=contract.workspace)
+        
+        if submission.status != 'approved':
+            messages.error(request, "This submission is not approved for final work.")
+            return redirect('contract:workspace', contract_id=contract_id)
+            
+        final_description = request.POST.get('final_description', '').strip()
+        final_attachment = request.FILES.get('final_attachment')
+        
+        if not final_description or not final_attachment:
+            messages.error(request, "Please provide both a description and attachment for final work.")
+            return redirect('contract:workspace', contract_id=contract_id)
+            
+        submission.final_description = final_description
+        submission.final_attachment = final_attachment
+        submission.status = 'final_submitted'
+        submission.save()
+        
+        # Notify client
+        client_user = contract.proposal.project.client.user
+        NotificationManager.send_notification(
+            user=client_user,
+            message=f"Final work has been submitted for {contract.proposal.project.title}",
+            redirect_url=reverse('contract:workspace', args=[contract.id])
+        )
+        
+        messages.success(request, "Final work submitted successfully.")
+        return redirect('contract:workspace', contract_id=contract_id)
+    
+class ProcessPaymentView(BaseContractView):
+    """View for processing contract payment"""
     
     def post(self, request, contract_id):
         contract = self.get_contract(request, contract_id)
         if not contract or request.user.role != 'client':
-            messages.error(request, "Contract not found or you don't have permission to access it.")
+            messages.error(request, "Only clients can process payments.")
             return redirect('contract:client_contract_list')
-        
-        if contract.status != Contract.Status.COMPLETED:
-            messages.error(request, "You can only leave reviews for completed contracts.")
+            
+        if contract.status != Contract.Status.ACTIVE:
+            messages.error(request, "Only active contracts can be paid.")
             return redirect('contract:client_contract_detail', contract_id=contract_id)
+            
+        payment_method = request.POST.get('payment_method')
+        if not payment_method:
+            messages.error(request, "Please select a payment method.")
+            return redirect('contract:client_contract_detail', contract_id=contract_id)
+            
+        # Create or update transaction
+        transaction, created = Transaction.objects.get_or_create(
+            contract=contract,
+            defaults={
+                'amount': contract.agreed_amount,
+                'payment_method': payment_method,
+                'status': Transaction.Status.PENDING
+            }
+        )
         
-        # Check if review already exists
+        if not created:
+            transaction.payment_method = payment_method
+            transaction.status = Transaction.Status.PENDING
+            transaction.save()
+            
+        # Here you would integrate with your payment gateway
+        # For now, we'll just mark it as completed
+        transaction.status = Transaction.Status.COMPLETED
+        transaction.save()
+        
+        # Update contract status
+        contract.status = Contract.Status.COMPLETED
+        contract.completed_date = datetime.now().date()
+        contract.save()
+        
+        # Notify freelancer
+        freelancer_user = contract.proposal.freelancer.user
+        NotificationManager.send_notification(
+            user=freelancer_user,
+            message=f"Payment for {contract.proposal.project.title} has been processed",
+            redirect_url=reverse('contract:freelancer_contract_detail', args=[contract.id])
+        )
+        
+        messages.success(request, "Payment processed successfully.")
+        return redirect('contract:freelancer_contract_detail', contract_id=contract_id)
+
+
+class LeaveReviewView(BaseContractView):
+    """View for leaving reviews after work completion"""
+    
+    def post(self, request, contract_id):
+        contract = self.get_contract(request, contract_id)
+        if not contract:
+            messages.error(request, "Contract not found.")
+            return redirect('contract:client_contract_list' if request.user.role == 'client' else 'contract:freelancer_contract_list')
+            
         if hasattr(contract, 'review'):
             messages.info(request, "You've already left a review for this contract.")
-            return redirect('contract:client_contract_detail', contract_id=contract_id)
-        
+            return redirect('contract:workspace', contract_id=contract_id)
+            
         rating = request.POST.get('rating')
-        feedback = request.POST.get('feedback', '')
+        review_text = request.POST.get('review_text', '').strip()
         
         try:
             rating = int(rating)
@@ -259,24 +421,21 @@ class ClientLeaveReviewView(BaseContractView):
                 raise ValueError("Rating must be between 1 and 5")
         except (ValueError, TypeError):
             messages.error(request, "Please provide a valid rating between 1 and 5.")
-            return redirect('contract:client_leave_review', contract_id=contract_id)
-        
-        # Create review
-        review = Review(
+            return redirect('contract:workspace', contract_id=contract_id)
+            
+        review = Review.objects.create(
             contract=contract,
             rating=rating,
-            feedback=feedback
+            feedback=review_text
         )
-        review.save()
         
-        # Notify freelancer
-        freelancer_user = contract.proposal.freelancer.user
-        NotificationManager.create_notification(
-            user=freelancer_user,
-            title="New Review Received",
+        # Notify the other party
+        other_user = contract.proposal.freelancer.user if request.user.role == 'client' else contract.proposal.project.client.user
+        NotificationManager.send_notification(
+            user=other_user,
             message=f"You've received a {rating}-star review for {contract.proposal.project.title}",
-            link=reverse('contract:freelancer_contract_detail', args=[contract.id])
+            redirect_url=reverse('contract:workspace', args=[contract.id])
         )
         
         messages.success(request, "Review submitted successfully.")
-        return redirect('contract:client_contract_detail', contract_id=contract_id)
+        return redirect('contract:workspace', contract_id=contract_id)

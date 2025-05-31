@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load extra_filters %}
+{% load project_filters %}
+{% load number_filters %}
+{% load custom_filters %}
+
+{% block title %}Workspace - {{ contract.proposal.project.title }}{% endblock %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static 'css/contract/workspace.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="workspace-container">
+    <div class="container">
+        <div class="workspace-header">
+            <div class="header-content">
+                <div class="breadcrumb">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb-list">
+                            <li class="breadcrumb-item">
+                                {% if user.role == 'freelancer'%}
+                                    <a href="{% url 'dashboard:freelancer' %}"><i class="fas fa-home"></i> Dashboard</a>
+                                {% else %}
+                                    <a href="{% url 'dashboard:client' %}"><i class="fas fa-home"></i> Dashboard</a>
+                                {% endif %}
+                            </li>
+                            <li class="breadcrumb-item">
+                                {% if user.role == 'freelancer'%}
+                                    <a href="{% url 'contract:freelancer_contract_list' %}">My Contracts</a>
+                                {% else %}
+                                    <a href="{% url 'contract:client_contract_list' %}">My Contracts</a>
+                                {% endif %}
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">
+                                {{ project.title|truncatechars:30 }}
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <h1>Workspace: <span>{{ contract.proposal.project.title }}</span></h1>
+                <p class="project-description">{{ contract.proposal.project.description|truncatechars:120 }}</p>
+            </div>
+            
+            <div class="workspace-info-card">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Client</div>
+                            <div class="info-value">{{ contract.proposal.project.client.user.full_name }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Freelancer</div>
+                            <div class="info-value">{{ contract.proposal.freelancer.user.full_name }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Contract Amount</div>
+                            <div class="info-value">Rs. {{ contract.agreed_amount|format_currency }}</div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div>
+                            <div class="info-label">Duration</div>
+                            <div class="info-value">{{ contract.start_date }} to {{ contract.end_date }}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>Project Progress</span>
+                        <span class="progress-percent">{% if contract.status == 'completed' %}100%{% else %}65%{% endif %}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {% if contract.status == 'completed' %}100%{% else %}65%{% endif %}"></div>
+                    </div>
+                    <div class="progress-status">
+                        <span class="status-badge {{ contract.status }}">{{ contract.status|title }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="workspace-sections">
+            {% if user.role == 'freelancer' %}
+            <div class="work-submission-section card">
+                <div class="section-header">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Submit Work</h2>
+                    <p>Upload your completed work for client review</p>
+                </div>
+                <form action="{% url 'contract:submit_work' contract.id %}" method="POST" enctype="multipart/form-data" class="submission-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="description">Description of Work</label>
+                        <textarea id="description" name="description" required placeholder="Describe the work you've completed..."></textarea>
+                    </div>
+                    <div class="form-group file-upload">
+                        <label for="attachment">Attach Files</label>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Drag & drop files here or click to browse</p>
+                            <input type="file" id="attachment" name="attachment" required>
+                        </div>
+                        <div class="file-preview" id="filePreview"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Work
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+    
+            <div class="submissions-section card">
+                <div class="section-header">
+                    <h2><i class="fas fa-tasks"></i> Work Submissions</h2>
+                    <p>Track all submitted work and client feedback</p>
+                </div>
+                
+                {% if submissions %}
+                    <div class="submissions-list">
+                        {% for submission in submissions %}
+                        <div class="submission-card">
+                            <div class="submission-header">
+                                <div>
+                                    <h3>Submission #{{ forloop.counter }}</h3>
+                                    <div class="submission-meta">
+                                        <span class="submission-date"><i class="far fa-clock"></i> {{ submission.created_at }}</span>
+                                        <span class="submission-status {{ submission.status }}">{{ submission.status|title }}</span>
+                                    </div>
+                                </div>
+                                <div class="submission-actions">
+                                    {% if submission.attachment %}
+                                    <a href="{{ submission.attachment.url }}" class="btn btn-icon" target="_blank" title="Download Files">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="submission-body">
+                                <div class="description-section">
+                                    <h4>Description</h4>
+                                    <p>{{ submission.description }}</p>
+                                </div>
+                                
+                                {% if submission.feedback %}
+                                <div class="feedback-section">
+                                    <h4>Client Feedback</h4>
+                                    <div class="feedback-content">
+                                        <p>{{ submission.feedback }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+    
+                            {% if submission.status == 'submitted' and user.role == 'client' %}
+                            <div class="review-section">
+                                <h4><i class="fas fa-check-circle"></i> Review Work</h4>
+                                <form action="{% url 'contract:review_submission' contract.id submission.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="feedback">Your Feedback</label>
+                                        <textarea id="feedback" name="feedback" required placeholder="Provide your feedback on the submitted work..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Select Action</label>
+                                        <div class="action-options">
+                                            <label class="action-option">
+                                                <input type="radio" name="action" value="approve" required>
+                                                <span class="action-label approve">
+                                                    <i class="fas fa-check"></i> Approve Work
+                                                </span>
+                                            </label>
+                                            <label class="action-option">
+                                                <input type="radio" name="action" value="reject" required>
+                                                <span class="action-label reject">
+                                                    <i class="fas fa-redo"></i> Request Changes
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Submit Review
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+    
+                            {% if submission.status == 'approved' and user.role == 'freelancer' %}
+                            <div class="final-submission-section">
+                                <h4><i class="fas fa-flag-checkered"></i> Submit Final Work</h4>
+                                <form action="{% url 'contract:submit_final_work' contract.id submission.id %}" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="final_description">Final Work Description</label>
+                                        <textarea id="final_description" name="final_description" required></textarea>
+                                    </div>
+                                    <div class="form-group file-upload">
+                                        <label for="final_attachment">Final Work Files</label>
+                                        <div class="upload-area">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Drag & drop final files here or click to browse</p>
+                                            <input type="file" id="final_attachment" name="final_attachment" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Submit Final Work
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+    
+                            {% if submission.status == 'final_submitted' and user.role == 'client' %}
+                            <div class="payment-section">
+                                <h4><i class="fas fa-credit-card"></i> Process Payment</h4>
+                                <form action="{% url 'contract:process_payment' contract.id %}" method="POST" class="payment-form">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="payment_method">Select Payment Method</label>
+                                        <div class="payment-methods">
+                                            <label class="payment-method">
+                                                <input type="radio" name="payment_method" value="esewa" required>
+                                                <div class="method-card">
+                                                    <img src="{% static 'images/payment/esewa.png' %}" alt="Esewa">
+                                                    <span>Esewa</span>
+                                                </div>
+                                            </label>
+                                            <label class="payment-method">
+                                                <input type="radio" name="payment_method" value="khalti" required>
+                                                <div class="method-card">
+                                                    <img src="{% static 'images/payment/khalti.png' %}" alt="Khalti">
+                                                    <span>Khalti</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-lock"></i> Pay Now
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+    
+                            {% if submission.status == 'completed' and not contract.review %}
+                            <div class="review-section">
+                                <h4><i class="fas fa-star"></i> Leave a Review</h4>
+                                <form action="{% url 'contract:leave_review' contract.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="rating">Rating</label>
+                                        <div class="rating-stars">
+                                            <input type="radio" id="star5" name="rating" value="5">
+                                            <label for="star5"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star4" name="rating" value="4">
+                                            <label for="star4"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star3" name="rating" value="3">
+                                            <label for="star3"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star2" name="rating" value="2">
+                                            <label for="star2"><i class="fas fa-star"></i></label>
+                                            <input type="radio" id="star1" name="rating" value="1" checked>
+                                            <label for="star1"><i class="fas fa-star"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="review_text">Review</label>
+                                        <textarea id="review_text" name="review_text" required placeholder="Share your experience working with this freelancer..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-check"></i> Submit Review
+                                    </button>
+                                </form>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="far fa-folder-open"></i>
+                        </div>
+                        <h3>No Work Submitted Yet</h3>
+                        <p>When work is submitted, it will appear here for review.</p>
+                        {% if user.role == 'freelancer' %}
+                        <a href="#submit-work" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Submit Your First Work
+                        </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_files %}
+<script src="{% static 'js/contract/contract.js' %}"></script>
+{% endblock %}

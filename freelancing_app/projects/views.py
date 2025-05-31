@@ -957,9 +957,9 @@ class ProjectProposalsView(BaseProjectView):
 # ✅ [TESTED & COMPLETED]
 # View Name: ProposalDetailView
 # Description: Displays detailed view of a specific proposal
-# Tested On: 
-# Status: 
-# Code Refractor Status: 
+# Tested On: 2025-04-29
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class ProjectProposalDetailsView(BaseProjectView):
     """
@@ -1024,12 +1024,12 @@ class ProjectProposalDetailsView(BaseProjectView):
             return redirect(self.PROJECT_URL)
 
 # ------------------------------------------------------
-# Pending:
+# ✅ [TESTED & COMPLETED]
 # View Name: ProposalActionView
 # Description: Handles actions on proposals (accept, shortlist, reject)
-# Tested On: 
-# Status: 
-# Code Refractor Status: 
+# Tested On:  2025-04-29
+# Status: Working as expected
+# Code Refractor Status: Completed
 # ------------------------------------------------------
 class ProposalActionView(BaseProjectView):
     """
@@ -1071,15 +1071,14 @@ class ProposalActionView(BaseProjectView):
                 end_date = start_date + timedelta(weeks=project.estimated_duration)
                 
                 contract = Contract.objects.create(
-                        proposal=proposal,
-                        agreed_amount=proposal.proposed_amount,
-                        start_date=start_date,
-                        end_date=end_date,
-                        status=Contract.Status.ACTIVE,
-                        client_signature=False,  
-                        freelancer_signature=False,  
-                        is_terms_accepted=False
-                    )
+                    proposal=proposal,
+                    agreed_amount=proposal.proposed_amount,
+                    start_date=start_date,
+                    end_date=end_date,
+                    status=Contract.Status.ACTIVE,
+                    client_signature=False,  
+                    freelancer_signature=False,  
+                )
                 
                 project.status = Project.Status.IN_PROGRESS
                 project.save()
@@ -1134,6 +1133,3 @@ class ProposalActionView(BaseProjectView):
             print(f"[ProposalActionView Error]: {e}")
             messages.error(request, 'An error occurred while processing your request.')
             return redirect(self.PROJECT_URL)
-
-
-

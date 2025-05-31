@@ -214,13 +214,23 @@
                     </div>
                     
                     <div class="contract-actions">
-                        <a href="{% url 'contract:freelancer_contract_detail' contract.id %}" class="action-btn view-btn">
+                        {% if contract.client_signature and contract.freelancer_signature %}
+                        <a href="{% url 'contract:workspace' contract.id %}" class="action-btn view-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                 <circle cx="12" cy="12" r="3"></circle>
                             </svg>
-                            View Details
+                            Go to Workspace
                         </a>
+                        {% else %}
+                            <a href="{% url 'contract:freelancer_contract_detail' contract.id %}" class="action-btn view-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                View Details
+                            </a>
+                        {% endif %}
                         
                         {% if not contract.freelancer_signature %}
                         <a href="{% url 'contract:freelancer_sign_contract' contract.id %}" class="action-btn sign-btn">
@@ -249,14 +259,7 @@
                     <h3>No Contracts Found</h3>
                     <p>You don't have any active contracts yet. When you hire freelancers, your contracts will appear here.</p>
                     <div class="no-contracts-actions">
-                        <a href="{% url 'projects:create_project' %}" class="action-btn primary-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            Create a Project
-                        </a>
-                        <a href="{% url 'projects:project_list' %}" class="action-btn secondary-btn">
+                        <a href="{% url 'home:projects' %}" class="action-btn secondary-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon">
                                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                             </svg>
