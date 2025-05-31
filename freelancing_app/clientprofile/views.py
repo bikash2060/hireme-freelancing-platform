@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.conf import settings
 from django.views import View
 from .models import Client
+from contract.models import Transaction
 from .utils import *
 import os
 
@@ -291,3 +292,55 @@ class PasswordChangeView(BaseClientView):
         except Exception:
             messages.error(request, 'Something went wrong. Please try again.')
             return redirect(self.EDIT_URL)
+
+# ------------------------------------------------------
+# ✅ [TESTED & COMPLETED]
+# View Name: ClientTransactionsView
+# Description: Fetches completed transactions for the logged-in client
+# Tested On: 2025-04-25
+# Status: Working as expected
+# Code Refractor Status: Completed
+# ------------------------------------------------------
+class ClientTransactionsView(BaseClientView):
+    """
+    - Fetches completed transactions for the logged-in client
+    - Returns transaction details including transaction ID, project name, payment date, amount, and freelancer name
+    """
+    TEMPLATE_NAME = 'clientprofile/payment.html'
+
+    def get(self, request):
+        try:
+            client = self.get_client(request)
+            
+            # Get only completed transactions through contracts and proposals
+            transactions = Transaction.objects.filter(
+                contract__proposal__project__client=client,
+                status=Transaction.Status.COMPLETED
+            ).select_related(
+                'contract__proposal__project',
+                'contract__proposal__freelancer__user'
+            ).order_by('-payment_date')
+            
+            # Prepare transaction data
+            transaction_list = []
+            for transaction in transactions:
+                transaction_list.append({
+                    'transaction_id': f"TRX-{transaction.id:06d}",
+                    'project_name': transaction.contract.proposal.project.title,
+                    'payment_date': transaction.payment_date,
+                    'amount': transaction.amount,
+                    'status': transaction.status,
+                    'freelancer_name': transaction.contract.proposal.freelancer.user.full_name
+                })
+            
+            return render(request, self.TEMPLATE_NAME, {
+                'payments': transaction_list
+            })
+            
+        except Exception as e:
+            print('Exception:', e)
+            messages.error(request, 'Failed to load transactions. Please try again later.')
+            return redirect(self.PROFILE_URL)
+        
+        
+        

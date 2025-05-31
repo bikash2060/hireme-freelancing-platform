@@ -9,4 +9,5 @@ urlpatterns = [
     path('my-profile/remove-image/', DeleteProfileImageView.as_view(), name='delete-profile-image'),    
     path('change-password/', PasswordChangeView.as_view(), name='change-password'),    
     path('locations/cities/', GetCitiesByCountryView.as_view(), name='get-cities'),
+    path('transactions/', ClientTransactionsView.as_view(), name='transactions'),
 ]

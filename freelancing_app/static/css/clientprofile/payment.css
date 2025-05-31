@@ -1,0 +1,194 @@
+/* User Profile Section */
+.payment-basic-info {
+    background-color: #f8fafc;
+    margin-left: 280px;
+    margin-top: 80px;
+    min-height: calc(100vh - 80px);
+    padding: 30px;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 992px) {
+    .payment-basic-info {
+        margin-left: 0;
+        padding: 20px;
+    }
+}
+
+.payment-basic-info .settings-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.payment-basic-info .settings-container .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    padding-bottom: 15px;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.payment-basic-info .settings-container .title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 70px;
+    height: 4px;
+    background: linear-gradient(90deg, #4070f4, #6a93ff);
+    border-radius: 2px;
+}
+
+/* Payment Table Styles */
+.payment-table-container {
+    overflow-x: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.payment-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 15px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.payment-table thead {
+    background: linear-gradient(90deg, #4070f4, #6a93ff);
+    color: white;
+}
+
+.payment-table th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.payment-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.payment-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.payment-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-badge.paid, 
+.status-badge.completed {
+    background-color: #e6f7ee;
+    color: #10b981;
+}
+
+.status-badge.pending {
+    background-color: #fff4e6;
+    color: #f59e0b;
+}
+
+.status-badge.failed, 
+.status-badge.cancelled {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+/* Transaction ID styling */
+.transaction-id {
+    font-family: monospace;
+    font-size: 13px;
+    color: #64748b;
+    letter-spacing: 0.5px;
+}
+
+/* View Workspace Button */
+.view-workspace-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #e0e7ff;
+    color: #4f46e5;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.view-workspace-btn:hover {
+    background-color: #c7d2fe;
+    transform: translateY(-1px);
+}
+
+.view-workspace-btn.view-only {
+    background-color: #f1f5f9;
+    color: #64748b;
+}
+
+.view-workspace-btn.view-only:hover {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+/* No Payments Message */
+.no-payments {
+    text-align: center;
+    padding: 30px;
+    color: #64748b;
+    font-style: italic;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .payment-table th, 
+    .payment-table td {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    
+    .view-workspace-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .status-badge {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+}
+
+/* Animation for table rows */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.payment-table tbody tr {
+    animation: fadeIn 0.3s ease forwards;
+    opacity: 0;
+}
+
+.payment-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.payment-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.payment-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.payment-table tbody tr:nth-child(4) { animation-delay: 0.4s; }

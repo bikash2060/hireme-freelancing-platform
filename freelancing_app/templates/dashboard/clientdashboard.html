@@ -30,9 +30,9 @@
                 </div>
                 <div class="stat-info">
                     <h4>Project Status</h4>
-                    <p class="stat-number">0 Active</p>
-                    <p class="stat-subtext">0 in development, 0 in review</p>
-                    <a href="" class="stat-link">Manage Projects</a>
+                    <p class="stat-number">{{ active_projects }} Active</p>
+                    <p class="stat-subtext">{{ in_development }} in development, {{ in_review }} in review</p>
+                    <a href="{% url 'contract:client_contract_list' %}" class="stat-link">Manage Projects</a>
                 </div>
             </div>
             
@@ -42,9 +42,9 @@
                 </div>
                 <div class="stat-info">
                     <h4>Hiring Pipeline</h4>
-                    <p class="stat-number">0 New Proposals</p>
-                    <p class="stat-subtext">0 candidates shortlisted</p>
-                    <a href="" class="stat-link">Review Applicants</a>
+                    <p class="stat-number">{{ new_proposals }} New Proposals</p>
+                    <p class="stat-subtext">{{ shortlisted_proposals }} candidates shortlisted</p>
+                    <a href="{% url 'project:client-projects' %}" class="stat-link">Review Applicants</a>
                 </div>
             </div>
             
@@ -54,9 +54,9 @@
                 </div>
                 <div class="stat-info">
                     <h4>Financial Overview</h4>
-                    <p class="stat-number">Rs 0.00 Spent</p>
-                    <p class="stat-subtext">Rs 0.00 in pending payments</p>
-                    <a href="" class="stat-link">View Transactions</a>
+                    <p class="stat-number">Rs {{ total_spent|floatformat:2|intcomma }} Spent</p>
+                    <p class="stat-subtext">Rs {{ pending_payments|floatformat:2|intcomma }} in pending payments</p>
+                    <a href="{% url 'client:transactions' %}" class="stat-link">View Transactions</a>
                 </div>
             </div>
             
@@ -66,9 +66,9 @@
                 </div>
                 <div class="stat-info">
                     <h4>Work Quality</h4>
-                    <p class="stat-number">0 Avg Rating</p>
-                    <p class="stat-subtext">From 0 completed projects</p>
-                    <a href="" class="stat-link">See Feedback</a>
+                    <p class="stat-number">{{ completed_projects }}</p>
+                    <p class="stat-subtext">Completed Projects</p>
+                    <a href="{% url 'project:client-projects' %}?status=completed" class="stat-link">View Projects</a>
                 </div>
             </div>
         </div>
