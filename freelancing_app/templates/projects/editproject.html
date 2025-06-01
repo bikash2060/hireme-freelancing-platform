@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% load extra_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}Edit Project - HireMe{% endblock %}
+{% block title %}{% translate "Edit Project" %} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/projects/editproject.css' %}">
@@ -18,13 +20,13 @@
                         <i class="fas fa-project-diagram profile-icon"></i>
                     </div>
                     <div>
-                        <h2>Edit Project</h2>
-                        <p class="subtitle">Update your project details</p>
+                        <h2>{% translate "Edit Project" %}</h2>
+                        <p class="subtitle">{% translate "Update your project details" %}</p>
                     </div>
                 </div>
                 <div class="action-buttons">
                     <a href="{% url 'project:client-project-detail' project.id %}" id="close-experience-form" class="back-to-profile-btn">
-                        <i class="fas fa-arrow-left"></i> Back to Project
+                        <i class="fas fa-arrow-left"></i> {% translate "Back to Project" %}
                     </a>
                 </div>
             </div>

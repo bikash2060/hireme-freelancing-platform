@@ -4,8 +4,10 @@
 {% load project_filters %}
 {% load number_filters %}
 {% load custom_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}Workspace - {{ contract.proposal.project.title }}{% endblock %}
+{% block title %}{% translate "Workspace" %} - {{ contract.proposal.project.title }}{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/contract/workspace.css' %}">
@@ -21,16 +23,16 @@
                         <ol class="breadcrumb-list">
                             <li class="breadcrumb-item">
                                 {% if user.role == 'freelancer'%}
-                                    <a href="{% url 'dashboard:freelancer' %}"><i class="fas fa-home"></i> Dashboard</a>
+                                    <a href="{% url 'dashboard:freelancer' %}"><i class="fas fa-home"></i> {% translate "Dashboard" %}</a>
                                 {% else %}
-                                    <a href="{% url 'dashboard:client' %}"><i class="fas fa-home"></i> Dashboard</a>
+                                    <a href="{% url 'dashboard:client' %}"><i class="fas fa-home"></i> {% translate "Dashboard" %}</a>
                                 {% endif %}
                             </li>
                             <li class="breadcrumb-item">
                                 {% if user.role == 'freelancer'%}
-                                    <a href="{% url 'contract:freelancer_contract_list' %}">My Contracts</a>
+                                    <a href="{% url 'contract:freelancer_contract_list' %}">{% translate "My Contracts" %}</a>
                                 {% else %}
-                                    <a href="{% url 'contract:client_contract_list' %}">My Contracts</a>
+                                    <a href="{% url 'contract:client_contract_list' %}">{% translate "My Contracts" %}</a>
                                 {% endif %}
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">
@@ -39,7 +41,7 @@
                         </ol>
                     </nav>
                 </div>
-                <h1>Workspace: 
+                <h1>{% translate "Workspace" %}: 
                     <span>
                         {% if user.role == 'client' %}
                             <a href="{% url 'project:client-project-detail' contract.proposal.project.id %}" class="project-title-link" target="_blank">
@@ -59,14 +61,14 @@
                 <div class="chat-button-container">
                     <a href="#" class="btn btn-chat pulse" onclick="startChatWithFreelancer({{ contract.proposal.project.client.user.id }})">
                         <i class="fas fa-comments"></i>
-                        <span>Chat with Client</span>
+                        <span>{% translate "Chat with Client" %}</span>
                     </a>
                 </div>
             {% else %}
                 <div class="chat-button-container">
                     <a href="#" class="btn btn-chat pulse" onclick="startChatWithFreelancer({{ contract.proposal.freelancer.user.id }})">
                         <i class="fas fa-comments"></i>
-                        <span>Chat with Freelancer</span>
+                        <span>{% translate "Chat with Freelancer" %}</span>
                     </a>
                 </div>
             {% endif %}
@@ -78,7 +80,7 @@
                             <i class="fas fa-user-tie"></i>
                         </div>
                         <div>
-                            <div class="info-label">Client</div>
+                            <div class="info-label">{% translate "Client" %}</div>
                             <div class="info-value">{{ contract.proposal.project.client.user.full_name }}</div>
                         </div>
                     </div>
@@ -87,7 +89,7 @@
                             <i class="fas fa-code"></i>
                         </div>
                         <div>
-                            <div class="info-label">Freelancer</div>
+                            <div class="info-label">{% translate "Freelancer" %}</div>
                             <div class="info-value">{{ contract.proposal.freelancer.user.full_name }}</div>
                         </div>
                     </div>
@@ -96,7 +98,7 @@
                             <i class="fas fa-dollar-sign"></i>
                         </div>
                         <div>
-                            <div class="info-label">Contract Amount</div>
+                            <div class="info-label">{% translate "Contract Amount" %}</div>
                             <div class="info-value">Rs. {{ contract.agreed_amount|format_currency }}</div>
                         </div>
                     </div>
@@ -105,15 +107,15 @@
                             <i class="fas fa-calendar-alt"></i>
                         </div>
                         <div>
-                            <div class="info-label">Duration</div>
-                            <div class="info-value">{{ contract.start_date }} to {{ contract.end_date }}</div>
+                            <div class="info-label">{% translate "Duration" %}</div>
+                            <div class="info-value">{{ contract.start_date }} {% translate "to" %} {{ contract.end_date }}</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="progress-container">
                     <div class="progress-header">
-                        <span>Project Progress</span>
+                        <span>{% translate "Project Progress" %}</span>
                         <span class="progress-percent">{% if contract.status == 'completed' %}100%{% else %}65%{% endif %}</span>
                     </div>
                     <div class="progress-bar">
@@ -132,26 +134,26 @@
                     {% if not submissions or last_submission.status != 'approved' and last_submission.status != 'final_submitted' %}
                     <div class="work-submission-section card">
                         <div class="section-header">
-                            <h2><i class="fas fa-cloud-upload-alt"></i> Submit Work</h2>
-                            <p>Upload your completed work for client review</p>
+                            <h2><i class="fas fa-cloud-upload-alt"></i> {% translate "Submit Work" %}</h2>
+                            <p>{% translate "Upload your completed work for client review" %}</p>
                         </div>
                         <form action="{% url 'contract:submit_work' contract.id %}" method="POST" enctype="multipart/form-data" class="submission-form">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="description">Description of Work</label>
-                                <textarea id="description" name="description" required placeholder="Describe the work you've completed..."></textarea>
+                                <label for="description">{% translate "Description of Work" %}</label>
+                                <textarea id="description" name="description" required placeholder="{% translate "Describe the work you've completed..." %}"></textarea>
                             </div>
                             <div class="form-group file-upload">
-                                <label for="attachment">Attach Files</label>
+                                <label for="attachment">{% translate "Attach Files" %}</label>
                                 <div class="upload-area" id="uploadArea">
                                     <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Drag & drop files here or click to browse</p>
+                                    <p>{% translate "Drag & drop files here or click to browse" %}</p>
                                     <input type="file" id="attachment" name="attachment" required>
                                 </div>
                                 <div class="file-preview" id="filePreview"></div>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i> Submit Work
+                                <i class="fas fa-paper-plane"></i> {% translate "Submit Work" %}
                             </button>
                         </form>
                     </div>
@@ -164,16 +166,16 @@
                     {% if submissions and last_submission.status == 'approved' and last_submission.status != 'final_submitted' %}
                     <div class="waiting-notification card">
                         <div class="section-header">
-                            <h2><i class="fas fa-clock"></i> Waiting for Final Submission</h2>
-                            <p>The freelancer is preparing the final work submission</p>
+                            <h2><i class="fas fa-clock"></i> {% translate "Waiting for Final Submission" %}</h2>
+                            <p>{% translate "The freelancer is preparing the final work submission" %}</p>
                         </div>
                         <div class="notification-content">
                             <div class="notification-icon">
                                 <i class="fas fa-hourglass-half"></i>
                             </div>
                             <div class="notification-text">
-                                <p>The work has been approved and we're waiting for the freelancer to submit the final version.</p>
-                                <p class="notification-subtext">You'll be notified when the final submission is ready for review.</p>
+                                <p>{% translate "The work has been approved and we're waiting for the freelancer to submit the final version." %}</p>
+                                <p class="notification-subtext">{% translate "You'll be notified when the final submission is ready for review." %}</p>
                             </div>
                         </div>
                     </div>
@@ -184,20 +186,20 @@
             <div class="submissions-section card">
                 <div class="section-header">
                     <div class="section-header-content">
-                        <h2><i class="fas fa-tasks"></i> Work Submissions</h2>
-                        <p>Track all submitted work and client feedback</p>
+                        <h2><i class="fas fa-tasks"></i> {% translate "Work Submissions" %}</h2>
+                        <p>{% translate "Track all submitted work and client feedback" %}</p>
                     </div>
                     {% with last_submission=submissions|first %}
                         {% if last_submission.status == 'final_submitted' %}
                             {% if contract.status == 'completed' %}
                                 <div class="payment-status completed">
                                     <i class="fas fa-check-circle"></i>
-                                    <span>Payment Completed</span>
+                                    <span>{% translate "Payment Completed" %}</span>
                                 </div>
                             {% else %}
                                 <div class="payment-status pending">
                                     <i class="fas fa-clock"></i>
-                                    <span>Pending Payment</span>
+                                    <span>{% translate "Pending Payment" %}</span>
                                 </div>
                             {% endif %}
                         {% endif %}
@@ -210,20 +212,20 @@
                         <div class="submission-card">
                             <div class="submission-header">
                                 <div>
-                                    <h3>Submission #{{ forloop.counter }}</h3>
+                                    <h3>{% translate "Submission" %} #{{ forloop.counter }}</h3>
                                     <div class="submission-meta">
                                         <span class="submission-date"><i class="far fa-clock"></i> {{ submission.created_at }}</span>
                                         <span class="submission-status {{ submission.status }}">
                                             {% if submission.status == 'final_submitted' %}
-                                                Final Submitted
+                                                {% translate "Final Submitted" %}
                                             {% elif submission.status == 'submitted' %}
-                                                Submitted
+                                                {% translate "Submitted" %}
                                             {% elif submission.status == 'approved' %}
-                                                Approved
+                                                {% translate "Approved" %}
                                             {% elif submission.status == 'rejected' %}
-                                                Rejected
+                                                {% translate "Rejected" %}
                                             {% elif submission.status == 'completed' %}
-                                                Completed
+                                                {% translate "Completed" %}
                                             {% else %}
                                                 {{ submission.status|title }}
                                             {% endif %}
@@ -232,7 +234,7 @@
                                 </div>
                                 <div class="submission-actions">
                                     {% if submission.attachment %}
-                                    <a href="{{ submission.attachment.url }}" class="btn btn-icon" download title="Download Files">
+                                    <a href="{{ submission.attachment.url }}" class="btn btn-icon" download title="{% translate 'Download Files' %}">
                                         <i class="fas fa-download"></i>
                                     </a>
                                     {% endif %}
@@ -241,13 +243,13 @@
                             
                             <div class="submission-body">
                                 <div class="description-section">
-                                    <h4>{% if user.role == 'client' %}Freelancer's Description{% else %}Your Description{% endif %}</h4>
+                                    <h4>{% if user.role == 'client' %}{% translate "Freelancer's Description" %}{% else %}{% translate "Your Description" %}{% endif %}</h4>
                                     <p>{{ submission.description }}</p>
                                 </div>
                                 
                                 {% if submission.feedback %}
                                 <div class="feedback-section">
-                                    <h4>{% if user.role == 'client' %}Your Feedback{% else %}Client Feedback{% endif %}</h4>
+                                    <h4>{% if user.role == 'client' %}{% translate "Your Feedback" %}{% else %}{% translate "Client Feedback" %}{% endif %}</h4>
                                     <div class="feedback-content">
                                         <p>{{ submission.feedback }}</p>
                                     </div>
@@ -257,32 +259,32 @@
     
                             {% if submission.status == 'submitted' and user.role == 'client' %}
                             <div class="review-section">
-                                <h4><i class="fas fa-check-circle"></i> Review Work</h4>
+                                <h4><i class="fas fa-check-circle"></i> {% translate "Review Work" %}</h4>
                                 <form action="{% url 'contract:review_submission' contract.id submission.id %}" method="POST">
                                     {% csrf_token %}
                                     <div class="form-group">
-                                        <label for="feedback">Your Feedback</label>
-                                        <textarea id="feedback" name="feedback" required placeholder="Provide your feedback on the submitted work..."></textarea>
+                                        <label for="feedback">{% translate "Your Feedback" %}</label>
+                                        <textarea id="feedback" name="feedback" required placeholder="{% translate 'Provide your feedback on the submitted work...' %}"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Select Action</label>
+                                        <label>{% translate "Select Action" %}</label>
                                         <div class="action-options">
                                             <label class="action-option">
                                                 <input type="radio" name="action" value="approve" required>
                                                 <span class="action-label approve">
-                                                    <i class="fas fa-check"></i> Approve Work
+                                                    <i class="fas fa-check"></i> {% translate "Approve Work" %}
                                                 </span>
                                             </label>
                                             <label class="action-option">
                                                 <input type="radio" name="action" value="reject" required>
                                                 <span class="action-label reject">
-                                                    <i class="fas fa-redo"></i> Request Changes
+                                                    <i class="fas fa-redo"></i> {% translate "Request Changes" %}
                                                 </span>
                                             </label>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane"></i> Submit Review
+                                        <i class="fas fa-paper-plane"></i> {% translate "Submit Review" %}
                                     </button>
                                 </form>
                             </div>
@@ -290,24 +292,24 @@
     
                             {% if submission.status == 'approved' and user.role == 'freelancer' %}
                             <div class="final-submission-section">
-                                <h4><i class="fas fa-flag-checkered"></i> Submit Final Work</h4>
+                                <h4><i class="fas fa-flag-checkered"></i> {% translate "Submit Final Work" %}</h4>
                                 <form action="{% url 'contract:submit_final_work' contract.id submission.id %}" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="form-group">
-                                        <label for="final_description">Final Work Description</label>
+                                        <label for="final_description">{% translate "Final Work Description" %}</label>
                                         <textarea id="final_description" name="final_description" required></textarea>
                                     </div>
                                     <div class="form-group file-upload">
-                                        <label for="final_attachment">Final Work Files</label>
+                                        <label for="final_attachment">{% translate "Final Work Files" %}</label>
                                         <div class="upload-area" id="finalUploadArea">
                                             <i class="fas fa-cloud-upload-alt"></i>
-                                            <p>Drag & drop final files here or click to browse</p>
+                                            <p>{% translate "Drag & drop final files here or click to browse" %}</p>
                                             <input type="file" id="final_attachment" name="final_attachment" required>
                                         </div>
                                         <div class="file-preview" id="finalFilePreview"></div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane"></i> Submit Final Work
+                                        <i class="fas fa-paper-plane"></i> {% translate "Submit Final Work" %}
                                     </button>
                                 </form>
                             </div>
@@ -315,11 +317,11 @@
     
                             {% if submission.status == 'final_submitted' and user.role == 'client' and contract.status != 'completed' %}
                             <div class="payment-section">
-                                <h4><i class="fas fa-credit-card"></i> Process Payment</h4>
+                                <h4><i class="fas fa-credit-card"></i> {% translate "Process Payment" %}</h4>
                                 <form action="{% url 'contract:process_payment' contract.id %}" method="POST" class="payment-form" id="paymentForm">
                                     {% csrf_token %}
                                     <div class="form-group">
-                                        <label for="payment_method">Select Payment Method</label>
+                                        <label for="payment_method">{% translate "Select Payment Method" %}</label>
                                         <div class="payment-methods">
                                             <label class="payment-method">
                                                 <input type="radio" name="payment_method" value="esewa" required>
@@ -338,7 +340,7 @@
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary" id="payButton">
-                                        <i class="fas fa-lock"></i> Pay Now
+                                        <i class="fas fa-lock"></i> {% translate "Pay Now" %}
                                     </button>
                                 </form>
                             </div>
@@ -351,8 +353,8 @@
                         <div class="empty-icon">
                             <i class="far fa-folder-open"></i>
                         </div>
-                        <h3>No Work Submitted Yet</h3>
-                        <p>When work is submitted, it will appear here for review.</p>
+                        <h3>{% translate "No Work Submitted Yet" %}</h3>
+                        <p>{% translate "When work is submitted, it will appear here for review." %}</p>
                     </div>
                 {% endif %}
             </div>
@@ -360,12 +362,12 @@
             {# Review section: only show once, after all submissions #}
             {% if contract.status == 'completed' %}
             <div class="review-section">
-                <h4><i class="fas fa-star"></i> Reviews</h4>
+                <h4><i class="fas fa-star"></i> {% translate "Reviews" %}</h4>
                 <div class="row" style="display: flex; gap: 30px; flex-wrap: wrap;">
                     {% if user.role == 'client' %}
                         <!-- Left: Client's review (Your Review) -->
                         <div class="col" style="flex: 1 1 300px;">
-                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Your Review</div>
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">{% translate "Your Review" %}</div>
                             {% if client_review %}
                                 <div class="review-submitted">
                                     <div class="your-review">
@@ -388,7 +390,7 @@
                                 <form action="{% url 'contract:leave_review' contract.id %}" method="POST">
                                     {% csrf_token %}
                                     <div class="form-group">
-                                        <label for="rating">Rating</label>
+                                        <label for="rating">{% translate "Rating" %}</label>
                                         <div class="rating-stars">
                                             <input type="radio" id="star5" name="rating" value="5">
                                             <label for="star5"><i class="fas fa-star"></i></label>
@@ -403,18 +405,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="review_text">Review</label>
-                                        <textarea id="review_text" name="review_text" required placeholder="Share your experience working with this freelancer..."></textarea>
+                                        <label for="review_text">{% translate "Review" %}</label>
+                                        <textarea id="review_text" name="review_text" required placeholder="{% translate 'Share your experience working with this freelancer...' %}"></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-check"></i> Submit Review
+                                        <i class="fas fa-check"></i> {% translate "Submit Review" %}
                                     </button>
                                 </form>
                             {% endif %}
                         </div>
                         <!-- Right: Freelancer's review -->
                         <div class="col" style="flex: 1 1 300px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Freelancer's Review</div>
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">{% translate "Freelancer's Review" %}</div>
                             {% if freelancer_review %}
                                 <div class="review-submitted">
                                     <div class="your-review">
@@ -435,14 +437,14 @@
                             {% else %}
                                 <div style="color: #94a3b8; margin-top: 30px; text-align: center;">
                                     <i class="far fa-comment-dots" style="font-size: 2rem;"></i><br>
-                                    No review yet
+                                    {% translate "No review yet" %}
                                 </div>
                             {% endif %}
                         </div>
                     {% else %}
                         <!-- Left: Freelancer's review (Your Review) -->
                         <div class="col" style="flex: 1 1 300px;">
-                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Your Review</div>
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">{% translate "Your Review" %}</div>
                             {% if freelancer_review %}
                                 <div class="review-submitted">
                                     <div class="your-review">
@@ -465,7 +467,7 @@
                                 <form action="{% url 'contract:leave_review' contract.id %}" method="POST">
                                     {% csrf_token %}
                                     <div class="form-group">
-                                        <label for="rating">Rating</label>
+                                        <label for="rating">{% translate "Rating" %}</label>
                                         <div class="rating-stars">
                                             <input type="radio" id="star5" name="rating" value="5">
                                             <label for="star5"><i class="fas fa-star"></i></label>
@@ -480,18 +482,18 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="review_text">Review</label>
-                                        <textarea id="review_text" name="review_text" required placeholder="Share your experience working with this client..."></textarea>
+                                        <label for="review_text">{% translate "Review" %}</label>
+                                        <textarea id="review_text" name="review_text" required placeholder="{% translate 'Share your experience working with this client...' %}"></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-check"></i> Submit Review
+                                        <i class="fas fa-check"></i> {% translate "Submit Review" %}
                                     </button>
                                 </form>
                             {% endif %}
                         </div>
                         <!-- Right: Client's review -->
                         <div class="col" style="flex: 1 1 300px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">Client's Review</div>
+                            <div style="font-weight: bold; color: #2563eb; font-size: 1.1rem;">{% translate "Client's Review" %}</div>
                             {% if client_review %}
                                 <div class="review-submitted">
                                     <div class="your-review">
@@ -512,7 +514,7 @@
                             {% else %}
                                 <div style="color: #94a3b8; margin-top: 30px; text-align: center;">
                                     <i class="far fa-comment-dots" style="font-size: 2rem;"></i><br>
-                                    No review yet
+                                    {% translate "No review yet" %}
                                 </div>
                             {% endif %}
                         </div>

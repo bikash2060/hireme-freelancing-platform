@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% load static%}
 {% load humanize %}
+{% load i18n %}
 {% load translation_tags %}
 
 
-{% block title %}My Dashboard - HireMe{% endblock %}
+{% block title %}{% translate "My Dashboard" %} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/dashboard/client/dashboard.css' %}">
@@ -17,11 +18,11 @@
         <div class="hero-content">
             <div class="welcome-message">
                 <h2>{{ greeting }}, {{ user.username }}</h2>
-                <p class="welcome-text">Here's an overview of your freelancing work</p>
+                <p class="welcome-text">{% translate "Here's an overview of your freelancing work" %}</p>
             </div>
             <div class="hero-actions">
                 <a href="{% url 'project:new-project' %}" class="post-project-btn">
-                    <i class="fas fa-plus-circle"></i> Post New Project
+                    <i class="fas fa-plus-circle"></i> {% translate "Post New Project" %}
                 </a>
             </div>
         </div>
@@ -31,10 +32,10 @@
                     <i class="fas fa-tasks"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Project Status</h4>
-                    <p class="stat-number">{{ active_projects }} Active</p>
-                    <p class="stat-subtext">{{ in_development }} in development</p>
-                    <a href="{% url 'contract:client_contract_list' %}" class="stat-link">Manage Projects</a>
+                    <h4>{% translate "Project Status" %}</h4>
+                    <p class="stat-number">{{ active_projects }} {% translate "Active" %}</p>
+                    <p class="stat-subtext">{{ in_development }} {% translate "in development" %}</p>
+                    <a href="{% url 'contract:client_contract_list' %}" class="stat-link">{% translate "Manage Projects" %}</a>
                 </div>
             </div>
             
@@ -43,10 +44,10 @@
                     <i class="fas fa-user-plus"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Hiring Pipeline</h4>
-                    <p class="stat-number">{{ new_proposals }} New Proposals</p>
-                    <p class="stat-subtext">{{ shortlisted_proposals }} candidates shortlisted</p>
-                    <a href="{% url 'project:client-projects' %}" class="stat-link">Review Applicants</a>
+                    <h4>{% translate "Hiring Pipeline" %}</h4>
+                    <p class="stat-number">{{ new_proposals }} {% translate "New Proposals" %}</p>
+                    <p class="stat-subtext">{{ shortlisted_proposals }} {% translate "candidates shortlisted" %}</p>
+                    <a href="{% url 'project:client-projects' %}" class="stat-link">{% translate "Review Applicants" %}</a>
                 </div>
             </div>
             
@@ -55,10 +56,10 @@
                     <i class="fas fa-credit-card"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Financial Overview</h4>
-                    <p class="stat-number">Rs {{ total_spent|floatformat:2|intcomma }} Spent</p>
-                    <p class="stat-subtext">Rs {{ pending_payments|floatformat:2|intcomma }} in pending payments</p>
-                    <a href="{% url 'client:transactions' %}" class="stat-link">View Transactions</a>
+                    <h4>{% translate "Financial Overview" %}</h4>
+                    <p class="stat-number">Rs {{ total_spent|floatformat:2|intcomma }} {% translate "Spent" %}</p>
+                    <p class="stat-subtext">Rs {{ pending_payments|floatformat:2|intcomma }} {% translate "in pending payments" %}</p>
+                    <a href="{% url 'client:transactions' %}" class="stat-link">{% translate "View Transactions" %}</a>
                 </div>
             </div>
             
@@ -67,10 +68,10 @@
                     <i class="fas fa-star"></i>
                 </div>
                 <div class="stat-info">
-                    <h4>Work Quality</h4>
+                    <h4>{% translate "Work Quality" %}</h4>
                     <p class="stat-number">{{ completed_projects }}</p>
-                    <p class="stat-subtext">Completed Projects</p>
-                    <a href="{% url 'project:client-projects' %}?status=completed" class="stat-link">View Projects</a>
+                    <p class="stat-subtext">{% translate "Completed Projects" %}</p>
+                    <a href="{% url 'project:client-projects' %}?status=completed" class="stat-link">{% translate "View Projects" %}</a>
                 </div>
             </div>
         </div>
@@ -80,35 +81,35 @@
 <!-- Quick Actions Section -->
 <div class="quick-actions-section">
     <div class="container">
-        <h2 class="section-title">Quick Actions</h2>
-        <p class="section-subtitle">Get started with these common tasks</p>       
+        <h2 class="section-title">{% translate "Quick Actions" %}</h2>
+        <p class="section-subtitle">{% translate "Get started with these common tasks" %}</p>       
         <div class="quick-actions-grid">
             <div class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-plus-circle"></i>
                 </div>
-                <h3>Post New Project</h3>
-                <p>Create a new job listing to attract top freelancers</p>
-                <a href="{% url 'project:new-project' %}" class="action-btn">Get Started</a>
+                <h3>{% translate "Post New Project" %}</h3>
+                <p>{% translate "Create a new job listing to attract top freelancers" %}</p>
+                <a href="{% url 'project:new-project' %}" class="action-btn">{% translate "Get Started" %}</a>
             </div>           
             
             <div class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-file-alt"></i>
                 </div>
-                <h3>Review Proposals</h3>
-                <p>Evaluate freelancer bids and shortlist candidates</p>
-                <a href="{% url 'project:client-projects' %}" class="action-btn">View Bids</a>
+                <h3>{% translate "Review Proposals" %}</h3>
+                <p>{% translate "Evaluate freelancer bids and shortlist candidates" %}</p>
+                <a href="{% url 'project:client-projects' %}" class="action-btn">{% translate "View Bids" %}</a>
             </div>            
             
             <div class="action-card">
                 <div class="action-icon">
                     <i class="fas fa-envelope"></i>
                 </div>
-                <h3>Contact Freelancers</h3>
-                <p>Communicate with your team and discuss project details</p>
+                <h3>{% translate "Contact Freelancers" %}</h3>
+                <p>{% translate "Communicate with your team and discuss project details" %}</p>
                 <a href="{% url 'contract:client_contract_list' %}" class="action-btn">
-                    Send Message
+                    {% translate "Send Message" %}
                 </a>
             </div>          
             
@@ -116,9 +117,9 @@
                 <div class="action-icon">
                     <i class="fas fa-credit-card"></i>
                 </div>
-                <h3>Process Payments</h3>
-                <p>Release payments and view transaction history</p>
-                <a href="{% url 'client:transactions' %}" class="action-btn">Payments</a>
+                <h3>{% translate "Process Payments" %}</h3>
+                <p>{% translate "Release payments and view transaction history" %}</p>
+                <a href="{% url 'client:transactions' %}" class="action-btn">{% translate "Payments" %}</a>
             </div>
         </div>
     </div>
@@ -129,8 +130,8 @@
     <div class="container">
         <div class="projects-header">
             <div>
-                <h2 class="section-title">Your Active Projects</h2>
-                <p class="section-subtitle">Monitor project progress and deadlines</p>
+                <h2 class="section-title">{% translate "Your Active Projects" %}</h2>
+                <p class="section-subtitle">{% translate "Monitor project progress and deadlines" %}</p>
             </div>
         </div>
         
@@ -151,7 +152,7 @@
                         
                         <div class="project-progress">
                             <div class="progress-info">
-                                <span>Progress</span>
+                                <span>{% translate "Progress" %}</span>
                                 <span>50%</span>
                             </div>
                             <div class="progress-bar">
@@ -163,13 +164,13 @@
                             <div class="detail-item">
                                 <i class="fas fa-user-tie"></i>
                                 <div>
-                                    <span>Freelancer</span>
+                                    <span>{% translate "Freelancer" %}</span>
                                     <span class="detail-value">
                                         {% with accepted_proposal=project.proposals.all|first %}
                                             {% if accepted_proposal and accepted_proposal.status == 'accepted' %}
                                                 {{ accepted_proposal.freelancer.user.full_name|default:accepted_proposal.freelancer.user.username }}
                                             {% else %}
-                                                Not Assigned
+                                                {% translate "Not Assigned" %}
                                             {% endif %}
                                         {% endwith %}
                                     </span>
@@ -178,13 +179,13 @@
                             <div class="detail-item">
                                 <i class="fas fa-calendar-alt"></i>
                                 <div>
-                                    <span>Deadline</span>
+                                    <span>{% translate "Deadline" %}</span>
                                     <span class="detail-value">
                                         {% with accepted_proposal=project.proposals.all|first %}
                                             {% if accepted_proposal and accepted_proposal.contract %}
                                                 {{ accepted_proposal.contract.end_date|date:"M d, Y" }}
                                             {% else %}
-                                                Not Set
+                                                {% translate "Not Set" %}
                                             {% endif %}
                                         {% endwith %}
                                     </span>
@@ -193,7 +194,7 @@
                             <div class="detail-item">
                                 <i class="fas fa-rupee-sign"></i>
                                 <div>
-                                    <span>Budget</span>
+                                    <span>{% translate "Budget" %}</span>
                                     <span class="detail-value">
                                         {% if project.is_fixed_price %}
                                             Rs {{ project.fixed_budget }}
@@ -209,17 +210,17 @@
                             {% with accepted_proposal=project.proposals.all|first %}
                                 {% if accepted_proposal and accepted_proposal.status == 'accepted' and accepted_proposal.contract %}
                                     <button class="btn-action message-btn" onclick="startChatWithFreelancer({{ accepted_proposal.freelancer.user.id }})">
-                                        <i class="fas fa-comment-alt"></i> Message
+                                        <i class="fas fa-comment-alt"></i> {% translate "Message" %}
                                     </button>
                                     <a href="{% url 'contract:workspace' accepted_proposal.contract.id %}" class="btn-action primary-btn">
-                                        <i class="fas fa-eye"></i> View Project
+                                        <i class="fas fa-eye"></i> {% translate "View Project" %}
                                     </a>
                                 {% else %}
                                     <button class="btn-action message-btn" disabled>
-                                        <i class="fas fa-comment-alt"></i> Message
+                                        <i class="fas fa-comment-alt"></i> {% translate "Message" %}
                                     </button>
                                     <a href="{% url 'project:client-projects' %}" class="btn-action primary-btn" style="text-decoration: none;">
-                                        <i class="fas fa-eye"></i> View Project
+                                        <i class="fas fa-eye"></i> {% translate "View Project" %}
                                     </a>
                                 {% endif %}
                             {% endwith %}
@@ -235,19 +236,19 @@
                         <path d="M9.5 9h5L12 12.5z"></path>
                     </svg>
                 </div>
-                <h3 class="empty-title">No Active Projects</h3>
-                <p class="empty-message">When you create or get assigned to projects, they'll appear here. Start a new project to find talented freelancers for your needs.</p>
+                <h3 class="empty-title">{% translate "No Active Projects" %}</h3>
+                <p class="empty-message">{% translate "When you create or get assigned to projects, they'll appear here. Start a new project to find talented freelancers for your needs." %}</p>
                 <div class="empty-actions">
                     <a href="{% url 'project:new-project' %}" class="btn-primary">
-                        <i class="fas fa-plus-circle"></i> Create New Project
+                        <i class="fas fa-plus-circle"></i> {% translate "Create New Project" %}
                     </a>
                     <a href="{% url 'project:client-projects' %}" class="btn-secondary">
-                        <i class="fas fa-file-alt"></i> View Proposals
+                        <i class="fas fa-file-alt"></i> {% translate "View Proposals" %}
                     </a>
                 </div>
                 <div class="empty-tip">
                     <i class="fas fa-lightbulb"></i>
-                    <span>Tip: Clear project descriptions attract better proposals</span>
+                    <span>{% translate "Tip: Clear project descriptions attract better proposals" %}</span>
                 </div>
             </div>
         {% endif %}
@@ -255,7 +256,7 @@
         {% if active_projects_data %}
             <div class="pagination">
                 <button class="pagination-btn" disabled>
-                    <i class="fas fa-chevron-left"></i> Previous
+                    <i class="fas fa-chevron-left"></i> {% translate "Previous" %}
                 </button>
                 <div class="page-numbers">
                     <button class="page-number active">1</button>
@@ -268,13 +269,13 @@
                     {% endif %}
                 </div>
                 <button class="pagination-btn" {% if total_projects <= 6 %}disabled{% endif %}>
-                    Next <i class="fas fa-chevron-right"></i>
+                    {% translate "Next" %} <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
             
             <div class="view-all-container">
                 <a href="{% url 'contract:client_contract_list' %}" class="view-all-link">
-                    View All Projects <i class="fas fa-arrow-right"></i>
+                    {% translate "View All Projects" %} <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
         {% endif %}
@@ -286,8 +287,8 @@
     <div class="container">
         <div class="progress-header">
             <div class="header-content">
-                <h2>Performance Overview</h2>
-                <p class="subtitle">Track your project performance and spending</p>
+                <h2>{% translate "Performance Overview" %}</h2>
+                <p class="subtitle">{% translate "Track your project performance and spending" %}</p>
             </div>
         </div>
         
@@ -297,14 +298,14 @@
                     <div class="card-icon">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
-                    <h3>Monthly Spending</h3>
+                    <h3>{% translate "Monthly Spending" %}</h3>
                 </div>
                 <div class="card-body">
                     <div class="progress-value">Rs {{ current_month_spending|floatformat:2|intcomma }}</div>
                     <div class="progress-stats">
                         <span class="progress-percent {% if spending_trend > 0 %}positive{% else %}negative{% endif %}">
                             <i class="fas {% if spending_trend > 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
-                            {{ spending_trend|floatformat:1 }}% vs last month
+                            {{ spending_trend|floatformat:1 }}% {% translate "vs last month" %}
                         </span>
                     </div>
                 </div>
@@ -315,13 +316,13 @@
                     <div class="card-icon">
                         <i class="fas fa-tasks"></i>
                     </div>
-                    <h3>Active Projects</h3>
+                    <h3>{% translate "Active Projects" %}</h3>
                 </div>
                 <div class="card-body">
                     <div class="progress-value">{{ active_projects }}</div>
                     <div class="progress-stats">
                         <span class="progress-percent">
-                            {{ in_development }} in development
+                            {{ in_development }} {% translate "in development" %}
                         </span>
                     </div>
                 </div>
@@ -332,14 +333,14 @@
                     <div class="card-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3>Active Freelancers</h3>
+                    <h3>{% translate "Active Freelancers" %}</h3>
                 </div>
                 <div class="card-body">
                     <div class="progress-value">{{ current_freelancers }}</div>
                     <div class="progress-stats">
                         <span class="progress-percent {% if freelancers_trend > 0 %}positive{% else %}negative{% endif %}">
                             <i class="fas {% if freelancers_trend > 0 %}fa-arrow-up{% else %}fa-arrow-down{% endif %}"></i>
-                            {{ freelancers_trend|floatformat:1 }}% vs last month
+                            {{ freelancers_trend|floatformat:1 }}% {% translate "vs last month" %}
                         </span>
                     </div>
                 </div>
@@ -350,13 +351,13 @@
                     <div class="card-icon">
                         <i class="fas fa-check-circle"></i>
                     </div>
-                    <h3>Completed Projects</h3>
+                    <h3>{% translate "Completed Projects" %}</h3>
                 </div>
                 <div class="card-body">
                     <div class="progress-value">{{ completed_projects }}</div>
                     <div class="progress-stats">
                         <span class="progress-percent">
-                            Total Value: Rs {{ total_spent|floatformat:2|intcomma }}
+                            {% translate "Total Value" %}: Rs {{ total_spent|floatformat:2|intcomma }}
                         </span>
                     </div>
                 </div>
@@ -365,7 +366,7 @@
         
         <div class="progress-chart-container">
             <div class="chart-header">
-                <h3>Monthly Spending Trend</h3>
+                <h3>{% translate "Monthly Spending Trend" %}</h3>
             </div>
             <div class="progress-chart">
                 <canvas id="clientProgressChart"></canvas>

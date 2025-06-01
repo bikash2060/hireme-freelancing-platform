@@ -3,8 +3,10 @@
 {% load project_filters %}
 {% load number_filters %}
 {% load custom_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}{{ project.title }} - Proposals - HireMe{% endblock %}
+{% block title %}{% translate "Proposals" %} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/projects/project-proposals.css' %}">
@@ -19,16 +21,16 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb-list">
                         <li class="breadcrumb-item">
-                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> {% translate "Home" %}</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{% url 'project:client-projects' %}">My Projects</a>
+                            <a href="{% url 'project:client-projects' %}">{% translate "My Projects" %}</a>
                         </li>
                         <li class="breadcrumb-item">
                             <a href="{% url 'project:client-project-detail' project.id %}">{{ project.title|truncatechars:20 }}</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Proposals
+                            {% translate "Proposals" %}
                         </li>
                     </ol>
                 </nav>

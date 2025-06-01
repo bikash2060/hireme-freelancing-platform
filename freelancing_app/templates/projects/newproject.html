@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% load extra_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}New Project - HireMe{% endblock %}
+{% block title %}{% translate "New Project" %} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/projects/addproject.css' %}">
@@ -18,13 +20,13 @@
                         <i class="fas fa-project-diagram profile-icon"></i>
                     </div>
                     <div>
-                        <h2>Post a New Project</h2>
-                        <p class="subtitle">Provide details about your project to find the right freelancers</p>
+                        <h2>{% translate "Post a New Project" %}</h2>
+                        <p class="subtitle">{% translate "Provide details about your project to find the right freelancers" %}</p>
                     </div>
                 </div>
                 <div class="action-buttons">
                     <a href="{% url 'home:home' %}" id="close-experience-form" class="back-to-profile-btn">
-                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                        <i class="fas fa-arrow-left"></i> {% translate "Back to Dashboard" %}
                     </a>
                 </div>
             </div>
@@ -36,41 +38,41 @@
                     <div class="form-grid">
                         <div class="form-section">
                             <h3 class="section-title">
-                                <i class="fas fa-info-circle"></i> Basic Information
+                                <i class="fas fa-info-circle"></i> {% translate "Basic Information" %}
                             </h3>
                             <div class="form-group">
                                 <label for="title">
-                                    <i class="fas fa-heading"></i> Project Title
+                                    <i class="fas fa-heading"></i> {% translate "Project Title" %}
                                 </label>
                                 <input type="text" id="title" name="title" class="form-control" value="{{ title }}" 
-                                    placeholder="e.g. Build a responsive website" required>
-                                <div class="input-hint">Clear, descriptive titles attract better proposals</div>
+                                    placeholder="{% translate 'e.g. Build a responsive website' %}" required>
+                                <div class="input-hint">{% translate "Clear, descriptive titles attract better proposals" %}</div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="category">
-                                    <i class="fas fa-folder"></i> Project Category
+                                    <i class="fas fa-folder"></i> {% translate "Project Category" %}
                                 </label>
                                 <select id="category" name="category" class="form-control" required>
-                                    <option value="" selected disabled>Select a category</option>
+                                    <option value="" selected disabled>{% translate "Select a category" %}</option>
                                     {% for category in categories %}
                                     <option value="{{ category.id }}" {% if category.id == category_id %}selected{% endif %}>{{ category.name }}</option>
                                     {% endfor %}
                                 </select>
-                                <div class="input-hint">Select the most relevant category for your project</div>
+                                <div class="input-hint">{% translate "Select the most relevant category for your project" %}</div>
                             </div>
                         </div>
                         
                         <div class="form-section">
                             <h3 class="section-title">
-                                <i class="fas fa-chart-line"></i> Requirements
+                                <i class="fas fa-chart-line"></i> {% translate "Requirements" %}
                             </h3>
                             <div class="form-group">
                                 <label for="experience_level">
-                                    <i class="fas fa-user-tie"></i> Experience Level Needed
+                                    <i class="fas fa-user-tie"></i> {% translate "Experience Level Needed" %}
                                 </label>
                                 <select id="experience_level" name="experience_level" class="form-control" required>
-                                    <option value="" selected disabled>Select experience level</option>
+                                    <option value="" selected disabled>{% translate "Select experience level" %}</option>
                                     {% for value, label in experience_levels %}
                                         <option value="{{ value }}" 
                                             {% if experience_level == value %}selected{% endif %}>
@@ -78,22 +80,22 @@
                                         </option>
                                     {% endfor %}
                                 </select>
-                                <div class="input-hint">Select the expertise level required</div>
+                                <div class="input-hint">{% translate "Select the expertise level required" %}</div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="estimated_duration">
-                                    <i class="fas fa-calendar-alt"></i> Estimated Duration (weeks)
+                                    <i class="fas fa-calendar-alt"></i> {% translate "Estimated Duration (weeks)" %}
                                 </label>
                                 <input type="number" id="estimated_duration" name="estimated_duration" 
                                     class="form-control" min="1" max="104" value="{{ estimated_duration }}" required>
-                                <div class="input-hint">How long do you expect this project to take?</div>
+                                <div class="input-hint">{% translate "How long do you expect this project to take?" %}</div>
                             </div>
                         </div>
                         
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-money-bill-wave"></i> Budget
+                                <i class="fas fa-money-bill-wave"></i> {% translate "Budget" %}
                             </h3>
                             
                             <div class="budget-toggle-container">
@@ -101,8 +103,8 @@
                                     <input type="radio" id="fixed_budget_option" name="budget_type" value="fixed" {% if not is_price_range %}checked{% endif %}>
                                     <label for="fixed_budget_option" class="option-content">
                                         <i class="fas fa-tag"></i>
-                                        <div class="option-title">Fixed Price</div>
-                                        <div class="option-description">One set amount for the project</div>
+                                        <div class="option-title">{% translate "Fixed Price" %}</div>
+                                        <div class="option-description">{% translate "One set amount for the project" %}</div>
                                     </label>
                                 </div>
                                 
@@ -110,8 +112,8 @@
                                     <input type="radio" id="range_budget_option" name="budget_type" value="range" {% if is_price_range %}checked{% endif %}>
                                     <label for="range_budget_option" class="option-content">
                                         <i class="fas fa-sliders-h"></i>
-                                        <div class="option-title">Price Range</div>
-                                        <div class="option-description">Flexible budget range</div>
+                                        <div class="option-title">{% translate "Price Range" %}</div>
+                                        <div class="option-description">{% translate "Flexible budget range" %}</div>
                                     </label>
                                 </div>
                             </div>
@@ -119,14 +121,14 @@
                             <div id="fixed-budget-fields" class="budget-fields {% if is_price_range %}hidden{% endif %}">
                                 <div class="budget-input-group">
                                     <label for="fixed_budget">
-                                        Fixed Budget (NPR)
+                                        {% translate "Fixed Budget (NPR)" %}
                                     </label>
                                     <div class="input-with-symbol">
                                         <span class="input-symbol">Rs</span>
                                         <input type="number" id="fixed_budget" name="fixed_budget" 
                                             class="form-control" min="1000" value="{{ fixed_budget }}">
                                     </div>
-                                    <div class="budget-hint">Total amount you're willing to pay for this project</div>
+                                    <div class="budget-hint">{% translate "Total amount you're willing to pay for this project" %}</div>
                                 </div>
                             </div>
                             
@@ -134,7 +136,7 @@
                                 <div class="duration-grid">
                                     <div class="budget-input-group">
                                         <label for="budget_min">
-                                            Minimum Budget (NPR)
+                                            {% translate "Minimum Budget (NPR)" %}
                                         </label>
                                         <div class="input-with-symbol">
                                             <span class="input-symbol">Rs</span>
@@ -145,7 +147,7 @@
                                     
                                     <div class="budget-input-group">
                                         <label for="budget_max">
-                                            Maximum Budget (NPR)
+                                            {% translate "Maximum Budget (NPR)" %}
                                         </label>
                                         <div class="input-with-symbol">
                                             <span class="input-symbol">Rs</span>
@@ -154,27 +156,27 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="budget-hint">Range of fixed prices you're willing to pay</div>
+                                <div class="budget-hint">{% translate "Range of fixed prices you're willing to pay" %}</div>
                             </div>
                         </div>
                         
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-align-left"></i> Project Description
+                                <i class="fas fa-align-left"></i> {% translate "Project Description" %}
                             </h3>
                             <div class="form-group">
                                 <label for="description">
-                                    <i class="fas fa-pen"></i> Detailed Description
+                                    <i class="fas fa-pen"></i> {% translate "Detailed Description" %}
                                 </label>
-                                <textarea id="description" name="description" class="form-control" placeholder="Explain your project in detail"
+                                <textarea id="description" name="description" class="form-control" placeholder="{% translate 'Explain your project in detail' %}"
                                     rows="6" maxlength="500" required>{{ description }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="desc-char-count">0</span>/500 characters
+                                        <span id="desc-char-count">0</span>/500 {% translate "characters" %}
                                     </div>
                                     <div class="bio-tips">
                                         <i class="fas fa-lightbulb"></i>
-                                        <span>Tip: Be specific about requirements, deliverables, and timelines</span>
+                                        <span>{% translate "Tip: Be specific about requirements, deliverables, and timelines" %}</span>
                                     </div>
                                 </div>
                             </div>
@@ -182,30 +184,30 @@
 
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-list-check"></i> Key Requirements
+                                <i class="fas fa-list-check"></i> {% translate "Key Requirements" %}
                             </h3>
                             <div class="form-group">
                                 <div id="requirements-editor" class="requirements-container">
                                     <div class="requirements-controls" style="padding: 10px 20px; text-align: right;">
-                                        <button type="button" id="clear-requirements" class="control-btn danger" title="Clear all">
-                                            <i class="fas fa-trash-alt"></i> Clear
+                                        <button type="button" id="clear-requirements" class="control-btn danger" title="{% translate 'Clear all' %}">
+                                            <i class="fas fa-trash-alt"></i> {% translate "Clear" %}
                                         </button>
                                     </div>
                                     <div class="requirements-body">
                                         <ul id="requirements-list">
                                             <li class="requirement-item empty-state">
                                                 <i class="fas fa-inbox"></i>
-                                                <span>No requirements added yet</span>
+                                                <span>{% translate "No requirements added yet" %}</span>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="requirements-footer">
                                         <button type="button" id="add-requirement" class="btn btn-primary">
-                                            <i class="fas fa-plus-circle"></i> Add New Requirement
+                                            <i class="fas fa-plus-circle"></i> {% translate "Add New Requirement" %}
                                         </button>
                                         <div class="bio-tips">
                                             <i class="fas fa-lightbulb"></i>
-                                            <span>Tip: Use clear and specific points to describe your needs</span>
+                                            <span>{% translate "Tip: Use clear and specific points to describe your needs" %}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -215,22 +217,22 @@
                         
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-info-circle"></i> Additional Information
+                                <i class="fas fa-info-circle"></i> {% translate "Additional Information" %}
                             </h3>
                             <div class="form-group">
                                 <label for="additional_info">
-                                    <i class="fas fa-align-left"></i> Extra Details
+                                    <i class="fas fa-align-left"></i> {% translate "Extra Details" %}
                                 </label>
                                 <textarea id="additional_info" name="additional_info" class="form-control" 
-                                    placeholder="Any other information freelancers should know about this project"
+                                    placeholder="{% translate 'Any other information freelancers should know about this project' %}"
                                     rows="4">{{ additional_info }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="additional-info-char-count">0</span>/500 characters
+                                        <span id="additional-info-char-count">0</span>/500 {% translate "characters" %}
                                     </div>
                                     <div class="bio-tips">
                                         <i class="fas fa-lightbulb"></i>
-                                        <span>Tip: Include any additional information that will help freelancers understand your project</span>
+                                        <span>{% translate "Tip: Include any additional information that will help freelancers understand your project" %}</span>
                                     </div>
                                 </div>
                             </div>
@@ -238,13 +240,13 @@
                         
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-code"></i> Skills
+                                <i class="fas fa-code"></i> {% translate "Skills" %}
                             </h3>
                             <div class="form-group">
                                 <label for="skills_search">
-                                    <i class="fas fa-search"></i> Search Skills
+                                    <i class="fas fa-search"></i> {% translate "Search Skills" %}
                                 </label>
-                                <input type="text" id="skills_search" class="form-control" placeholder="Search skills...">
+                                <input type="text" id="skills_search" class="form-control" placeholder="{% translate 'Search skills...' %}">
                                 
                                 <div class="skills-checkbox-container" id="skills-options">
                                     {% for skill in skills %}
@@ -269,32 +271,32 @@
                                         </div>
                                     </div>
                                     {% empty %}
-                                    <div class="no-skills-available">No skills available</div>
+                                    <div class="no-skills-available">{% translate "No skills available" %}</div>
                                     {% endfor %}
                                 </div>
                                 
                                 <div class="selected-skills-container" id="selected-skills">
-                                    <h4>Selected Skills:</h4>
+                                    <h4>{% translate "Selected Skills:" %}</h4>
                                     <div class="selected-skills-list">
                                         <!-- Selected skills with levels will appear here -->
                                     </div>
                                 </div>
                                 
-                                <div class="tags-hint">Add at least 5 skills to increase your visibility</div>
+                                <div class="tags-hint">{% translate "Add at least 5 skills to increase your visibility" %}</div>
                             </div>
                         </div>
                         
                         <div class="form-section full-width attachment-section">
                             <h3 class="section-title">
-                                <i class="fas fa-paperclip"></i> Attachments (Optional)
+                                <i class="fas fa-paperclip"></i> {% translate "Attachments (Optional)" %}
                             </h3>
                             <div class="form-group">
                                 <div class="file-upload-container">
                                     <label for="attachment" class="file-upload-label">
                                         <div class="upload-area">
                                             <i class="fas fa-cloud-upload-alt"></i>
-                                            <h4>Drag & drop files here or click to browse</h4>
-                                            <p class="file-types">Supports: PDF, DOC, JPG, PNG (Max 5MB each)</p>
+                                            <h4>{% translate "Drag & drop files here or click to browse" %}</h4>
+                                            <p class="file-types">{% translate "Supports: PDF, DOC, JPG, PNG (Max 5MB each)" %}</p>
                                         </div>
                                         <input type="file" id="attachment" name="attachment[]" class="file-upload-input" multiple
                                             {% if attachments %}value="{{ attachments }}"{% endif %}>
@@ -317,10 +319,10 @@
                     
                     <div class="form-actions">
                         <button type="hidden" name="status" value="draft" class="save-btn draft-btn">
-                            <i class="fas fa-save"></i> Save Draft
+                            <i class="fas fa-save"></i> {% translate "Save Draft" %}
                         </button>
                         <button type="submit" name="status" value="posted" class="save-btn">
-                            <i class="fas fa-paper-plane"></i> Post Project
+                            <i class="fas fa-paper-plane"></i> {% translate "Post Project" %}
                         </button>
                     </div>
                 </form>

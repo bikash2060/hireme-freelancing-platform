@@ -4,8 +4,10 @@
 {% load project_filters %}
 {% load number_filters %}
 {% load custom_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}Sign Contract - HireMe{% endblock %}
+{% block title %}{% translate "Sign Contract" %} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/contract/client/sign-contract.css' %}">
@@ -26,8 +28,8 @@
                 </svg>
             </div>
             <div class="hero-text">
-                <h2 class="title">Sign Your Contract Securely</h2>
-                <p class="subtitle">Finalize your agreement with confidence using our digital signature system</p>
+                <h2 class="title">{% translate "Sign Your Contract Securely" %}</h2>
+                <p class="subtitle">{% translate "Finalize your agreement with confidence using our digital signature system" %}</p>
             </div>
         </div>
     </div>
@@ -37,35 +39,35 @@
 <div class="sign-contract-container">
     <div class="contract-header">
         <div class="contract-project-info">
-            <h2>Signing Contract for</h2>
+            <h2>{% translate "Signing Contract for" %}</h2>
             <h3>{{ contract.proposal.project.title }}</h3>
             <div class="freelancer-info">
                 <div class="freelancer-avatar">
                     {{ contract.proposal.freelancer.user.full_name|first|upper }}
                 </div>
-                <span>With {{ contract.proposal.freelancer.user.full_name }}</span>
+                <span>{% translate "With" %} {{ contract.proposal.freelancer.user.full_name }}</span>
             </div>
         </div>
         
         <div class="contract-progress">
             <div class="progress-step completed">
                 <div class="step-icon"><i class="fas fa-check"></i></div>
-                <div class="step-label">Proposal</div>
+                <div class="step-label">{% translate "Proposal" %}</div>
             </div>
             <div class="progress-line completed"></div>
             <div class="progress-step completed">
                 <div class="step-icon"><i class="fas fa-check"></i></div>
-                <div class="step-label">Negotiation</div>
+                <div class="step-label">{% translate "Negotiation" %}</div>
             </div>
             <div class="progress-line active"></div>
             <div class="progress-step active">
                 <div class="step-icon"><i class="fas fa-pen-fancy"></i></div>
-                <div class="step-label">Signing</div>
+                <div class="step-label">{% translate "Signing" %}</div>
             </div>
             <div class="progress-line"></div>
             <div class="progress-step">
                 <div class="step-icon"><i class="fas fa-rocket"></i></div>
-                <div class="step-label">Start Project</div>
+                <div class="step-label">{% translate "Start Project" %}</div>
             </div>
         </div>
     </div>
@@ -80,33 +82,33 @@
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                         <polyline points="10 9 9 9 8 9"></polyline>
                     </svg>
-                    <h3>Contract Summary</h3>
+                    <h3>{% translate "Contract Summary" %}</h3>
                 </div>
                 <div class="contract-details">
                     <div class="detail-grid">
                         <div class="detail-item">
-                            <span class="detail-label">Project Title</span>
+                            <span class="detail-label">{% translate "Project Title" %}</span>
                             <span class="detail-value">{{ contract.proposal.project.title }}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Freelancer</span>
+                            <span class="detail-label">{% translate "Freelancer" %}</span>
                             <span class="detail-value">{{ contract.proposal.freelancer.user.full_name }}</span>
                         </div>
                         <div class="detail-item highlight">
-                            <span class="detail-label">Agreed Amount</span>
+                            <span class="detail-label">{% translate "Agreed Amount" %}</span>
                             <span class="detail-value">Rs. {{ contract.agreed_amount|format_currency }}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Start Date</span>
+                            <span class="detail-label">{% translate "Start Date" %}</span>
                             <span class="detail-value">{{ contract.start_date }}</span>
                         </div>
                         {% if contract.end_date %}
                         <div class="detail-item">
-                            <span class="detail-label">End Date</span>
+                            <span class="detail-label">{% translate "End Date" %}</span>
                             <span class="detail-value">{{ contract.end_date }}</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Duration</span>
+                            <span class="detail-label">{% translate "Duration" %}</span>
                             <span class="detail-value">{{ contract.start_date|timesince:contract.end_date }}</span>
                         </div>
                         {% endif %}
@@ -115,7 +117,7 @@
                 <form class="contract-signature-form" id="signature-form" method="POST" action="{% url 'contract:client_sign_contract' contract.id %}" style="text-align: right; margin-top: 20px;">
                     {% csrf_token %}
                     <div class="signing-button">
-                        <button class="btn btn-primary" id="sign-contract-button">Sign Contract</button>
+                        <button class="btn btn-primary" id="sign-contract-button">{% translate "Sign Contract" %}</button>
                     </div>
                 </form>
             </div>            
@@ -125,10 +127,10 @@
         <div class="contract-footer">
             <div class="security-info">
                 <i class="fas fa-lock"></i> 
-                <span>Secured with 256-bit encryption • Legally binding</span>
+                <span>{% translate "Secured with 256-bit encryption • Legally binding" %}</span>
             </div>
             <div class="support-info">
-                Need help? <a href="#" class="support-link">Contact our support team</a>
+                {% translate "Need help?" %} <a href="#" class="support-link">{% translate "Contact our support team" %}</a>
             </div>
         </div>        
     </div>
