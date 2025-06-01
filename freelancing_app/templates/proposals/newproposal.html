@@ -3,8 +3,10 @@
 {% load number_filters %}
 {% load custom_filters %}
 {% load project_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
-{% block title %}Apply for {{ project.title }} - HireMe{% endblock %}
+{% block title %}{% translate "Apply for" %} {{ project.title }} - HireMe{% endblock %}
 
 {% block css_files %}
 <link rel="stylesheet" href="{% static 'css/proposals/newproposal.css' %}">
@@ -19,13 +21,13 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb-list">
                         <li class="breadcrumb-item">
-                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> {% translate "Home" %}</a>
                         </li>
                         <li class="breadcrumb-item">
                             <a href="{% url 'home:project-detail' project.id %}">{{ project.title|truncatechars:30 }}</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Submit Proposal
+                            {% translate "Submit Proposal" %}
                         </li>
                     </ol>
                 </nav>
@@ -37,7 +39,7 @@
                             <i class="fas fa-tag"></i> {{ project.category.name }}
                         </span>
                         <span class="project-status published">
-                            <i class="fas fa-circle"></i> Open
+                            <i class="fas fa-circle"></i> {% translate "Open" %}
                         </span>
                     </div>
                       
@@ -46,7 +48,7 @@
                     <div class="project-client">
                         <div class="client-avatar">
                             {% if project.client.user.profile_image %}
-                                <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="Sarah Johnson">
+                                <img src="{% get_media_prefix %}profile_images/{{ project.client.user.profile_image }}" alt="{% translate 'Client Profile' %}">
                             {% else %}
                                 <div class="profile-icon">
                                     <i class="fas fa-user"></i>
@@ -67,7 +69,7 @@
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-clock"></i>
-                            <span>{{ project.estimated_duration }} weeks</span>
+                            <span>{{ project.estimated_duration }} {% translate "weeks" %}</span>
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-rupee-sign"></i>
@@ -94,13 +96,13 @@
                         <i class="fas fa-paper-plane profile-icon"></i>
                     </div>
                     <div>
-                        <h2>Submit Proposal</h2>
-                        <p class="subtitle">Create a compelling proposal to win this project</p>
+                        <h2>{% translate "Submit Proposal" %}</h2>
+                        <p class="subtitle">{% translate "Create a compelling proposal to win this project" %}</p>
                     </div>
                 </div>
                 <div class="action-buttons">
                     <a href="{% url 'home:project-detail' project.id %}" class="back-to-profile-btn">
-                        <i class="fas fa-arrow-left"></i> Back to Project
+                        <i class="fas fa-arrow-left"></i> {% translate "Back to Project" %}
                     </a>
                 </div>
             </div>
@@ -112,7 +114,7 @@
                     <div class="form-grid">
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-info-circle"></i> Project Summary
+                                <i class="fas fa-info-circle"></i> {% translate "Project Summary" %}
                             </h3>
                             <div class="project-summary" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                                 <div class="summary-column">
@@ -121,7 +123,7 @@
                                             <i class="fas fa-wallet"></i>
                                         </div>
                                         <div class="summary-content">
-                                            <div class="summary-label">Budget</div>
+                                            <div class="summary-label">{% translate "Budget" %}</div>
                                             <div class="summary-value">
                                                 {% if project.is_fixed_price %}
                                                     Rs. {{ project.fixed_budget|format_currency }}
@@ -137,8 +139,8 @@
                                             <i class="fas fa-calendar-alt"></i>
                                         </div>
                                         <div class="summary-content">
-                                            <div class="summary-label">Duration</div>
-                                            <div class="summary-value">{{ project.estimated_duration }} weeks</div>
+                                            <div class="summary-label">{% translate "Duration" %}</div>
+                                            <div class="summary-value">{{ project.estimated_duration }} {% translate "weeks" %}</div>
                                         </div>
                                     </div>
                                     
@@ -147,7 +149,7 @@
                                             <i class="fas fa-user-tie"></i>
                                         </div>
                                         <div class="summary-content">
-                                            <div class="summary-label">Expertise Level</div>
+                                            <div class="summary-label">{% translate "Expertise Level" %}</div>
                                             <div class="summary-value">{{ project.get_experience_level_display }}</div>
                                         </div>
                                     </div>
@@ -158,7 +160,7 @@
                                             <i class="fas fa-tag"></i>
                                         </div>
                                         <div class="summary-content">
-                                            <div class="summary-label">Category</div>
+                                            <div class="summary-label">{% translate "Category" %}</div>
                                             <div class="summary-value">{{ project.category.name }}</div>
                                         </div>
                                     </div>
@@ -167,7 +169,7 @@
                                             <i class="fas fa-clock"></i>
                                         </div>
                                         <div class="summary-content">
-                                            <div class="summary-label">Posted</div>
+                                            <div class="summary-label">{% translate "Posted" %}</div>
                                             <div class="summary-value">{{ project.created_at|format_posted_time }}</div>
                                         </div>
                                     </div>
@@ -176,11 +178,11 @@
                                             <i class="fas fa-briefcase"></i>
                                         </div>
                                         <div class="summary-content">
-                                            <div class="summary-label">Project Type</div>
+                                            <div class="summary-label">{% translate "Project Type" %}</div>
                                             {% if project.is_fixed_price %}
-                                                <div class="summary-value">Fixed Price</div>
+                                                <div class="summary-value">{% translate "Fixed Price" %}</div>
                                             {% else %}
-                                                <div class="summary-value">Price Range</div>
+                                                <div class="summary-value">{% translate "Price Range" %}</div>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -189,122 +191,122 @@
                         </div>                        
                         <div class="form-section full-width">
                             <h3 class="section-title">
-                                <i class="fas fa-file-alt"></i> Your Proposal Details
+                                <i class="fas fa-file-alt"></i> {% translate "Your Proposal Details" %}
                             </h3>
                             
                             <div class="form-group">
                                 <label for="cover_letter">
-                                    <i class="fas fa-align-left"></i> Cover Letter
+                                    <i class="fas fa-align-left"></i> {% translate "Cover Letter" %}
                                 </label>
                                 <textarea id="cover_letter" name="cover_letter" class="form-control" 
-                                placeholder="Explain why you're the best fit: your understanding, experience, approach, and any questions."
+                                placeholder="{% translate 'Explain why you\'re the best fit: your understanding, experience, approach, and any questions.' %}"
                                     rows="8" maxlength="3000" required>{{ cover_letter }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="cover-letter-char-count">0</span>/3000 characters
+                                        <span id="cover-letter-char-count">0</span>/3000 {% translate "characters" %}
                                     </div>
                                     <div class="bio-tips">
                                         <i class="fas fa-lightbulb"></i>
-                                        <span>Tip: A detailed, personalized proposal increases your chances</span>
+                                        <span>{% translate "Tip: A detailed, personalized proposal increases your chances" %}</span>
                                     </div>
                                 </div>
                             </div>                                                   
                             <div class="duration-grid">
                                 <div class="form-group">
                                     <label for="proposed_amount">
-                                        <i class="fas fa-hand-holding-usd"></i> Proposed Amount (NPR)
+                                        <i class="fas fa-hand-holding-usd"></i> {% translate "Proposed Amount (NPR)" %}
                                     </label>
                                     <div class="input-with-symbol">
                                         <span class="input-symbol">Rs</span>
                                         <input type="number" id="proposed_amount" name="proposed_amount" 
                                             class="form-control" min="1000" step="500"
-                                            placeholder="Enter your proposed amount" value="{{ proposed_amount }}" required>
+                                            placeholder="{% translate 'Enter your proposed amount' %}" value="{{ proposed_amount }}" required>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="estimated_duration">
-                                        <i class="fas fa-clock"></i> Estimated Duration (weeks)
+                                        <i class="fas fa-clock"></i> {% translate "Estimated Duration (weeks)" %}
                                     </label>
                                     <input type="number" id="estimated_duration" name="estimated_duration" 
                                         class="form-control" min="1" max="104" 
-                                        placeholder="Enter weeks needed" value="{{ estimated_duration }}" required>
+                                        placeholder="{% translate 'Enter weeks needed' %}" value="{{ estimated_duration }}" required>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="available_start_date">
-                                        <i class="fas fa-calendar-check"></i> Available Start Date
+                                        <i class="fas fa-calendar-check"></i> {% translate "Available Start Date" %}
                                     </label>
                                     <input type="date" id="available_start_date" name="available_start_date" 
                                         class="form-control"
-                                        placeholder="When can you start?" value="{{ available_start_date }}" required>
+                                        placeholder="{% translate 'When can you start?' %}" value="{{ available_start_date }}" required>
                                 </div>
                             </div>                            
                             <div class="form-group">
                                 <label for="approach_methodology">
-                                    <i class="fas fa-tasks"></i> Approach & Methodology
+                                    <i class="fas fa-tasks"></i> {% translate "Approach & Methodology" %}
                                 </label>
                                 <textarea id="approach_methodology" name="approach_methodology" class="form-control" 
-                                    placeholder="Describe your approach to completing the project including any phases or milestones" 
+                                    placeholder="{% translate 'Describe your approach to completing the project including any phases or milestones' %}" 
                                     rows="4" required>{{ approach_methodology }}</textarea>
 
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="approach-methodology-char-count">0</span>/2000 characters
+                                        <span id="approach-methodology-char-count">0</span>/2000 {% translate "characters" %}
                                     </div>
                                     <div class="bio-tips">
                                         <i class="fas fa-lightbulb"></i>
-                                        <span>Tip: Outline your step-by-step plan, key milestones, and methodology to demonstrate your expertise</span>
+                                        <span>{% translate "Tip: Outline your step-by-step plan, key milestones, and methodology to demonstrate your expertise" %}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="relevant_experience">
-                                    <i class="fas fa-award"></i> Relevant Experience
+                                    <i class="fas fa-award"></i> {% translate "Relevant Experience" %}
                                 </label>
                                 <textarea id="relevant_experience" name="relevant_experience" class="form-control" 
-                                    placeholder="Describe your relevant experience for this project" 
+                                    placeholder="{% translate 'Describe your relevant experience for this project' %}" 
                                     rows="4" required>{{ relevant_experience }}</textarea>
 
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="relevant-experience-char-count">0</span>/1500 characters
+                                        <span id="relevant-experience-char-count">0</span>/1500 {% translate "characters" %}
                                     </div>
                                     <div class="bio-tips">
                                         <i class="fas fa-lightbulb"></i>
-                                        <span>Tip: Highlight specific projects, skills, and achievements that directly relate to this opportunity</span>
+                                        <span>{% translate "Tip: Highlight specific projects, skills, and achievements that directly relate to this opportunity" %}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="questions_for_client">
-                                    <i class="fas fa-question-circle"></i> Questions for Client
+                                    <i class="fas fa-question-circle"></i> {% translate "Questions for Client" %}
                                 </label>
                                 <textarea id="questions_for_client" name="questions_for_client" class="form-control" 
-                                    placeholder="Any questions you have about the project requirements" 
+                                    placeholder="{% translate 'Any questions you have about the project requirements' %}" 
                                     rows="3" required>{{ questions_for_client }}</textarea>
                                 <div class="textarea-footer">
                                     <div class="char-counter">
-                                        <span id="questions-client-char-count">0</span>/500 characters
+                                        <span id="questions-client-char-count">0</span>/500 {% translate "characters" %}
                                     </div>
                                     <div class="bio-tips">
                                         <i class="fas fa-lightbulb"></i>
-                                        <span>Tip: Ask questions to clarify the project requirements and ensure you have all the information you need</span>
+                                        <span>{% translate "Tip: Ask questions to clarify the project requirements and ensure you have all the information you need" %}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-section full-width attachment-section">
                             <h3 class="section-title">
-                                <i class="fas fa-paperclip"></i> Attachments (Optional)
+                                <i class="fas fa-paperclip"></i> {% translate "Attachments (Optional)" %}
                             </h3>
                             <div class="form-group">
                                 <div class="file-upload-container">
                                     <label for="attachment" class="file-upload-label">
                                         <div class="upload-area">
                                             <i class="fas fa-cloud-upload-alt"></i>
-                                            <h4>Drag & drop files here or click to browse</h4>
-                                            <p class="file-types">Supports: PDF, DOC, JPG, PNG (Max 5MB each)</p>
+                                            <h4>{% translate "Drag & drop files here or click to browse" %}</h4>
+                                            <p class="file-types">{% translate "Supports: PDF, DOC, JPG, PNG (Max 5MB each)" %}</p>
                                         </div>
                                         <input type="file" id="attachment" name="attachment[]" class="file-upload-input" multiple
                                             {% if attachments %}value="{{ attachments }}"{% endif %}>
@@ -326,7 +328,7 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="save-btn">
-                            <i class="fas fa-paper-plane"></i> Submit Proposal
+                            <i class="fas fa-paper-plane"></i> {% translate "Submit Proposal" %}
                         </button>
                     </div>
                 </form>

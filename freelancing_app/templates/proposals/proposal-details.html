@@ -3,6 +3,8 @@
 {% load number_filters %}
 {% load custom_filters %}
 {% load project_filters %}
+{% load i18n %}
+{% load translation_tags %}
 
 {% block title %}{{ proposal.project.title }} - HireMe{% endblock %}
 
@@ -19,10 +21,10 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb-list">
                         <li class="breadcrumb-item">
-                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> Home</a>
+                            <a href="{% url 'home:home' %}"><i class="fas fa-home"></i> {% translate "Home" %}</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{% url 'proposal:freelancer-proposals' %}">My Proposals</a>
+                            <a href="{% url 'proposal:freelancer-proposals' %}">{% translate "My Proposals" %}</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
                             {{ proposal.project.title|truncatechars:30 }}
@@ -50,7 +52,7 @@
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-clock"></i>
-                            <span>{{ proposal.project.estimated_duration }} weeks</span>
+                            <span>{{ proposal.project.estimated_duration }} {% translate "weeks" %}</span>
                         </div>
                         <div class="stat-item">
                             <i class="fas fa-rupee-sign"></i>
@@ -64,7 +66,7 @@
                     <div class="action-buttons">
                         {% if proposal.status == 'rejected' %}
                             <a href="{% url 'proposal:delete-proposal' proposal.id %}" class="btn btn-secondary delete-action" data-item-type="proposal">
-                                <i class="fas fa-trash"></i> Delete
+                                <i class="fas fa-trash"></i> {% translate "Delete" %}
                             </a>
                         {% endif %}
                     </div>
@@ -81,13 +83,13 @@
             <div class="overview-main">
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-align-left"></i> Proposal Details
+                        <i class="fas fa-align-left"></i> {% translate "Proposal Details" %}
                     </h3>
                     <div class="project-description">
-                        <h4>Cover Letter:</h4>
+                        <h4>{% translate "Cover Letter" %}:</h4>
                         <p>{{ proposal.cover_letter }}</p>
                         
-                        <h4>Approach Methodology:</h4>
+                        <h4>{% translate "Approach Methodology" %}:</h4>
                         {% if proposal.approach_methodology %}
                             {% for line in proposal.approach_methodology|split_lines %}
                                 <div class="approach-line" style="margin-bottom: 10px;">
@@ -95,10 +97,10 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <span style="color: #949494; font-style: italic;">No approach methodology provided.</span>
+                            <span style="color: #949494; font-style: italic;">{% translate "No approach methodology provided." %}</span>
                         {% endif %}
                         
-                        <h4>Relevant Experience:</h4>
+                        <h4>{% translate "Relevant Experience" %}:</h4>
                         {% if proposal.relevant_experience %}
                             {% for line in proposal.relevant_experience|split_lines %}
                                 <div class="relevant-line" style="margin-bottom: 10px;">
@@ -106,10 +108,10 @@
                                 </div>
                             {% endfor %}
                         {% else %}
-                            <span style="color: #949494; font-style: italic;">No relevant experience provided.</span>
+                            <span style="color: #949494; font-style: italic;">{% translate "No relevant experience provided." %}</span>
                         {% endif %}
                         
-                        <h4>Questions for Client:</h4>
+                        <h4>{% translate "Questions for Client" %}:</h4>
                         {% if proposal.questions_for_client %}
                             <div class="client-questions">
                                 {% for question in proposal.questions_for_client|split_lines %}
@@ -119,13 +121,13 @@
                                 {% endfor %}
                             </div>
                         {% else %}
-                            <span style="color: #949494; font-style: italic;">No questions for client provided.</span>
+                            <span style="color: #949494; font-style: italic;">{% translate "No questions for client provided." %}</span>
                         {% endif %}
                     </div>
                 </div>
                 <div class="section-card">
                     <h3 class="section-title">
-                        <i class="fas fa-paperclip"></i> Attachments
+                        <i class="fas fa-paperclip"></i> {% translate "Attachments" %}
                     </h3>
                     <div class="attachments-list">
                         {% if attachments %}
@@ -150,7 +152,7 @@
                                         <h4 class="attachment-title">{{ attachment.filename }}</h4>
                                         <div class="attachment-meta">
                                             <span class="attachment-size">{{ attachment.file.size|filesizeformat }}</span>
-                                            <span class="attachment-date">Uploaded {{ attachment.uploaded_at|format_posted_time }}</span>
+                                            <span class="attachment-date">{% translate "Uploaded" %} {{ attachment.uploaded_at|format_posted_time }}</span>
                                         </div>
                                     </div>
                                     <a href="{{ attachment.file.url }}" class="attachment-download" download>
@@ -160,7 +162,7 @@
                             {% endfor %}
                         {% else %}  
                             <div class="no-attachments">
-                                <i class="fas fa-info-circle"></i> No attachments available for this project
+                                <i class="fas fa-info-circle"></i> {% translate "No attachments available for this project" %}
                             </div>
                         {% endif %}
                     </div>
@@ -169,7 +171,7 @@
             <div class="overview-sidebar">
                 <div class="sidebar-card">
                     <h3 class="card-title">
-                        <i class="fas fa-info-circle"></i> Proposal Details
+                        <i class="fas fa-info-circle"></i> {% translate "Proposal Details" %}
                     </h3>
                     <div class="project-info-list">
                         <div class="info-item">
@@ -177,7 +179,7 @@
                                 <i class="fas fa-calendar"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Submitted</div>
+                                <div class="info-label">{% translate "Submitted" %}</div>
                                 <div class="info-value">{{ proposal.submitted_at|format_posted_time }}</div>
                             </div>
                         </div>
@@ -186,7 +188,7 @@
                                 <i class="fas fa-dollar-sign"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Proposed Amount</div>
+                                <div class="info-label">{% translate "Proposed Amount" %}</div>
                                 <div class="info-value">Rs. {{ proposal.proposed_amount|format_currency }}</div>
                             </div>
                         </div>
@@ -195,8 +197,8 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Estimated Duration</div>
-                                <div class="info-value">{{ proposal.estimated_duration }} weeks</div>
+                                <div class="info-label">{% translate "Estimated Duration" %}</div>
+                                <div class="info-value">{{ proposal.estimated_duration }} {% translate "weeks" %}</div>
                             </div>
                         </div>
                         <div class="info-item">
@@ -204,7 +206,7 @@
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Available Start Date</div>
+                                <div class="info-label">{% translate "Available Start Date" %}</div>
                                 <div class="info-value">{{ proposal.available_start_date }}</div>
                             </div>
                         </div>
@@ -213,7 +215,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Status</div>
+                                <div class="info-label">{% translate "Status" %}</div>
                                 <div class="info-value">{{ proposal.status|title }}</div>
                             </div>
                         </div>
@@ -222,7 +224,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="info-content">  
-                                <div class="info-label">Shortlisted</div>
+                                <div class="info-label">{% translate "Shortlisted" %}</div>
                                 <div class="info-value">{{ proposal.is_shortlisted|yesno:'Yes,No' }}</div>
                             </div>
                         </div>
@@ -232,11 +234,11 @@
                                 <i class="fas fa-tasks"></i>
                             </div>
                             <div class="info-content">
-                                <div class="info-label">Project Type</div>
+                                <div class="info-label">{% translate "Project Type" %}</div>
                                 {% if project.is_fixed_price %}
-                                    <div class="info-value">Fixed Price</div>
+                                    <div class="info-value">{% translate "Fixed Price" %}</div>
                                 {% else %}
-                                    <div class="info-value">Price Range</div>
+                                    <div class="info-value">{% translate "Price Range" %}</div>
                                 {% endif %}
                             </div>
                         </div>

@@ -87,7 +87,7 @@
 
                     {% for experience in selected_experience %}
                         <div class="applied-filter-tag experience-tag">
-                            Experience: {{ experience|title }}
+                            {% translate "Experience" %}: {{ experience|title }}
                             <span class="remove-filter" onclick="removeMultiFilterParam('experience', '{{ experience }}')">
                                 <i class="fas fa-times"></i>
                             </span>
@@ -96,13 +96,13 @@
 
                     {% for duration in selected_durations %}
                         <div class="applied-filter-tag duration-filter">
-                            Duration: 
+                            {% translate "Duration" %}: 
                             {% if duration == '12+' %}
-                                3+ months
+                                {% translate "3+ months" %}
                             {% elif duration == '4-12' %}
-                                1-3 months
+                                {% translate "1-3 months" %}
                             {% else %}
-                                Less than 4 weeks
+                                {% translate "Less than 4 weeks" %}
                             {% endif %}
                             <span class="remove-filter" onclick="removeMultiFilterParam('duration', '{{ duration }}')">
                                 <i class="fas fa-times"></i>
@@ -113,13 +113,13 @@
             {% endif %}
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" name="search" placeholder="Search proposals..." value="{{ request.GET.search }}" class="search-input">
+                <input type="text" name="search" placeholder="{% translate 'Search proposals...' %}" value="{{ request.GET.search }}" class="search-input">
             </div>
             <div class="filters-container">
                 <div class="filters">
                     <div class="filter-dropdown">
                         <button class="filter-btn">
-                            <span>Status</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                            <span>{% translate "Status" %}</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
                         <div class="dropdown-content">
                             <div class="dropdown-section">
@@ -135,11 +135,11 @@
                     </div>
                     <div class="filter-dropdown scrollable-dropdown large-above-dropdown">
                         <button class="filter-btn">
-                            <span>Category</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                            <span>{% translate "Category" %}</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
                         <div class="dropdown-content">
                             <div class="category-search-container">
-                                <input type="text" placeholder="Search categories..." class="category-search-input">
+                                <input type="text" placeholder="{% translate 'Search categories...' %}" class="category-search-input">
                             </div>
                             <div class="category-items">
                                 {% for category in categories %}
@@ -154,7 +154,7 @@
                     </div>
                     <div class="filter-dropdown">
                         <button class="filter-btn">
-                            <span>Budget</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                            <span>{% translate "Budget" %}</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
                         <div class="dropdown-content">
                             <label class="dropdown-item">
@@ -181,29 +181,29 @@
                     </div>
                     <div class="filter-dropdown">
                         <button class="filter-btn">
-                            <span>Duration</span> <i class="fas fa-chevron-down dropdown-icon"></i>
+                            <span>{% translate "Duration" %}</span> <i class="fas fa-chevron-down dropdown-icon"></i>
                         </button>
                         <div class="dropdown-content">  
                             <label class="dropdown-item">
                                 <input type="checkbox" name="duration" value="0-4"
                                        {% if '0-4' in selected_durations %}checked{% endif %}>
-                                Less than 4 weeks
+                                {% translate "Less than 4 weeks" %}
                             </label>
                             <label class="dropdown-item">
                                 <input type="checkbox" name="duration" value="4-12"
                                        {% if '4-12' in selected_durations %}checked{% endif %}>
-                                1-3 months
+                                {% translate "1-3 months" %}
                             </label>
                             <label class="dropdown-item">
                                 <input type="checkbox" name="duration" value="12+"
                                        {% if '12+' in selected_durations %}checked{% endif %}>
-                                3+ months
+                                {% translate "3+ months" %}
                             </label>
                         </div>
                     </div>
                 </div>
                 <button class="clear-filters-btn">
-                    <i class="fas fa-undo"></i> Reset Filters
+                    <i class="fas fa-undo"></i> {% translate "Reset Filters" %}
                 </button>
             </div>
         </div>
@@ -231,7 +231,7 @@
                                     <span class="proposal-category">
                                         <i class="fas fa-tag"></i> {{ proposal.project.category.name }}
                                     </span>
-                                    <span class="proposal-submitted"><i class="far fa-clock"></i> Submitted {{ proposal.submitted_at|format_posted_time }}</span>
+                                    <span class="proposal-submitted"><i class="far fa-clock"></i> {% translate "Submitted" %} {{ proposal.submitted_at|format_posted_time }}</span>
                                 </div>
                             </div>
                         </div>
