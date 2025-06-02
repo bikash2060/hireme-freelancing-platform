@@ -42,8 +42,8 @@ HireMe/
 
 ### 1. Clone the Repository
 ```bash
-git clone url
-cd folder
+git clone https://github.com/bikash2060/hireme-freelancing-platform.git
+cd hireme-freelancing-platform
 ```
 ### 2. Create the Virtual Environment
 ```bash
