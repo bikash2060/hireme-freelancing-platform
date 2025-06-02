@@ -12,7 +12,7 @@ class ChatRoom(models.Model):
         return self.name
     
     class Meta:
-        db_table = 'chat_rooms'
+        db_table = 'chat_room'
 
 class ChatMessage(models.Model):
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
@@ -23,7 +23,7 @@ class ChatMessage(models.Model):
     
     class Meta:
         ordering = ['timestamp']
-        db_table = 'chat_messages'
+        db_table = 'chat_message'
     
     def __str__(self):
         return f"{self.sender.username}: {self.content[:20]}"

@@ -55,7 +55,7 @@ class OTPCode(models.Model):
     is_verified = models.BooleanField(default=False)
     
     class Meta:
-        db_table = "otpcode"
+        db_table = "otp_code"
         verbose_name = "OTP Code"
         verbose_name_plural = "OTP Codes"
         indexes = [

@@ -76,6 +76,7 @@ class TaskSubmission(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
+        db_table = "task_submission"
         ordering = ['-created_at']
         
     def __str__(self):
@@ -94,6 +95,10 @@ class Transaction(models.Model):
     payment_date = models.DateTimeField(auto_now_add=True)
     transaction_uuid = models.CharField(max_length=100, unique=True, null=True, blank=True)
     
+    class Meta:
+        db_table = "transaction"
+        ordering = ['-payment_date']
+
     def __str__(self):
         return f"Transaction {self.id} - {self.contract.proposal.project.title}"
 
