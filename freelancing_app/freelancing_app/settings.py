@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     "projects",
     "proposals",
     "contract",
-    "translation",  # Add this line
+    "translation", 
 ]
 
 # Middleware stack for request/response processing
@@ -108,7 +108,7 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hireme_db',
+        'NAME': 'hireme_database',
         'USER': 'root',
         'PASSWORD': 'Bishal@123',
         'HOST': 'localhost',
