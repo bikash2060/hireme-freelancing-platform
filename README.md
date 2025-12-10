@@ -24,20 +24,6 @@
 - **Payment Gateway**: eSewa, Khalti
 - **AI/ML**: Logistic Regression, KNN, Naive Bayes (for job recommendations)
 
-## 📁 Project Structure
-
-HireMe/
-├── accounts/ # User authentication and profile
-├── projects/ # Project and bid management
-├── chat/ # Real-time messaging
-├── contracts/ # Contract handling
-├── payment/ # Payment integration logic
-├── templates/ # HTML templates
-├── static/ # CSS, JS, Images
-├── manage.py
-├── requirements.txt
-└── README.md
-
 ## 🧪 Setup Instructions
 
 ### 1. Clone the Repository
