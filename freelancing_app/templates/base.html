@@ -354,12 +354,7 @@
         <div class="chat-header">
             <div class="user-details">
                 <div class="avatar">
-                    {% if request.user.profile_image %}
-                        <img src="{% get_media_prefix %}profile_images/{{ request.user.profile_image }}" alt="Profile Picture">
-                    {% else %}
-                        
-                            <i class="fas fa-user"></i>
-                    {% endif %}
+                    <img src="" alt="User">
                 </div>
                 <div class="user-info">
                     <div class="user-name"></div>
