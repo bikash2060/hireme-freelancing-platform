@@ -64,7 +64,7 @@
                                 <span>{% translate "Phone" %}</span>
                             </div>
                             <div class="info-value phone-value">
-                                <span id="phone">{{ user.phone_number|default:"{% translate 'Not provided' %}" }}</span>
+                                <span id="phone">{% if user.phone_number %}{{ user.phone_number }}{% else %}{% translate "Not provided" %}{% endif %}</span>
                             </div>
                         </div>
                         <div class="info-item">
@@ -84,11 +84,11 @@
                             <div class="info-value">
                                 <div class="location-detail">
                                     <i class="fas fa-city"></i>
-                                    <span>{{ user.city.name|default:"{% translate 'Not specified' %}" }}</span>
+                                    <span>{% if user.city.name %}{{ user.city.name }}{% else %}{% translate "Not specified" %}{% endif %}</span>
                                 </div>
                                 <div class="location-detail">
                                     <i class="fas fa-globe-asia"></i>
-                                    <span>{{ user.country|default:"{% translate 'Not specified' %}" }}</span>
+                                    <span>{% if user.country %}{{ user.country }}{% else %}{% translate "Not specified" %}{% endif %}</span>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                             </div>
                             <div class="info-value bio-value">
                                 <div class="bio-text" id="bio">
-                                    {{ user.bio|default:"{% translate 'No bio available. Tell others about yourself!' %}" }}
+                                    {% if user.bio %}{{ user.bio }}{% else %}{% translate "No bio available. Tell others about yourself!" %}{% endif %}
                                 </div>
                             </div>
                         </div>
