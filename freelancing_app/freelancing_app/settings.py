@@ -13,7 +13,7 @@ SECRET_KEY = "django-insecure-y9vjmoy_i9&x-5!dq7w-dq+fsts@dsmut9(yp)$)lyg%rd43_x
 DEBUG = False
 
 # List of allowed hostnames for the application.
-ALLOWED_HOSTS = ['*', 'hiremenepal.tech', 'www.hiremenepal.tech']
+ALLOWED_HOSTS = ['*']
 
 SITE_ID = 1
 
@@ -105,18 +105,6 @@ CHANNEL_LAYERS = {
 }
 
 # Database configuration for MySQL backend
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hireme_db',
-        'USER': 'root',
-        'PASSWORD': 'Bishal@123',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -127,6 +115,17 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'hireme_db',
+#         'USER': 'root',
+#         'PASSWORD': 'Bishal@123',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 # Password validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -1698,7 +1697,4 @@ category_skills_map = {
         "Hiring Compliance", "Diversity & Inclusion Policy Awareness", "Bias-Free Hiring",
         "HR Reporting & Analytics", "Attrition Analysis", "Hiring Funnel Optimization"
     ]
-}
-
-    
-    
+}    
