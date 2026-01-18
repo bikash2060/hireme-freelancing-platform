@@ -598,10 +598,28 @@ class ChatApp {
                 statusIndicator.style.backgroundColor = otherUser.is_online ? '#4caf50' : '#bbb';
             }
             
-            const avatar = this.detailedChat.querySelector('.avatar img');
-            if (avatar && otherUser.profile_image) {
-                avatar.src = otherUser.profile_image;
-                avatar.alt = otherUser.full_name || otherUser.username;
+            // Update avatar - handle both profile image and fallback to initials
+            const avatarContainer = this.detailedChat.querySelector('.avatar');
+            if (avatarContainer) {
+                if (otherUser.profile_image) {
+                    // User has profile image
+                    avatarContainer.innerHTML = `<img src="${otherUser.profile_image}" alt="${otherUser.full_name || otherUser.username}">`;
+                } else {
+                    // No profile image - show first letter
+                    const firstLetter = (otherUser.full_name || otherUser.username || 'U').charAt(0).toUpperCase();
+                    avatarContainer.innerHTML = `<div class="user-icon" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: #4A90E2;
+                        color: white;
+                        font-size: 18px;
+                        font-weight: 600;
+                        border-radius: 50%;
+                    ">${firstLetter}</div>`;
+                }
             }
         }
     }
