@@ -357,9 +357,8 @@
                     {% if request.user.profile_image %}
                         <img src="{% get_media_prefix %}profile_images/{{ request.user.profile_image }}" alt="Profile Picture">
                     {% else %}
-                        <div class="profile-icon">
+                        
                             <i class="fas fa-user"></i>
-                        </div>
                     {% endif %}
                 </div>
                 <div class="user-info">
