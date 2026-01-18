@@ -13,7 +13,16 @@ SECRET_KEY = "django-insecure-y9vjmoy_i9&x-5!dq7w-dq+fsts@dsmut9(yp)$)lyg%rd43_x
 DEBUG = True
 
 # List of allowed hostnames for the application.
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'hiremenepal.tech',
+    'www.hiremenepal.tech',
+    '3.6.14.186',
+    'localhost',
+]
+
+# Security settings for proxy
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 SITE_ID = 1
 
