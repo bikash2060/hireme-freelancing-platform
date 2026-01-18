@@ -10,10 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-y9vjmoy_i9&x-5!dq7w-dq+fsts@dsmut9(yp)$)lyg%rd43_x"
 
 # Debug mode setting; should be False in production.
-DEBUG = True
+DEBUG = False
 
 # List of allowed hostnames for the application.
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'hiremenepal.tech', 'www.hiremenepal.tech']
 
 SITE_ID = 1
 
