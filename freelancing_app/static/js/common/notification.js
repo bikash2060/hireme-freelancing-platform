@@ -4,8 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const baseUrl = '/' + langPrefix;
 
     // Connect to WebSocket
+    // Automatically use ws:// for http:// and wss:// for https://
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const notificationSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/notifications/'
+        protocol + '//' + window.location.host + '/ws/notifications/'
     );
 
     // Handle incoming notifications
