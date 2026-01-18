@@ -120,10 +120,10 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hireme-db',  # RDS database name
+        'NAME': 'hiremedb',  # RDS database name
         'USER': 'hireme_user',
         'PASSWORD': 'HireMeDatabase_2060',
-        'HOST': 'hireme-db.c9qyc8uss9wk.ap-south-1.rds.amazonaws.com',  # RDS endpoint
+        'HOST': 'hiremedb.c9qyc8uss9wk.ap-south-1.rds.amazonaws.com',  # RDS endpoint
         'PORT': '3306',
     }
 }
